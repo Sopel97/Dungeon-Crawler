@@ -1,0 +1,132 @@
+#ifndef RESOURCEMANAGER_H
+#define RESOURCEMANAGER_H
+
+#include <map>
+#include <vector>
+#include <typeindex>
+#include <stdexcept>
+
+class ResourceLoader
+{
+public:
+    typedef void LoadType;
+    virtual void* load(const std::string& path) const = 0; //should return nullptr when resource was not loaded
+    virtual ~ResourceLoader();
+};
+
+template <class T>
+class ResourceHandle
+{
+public:
+    ResourceHandle();
+    ResourceHandle(T* resource);
+    ResourceHandle(const ResourceHandle& other);
+
+    void set(T* resource);
+    const T& get() const;
+
+    ~ResourceHandle();
+
+protected:
+    T* m_resource; //non owning
+};
+
+
+class ResourceManager
+{
+public:
+
+    static ResourceManager& instance();
+
+    template <class T>
+    ResourceHandle<T> get(const std::string& path);
+
+    template <class T, typename... Arguments>
+    std::map<std::type_index, ResourceLoader*>::iterator registerLoader(Arguments&& ... args);
+
+    template <class T>
+    std::map<std::string, void*>::iterator load(const std::string& path);
+
+    ~ResourceManager();
+protected:
+    std::map<std::type_index, ResourceLoader*> m_resourceLoaders; //key is the type_index od the type that resource loader load
+    std::map<std::string, void*> m_resources; //owning
+};
+
+//Template members definitions
+
+
+template <class T>
+ResourceHandle<T>::ResourceHandle() :
+    m_resource(nullptr)
+{
+
+}
+template <class T>
+ResourceHandle<T>::ResourceHandle(T* resource) :
+    m_resource(resource)
+{
+}
+template <class T>
+ResourceHandle<T>::ResourceHandle(const ResourceHandle& other) :
+    m_resource(other.m_resource)
+{
+
+}
+
+template <class T>
+void ResourceHandle<T>::set(T* resource)
+{
+    m_resource = resource;
+}
+
+template <class T>
+const T& ResourceHandle<T>::get() const
+{
+    return *m_resource;
+}
+
+template <class T>
+ResourceHandle<T>::~ResourceHandle()
+{
+}
+
+
+template <class T>
+ResourceHandle<T> ResourceManager::get(const std::string& path)
+{
+    auto iter = m_resources.find(path);
+    void* resource = nullptr;
+    if(iter != m_resources.end())
+    {
+        resource = iter->second;
+    }
+    else
+    {
+        resource = load<T>(path)->second;
+    }
+    if(resource == nullptr) throw std::runtime_error(std::string("No resource found with path ") + path);
+    return ResourceHandle<T>(static_cast<T*>(resource));
+}
+
+template <class T, typename... Arguments>
+std::map<std::type_index, ResourceLoader*>::iterator ResourceManager::registerLoader(Arguments&& ... args)
+{
+    return m_resourceLoaders.insert(std::make_pair(std::type_index(typeid(typename T::LoadType)), new T(std::forward<Arguments>(args)...))).first;
+}
+
+template <class T>
+std::map<std::string, void*>::iterator ResourceManager::load(const std::string& path)
+{
+    auto iter = m_resourceLoaders.find(std::type_index(typeid(T)));
+    if(iter != m_resourceLoaders.end())
+    {
+        return m_resources.insert(std::make_pair(path, iter->second->load(path))).first;
+    }
+    else
+    {
+        throw std::runtime_error(std::string("No resource loader found for type ") + std::string(typeid(T).name()));
+    }
+}
+
+#endif // RESOURCEMANAGER_H
