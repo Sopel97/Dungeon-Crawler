@@ -3,6 +3,11 @@
 #include "SFMLUtil.h"
 #include "World.h"
 
+#include "Tile.h"
+
+#include "ResourceLoaders.h"
+#include "ResourceManager.h"
+
 Root::Root() :
     m_window(sf::VideoMode(m_defaultWindowWidth, m_defaultWindowHeight), "Dungeon Crawler Test"),
     m_renderStates(),
@@ -77,11 +82,14 @@ void Root::run()
 void Root::initResourceLoaders()
 {
     ResourceManager::instance().registerLoader<TextureLoader>();
+    ResourceManager::instance().registerLoader<TileLoader>();
 }
 
 void Root::loadAssets()
 {
     ResourceManager::instance().load<sf::Texture>("assets\\gfx\\spritesheet.png", "Spritesheet");
+
+    ResourceManager::instance().load<Tile>("assets\\tiles\\test.tile");
 }
 
 void Root::onWindowResized(const sf::Event& event)
@@ -90,13 +98,3 @@ void Root::onWindowResized(const sf::Event& event)
 }
 
 
-void* Root::TextureLoader::load(const std::string& path) const
-{
-    sf::Texture* texture = new sf::Texture;
-    texture->loadFromFile(path);
-    return texture;
-}
-Root::TextureLoader::~TextureLoader()
-{
-
-}

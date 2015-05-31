@@ -3,8 +3,6 @@
 
 #include "WindowSpaceManager.h"
 
-#include "ResourceManager.h"
-
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 
@@ -29,14 +27,6 @@ public:
     void onWindowResized(const sf::Event& event);
 
 protected:
-    class TextureLoader : public ResourceLoader
-    {
-    public:
-        typedef sf::Texture LoadType;
-        virtual void* load(const std::string& path) const; //should return nullptr when resource was not loaded
-        virtual ~TextureLoader();
-    };
-
     sf::RenderWindow m_window;
     sf::RenderStates m_renderStates;
     WindowSpaceManager m_windowSpaceManager;

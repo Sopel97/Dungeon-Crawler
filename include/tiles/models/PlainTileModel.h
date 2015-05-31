@@ -3,13 +3,18 @@
 
 #include "TileModel.h"
 
+#include <memory>
+
 class Tile;
 
 class PlainTileModel : public TileModel
 {
 public:
     PlainTileModel(Tile* owner);
+    PlainTileModel(const PlainTileModel& other);
     virtual ~PlainTileModel();
+
+    virtual std::unique_ptr<TileModel> clone() const;
 protected:
 };
 

@@ -1,0 +1,12 @@
+tile = {
+        
+    name = "Test Tile",
+    
+    model = "PlainTileModel",
+    view = "PlainTileView",
+    controller = "PlainTileController",
+
+    texture = "Spritesheet",
+    spritePosition = {0, 0}
+    
+}

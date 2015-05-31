@@ -19,6 +19,7 @@ class Tile
 {
 public:
     Tile(std::unique_ptr<TileModel>&& model, std::unique_ptr<TileView>&& view, std::unique_ptr<TileController>&& controller);
+    Tile(const Tile& other);
     virtual ~Tile();
 
     void loadFromConfiguration(ConfigurationNode& config);
@@ -29,7 +30,7 @@ public:
     const std::unique_ptr<TileView>& view() const;
     const std::unique_ptr<TileController>& controller() const;
 
-    virtual Tile* clone() const = 0;
+    virtual std::unique_ptr<Tile> clone() const;
 protected:
     std::unique_ptr<TileModel> m_model;
     std::unique_ptr<TileView> m_view;

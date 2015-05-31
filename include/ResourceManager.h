@@ -10,7 +10,7 @@ class ResourceLoader
 {
 public:
     typedef void LoadType;
-    virtual void* load(const std::string& path) const = 0; //should return nullptr when resource was not loaded
+    virtual std::pair<std::string, void*> load(const std::string& path) const = 0; //should return nullptr when resource was not loaded. Also returns name.
     virtual ~ResourceLoader();
 };
 
@@ -45,7 +45,9 @@ public:
     std::map<std::type_index, ResourceLoader*>::iterator registerLoader(Arguments&& ... args);
 
     template <class T>
-    std::map<std::string, void*>::iterator load(const std::string& path, const std::string& name);
+    std::map<std::string, void*>::iterator load(const std::string& path, const std::string& name); //this name has bigger priority than name given by resource loader
+    template <class T>
+    std::map<std::string, void*>::iterator load(const std::string& path);
 
     ~ResourceManager();
 protected:
@@ -122,9 +124,25 @@ std::map<std::string, void*>::iterator ResourceManager::load(const std::string& 
     {
         auto resourceIter = m_resources.find(name);
         if(resourceIter != m_resources.end()) return resourceIter;
-        void* resource = iter->second->load(path);
-        if(resource == nullptr) throw std::runtime_error(std::string("Could not load resource from path ") + path);
-        return m_resources.insert(std::make_pair(name, resource)).first;
+        std::pair<std::string, void*> resource = iter->second->load(path);
+        if(resource.second == nullptr) throw std::runtime_error(std::string("Could not load resource from path ") + path);
+        return m_resources.insert(std::make_pair(name, resource.second)).first;
+    }
+    else
+    {
+        throw std::runtime_error(std::string("No resource loader found for type ") + std::string(typeid(T).name()));
+    }
+}
+
+template <class T>
+std::map<std::string, void*>::iterator ResourceManager::load(const std::string& path)
+{
+    auto iter = m_resourceLoaders.find(std::type_index(typeid(T)));
+    if(iter != m_resourceLoaders.end())
+    {
+        std::pair<std::string, void*> resource = iter->second->load(path);
+        if(resource.second == nullptr) throw std::runtime_error(std::string("Could not load resource from path ") + path);
+        return m_resources.insert(resource).first;
     }
     else
     {

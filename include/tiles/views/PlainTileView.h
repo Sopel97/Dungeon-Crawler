@@ -20,14 +20,17 @@ class PlainTileView : public TileView
 {
 public:
     PlainTileView(Tile* owner);
+    PlainTileView(const PlainTileView& other);
     virtual ~PlainTileView();
 
     virtual void loadFromConfiguration(ConfigurationNode& config);
 
-    virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, int x, int y, MapLayer& map);
+    virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, int x, int y, const MapLayer& map);
 
     const ResourceHandle<sf::Texture> texture();
     const Geo::Vec2F spritePosition();
+
+    virtual std::unique_ptr<TileView> clone() const;
 protected:
     ResourceHandle<sf::Texture> m_texture;
     Geo::Vec2I m_spritePosition;
