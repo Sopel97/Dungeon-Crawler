@@ -81,7 +81,7 @@ void Root::initResourceLoaders()
 
 void Root::loadAssets()
 {
-    ResourceManager::instance().load<sf::Texture>("assets\\gfx\\spritesheet.png");
+    ResourceManager::instance().load<sf::Texture>("assets\\gfx\\spritesheet.png", "Spritesheet");
 }
 
 void Root::onWindowResized(const sf::Event& event)
