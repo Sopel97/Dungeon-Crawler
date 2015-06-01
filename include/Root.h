@@ -24,7 +24,11 @@ public:
     void initResourceLoaders();
     void loadAssets();
 
+    void processAsyncKeyboardInput();
+    void onKeyPressed(const sf::Event& event);
     void onWindowResized(const sf::Event& event);
+
+    WindowSpaceManager& windowSpaceManager();
 
 protected:
     sf::RenderWindow m_window;

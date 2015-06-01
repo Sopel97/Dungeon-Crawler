@@ -8,12 +8,16 @@
 #include "ResourceLoaders.h"
 #include "ResourceManager.h"
 
+#include "../LibS/GeometryLight.h"
+
+using namespace Geo;
+
 Root::Root() :
     m_window(sf::VideoMode(m_defaultWindowWidth, m_defaultWindowHeight), "Dungeon Crawler Test"),
     m_renderStates(),
     m_windowSpaceManager(m_window),
     m_lastFrameTime(0.0f),
-    m_world(std::make_unique<World>(*this))
+    m_world(nullptr)
 {
     //ctor
 }
@@ -40,6 +44,8 @@ void Root::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
     m_windowSpaceManager.setDefaultView();
     m_window.draw(vertexBuffer, m_renderStates);
 
+    m_world->draw(renderTarget, renderStates);
+
     m_window.display();
 }
 
@@ -47,6 +53,8 @@ void Root::run()
 {
     initResourceLoaders();
     loadAssets();
+
+    m_world = std::make_unique<World>(*this);
 
     sf::Clock clock;
     clock.restart();
@@ -62,11 +70,13 @@ void Root::run()
 
         while(m_window.pollEvent(event))
         {
+            if(event.type == sf::Event::EventType::KeyPressed) onKeyPressed(event);
             if(event.type == sf::Event::EventType::Closed) m_window.close();
             if(event.type == sf::Event::EventType::Resized) onWindowResized(event);
         }
         if(elapsedTime.asSeconds() >= m_tickTime + lastTick)
         {
+            if(m_window.hasFocus()) processAsyncKeyboardInput();
             tick(dt);
             lastTick = elapsedTime.asSeconds();
         }
@@ -78,6 +88,14 @@ void Root::run()
 
     }
 
+}
+void Root::processAsyncKeyboardInput()
+{
+    constexpr float speed = 5.0f;
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) m_world->moveCamera(Vec2F(-speed, 0.0f)); //just for testing
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) m_world->moveCamera(Vec2F(speed, 0.0f));
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) m_world->moveCamera(Vec2F(0.0f, -speed));
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) m_world->moveCamera(Vec2F(0.0f, speed));
 }
 void Root::initResourceLoaders()
 {
@@ -92,9 +110,16 @@ void Root::loadAssets()
     ResourceManager::instance().load<Tile>("assets\\tiles\\test.tile");
 }
 
+void Root::onKeyPressed(const sf::Event& event)
+{
+}
 void Root::onWindowResized(const sf::Event& event)
 {
     m_windowSpaceManager.onWindowResized(event);
 }
 
+WindowSpaceManager& Root::windowSpaceManager()
+{
+    return m_windowSpaceManager;
+}
 

@@ -13,8 +13,13 @@ public:
     ~MapLayer();
 
     const Array2<TileStack>& tileStacks() const;
+    Array2<TileStack>& tileStacks();
     int width() const;
     int height() const;
+
+    const TileStack& at(int x, int y) const;
+    TileStack& at(int x, int y);
+
 protected:
     World& m_world;
     Array2<TileStack> m_tileStacks;

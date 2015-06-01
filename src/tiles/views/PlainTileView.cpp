@@ -30,7 +30,11 @@ void PlainTileView::loadFromConfiguration(ConfigurationNode& config)
 
 void PlainTileView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, int x, int y, const MapLayer& map)
 {
-
+    sf::Sprite sprite;
+    sprite.setPosition(sf::Vector2f(x*32.0f, y*32.0f));
+    sprite.setTexture(m_texture.get());
+    sprite.setTextureRect(sf::IntRect(sf::Vector2i(m_spritePosition.x, m_spritePosition.y), sf::Vector2i(32, 32)));
+    renderTarget.draw(sprite, renderStates);
 }
 
 const ResourceHandle<sf::Texture> PlainTileView::texture()

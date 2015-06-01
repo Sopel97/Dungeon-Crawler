@@ -2,7 +2,7 @@
 
 using namespace Geo;
 
-WindowSpaceManager::Region::Region(const Geo::RectangleI& rect, WindowSpaceManager::Region::Id id, const std::vector<WindowSpaceManager::Scene>& parentScenes, int zIndex) :
+WindowSpaceManager::Region::Region(const RectangleI& rect, WindowSpaceManager::Region::Id id, const std::vector<WindowSpaceManager::Scene>& parentScenes, int zIndex) :
     m_rect(rect),
     m_id(id),
     m_parentScenes(parentScenes),
@@ -12,11 +12,11 @@ WindowSpaceManager::Region::Region(const Geo::RectangleI& rect, WindowSpaceManag
 }
 
 
-Geo::Vec2I WindowSpaceManager::Region::localCoords(const Geo::Vec2I& windowCoords) const
+Vec2I WindowSpaceManager::Region::localCoords(const Vec2I& windowCoords) const
 {
     return windowCoords - m_rect.min;
 }
-const Geo::RectangleI& WindowSpaceManager::Region::rect() const
+const RectangleI& WindowSpaceManager::Region::rect() const
 {
     return m_rect;
 }
@@ -52,7 +52,7 @@ void WindowSpaceManager::setViewToRect(const RectangleI& windowViewRect, const R
     Vec2F windowViewSizeRelativeToWindow = windowViewSize / windowSize;
 
     sf::FloatRect view(windowViewTopLeftRelativeToWindow.x, windowViewTopLeftRelativeToWindow.y, windowViewSizeRelativeToWindow.x, windowViewSizeRelativeToWindow.y);
-    sf::View panelView(sf::Vector2f(worldViewRect.min.x + (worldViewRect.width()) / 2.0f, (worldViewRect.min.y + (worldViewRect.height()) / 2.0f)), sf::Vector2f(worldViewRect.width(), worldViewRect.height()));
+    sf::View panelView(sf::Vector2f(worldViewRect.min.x + (worldViewRect.width() + 0.1f) / 2.0f , (worldViewRect.min.y + (worldViewRect.height() + 0.1f) / 2.0f)), sf::Vector2f(worldViewRect.width(), worldViewRect.height()));
     panelView.setViewport(view);
     m_window.setView(panelView);
 }
@@ -61,7 +61,7 @@ void WindowSpaceManager::setViewToRegion(WindowSpaceManager::Region::Id regionId
     const RectangleI& rect = regionRect(regionId);
     setViewToRect(rect, RectangleI(Vec2I(0, 0), rect.width(), rect.height()));
 }
-void WindowSpaceManager::setViewToRegion(WindowSpaceManager::Region::Id regionId, const Geo::RectangleF& worldViewRect)
+void WindowSpaceManager::setViewToRegion(WindowSpaceManager::Region::Id regionId, const RectangleF& worldViewRect)
 {
     const RectangleI& rect = regionRect(regionId);
     setViewToRect(rect, worldViewRect);
@@ -141,7 +141,7 @@ const WindowSpaceManager::Region& WindowSpaceManager::region(WindowSpaceManager:
 {
     return m_regions.at(regionId);
 }
-const WindowSpaceManager::Region* WindowSpaceManager::pointedRegion(const Geo::Vec2I& windowCoords) const
+const WindowSpaceManager::Region* WindowSpaceManager::pointedRegion(const Vec2I& windowCoords) const
 {
     const Region* bestCandidate = nullptr;
     int highestZ = std::numeric_limits<int>::min();
@@ -158,7 +158,7 @@ const WindowSpaceManager::Region* WindowSpaceManager::pointedRegion(const Geo::V
     }
     return bestCandidate;
 }
-const Geo::RectangleI& WindowSpaceManager::regionRect(WindowSpaceManager::Region::Id regionId) const
+const RectangleI& WindowSpaceManager::regionRect(WindowSpaceManager::Region::Id regionId) const
 {
     return region(regionId).rect();
 }

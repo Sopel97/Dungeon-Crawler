@@ -3,6 +3,12 @@
 
 #include <memory>
 
+#include "MapGenerator.h"
+
+#include "Camera.h"
+
+#include "../LibS/GeometryLight.h"
+
 namespace sf
 {
     class RenderTarget;
@@ -19,10 +25,15 @@ public:
 
     void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
 
+    void moveCamera(const Geo::Vec2F& displacement);
+
 protected:
     Root& m_root;
+    int m_width;
+    int m_height;
     std::unique_ptr<MapLayer> m_mapLayer;
-    //TODO: do proper camera before anything else
+    Camera m_camera;
+    MapGenerator m_mapGenerator;
 };
 
 #endif // WORLD_H

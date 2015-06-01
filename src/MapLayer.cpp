@@ -19,6 +19,10 @@ const Array2<TileStack>& MapLayer::tileStacks() const
 {
     return m_tileStacks;
 }
+Array2<TileStack>& MapLayer::tileStacks()
+{
+    return m_tileStacks;
+}
 
 int MapLayer::width() const
 {
@@ -27,4 +31,14 @@ int MapLayer::width() const
 int MapLayer::height() const
 {
     return m_tileStacks.sizeY();
+}
+
+
+const TileStack& MapLayer::at(int x, int y) const
+{
+    return m_tileStacks(x, y);
+}
+TileStack& MapLayer::at(int x, int y)
+{
+    return m_tileStacks(x, y);
 }
