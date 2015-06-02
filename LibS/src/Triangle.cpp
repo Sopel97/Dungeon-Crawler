@@ -147,8 +147,8 @@ std::unique_ptr<typename Shape2<T>::RandomPointPickerPreprocessedData> Triangle<
 template <class T>
 Vec2<T> Triangle<T>::pickRandomPoint(Random::RandomEngineBase& randomEngine) const
 {
-    T t1 = randomEngine.nextDouble();
-    T t2 = randomEngine.nextDouble();
+    T t1 = randomEngine.next<T>(T(0.0), T(1.0));
+    T t2 = randomEngine.next<T>(T(0.0), T(1.0));
     Vec2<T> point(vertices[0] + (vertices[2] - vertices[0]) * t1 + (vertices[1] - vertices[0]) * t2);
     if
     (
@@ -169,8 +169,8 @@ template <class T>
 Vec2<T> Triangle<T>::pickRandomPoint(Random::RandomEngineBase& randomEngine, typename Shape2<T>::RandomPointPickerPreprocessedData& preprocessedData) const
 {
     Triangle<T>::RandomPointPickerPreprocessedData& trianglePreprocessedData = static_cast<Triangle<T>::RandomPointPickerPreprocessedData&>(preprocessedData);
-    T t1 = randomEngine.nextDouble();
-    T t2 = randomEngine.nextDouble();
+    T t1 = randomEngine.next<T>(T(0.0), T(1.0));
+    T t2 = randomEngine.next<T>(T(0.0), T(1.0));
     Vec2<T> point(vertices[0] + trianglePreprocessedData.edge02 * t1 + trianglePreprocessedData.edge01 * t2);
     if
     (

@@ -114,8 +114,8 @@ Polyline<T> Circle<T>::asPolyline() const
 template <class T>
 Vec2<T> Circle<T>::pickRandomPoint(Random::RandomEngineBase& randomEngine) const
 {
-    T r = std::sqrt(randomEngine.nextDouble()) * radius;
-    AngleD angle = AngleD::radians(randomEngine.nextDouble(0.0, 2 * PI));
+    T r = std::sqrt(randomEngine.next<T>(T(0.0), T(1.0))) * radius;
+    AngleD angle = AngleD::radians(randomEngine.next<T>(T(0.0), T(2.0) * PI));
     return origin + Vec2<T>(r * angle.cos(), r * angle.sin());
 }
 template <class T>

@@ -123,8 +123,8 @@ Polyline<T> Rectangle<T>::asPolyline() const
 template <class T>
 Vec2<T> Rectangle<T>::pickRandomPoint(Random::RandomEngineBase& randomEngine) const
 {
-    T t1 = randomEngine.nextDouble();
-    T t2 = randomEngine.nextDouble();
+    T t1 = randomEngine.next<T>(T(0.0), T(1.0));
+    T t2 = randomEngine.next<T>(T(0.0), T(1.0));
     return Vec2<T>(min + (max-min) * Vec2<T>(t1, t2));
 }
 template <class T>

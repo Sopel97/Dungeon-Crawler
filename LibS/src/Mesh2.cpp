@@ -225,7 +225,7 @@ Vec2<typename Mesh2<ShapeType>::T> Mesh2<ShapeType>::pickRandomPoint(Random::Ran
 {
     Mesh2<ShapeType>::RandomPointPickerPreprocessedData& polygonPreprocessedData = static_cast<Mesh2<ShapeType>::RandomPointPickerPreprocessedData&>(preprocessedData);
     T sumOfAreas = polygonPreprocessedData.shapesByArea.back().second;
-    T randomArea = randomEngine.nextDouble(0.0, sumOfAreas);
+    T randomArea = randomEngine.next<T>(T(0.0), sumOfAreas);
     auto chosenShapeIter = std::upper_bound(polygonPreprocessedData.shapesByArea.begin(), polygonPreprocessedData.shapesByArea.end(), randomArea, [](const T& lhs, const std::pair<const ShapeType*, T>& rhs)->bool{return lhs < rhs.second;});
     if(chosenShapeIter == polygonPreprocessedData.shapesByArea.end()) chosenShapeIter = polygonPreprocessedData.shapesByArea.begin();
     return chosenShapeIter->first->pickRandomPoint(randomEngine);

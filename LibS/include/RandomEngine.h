@@ -8,7 +8,7 @@
 //       Places when polymorphism is required is very rarely seen with Random:: classes
 // NOTE: After some thought I decided that it may be actually more problematic to do it with templated due to issue with parial specialization.
 //       That said, it may remain just like it is now.
-//       I may try and make specialize some things for different IntType types
+//       I may try and specialize some things for different IntType types
 
 template <typename IntType>
 class RandomEngineT : public RandomEngineBase

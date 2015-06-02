@@ -109,7 +109,7 @@ Polyline<T> LineSegment<T>::asPolyline() const
 template <class T>
 Vec2<T> LineSegment<T>::pickRandomPoint(Random::RandomEngineBase& randomEngine) const
 {
-    T t = randomEngine.nextDouble();
+    T t = randomEngine.next<T>(T(0.0), T(1.0));
     return begin + (end - begin) * t;
 }
 template <class T>

@@ -201,7 +201,7 @@ Vec2<T> Polygon<T>::pickRandomPoint(Random::RandomEngineBase& randomEngine, type
 {
     Polygon<T>::RandomPointPickerPreprocessedData& polygonPreprocessedData = static_cast<Polygon<T>::RandomPointPickerPreprocessedData&>(preprocessedData);
     T sumOfAreas = polygonPreprocessedData.trianglesByArea.back().second;
-    T randomArea = randomEngine.nextDouble(0.0, sumOfAreas);
+    T randomArea = randomEngine.next<T>(T(0.0), sumOfAreas);
     auto chosenTriangleIter = std::upper_bound(polygonPreprocessedData.trianglesByArea.begin(), polygonPreprocessedData.trianglesByArea.end(), randomArea, [](const T& lhs, const std::pair<const Triangle<T>*, T>& rhs)->bool{return lhs < rhs.second;});
     if(chosenTriangleIter == polygonPreprocessedData.trianglesByArea.end()) chosenTriangleIter = polygonPreprocessedData.trianglesByArea.begin();
     return chosenTriangleIter->first->pickRandomPoint(randomEngine);

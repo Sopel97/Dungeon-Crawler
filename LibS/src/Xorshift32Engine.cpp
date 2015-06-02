@@ -3,7 +3,7 @@ Xorshift32EngineT<I>::Xorshift32EngineT(uint32_t seed) :
     RandomEngineT<uint32_t>(seed, 0xffffffffu)
 {
     x = seed;
-    y = x + 0xb5f3c6a7; //this values are temporary, i have no idea what should it be
+    y = x + 0xb5f3c6a7; //this values are temporary, i have no idea what they should be
     z = y * 0xb5f3c6a7;
     w = z ^ 0xb5f3c6a7;
 }
