@@ -11,11 +11,13 @@
 #include "../LibS/GeometryLight.h"
 
 using namespace Geo;
+using namespace Random;
 
 Root::Root() :
     m_window(sf::VideoMode(m_defaultWindowWidth, m_defaultWindowHeight), "Dungeon Crawler Test"),
     m_renderStates(),
     m_windowSpaceManager(m_window),
+    m_rng(12341),
     m_lastFrameTime(0.0f),
     m_world(nullptr)
 {
@@ -121,5 +123,10 @@ void Root::onWindowResized(const sf::Event& event)
 WindowSpaceManager& Root::windowSpaceManager()
 {
     return m_windowSpaceManager;
+}
+
+CMWCEngine Root::rng()
+{
+    return m_rng;
 }
 

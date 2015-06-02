@@ -7,6 +7,8 @@
 
 #include "../LibS/GeometryLight.h"
 
+#include <vector>
+
 namespace sf
 {
     class RenderTarget;
@@ -28,12 +30,17 @@ public:
     virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, int x, int y, const MapLayer& map);
 
     const ResourceHandle<sf::Texture> texture();
-    const Geo::Vec2F spritePosition();
+    const Geo::Vec2I& currentSprite();
 
     virtual std::unique_ptr<TileView> clone() const;
 protected:
-    ResourceHandle<sf::Texture> m_texture;
-    Geo::Vec2I m_spritePosition;
+    struct CommonData
+    {
+        ResourceHandle<sf::Texture> texture;
+        std::vector<Geo::Vec2I> sprites;
+    };
+    std::shared_ptr<CommonData> m_commonData;
+    int m_currentSprite;
 };
 
 #endif // PLAINTILEVIEW_H

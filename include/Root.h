@@ -6,6 +6,8 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 
+#include "../LibS/Random.h"
+
 #include <memory>
 
 class World;
@@ -30,10 +32,13 @@ public:
 
     WindowSpaceManager& windowSpaceManager();
 
+    Random::CMWCEngine rng();
+
 protected:
     sf::RenderWindow m_window;
     sf::RenderStates m_renderStates;
     WindowSpaceManager m_windowSpaceManager;
+    Random::CMWCEngine m_rng;
     float m_lastFrameTime;
 
     std::unique_ptr<World> m_world;

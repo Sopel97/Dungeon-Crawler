@@ -7,6 +7,13 @@ tile = {
     controller = "PlainTileController",
 
     texture = "Spritesheet",
-    spritePosition = {0, 0}
+    sprites = {
+        {0, 0},
+        {0, 32},
+        {0, 64},
+        {0, 96},
+        {0, 128},
+        {0, 160}
+    }
     
 }
