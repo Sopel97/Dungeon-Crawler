@@ -5,6 +5,10 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 
+#include <algorithm>
+
+using namespace Geo;
+
 PlainTileView::PlainTileView(Tile* owner) :
     TileView(owner),
     m_commonData(std::make_shared<CommonData>()),
@@ -15,8 +19,7 @@ PlainTileView::PlainTileView(const PlainTileView& other) :
     TileView(other),
     m_commonData(other.m_commonData)
 {
-    if(m_commonData->sprites.size() == 0) m_currentSprite = 0;
-    else m_currentSprite = Root::instance().rng().nextInt32(0, m_commonData->sprites.size() - 1);
+    m_currentSprite = selectRandomSprite();
 }
 PlainTileView::~PlainTileView()
 {
@@ -29,11 +32,16 @@ void PlainTileView::loadFromConfiguration(ConfigurationNode& config)
     m_commonData->texture = ResourceManager::instance().get<sf::Texture>(texturePath);
     ConfigurationNode sprites = config["sprites"];
     int numberOfSprites = sprites.length();
+    float weightSum = 0.0f;
     for(int i = 1; i <= numberOfSprites; ++i)
     {
         int x = sprites[i][1].get<int>();
         int y = sprites[i][2].get<int>();
+
+        float weight = sprites[i][3].getDefault<float>(1.0f);
         m_commonData->sprites.emplace_back(x, y);
+        weightSum += weight;
+        m_commonData->spritesWeightsSums.emplace_back(weightSum);
     }
 }
 
@@ -53,6 +61,17 @@ const ResourceHandle<sf::Texture> PlainTileView::texture()
 const Geo::Vec2I& PlainTileView::currentSprite()
 {
     return m_commonData->sprites[m_currentSprite];
+}
+
+int PlainTileView::selectRandomSprite() const
+{
+    const auto& spritesWeightsSums = m_commonData->spritesWeightsSums;
+
+    if(spritesWeightsSums.size() == 0) return 0;
+
+    float sumOfWeights = spritesWeightsSums.back();
+
+    return std::lower_bound(spritesWeightsSums.begin(), spritesWeightsSums.end(), Root::instance().rng().nextFloat(0.0f, sumOfWeights)) - spritesWeightsSums.begin();
 }
 
 std::unique_ptr<TileView> PlainTileView::clone() const
