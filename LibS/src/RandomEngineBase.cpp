@@ -1,4 +1,4 @@
-#include "../include/RandomEngineBase.h"
+#include "RandomEngineBase.h"
 
 template <>
 inline int32_t RandomEngineBase::next()

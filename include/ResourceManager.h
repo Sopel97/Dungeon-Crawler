@@ -25,9 +25,6 @@ public:
     void set(T* resource);
     const T& get() const;
 
-    const T* operator->() const;
-    T* operator->();
-
     ~ResourceHandle();
 
 protected:
@@ -89,16 +86,6 @@ template <class T>
 const T& ResourceHandle<T>::get() const
 {
     return *m_resource;
-}
-template <class T>
-const T* ResourceHandle<T>::operator->() const
-{
-    return m_resource;
-}
-template <class T>
-T* ResourceHandle<T>::operator->()
-{
-    return m_resource;
 }
 
 template <class T>
