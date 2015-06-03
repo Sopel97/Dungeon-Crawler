@@ -110,6 +110,7 @@ void Root::loadAssets()
     ResourceManager::instance().load<sf::Texture>("assets\\gfx\\spritesheet.png", "Spritesheet");
 
     ResourceManager::instance().load<Tile>("assets\\tiles\\test.tile");
+    ResourceManager::instance().load<Tile>("assets\\tiles\\test2.tile");
 }
 
 void Root::onKeyPressed(const sf::Event& event)

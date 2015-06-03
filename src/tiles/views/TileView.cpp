@@ -30,3 +30,8 @@ void TileView::setOwner(Tile* newOwner)
 {
     m_owner = newOwner;
 }
+
+int TileView::innerBorderGroup() const
+{
+    return -1;
+}

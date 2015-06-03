@@ -1,0 +1,14 @@
+tile = {
+        
+    name = "Test Wall Tile",
+    
+    model = "PlainTileModel",
+    view = "InnerBorderedWallTileView",
+    controller = "PlainTileController",
+
+    texture = "Spritesheet",
+    spriteSet = {64, 0},
+
+    innerBorderGroup = 1
+    
+}

@@ -8,7 +8,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 
-#include "make_unique.h"
+#include "../LibS/make_unique.h"
 
 Tile::Tile(std::unique_ptr<TileModel>&& model, std::unique_ptr<TileView>&& view, std::unique_ptr<TileController>&& controller) :
     m_model(std::move(model)),

@@ -28,6 +28,8 @@ public:
 
     void setOwner(Tile* newOwner);
 
+    virtual int innerBorderGroup() const;
+
     virtual std::unique_ptr<TileView> clone() const = 0;
 protected:
     Tile* m_owner;

@@ -1,6 +1,6 @@
 tile = {
         
-    name = "Test Tile",
+    name = "Test Floor Tile",
     
     model = "PlainTileModel",
     view = "PlainTileView",

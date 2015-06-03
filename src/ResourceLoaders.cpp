@@ -5,6 +5,7 @@
 
 #include "TileView.h"
 #include "PlainTileView.h"
+#include "InnerBorderedWallTileView.h"
 
 #include "TileController.h"
 #include "PlainTileController.h"
@@ -41,7 +42,8 @@ TileLoader::TileLoader()
 
     std::pair<std::string, std::unique_ptr<TileView>> _tileViews[] =
     {
-        {"PlainTileView", std::make_unique<PlainTileView>(nullptr)}
+        {"PlainTileView", std::make_unique<PlainTileView>(nullptr)},
+        {"InnerBorderedWallTileView", std::make_unique<InnerBorderedWallTileView>(nullptr)}
     };
 
     std::pair<std::string, std::unique_ptr<TileController>> _tileControllers[] =

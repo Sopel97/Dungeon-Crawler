@@ -17,12 +17,18 @@ public:
     int width() const;
     int height() const;
 
+    bool inWorldBounds(int x, int y) const;
+
     const TileStack& at(int x, int y) const;
     TileStack& at(int x, int y);
 
 protected:
     World& m_world;
+    int m_width;
+    int m_height;
     Array2<TileStack> m_tileStacks;
+
+    static TileStack m_emptyTileStack;
 };
 
 #endif // MAPLAYER_H
