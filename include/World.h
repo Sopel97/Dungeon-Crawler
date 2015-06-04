@@ -27,6 +27,13 @@ public:
 
     void moveCamera(const Geo::Vec2F& displacement);
 
+    const Camera& camera() const;
+    int width() const;
+    int height() const;
+
+    const MapLayer& map() const;
+    const MapGenerator& mapGenerator() const;
+
 protected:
     Root& m_root;
     int m_width;
@@ -34,6 +41,8 @@ protected:
     std::unique_ptr<MapLayer> m_mapLayer;
     Camera m_camera;
     MapGenerator m_mapGenerator;
+
+    static constexpr int tileSize = 32;
 };
 
 #endif // WORLD_H

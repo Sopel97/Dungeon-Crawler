@@ -43,17 +43,17 @@ void Tile::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, 
     m_view->draw(renderTarget, renderStates, x, y, z, map);
 }
 
-const std::unique_ptr<TileModel>& Tile::model() const
+const TileModel& Tile::model() const
 {
-    return m_model;
+    return *m_model;
 }
-const std::unique_ptr<TileView>& Tile::view() const
+const TileView& Tile::view() const
 {
-    return m_view;
+    return *m_view;
 }
-const std::unique_ptr<TileController>& Tile::controller() const
+const TileController& Tile::controller() const
 {
-    return m_controller;
+    return *m_controller;
 }
 
 std::unique_ptr<Tile> Tile::clone() const

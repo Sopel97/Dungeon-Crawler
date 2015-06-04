@@ -23,7 +23,7 @@ public:
 
     const TileStack& at(int x, int y) const;
     TileStack& at(int x, int y);
-    const Tile* at(int x, int y, int z) const;
+    const Tile& at(int x, int y, int z) const;
     Tile* at(int x, int y, int z);
 
 

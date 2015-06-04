@@ -28,7 +28,7 @@ public:
 
     virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, int x, int y, int z, const MapLayer& map) const;
 
-    const ResourceHandle<sf::Texture>& texture() const;
+    const sf::Texture& texture() const;
     const Geo::Vec2I& spriteSet() const;
     virtual int innerBorderGroup() const;
 

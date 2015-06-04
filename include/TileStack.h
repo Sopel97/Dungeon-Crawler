@@ -21,7 +21,7 @@ public:
     void deleteTop(); //this one deletes the tile on top
 
     bool isValid(int z) const;
-    const Tile* at(int z) const;
+    const Tile& at(int z) const;
     Tile* at(int z);
     int size() const;
 

@@ -49,9 +49,9 @@ void InnerBorderedWallTileView::draw(sf::RenderTarget& renderTarget, sf::RenderS
 {
     int group = innerBorderGroup();
 
-    bool isBottomTileGroupSame = map.at(x, y + 1, z)->view()->innerBorderGroup() == group;
-    bool isRightTileGroupSame = map.at(x + 1, y, z)->view()->innerBorderGroup() == group;
-    bool isBottomRightTileGroupSame = map.at(x, y + 1, z)->view()->innerBorderGroup() == group;
+    bool isBottomTileGroupSame = map.at(x, y + 1, z).view().innerBorderGroup() == group;
+    bool isRightTileGroupSame = map.at(x + 1, y, z).view().innerBorderGroup() == group;
+    bool isBottomRightTileGroupSame = map.at(x, y + 1, z).view().innerBorderGroup() == group;
 
     const Vec2I* resultSprite = nullptr;
 
@@ -66,16 +66,16 @@ void InnerBorderedWallTileView::draw(sf::RenderTarget& renderTarget, sf::RenderS
     {
         sf::Sprite spr;
         spr.setPosition(sf::Vector2f(x * tileSize, y * tileSize));
-        spr.setTexture(m_commonData->texture.get());
+        spr.setTexture(texture());
         spr.setTextureRect(sf::IntRect(sf::Vector2i(resultSprite->x, resultSprite->y), sf::Vector2i(tileSize, tileSize)));
         renderTarget.draw(spr, renderStates);
     }
 
 }
 
-const ResourceHandle<sf::Texture>& InnerBorderedWallTileView::texture() const
+const sf::Texture& InnerBorderedWallTileView::texture() const
 {
-    return m_commonData->texture;
+    return m_commonData->texture.get();
 }
 const Geo::Vec2I& InnerBorderedWallTileView::spriteSet() const
 {

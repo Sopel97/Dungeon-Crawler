@@ -23,7 +23,7 @@ World::World(Root& root) :
     m_width(256),
     m_height(256),
     m_mapLayer(std::make_unique<MapLayer>(*this, m_width, m_height)),
-    m_camera(Vec2F(m_width*32.0f/2.0f, m_height*32.0f/2.0f), viewWidth*32.0f, viewHeight*32.0f),
+    m_camera(Vec2F(m_width * tileSize / 2.0f, m_height * tileSize / 2.0f), viewWidth * tileSize, viewHeight * tileSize),
     m_mapGenerator()
 {
     m_mapGenerator.generate(*m_mapLayer);
@@ -39,10 +39,10 @@ void World::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
 
     Vec2F cameraTopLeft     = m_camera.position() - Vec2F(m_camera.width() / 2.0f, m_camera.height() / 2.0f);
     Vec2F cameraBottomRight = m_camera.position() + Vec2F(m_camera.width() / 2.0f, m_camera.height() / 2.0f);
-    int firstTileX = std::max(Util::fastFloor(cameraTopLeft.x/32.0f), 0);
-    int firstTileY = std::max(Util::fastFloor(cameraTopLeft.y/32.0f), 0);
-    int lastTileX = std::min(Util::fastFloor(cameraBottomRight.x/32.0f) + 1, m_width - 1);
-    int lastTileY = std::min(Util::fastFloor(cameraBottomRight.y/32.0f) + 1, m_height - 1);
+    int firstTileX = std::max(Util::fastFloor(cameraTopLeft.x / tileSize), 0);
+    int firstTileY = std::max(Util::fastFloor(cameraTopLeft.y / tileSize), 0);
+    int lastTileX = std::min(Util::fastFloor(cameraBottomRight.x / tileSize) + 1, m_width - 1);
+    int lastTileY = std::min(Util::fastFloor(cameraBottomRight.y / tileSize) + 1, m_height - 1);
 
     for(int x = firstTileX; x <= lastTileX; ++x)
     {
@@ -62,4 +62,26 @@ void World::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
 void World::moveCamera(const Geo::Vec2F& displacement)
 {
     m_camera.move(displacement);
+}
+
+const Camera& World::camera() const
+{
+    return m_camera;
+}
+int World::width() const
+{
+    return m_width;
+}
+int World::height() const
+{
+    return m_height;
+}
+
+const MapLayer& World::map() const
+{
+    return *m_mapLayer;
+}
+const MapGenerator& World::mapGenerator() const
+{
+    return m_mapGenerator;
 }

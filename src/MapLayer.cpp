@@ -57,12 +57,12 @@ TileStack& MapLayer::at(int x, int y)
     //but will ALWAYS return some TileStack so it is up to the user to pass valid x,y coordinates
     return m_tileStacks(x, y);
 }
-const Tile* MapLayer::at(int x, int y, int z) const
+const Tile& MapLayer::at(int x, int y, int z) const
 {
     const TileStack& tileStack = at(x, y);
     if(tileStack.isValid(z)) return tileStack.at(z);
 
-    return &m_emptyTile;
+    return m_emptyTile;
 }
 Tile* MapLayer::at(int x, int y, int z)
 {

@@ -26,9 +26,9 @@ public:
 
     virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, int x, int y, int z, const MapLayer& map) const;
 
-    const std::unique_ptr<TileModel>& model() const;
-    const std::unique_ptr<TileView>& view() const;
-    const std::unique_ptr<TileController>& controller() const;
+    const TileModel& model() const;
+    const TileView& view() const;
+    const TileController& controller() const;
 
     virtual std::unique_ptr<Tile> clone() const;
 protected:

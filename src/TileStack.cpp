@@ -62,10 +62,10 @@ bool TileStack::isValid(int z) const
     return m_lastTile >= z;
 }
 
-const Tile* TileStack::at(int z) const
+const Tile& TileStack::at(int z) const
 {
-    if(isValid(z)) return m_tiles[z];
-    return &m_emptyTile;
+    if(isValid(z)) return *(m_tiles[z]);
+    return m_emptyTile;
 }
 Tile* TileStack::at(int z)
 {
