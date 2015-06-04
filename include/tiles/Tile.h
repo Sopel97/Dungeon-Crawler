@@ -30,11 +30,16 @@ public:
     const TileView& view() const;
     const TileController& controller() const;
 
+    int id() const;
+
     virtual std::unique_ptr<Tile> clone() const;
 protected:
     std::unique_ptr<TileModel> m_model;
     std::unique_ptr<TileView> m_view;
     std::unique_ptr<TileController> m_controller;
+    int m_id;
+
+    static int m_lastId;
 };
 
 #endif // TILE_H
