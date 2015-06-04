@@ -26,7 +26,7 @@ public:
 
     virtual void loadFromConfiguration(ConfigurationNode& config);
 
-    virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, int x, int y, const MapLayer& map);
+    virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, int x, int y, int z, const MapLayer& map) const;
 
     const ResourceHandle<sf::Texture>& texture() const;
     const Geo::Vec2I& spriteSet() const;
@@ -37,7 +37,14 @@ protected:
     struct CommonData
     {
         ResourceHandle<sf::Texture> texture;
-        Geo::Vec2I spriteSet; //may be replaced by a list of separate sprites' positions
+
+        Geo::Vec2I spriteSet;
+        Geo::Vec2I full;
+        Geo::Vec2I top;
+        Geo::Vec2I left;
+        Geo::Vec2I topLeftConcave;
+        Geo::Vec2I topLeftConvex;
+
         int innerBorderGroup;
     };
     std::shared_ptr<CommonData> m_commonData;

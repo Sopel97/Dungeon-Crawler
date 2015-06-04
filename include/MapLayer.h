@@ -3,6 +3,8 @@
 
 #include "../LibS/Array2.h"
 
+#include "Tile.h"
+
 class World;
 class TileStack;
 
@@ -17,10 +19,13 @@ public:
     int width() const;
     int height() const;
 
-    bool inWorldBounds(int x, int y) const;
+    bool isValid(int x, int y) const;
 
     const TileStack& at(int x, int y) const;
     TileStack& at(int x, int y);
+    const Tile* at(int x, int y, int z) const;
+    Tile* at(int x, int y, int z);
+
 
 protected:
     World& m_world;
@@ -29,6 +34,7 @@ protected:
     Array2<TileStack> m_tileStacks;
 
     static TileStack m_emptyTileStack;
+    static Tile m_emptyTile;
 };
 
 #endif // MAPLAYER_H

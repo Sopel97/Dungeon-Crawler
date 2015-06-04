@@ -48,9 +48,12 @@ void World::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
     {
         for(int y = firstTileY; y <= lastTileY; ++y)
         {
-            for(auto& tile : m_mapLayer->at(x, y).tiles())
+            const TileStack& tileStack = m_mapLayer->at(x, y);
+            int z = 0;
+            for(const auto& tile : tileStack.tiles())
             {
-                tile->draw(renderTarget, renderStates, x, y, *m_mapLayer);
+                tile->draw(renderTarget, renderStates, x, y, z, *m_mapLayer);
+                ++z;
             }
         }
     }

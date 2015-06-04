@@ -38,9 +38,9 @@ void Tile::loadFromConfiguration(ConfigurationNode& config)
     m_controller->loadFromConfiguration(config);
 }
 
-void Tile::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, int x, int y, const MapLayer& map)
+void Tile::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, int x, int y, int z, const MapLayer& map) const
 {
-    m_view->draw(renderTarget, renderStates, x, y, map);
+    m_view->draw(renderTarget, renderStates, x, y, z, map);
 }
 
 const std::unique_ptr<TileModel>& Tile::model() const

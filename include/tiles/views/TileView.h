@@ -22,7 +22,7 @@ public:
 
     virtual void loadFromConfiguration(ConfigurationNode& config);
 
-    virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, int x, int y, const MapLayer& map) = 0;
+    virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, int x, int y, int z, const MapLayer& map) const;
 
     const Tile* owner() const;
 
@@ -30,9 +30,11 @@ public:
 
     virtual int innerBorderGroup() const;
 
-    virtual std::unique_ptr<TileView> clone() const = 0;
+    virtual std::unique_ptr<TileView> clone() const;
 protected:
     Tile* m_owner;
+
+    static constexpr int tileSize = 32;
 };
 
 #endif // TILEVIEW_H

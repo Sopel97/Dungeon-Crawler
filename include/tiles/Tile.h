@@ -24,7 +24,7 @@ public:
 
     void loadFromConfiguration(ConfigurationNode& config);
 
-    virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, int x, int y, const MapLayer& map);
+    virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, int x, int y, int z, const MapLayer& map) const;
 
     const std::unique_ptr<TileModel>& model() const;
     const std::unique_ptr<TileView>& view() const;

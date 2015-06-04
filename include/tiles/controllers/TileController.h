@@ -20,7 +20,7 @@ public:
 
     void setOwner(Tile* newOwner);
 
-    virtual std::unique_ptr<TileController> clone() const = 0;
+    virtual std::unique_ptr<TileController> clone() const;
 protected:
     Tile* m_owner;
 };

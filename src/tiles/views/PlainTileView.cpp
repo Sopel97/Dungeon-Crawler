@@ -45,20 +45,20 @@ void PlainTileView::loadFromConfiguration(ConfigurationNode& config)
     }
 }
 
-void PlainTileView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, int x, int y, const MapLayer& map)
+void PlainTileView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, int x, int y, int z, const MapLayer& map) const
 {
     sf::Sprite spr;
-    spr.setPosition(sf::Vector2f(x * 32.0f, y * 32.0f));
+    spr.setPosition(sf::Vector2f(x * tileSize, y * tileSize));
     spr.setTexture(m_commonData->texture.get());
-    spr.setTextureRect(sf::IntRect(sf::Vector2i(currentSprite().x, currentSprite().y), sf::Vector2i(32, 32)));
+    spr.setTextureRect(sf::IntRect(sf::Vector2i(currentSprite().x, currentSprite().y), sf::Vector2i(tileSize, tileSize)));
     renderTarget.draw(spr, renderStates);
 }
 
-const ResourceHandle<sf::Texture> PlainTileView::texture()
+const ResourceHandle<sf::Texture>& PlainTileView::texture() const
 {
     return m_commonData->texture;
 }
-const Geo::Vec2I& PlainTileView::currentSprite()
+const Geo::Vec2I& PlainTileView::currentSprite() const
 {
     return m_commonData->sprites[m_currentSprite];
 }

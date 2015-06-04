@@ -20,12 +20,18 @@ public:
 
     void deleteTop(); //this one deletes the tile on top
 
-    const std::vector<Tile*> tiles() const;
-    std::vector<Tile*> tiles();
+    bool isValid(int z) const;
+    const Tile* at(int z) const;
+    Tile* at(int z);
+    int size() const;
+
+    const std::vector<Tile*>& tiles() const;
 
 protected:
     std::vector<Tile*> m_tiles;
     int m_lastTile;
+
+    static Tile m_emptyTile;
 };
 
 #endif // TILESTACK_H

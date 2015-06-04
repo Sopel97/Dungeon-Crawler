@@ -1,6 +1,6 @@
 #include "PlainTileModel.h"
 
-#include "make_unique.h"
+#include "../LibS/make_unique.h"
 
 PlainTileModel::PlainTileModel(Tile* owner) :
     TileModel(owner)

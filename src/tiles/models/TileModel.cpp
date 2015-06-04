@@ -1,5 +1,6 @@
 #include "TileModel.h"
 
+#include "../LibS/make_unique.h"
 
 TileModel::TileModel(Tile* owner) :
     m_owner(owner)
@@ -29,4 +30,9 @@ const Tile* TileModel::owner() const
 void TileModel::setOwner(Tile* newOwner)
 {
     m_owner = newOwner;
+}
+
+std::unique_ptr<TileModel> TileModel::clone() const
+{
+    return std::make_unique<TileModel>(*this);
 }
