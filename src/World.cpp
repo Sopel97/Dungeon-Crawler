@@ -23,7 +23,7 @@ World::World(Root& root) :
     m_width(256),
     m_height(256),
     m_mapLayer(std::make_unique<MapLayer>(*this, m_width, m_height)),
-    m_camera(Vec2F(m_width * tileSize / 2.0f, m_height * tileSize / 2.0f), viewWidth * tileSize, viewHeight * tileSize),
+    m_camera(Vec2F(m_width* tileSize / 2.0f, m_height* tileSize / 2.0f), viewWidth* tileSize, viewHeight* tileSize),
     m_mapGenerator()
 {
     m_mapGenerator.generate(*m_mapLayer);
@@ -44,9 +44,10 @@ void World::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
     int lastTileX = std::min(Util::fastFloor(cameraBottomRight.x / tileSize) + 1, m_width - 1);
     int lastTileY = std::min(Util::fastFloor(cameraBottomRight.y / tileSize) + 1, m_height - 1);
 
-    for(int x = firstTileX; x <= lastTileX; ++x)
+    //x,y are inverted here because we want to draw top down
+    for(int y = firstTileY; y <= lastTileY; ++y)
     {
-        for(int y = firstTileY; y <= lastTileY; ++y)
+        for(int x = firstTileX; x <= lastTileX; ++x)
         {
             const TileStack& tileStack = m_mapLayer->at(x, y);
             int z = 0;

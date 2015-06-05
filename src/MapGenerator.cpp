@@ -21,7 +21,7 @@ void MapGenerator::generate(MapLayer& map)
     for(auto& tileStack : map.tileStacks())
     {
         tileStack.push(floor.get().clone().release());
-        if(Root::instance().rng().nextBool())
+        if(Root::instance().rng().nextFloat() < 0.4f)
         {
             tileStack.push(wall.get().clone().release());
         }
