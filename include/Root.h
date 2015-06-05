@@ -6,6 +6,8 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 
+#include "ResourceManager.h"
+
 #include "../LibS/Random.h"
 
 #include <memory>
@@ -40,6 +42,9 @@ protected:
     WindowSpaceManager m_windowSpaceManager;
     Random::CMWCEngine m_rng;
     float m_lastFrameTime;
+    int m_lastMeasuredFps;
+    int m_currentFpsCounter;
+    ResourceHandle<sf::Font> m_font;
 
     std::unique_ptr<World> m_world;
 

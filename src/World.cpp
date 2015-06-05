@@ -15,13 +15,10 @@
 
 using namespace Geo;
 
-constexpr int viewWidth = 15;
-constexpr int viewHeight = 15;
-
 World::World(Root& root) :
     m_root(root),
-    m_width(256),
-    m_height(256),
+    m_width(worldWidth),
+    m_height(worldHeight),
     m_mapLayer(std::make_unique<MapLayer>(*this, m_width, m_height)),
     m_camera(Vec2F(m_width* tileSize / 2.0f, m_height* tileSize / 2.0f), viewWidth* tileSize, viewHeight* tileSize),
     m_mapGenerator()

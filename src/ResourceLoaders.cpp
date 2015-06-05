@@ -24,7 +24,7 @@
 std::pair<std::string, void*> TextureLoader::load(const std::string& path) const
 {
     sf::Texture* texture = new sf::Texture;
-    texture->loadFromFile(path);
+    if(!texture->loadFromFile(path)) return std::make_pair(path, nullptr);
     return std::make_pair(path, texture);
 }
 TextureLoader::~TextureLoader()
@@ -110,6 +110,22 @@ std::pair<std::string, void*> TileLoader::load(const std::string& path) const
 }
 
 TileLoader::~TileLoader()
+{
+
+}
+
+
+FontLoader::FontLoader()
+{
+
+}
+std::pair<std::string, void*> FontLoader::load(const std::string& path) const
+{
+    sf::Font* font = new sf::Font;
+    if(!font->loadFromFile(path)) return std::make_pair(path, nullptr);
+    return std::make_pair(path, font);
+}
+FontLoader::~FontLoader()
 {
 
 }

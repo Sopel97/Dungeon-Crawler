@@ -8,6 +8,7 @@
 namespace sf
 {
     class Texture;
+    class Font;
 }
 class Tile;
 class TileModel;
@@ -36,4 +37,13 @@ protected:
     std::map<std::string, std::unique_ptr<TileController>> tileControllers;
 };
 
+
+class FontLoader : public ResourceLoader
+{
+public:
+    FontLoader();
+    typedef sf::Font LoadType;
+    virtual std::pair<std::string, void*> load(const std::string& path) const; //should return nullptr when resource was not loaded
+    virtual ~FontLoader();
+};
 #endif // RESOURCELOADERS_H_INCLUDED
