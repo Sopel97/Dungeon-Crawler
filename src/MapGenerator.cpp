@@ -9,6 +9,8 @@
 
 #include "Root.h"
 
+#include <cstdlib>
+
 MapGenerator::MapGenerator()
 {
 
@@ -21,7 +23,7 @@ void MapGenerator::generate(MapLayer& map)
     for(auto& tileStack : map.tileStacks())
     {
         tileStack.push(floor.get().clone().release());
-        if(Root::instance().rng().nextFloat() < 0.4f)
+        if(rand()/(float)RAND_MAX < 0.4)
         {
             tileStack.push(wall.get().clone().release());
         }
