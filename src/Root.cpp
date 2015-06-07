@@ -9,6 +9,8 @@
 
 #include "../LibS/GeometryLight.h"
 
+#include <windows.h>
+
 using namespace Geo;
 using namespace Random;
 
@@ -127,8 +129,10 @@ void Root::loadAssets()
 {
     ResourceManager::instance().load<sf::Texture>("assets\\gfx\\spritesheet.png", "Spritesheet");
 
-    ResourceManager::instance().load<Tile>("assets\\tiles\\test.tile");
-    ResourceManager::instance().load<Tile>("assets\\tiles\\test2.tile");
+    for(const auto& tile : scanForFiles("assets\\tiles\\", "*.tile"))
+    {
+        ResourceManager::instance().load<Tile>(tile);
+    }
 
     ResourceManager::instance().load<sf::Font>("assets\\fonts\\standard_font.ttf", "Font");
 }
@@ -149,5 +153,24 @@ WindowSpaceManager& Root::windowSpaceManager()
 CMWCEngine Root::rng()
 {
     return m_rng;
+}
+
+std::vector<std::string> Root::scanForFiles(const std::string& path, const std::string& query) const
+{
+    std::vector<std::string> files;
+    WIN32_FIND_DATA findFileData;
+    HANDLE hFind;
+    std::string fullPath = path + query;
+    hFind = FindFirstFile(fullPath.c_str(), &findFileData);
+    if(hFind != INVALID_HANDLE_VALUE)
+    {
+        files.push_back(path + findFileData.cFileName);
+    }
+    while(FindNextFile(hFind, &findFileData))
+    {
+        files.push_back(path + findFileData.cFileName);
+    }
+    FindClose(hFind);
+    return files;
 }
 

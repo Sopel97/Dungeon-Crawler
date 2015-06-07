@@ -11,6 +11,7 @@
 #include "../LibS/Random.h"
 
 #include <memory>
+#include <vector>
 
 class World;
 
@@ -35,6 +36,8 @@ public:
     WindowSpaceManager& windowSpaceManager();
 
     Random::CMWCEngine rng();
+
+    std::vector<std::string> scanForFiles(const std::string& path, const std::string& query) const;
 
 protected:
     sf::RenderWindow m_window;
