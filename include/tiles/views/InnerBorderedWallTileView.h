@@ -6,6 +6,8 @@
 
 #include "ResourceManager.h"
 
+#include "ResourceLoaders.h"
+
 #include "../LibS/GeometryLight.h"
 
 namespace sf
@@ -60,5 +62,7 @@ protected:
     };
     std::shared_ptr<CommonData> m_commonData;
 };
+
+REGISTER_TILE_VIEW_TYPE(InnerBorderedWallTileView)
 
 #endif // INNERBORDEREDWALLTILEVIEW_H

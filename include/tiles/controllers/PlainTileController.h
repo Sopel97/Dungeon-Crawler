@@ -3,6 +3,8 @@
 
 #include "TileController.h"
 
+#include "ResourceLoaders.h"
+
 #include <memory>
 
 class Tile;
@@ -16,5 +18,7 @@ public:
 
     virtual std::unique_ptr<TileController> clone() const;
 };
+
+REGISTER_TILE_CONTROLLER_TYPE(PlainTileController)
 
 #endif // PLAINTILECONTROLLER_H

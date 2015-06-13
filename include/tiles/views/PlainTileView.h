@@ -5,6 +5,8 @@
 
 #include "ResourceManager.h"
 
+#include "ResourceLoaders.h"
+
 #include "../LibS/GeometryLight.h"
 
 #include <vector>
@@ -45,5 +47,7 @@ protected:
     std::shared_ptr<CommonData> m_commonData;
     int m_currentSprite;
 };
+
+REGISTER_TILE_VIEW_TYPE(PlainTileView)
 
 #endif // PLAINTILEVIEW_H

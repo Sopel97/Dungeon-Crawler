@@ -1,14 +1,10 @@
 #include "ResourceLoaders.h"
 
 #include "TileModel.h"
-#include "PlainTileModel.h"
 
 #include "TileView.h"
-#include "PlainTileView.h"
-#include "InnerBorderedWallTileView.h"
 
 #include "TileController.h"
-#include "PlainTileController.h"
 
 #include "Tile.h"
 
@@ -32,28 +28,8 @@ TextureLoader::~TextureLoader()
 
 }
 
-
 TileLoader::TileLoader()
 {
-    std::pair<std::string, std::unique_ptr<TileModel>> _tileModels[] =
-    {
-        {"PlainTileModel", std::make_unique<PlainTileModel>(nullptr)}
-    };
-
-    std::pair<std::string, std::unique_ptr<TileView>> _tileViews[] =
-    {
-        {"PlainTileView", std::make_unique<PlainTileView>(nullptr)},
-        {"InnerBorderedWallTileView", std::make_unique<InnerBorderedWallTileView>(nullptr)}
-    };
-
-    std::pair<std::string, std::unique_ptr<TileController>> _tileControllers[] =
-    {
-        {"PlainTileController", std::make_unique<PlainTileController>(nullptr)}
-    };
-
-    tileModels = std::map<std::string, std::unique_ptr<TileModel>> {std::make_move_iterator(std::begin(_tileModels)),  std::make_move_iterator(std::end(_tileModels))};
-    tileViews = std::map<std::string, std::unique_ptr<TileView>> {std::make_move_iterator(std::begin(_tileViews)),  std::make_move_iterator(std::end(_tileViews))};
-    tileControllers = std::map<std::string, std::unique_ptr<TileController>> {std::make_move_iterator(std::begin(_tileControllers)),  std::make_move_iterator(std::end(_tileControllers))};
 }
 std::pair<std::string, void*> TileLoader::load(const std::string& path) const
 {
@@ -70,7 +46,7 @@ std::pair<std::string, void*> TileLoader::load(const std::string& path) const
     std::string modelName = tileConfig["model"].get<std::string>();
     try
     {
-        model = tileModels.at(modelName)->clone();
+        model = tileModels().at(modelName)->clone();
     }
     catch(std::out_of_range& e)
     {
@@ -80,7 +56,7 @@ std::pair<std::string, void*> TileLoader::load(const std::string& path) const
     std::string viewName = tileConfig["view"].get<std::string>();
     try
     {
-        view = tileViews.at(viewName)->clone();
+        view = tileViews().at(viewName)->clone();
     }
     catch(std::out_of_range& e)
     {
@@ -90,7 +66,7 @@ std::pair<std::string, void*> TileLoader::load(const std::string& path) const
     std::string controllerName = tileConfig["controller"].get<std::string>();
     try
     {
-        controller = tileControllers.at(controllerName)->clone();
+        controller = tileControllers().at(controllerName)->clone();
     }
     catch(std::out_of_range& e)
     {
@@ -105,6 +81,8 @@ std::pair<std::string, void*> TileLoader::load(const std::string& path) const
                                  );
 
     tile->loadFromConfiguration(tileConfig);
+
+    std::cout << "Loaded tile: " << tileName << " (" << modelName << ", " << viewName << ", " << controllerName << ")" << '\n';
 
     return std::make_pair(tileName, static_cast<void*>(tile.release()));
 }

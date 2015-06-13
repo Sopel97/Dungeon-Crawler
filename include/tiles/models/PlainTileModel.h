@@ -3,6 +3,8 @@
 
 #include "TileModel.h"
 
+#include "ResourceLoaders.h"
+
 #include <memory>
 
 class Tile;
@@ -17,5 +19,7 @@ public:
     virtual std::unique_ptr<TileModel> clone() const;
 protected:
 };
+
+REGISTER_TILE_MODEL_TYPE(PlainTileModel)
 
 #endif // PLAINTILEMODEL_H
