@@ -15,7 +15,13 @@
 
 using namespace Geo;
 
-MapGenerator::MapGenerator()
+MapGenerator::MapGenerator(size_t width, size_t height) :
+    m_topologyMap(width, height),
+    m_regionMap(width, height),
+    m_rectangleMap(width, height),
+    m_rectangles(width, height),
+    m_width(width),
+    m_height(height)
 {
 
 }

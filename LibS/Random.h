@@ -2,8 +2,14 @@
 #define RANDOM_H_INCLUDED
 
 #include <memory>
-#include "make_unique.h"
-
+namespace std //because it's not in C++11
+{
+    template<typename T, typename... Args>
+    std::unique_ptr<T> make_unique(Args&& ... args)
+    {
+        return std::unique_ptr<T>(new T(std::forward<Args>(args)...));
+    }
+}
 namespace Random
 {
     class RandomEngineBase;
@@ -19,6 +25,8 @@ namespace Random
     template <int I = 0> class WELL512EngineT;
     template <int I = 0> class WELL1024EngineT;
 
+    template <class StandardEngine> class StandardRandomNumberGeneratorWrapper;
+
 #include "include/RandomEngineBase.h"
 #include "include/RandomEngine.h"
 #include "include/CMWCEngine.h"
@@ -30,6 +38,8 @@ namespace Random
 
 #include "include/WELL512Engine.h"
 #include "include/WELL1024Engine.h"
+
+#include "include/StandardRandomNumberGeneratorWrapper.h"
 
 }
 

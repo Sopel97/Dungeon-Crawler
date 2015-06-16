@@ -49,7 +49,8 @@ public:
         {
             return *(m_dataCol + y);
         }
-        Col& operator= (Col && col) {
+        Col& operator= (Col && col)
+        {
             m_dataCol = col.m_dataCol;
             m_colSize = col.m_colSize;
             return *this;
@@ -63,7 +64,7 @@ public:
         Col& operator= (const std::initializer_list<T>& list)
         {
             int i = 0;
-            for(auto&& v : list)
+            for(auto && v : list)
             {
                 operator[](i) = v;
                 ++i;
@@ -102,19 +103,19 @@ public:
 
         Col previousCol(int n = 1) const
         {
-            return Col(m_dataCol - (m_colSize*n), m_colSize);
+            return Col(m_dataCol - (m_colSize * n), m_colSize);
         }
         Col nextCol(int n = 1) const
         {
-            return Col(m_dataCol + (m_colSize*n), m_colSize);
+            return Col(m_dataCol + (m_colSize * n), m_colSize);
         }
         Col& moveToPreviousCol(int n = 1)
         {
-            m_dataCol -= (m_colSize*n);
+            m_dataCol -= (m_colSize * n);
         }
         Col& moveToNextCol(int n = 1)
         {
-            m_dataCol += (m_colSize*n);
+            m_dataCol += (m_colSize * n);
         }
 
     private:
@@ -221,7 +222,7 @@ public:
         Row& operator= (const std::initializer_list<T>& list)
         {
             int i = 0;
-            for(auto&& v : list)
+            for(auto && v : list)
             {
                 operator[](i) = v;
                 ++i;
@@ -334,9 +335,9 @@ public:
         for(auto& row : list)
         {
             int x = 0;
-            for(auto&& v : row)
+            for(auto && v : row)
             {
-                at(x,y) = v;
+                at(x, y) = v;
                 ++x;
             }
             ++y;
@@ -386,6 +387,21 @@ public:
     void fill(const T& value)
     {
         std::fill(begin(), end(), value);
+    }
+    void floodFill(int x, int y, const T& value)
+    {
+        int width = m_sizeX;
+        int height = m_sizeY;
+
+        int thisCell = at(x, y);
+
+        if(value == thisCell) return;
+
+        at(x, y) = value;
+        if(x > 0 && at(x - 1, y) == thisCell) floodFill(x - 1, y, value);
+        if(y > 0 && at(x, y - 1) == thisCell) floodFill(x, y - 1, value);
+        if(x < width - 1 && at(x + 1, y) == thisCell) floodFill(x + 1, y, value);
+        if(y < height - 1 && at(x, y + 1) == thisCell) floodFill(x, y + 1, value);
     }
 
     T* data() const

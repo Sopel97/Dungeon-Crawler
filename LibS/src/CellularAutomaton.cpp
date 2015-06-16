@@ -77,20 +77,35 @@ void CellularAutomaton<Rules>::iterate(size_t times)
 }
 
 template <class Rules>
-size_t CellularAutomaton<Rules>::quantityOfStateIn3x3(States state, size_t x, size_t y) const
+size_t CellularAutomaton<Rules>::quantityOfStateIn3x3(States state, int x, int y) const
+{
+    return quantityOfStateInRadius(state, x, y, 3u);
+}
+template <class Rules>
+size_t CellularAutomaton<Rules>::quantityOfStateIn5x5(States state, int x, int y) const
+{
+    return quantityOfStateInRadius(state, x, y, 5u);
+}
+template <class Rules>
+size_t CellularAutomaton<Rules>::quantityOfStateInRadius(States state, int x, int y, size_t radius) const
+{
+    return quantityOfStateInRegion(state, static_cast<int>(x) - radius/2, static_cast<int>(y) - radius/2, radius, radius);
+}
+template <class Rules>
+size_t CellularAutomaton<Rules>::quantityOfStateInRect(States state, const RectangleI& rect) const
 {
     size_t quantity = 0u;
 
     if(m_topology == CellularAutomatonGridTopology::Finite)
     {
-        size_t xmin = std::max(x, 1u) - 1u;
-        size_t ymin = std::max(y, 1u) - 1u;
-        size_t xmax = std::min(x + 1, m_grid.sizeX() - 1u);
-        size_t ymax = std::min(y + 1, m_grid.sizeY() - 1u);
+        int xmin = std::max(rect.min.x, 0);
+        int ymin = std::max(rect.min.y, 0);
+        int xmax = std::min(rect.max.x, static_cast<int>(m_grid.sizeX() - 1));
+        int ymax = std::min(rect.max.y, static_cast<int>(m_grid.sizeY() - 1));
 
-        for(size_t xx = xmin; xx <= xmax; ++xx)
+        for(int xx = xmin; xx <= xmax; ++xx)
         {
-            for(size_t yy = ymin; yy <= ymax; ++yy)
+            for(int yy = ymin; yy <= ymax; ++yy)
             {
                 if(m_grid(xx, yy) == state) ++quantity;
             }
@@ -101,16 +116,11 @@ size_t CellularAutomaton<Rules>::quantityOfStateIn3x3(States state, size_t x, si
         int width = m_grid.sizeX();
         int height = m_grid.sizeY();
 
-        int xmin = static_cast<int>(x) - 1;
-        int ymin = static_cast<int>(y) - 1;
-        int xmax = static_cast<int>(x) + 1;
-        int ymax = static_cast<int>(y) + 1;
-
-        for(int xx = xmin; xx <= xmax; ++xx)
+        for(int xx = rect.min.x; xx <= rect.max.x; ++xx)
         {
-            for(int yy = ymin; yy <= ymax; ++yy)
+            for(int yy = rect.min.y; yy <= rect.max.y; ++yy)
             {
-                if(m_grid((xx + width) % width, (yy + height) % height) == state) ++quantity; //+width/height is to prevent undefined modulo operation on negative numbers
+                if(m_grid((xx + width) % width, (yy + height) % height) == state) ++quantity;
             }
         }
     }
@@ -118,7 +128,7 @@ size_t CellularAutomaton<Rules>::quantityOfStateIn3x3(States state, size_t x, si
     return quantity;
 }
 template <class Rules>
-size_t CellularAutomaton<Rules>::quantityOfStateInMooreNeighbourhood(States state, size_t x, size_t y) const
+size_t CellularAutomaton<Rules>::quantityOfStateInMooreNeighbourhood(States state, int x, int y) const
 {
     size_t quantity = 0u;
 
@@ -143,85 +153,12 @@ size_t CellularAutomaton<Rules>::quantityOfStateInMooreNeighbourhood(States stat
 }
 
 template <class Rules>
-size_t CellularAutomaton<Rules>::quantityOfStateInNeighbourhood(States state, size_t x, size_t y) const
+size_t CellularAutomaton<Rules>::quantityOfStateInNeighbourhood(States state, int x, int y) const
 {
-    size_t quantity = 0u;
-
-    if(m_topology == CellularAutomatonGridTopology::Finite)
-    {
-        size_t xmin = std::max(x, 1u) - 1u;
-        size_t ymin = std::max(y, 1u) - 1u;
-        size_t xmax = std::min(x + 1, m_grid.sizeX() - 1u);
-        size_t ymax = std::min(y + 1, m_grid.sizeY() - 1u);
-
-        for(size_t xx = xmin; xx <= xmax; ++xx)
-        {
-            for(size_t yy = ymin; yy <= ymax; ++yy)
-            {
-                if(xx == x && yy == y) continue;
-                if(m_grid(xx, yy) == state) ++quantity;
-            }
-        }
-    }
-    else if(m_topology == CellularAutomatonGridTopology::Toroidal)
-    {
-        int width = m_grid.sizeX();
-        int height = m_grid.sizeY();
-
-        int xmin = static_cast<int>(x) - 1;
-        int ymin = static_cast<int>(y) - 1;
-        int xmax = static_cast<int>(x) + 1;
-        int ymax = static_cast<int>(y) + 1;
-
-        for(int xx = xmin; xx <= xmax; ++xx)
-        {
-            for(int yy = ymin; yy <= ymax; ++yy)
-            {
-                int xxx = (xx + width) % width;
-                int yyy = (yy + height) % height;
-                if(xxx == static_cast<int>(x) && yyy == static_cast<int>(y)) continue;
-
-                if(m_grid(xxx, yyy) == state) ++quantity;
-            }
-        }
-    }
-
-    return quantity;
+    return quantityOfStateInRadius(state, x, y, 3u) - (m_grid(x, y) == state);
 }
 template <class Rules>
-size_t CellularAutomaton<Rules>::quantityOfStateInRegion(States state, size_t x, size_t y, size_t w, size_t h) const
+size_t CellularAutomaton<Rules>::quantityOfStateInRegion(States state, int x, int y, size_t w, size_t h) const
 {
-    size_t quantity = 0u;
-
-    if(m_topology == CellularAutomatonGridTopology::Finite)
-    {
-        size_t xmax = std::min(x + w, m_grid.sizeX() - 1);
-        size_t ymax = std::min(y + h, m_grid.sizeY() - 1);
-
-        for(size_t xx = x; xx <= xmax; ++xx)
-        {
-            for(size_t yy = y; yy <= ymax; ++yy)
-            {
-                if(m_grid(xx, yy) == state) ++quantity;
-            }
-        }
-    }
-    else if(m_topology == CellularAutomatonGridTopology::Toroidal)
-    {
-        int width = m_grid.sizeX();
-        int height = m_grid.sizeY();
-
-        size_t xmax = x + w;
-        size_t ymax = y + h;
-
-        for(int xx = x; xx <= xmax; ++xx)
-        {
-            for(int yy = y; yy <= ymax; ++yy)
-            {
-                if(m_grid(xx % width, yy % height) == state) ++quantity;
-            }
-        }
-    }
-
-    return quantity;
+    return quantityOfStateInRect(state, RectangleI(Vec2I(x, y), w - 1u, h - 1u));
 }

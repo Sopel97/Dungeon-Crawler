@@ -32,10 +32,13 @@ public:
 
     void iterate(size_t times = 1u); //can be QuantityRules or any other with proper () operator
 
-    size_t quantityOfStateIn3x3(States state, size_t x, size_t y) const; //x,y determine center of the 3x3 region
-    size_t quantityOfStateInMooreNeighbourhood(States state, size_t x, size_t y) const; //only sides
-    size_t quantityOfStateInNeighbourhood(States state, size_t x, size_t y) const; //sides and diagonals
-    size_t quantityOfStateInRegion(States state, size_t x, size_t y, size_t w, size_t h) const; //x,y determine top left of the region. w,h determine size. Does NOT check bounds
+    size_t quantityOfStateIn3x3(States state, int x, int y) const; //x,y determine center of the 3x3 region
+    size_t quantityOfStateIn5x5(States state, int x, int y) const; //x,y determine center of the 5x5 region
+    size_t quantityOfStateInRadius(States state, int x, int y, size_t radius) const; //x,y determine center of the region
+    size_t quantityOfStateInRect(States state, const RectangleI& rect) const;
+    size_t quantityOfStateInMooreNeighbourhood(States state, int x, int y) const; //only sides
+    size_t quantityOfStateInNeighbourhood(States state, int x, int y) const; //sides and diagonals
+    size_t quantityOfStateInRegion(States state, int x, int y, size_t w, size_t h) const; //x,y determine top left of the region. w,h determine size. Does NOT check bounds
 
 protected:
     Rules m_rules;
