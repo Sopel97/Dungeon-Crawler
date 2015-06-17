@@ -42,10 +42,10 @@ protected:
     Camera m_camera;
     MapGenerator m_mapGenerator;
 
-    static constexpr int viewWidth = 31;
-    static constexpr int viewHeight = 31;
-    static constexpr int worldWidth = 256;
-    static constexpr int worldHeight = 256;
+    static constexpr int viewWidth = 128;
+    static constexpr int viewHeight = 128;
+    static constexpr int worldWidth = 128;
+    static constexpr int worldHeight = 128;
     static constexpr int tileSize = 32;
 };
 
