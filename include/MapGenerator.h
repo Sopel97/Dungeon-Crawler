@@ -31,52 +31,17 @@ protected:
             Passage
         };
 
-        TopologyMap(size_t width, size_t height) :
-            m_automaton(CaveTopologyRules(), width, height, Geo::CellularAutomatonGridTopology::Toroidal),
-            m_initialAutomatonState(CaveTopologyRules(), width, height, Geo::CellularAutomatonGridTopology::Toroidal),
-            m_width(width),
-            m_height(height)
-        {
-            m_automaton.fill([width, height](size_t x, size_t y) -> TopologyState
-            {
-                if(width - x <= 2 || x <= 1 || height - y <= 2 || y <= 1) return TopologyState::Wall;
-                return (rand() / (float)RAND_MAX < 0.5 ? TopologyState::Wall : TopologyState::Passage);
-            });
-            m_initialAutomatonState = m_automaton;
-        }
+        TopologyMap(size_t width, size_t height);
 
-        TopologyState at(size_t x, size_t y) const
-        {
-            return m_automaton.cellAt(x, y);
-        }
+        TopologyState at(size_t x, size_t y) const;
 
-        void setState(size_t x, size_t y, TopologyState newState)
-        {
-            m_automaton.setCell(x, y, newState);
-        }
+        void setState(size_t x, size_t y, TopologyState newState);
 
-        void iterate(size_t times)
-        {
-            m_automaton.iterate(times);
-        }
+        void iterate(size_t times);
 
-        size_t countStates(TopologyState state)
-        {
-            size_t count = 0;
-            for(size_t x = 0; x < m_width; ++x)
-            {
-                for(size_t y = 0; y < m_height; ++y)
-                {
-                    if(m_automaton.cellAt(x, y) == state) ++count;
-                }
-            }
-            return count;
-        }
+        size_t countStates(TopologyState state);
 
-        void reset()
-        {
-            m_automaton = m_initialAutomatonState;
-        }
+        void reset();
 
     protected:
         class CaveTopologyRules
@@ -84,25 +49,9 @@ protected:
         public:
             typedef TopologyState States;
 
-            CaveTopologyRules() : m_iteration(0)
-            {
+            CaveTopologyRules();
 
-            }
-
-            States operator()(const Geo::CellularAutomaton<CaveTopologyRules>& automaton, size_t x, size_t y)
-            {
-                ++m_iteration;
-                if(m_iteration < 5)
-                {
-                    if(automaton.quantityOfStateIn3x3(States::Wall, x, y) >= 5 || automaton.quantityOfStateIn5x5(States::Wall, x, y) <= 2) return States::Wall;
-                    else return States::Passage;
-                }
-                else
-                {
-                    if(automaton.quantityOfStateIn3x3(States::Wall, x, y) >= 5) return States::Wall;
-                    else return States::Passage;
-                }
-            }
+            States operator()(const Geo::CellularAutomaton<CaveTopologyRules>& automaton, size_t x, size_t y);
         protected:
             int m_iteration; //this should be added to parameter list for operator ()
         };
@@ -115,71 +64,19 @@ protected:
     class RegionMap //-1 is wall, 0.. are regions
     {
     public:
-        RegionMap(size_t width, size_t height) :
-            m_regionIds(width, height, -1),
-            m_width(width),
-            m_height(height)
-        {
+        RegionMap(size_t width, size_t height);
 
-        }
+        void updateFromTopologyMap(const TopologyMap& topologyMap);
 
-        void updateFromTopologyMap(const TopologyMap& topologyMap)
-        {
-            m_regionIds.fill(-1);
+        int at(size_t x, size_t y) const;
 
-            for(size_t x = 0; x < m_width; ++x)
-            {
-                for(size_t y = 0; y < m_height; ++y)
-                {
-                    if(topologyMap.at(x, y) == TopologyMap::TopologyState::Passage) m_regionIds(x, y) = 0;
-                }
-            }
+        static bool isWall(int value);
 
-            int currentRegionId = 0;
-            for(size_t x = 0; x < m_width; ++x)
-            {
-                for(size_t y = 0; y < m_height; ++y)
-                {
-                    if(m_regionIds(x, y) == 0) m_regionIds.floodFill(x, y, currentRegionId++);
-                }
-            }
-            m_numberOfRegions = currentRegionId;
+        size_t numberOfRegions() const;
 
-            m_regionsSizes.clear();
-            m_regionsSizes.resize(currentRegionId);
+        const Array2<int>& regionIds() const;
 
-            for(const auto& c : m_regionIds)
-            {
-                if(!isWall(c))
-                    ++m_regionsSizes[c];
-            }
-
-        }
-
-        int at(size_t x, size_t y) const
-        {
-            return m_regionIds(x, y);
-        }
-
-        static bool isWall(int value)
-        {
-            return value == -1;
-        }
-
-        size_t numberOfRegions() const
-        {
-            return m_numberOfRegions;
-        }
-
-        const Array2<int>& regionIds() const
-        {
-            return m_regionIds;
-        }
-
-        size_t regionSize(size_t regionsId) const
-        {
-            return m_regionsSizes[regionsId];
-        }
+        size_t regionSize(size_t regionsId) const;
 
     protected:
         Array2<int> m_regionIds;
@@ -192,27 +89,21 @@ protected:
     class RectangleMap
     {
     public:
-        RectangleMap(size_t width, size_t height) :
-            m_rectangleSizes(width, height, Geo::Vec2I(0, 0)),
-            m_width(width),
-            m_height(height)
-        {
-
-        }
+        RectangleMap(size_t width, size_t height);
 
         template <class F>
         void updateFromTopologyMap(const TopologyMap& topologyMap, F rectangleSizeAdjustingFunction)
         {
-            for(int x = 0; x < m_width; ++x)
+            for(size_t x = 0; x < m_width; ++x)
             {
-                for(int y = 0; y < m_height; ++y)
+                for(size_t y = 0; y < m_height; ++y)
                 {
                     std::vector<Geo::Vec2I> localRects;
-                    int xx = x;
-                    int lastMaxY = m_height;
+                    size_t xx = x;
+                    size_t lastMaxY = m_height;
                     while(topologyMap.at(xx, y) == TopologyMap::TopologyState::Passage && xx < m_width)
                     {
-                        int yy = y;
+                        size_t yy = y;
                         while(topologyMap.at(xx, yy) == TopologyMap::TopologyState::Passage && yy < lastMaxY)
                         {
                             ++yy;
@@ -232,11 +123,7 @@ protected:
                 }
             }
         }
-
-        const Geo::Vec2I& at(size_t x, size_t y) const
-        {
-            return m_rectangleSizes(x, y);
-        }
+        const Geo::Vec2I& at(size_t x, size_t y) const;
 
     protected:
         Array2<Geo::Vec2I> m_rectangleSizes;
@@ -247,12 +134,7 @@ protected:
     class MapFillingRectangles
     {
     public:
-        MapFillingRectangles(size_t width, size_t height) :
-            m_width(width),
-            m_height(height)
-        {
-
-        }
+        MapFillingRectangles(size_t width, size_t height);
 
         template <class F>
         void updateFromRegionMapAndRectangleMap(const RegionMap& regionMap, const RectangleMap& rectangleMap, F rectangleSizeAdjustingFunction)
@@ -424,9 +306,9 @@ protected:
             {
                 for(const auto& rectangle : rectangles)
                 {
-                    for(size_t x = rectangle.min.x; x < rectangle.max.x; ++x)
+                    for(int x = rectangle.min.x; x < rectangle.max.x; ++x)
                     {
-                        for(size_t y = rectangle.min.y; y < rectangle.max.y; ++y)
+                        for(int y = rectangle.min.y; y < rectangle.max.y; ++y)
                         {
                             rectangleFillMap(x, y) = FillState::Filled;
                         }
@@ -440,7 +322,7 @@ protected:
                 {
                     if(rectangleFillMap(x, y) == FillState::Unfilled)
                     {
-                        rectanglesInRegion[regionMap.at(x, y)].push_back(Geo::RectangleI(Geo::Vec2I {x, y}, 1, 1));
+                        rectanglesInRegion[regionMap.at(x, y)].push_back(Geo::RectangleI(Geo::Vec2I(x, y), 1, 1));
                     }
                 }
             }
@@ -452,10 +334,7 @@ protected:
             }
         }
 
-        const std::vector<Geo::RectangleI>& rectangles() const
-        {
-            return m_rectangles;
-        }
+        const std::vector<Geo::RectangleI>& rectangles() const;
 
     protected:
         std::vector<Geo::RectangleI> m_rectangles;
