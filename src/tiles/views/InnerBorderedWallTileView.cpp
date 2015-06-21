@@ -187,3 +187,7 @@ std::unique_ptr<TileView> InnerBorderedWallTileView::clone() const
 {
     return std::make_unique<InnerBorderedWallTileView>(*this);
 }
+std::unique_ptr<TileView> InnerBorderedWallTileView::create(Tile* owner) const
+{
+    return std::make_unique<InnerBorderedWallTileView>(owner);
+}

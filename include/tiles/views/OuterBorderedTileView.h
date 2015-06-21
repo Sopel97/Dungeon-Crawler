@@ -42,6 +42,7 @@ public:
     virtual bool coversOuterBorders() const;
 
     virtual std::unique_ptr<TileView> clone() const;
+    virtual std::unique_ptr<TileView> create(Tile* owner) const;
 protected:
     struct CommonData
     {

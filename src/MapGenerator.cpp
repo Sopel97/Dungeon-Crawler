@@ -1,6 +1,7 @@
 #include "MapGenerator.h"
 
 #include "Tile.h"
+#include "TileView.h"
 
 #include "TileStack.h"
 #include "MapLayer.h"
@@ -389,7 +390,8 @@ void MapGenerator::generate(MapLayer& map)
     {
         for(size_t y = 0; y < m_height; ++y)
         {
-            auto& floorTileToPlace = rand()/(float)RAND_MAX < 0.5f ? floorTile : floorTile2;
+            //auto& floorTileToPlace = rand()/(float)RAND_MAX < 0.5f ? floorTile : floorTile2;
+            auto& floorTileToPlace = floorTile;
 
             auto& tileStack = map.at(x, y);
             tileStack.push(floorTileToPlace.get().clone().release());

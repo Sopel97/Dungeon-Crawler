@@ -36,3 +36,8 @@ std::unique_ptr<TileModel> TileModel::clone() const
 {
     return std::make_unique<TileModel>(*this);
 }
+
+std::unique_ptr<TileModel> TileModel::create(Tile* owner) const
+{
+    return std::make_unique<TileModel>(owner);
+}

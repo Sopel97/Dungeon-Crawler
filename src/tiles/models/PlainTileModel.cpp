@@ -21,3 +21,8 @@ std::unique_ptr<TileModel> PlainTileModel::clone() const
 {
     return std::make_unique<PlainTileModel>(*this);
 }
+
+std::unique_ptr<TileModel> PlainTileModel::create(Tile* owner) const
+{
+    return std::make_unique<PlainTileModel>(owner);
+}

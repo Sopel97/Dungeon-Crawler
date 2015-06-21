@@ -63,3 +63,7 @@ std::unique_ptr<TileView> TileView::clone() const
 {
     return std::make_unique<TileView>(*this);
 }
+std::unique_ptr<TileView> TileView::create(Tile* owner) const
+{
+    return std::make_unique<TileView>(owner);
+}

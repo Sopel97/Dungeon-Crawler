@@ -17,6 +17,7 @@ public:
     virtual ~PlainTileModel();
 
     virtual std::unique_ptr<TileModel> clone() const;
+    virtual std::unique_ptr<TileModel> create(Tile* owner) const;
 protected:
 };
 

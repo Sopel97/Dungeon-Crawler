@@ -156,3 +156,7 @@ std::unique_ptr<TileView> OuterBorderedTileView::clone() const
 {
     return std::make_unique<OuterBorderedTileView>(*this);
 }
+std::unique_ptr<TileView> OuterBorderedTileView::create(Tile* owner) const
+{
+    return std::make_unique<OuterBorderedTileView>(owner);
+}

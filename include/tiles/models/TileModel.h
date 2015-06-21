@@ -21,6 +21,7 @@ public:
     void setOwner(Tile* newOwner);
 
     virtual std::unique_ptr<TileModel> clone() const;
+    virtual std::unique_ptr<TileModel> create(Tile* owner) const;
 protected:
     Tile* m_owner;
 };

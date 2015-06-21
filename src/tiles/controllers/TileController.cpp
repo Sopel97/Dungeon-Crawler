@@ -36,3 +36,8 @@ std::unique_ptr<TileController> TileController::clone() const
 {
     return std::make_unique<TileController>(*this);
 }
+
+std::unique_ptr<TileController> TileController::create(Tile* owner) const
+{
+    return std::make_unique<TileController>(owner);
+}

@@ -17,6 +17,7 @@ public:
     virtual ~PlainTileController();
 
     virtual std::unique_ptr<TileController> clone() const;
+    virtual std::unique_ptr<TileController> create(Tile* owner) const;
 };
 
 REGISTER_TILE_CONTROLLER_TYPE(PlainTileController)

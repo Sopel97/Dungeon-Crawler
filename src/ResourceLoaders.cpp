@@ -46,7 +46,7 @@ std::pair<std::string, void*> TileLoader::load(const std::string& path) const
     std::string modelName = tileConfig["model"].get<std::string>();
     try
     {
-        model = tileModels().at(modelName)->clone();
+        model = tileModels().at(modelName)->create(nullptr);
     }
     catch(std::out_of_range& e)
     {
@@ -56,7 +56,7 @@ std::pair<std::string, void*> TileLoader::load(const std::string& path) const
     std::string viewName = tileConfig["view"].get<std::string>();
     try
     {
-        view = tileViews().at(viewName)->clone();
+        view = tileViews().at(viewName)->create(nullptr);
     }
     catch(std::out_of_range& e)
     {
@@ -66,7 +66,7 @@ std::pair<std::string, void*> TileLoader::load(const std::string& path) const
     std::string controllerName = tileConfig["controller"].get<std::string>();
     try
     {
-        controller = tileControllers().at(controllerName)->clone();
+        controller = tileControllers().at(controllerName)->create(nullptr);
     }
     catch(std::out_of_range& e)
     {
