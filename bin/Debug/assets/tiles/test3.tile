@@ -1,6 +1,6 @@
 tile = {
         
-    name = "Test Floor Tile",
+    name = "Test Floor Tile2",
     
     model = "PlainTileModel",
     view = "OuterBorderedTileView",
@@ -19,6 +19,6 @@ tile = {
 	
 	borderSprites = {160, 0},
 	
-	outerBorderPriority = 3
+	outerBorderPriority = 2
     
 }

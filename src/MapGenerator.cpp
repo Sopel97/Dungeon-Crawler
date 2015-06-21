@@ -380,6 +380,7 @@ void MapGenerator::prepareHelperMaps()
 void MapGenerator::generate(MapLayer& map)
 {
     ResourceHandle<Tile> floorTile = ResourceManager::instance().get<Tile>("Test Floor Tile");
+    ResourceHandle<Tile> floorTile2 = ResourceManager::instance().get<Tile>("Test Floor Tile2");
     ResourceHandle<Tile> wallTile = ResourceManager::instance().get<Tile>("Test Wall Tile");
 
     prepareHelperMaps();
@@ -388,8 +389,11 @@ void MapGenerator::generate(MapLayer& map)
     {
         for(size_t y = 0; y < m_height; ++y)
         {
+            auto& floorTileToPlace = rand()/(float)RAND_MAX < 0.5f ? floorTile : floorTile2;
+
             auto& tileStack = map.at(x, y);
-            tileStack.push(floorTile.get().clone().release());
+            tileStack.push(floorTileToPlace.get().clone().release());
+
             if(m_topologyMap.at(x, y) == TopologyMap::TopologyState::Wall)
                 tileStack.push(wallTile.get().clone().release());
         }

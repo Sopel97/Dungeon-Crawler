@@ -47,7 +47,8 @@ void OuterBorderedTileView::loadFromConfiguration(ConfigurationNode& config)
         weightSum += weight;
         m_commonData->spritesWeightsSums.emplace_back(weightSum);
     }
-    m_commonData->borderSprites = Vec2I{config["borderSprites"][1], config["borderSprites"][2]};
+    m_commonData->borderSprites = Vec2I{config["borderSprites"][1].get<int>(), config["borderSprites"][2].get<int>()};
+    m_commonData->outerBorderPriority = config["outerBorderPriority"].get<int>();
 }
 
 void OuterBorderedTileView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, int x, int y, int z, const MapLayer& map) const
@@ -136,6 +137,19 @@ int OuterBorderedTileView::selectRandomSprite() const
     float sumOfWeights = spritesWeightsSums.back();
 
     return std::lower_bound(spritesWeightsSums.begin(), spritesWeightsSums.end(), Root::instance().rng().nextFloat(0.0f, sumOfWeights)) - spritesWeightsSums.begin();
+}
+
+int OuterBorderedTileView::outerBorderPriority() const
+{
+    return m_commonData->outerBorderPriority;
+}
+bool OuterBorderedTileView::hasOuterBorder() const
+{
+    return true;
+}
+bool OuterBorderedTileView::coversOuterBorders() const
+{
+    return false;
 }
 
 std::unique_ptr<TileView> OuterBorderedTileView::clone() const

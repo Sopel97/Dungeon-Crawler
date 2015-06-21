@@ -54,22 +54,15 @@ void World::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
             {
                 if(z == 0)
                 {
-                    if(tile->view().hasOuterBorder())
+                    if(tile->view().coversOuterBorders())
                     {
-                        if(tile->view().coversOuterBorders())
-                        {
-                            drawOuterBorder(renderTarget, renderStates, x, y, *m_mapLayer);
-                            tile->draw(renderTarget, renderStates, x, y, z, *m_mapLayer);
-                        }
-                        else
-                        {
-                            tile->draw(renderTarget, renderStates, x, y, z, *m_mapLayer);
-                            drawOuterBorder(renderTarget, renderStates, x, y, *m_mapLayer);
-                        }
+                        drawOuterBorder(renderTarget, renderStates, x, y, *m_mapLayer);
+                        //tile->draw(renderTarget, renderStates, x, y, z, *m_mapLayer);
                     }
                     else
                     {
-                        tile->draw(renderTarget, renderStates, x, y, z, *m_mapLayer);
+                        //tile->draw(renderTarget, renderStates, x, y, z, *m_mapLayer);
+                        drawOuterBorder(renderTarget, renderStates, x, y, *m_mapLayer);
                     }
                 }
                 else
@@ -97,7 +90,7 @@ void World::drawOuterBorder(sf::RenderTarget& renderTarget, sf::RenderStates& re
             int xx = x + xoffset;
             int yy = y + yoffset;
             const Tile& tile = map.at(xx, yy, 0);
-            if(tile.view().outerBorderPriority() <= thisTileOuterBorderPriority) continue;
+            if(!tile->view().hasOuterBorder() || tile.view().outerBorderPriority() <= thisTileOuterBorderPriority) continue;
 
             bool firstSuchNeighbour = true;
             for(const auto& neighbour : differentNeigbourTiles)
