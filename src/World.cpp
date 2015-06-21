@@ -78,6 +78,7 @@ void World::drawOuterBorder(sf::RenderTarget& renderTarget, sf::RenderStates& re
     auto areTilesEqual = [](const Tile * lhs, const Tile * rhs)->bool {return lhs->id() == rhs->id();};
     auto borderPriorityCompare = [](const Tile* lhs, const Tile* rhs)->bool{return lhs->view().outerBorderPriority() < rhs->view().outerBorderPriority();};
     std::vector<const Tile*> differentNeigbourTiles;
+    int thisTileOuterBorderPriority = map.at(x, y, 0).view().outerBorderPriority();
     for(int xoffset = -1; xoffset <= 1; ++xoffset)
     {
         for(int yoffset = -1; yoffset <= 1; ++yoffset)
@@ -86,6 +87,7 @@ void World::drawOuterBorder(sf::RenderTarget& renderTarget, sf::RenderStates& re
             int xx = x + xoffset;
             int yy = y + yoffset;
             const Tile& tile = map.at(xx, yy, 0);
+            if(tile.view().outerBorderPriority() <= thisTileOuterBorderPriority) continue;
 
             bool firstSuchNeighbour = true;
             for(const auto& neighbour : differentNeigbourTiles)

@@ -17,6 +17,6 @@ tile = {
         {0, 192, 0.15}
     },
 	
-	borderSprites = {128, 0}
+	borderSprites = {160, 0}
     
 }

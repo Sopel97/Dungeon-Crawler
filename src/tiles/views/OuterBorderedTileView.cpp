@@ -2,6 +2,10 @@
 
 #include "Root.h"
 
+#include "Tile.h"
+
+#include "MapLayer.h"
+
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 
@@ -54,9 +58,64 @@ void OuterBorderedTileView::draw(sf::RenderTarget& renderTarget, sf::RenderState
     spr.setTextureRect(sf::IntRect(sf::Vector2i(currentSprite().x, currentSprite().y), sf::Vector2i(tileSize, tileSize)));
     renderTarget.draw(spr, renderStates);
 }
+
 void OuterBorderedTileView::drawOutside(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, int x, int y, int z, const MapLayer& map) const
 {
+    enum Indices
+    {
+        TopLeft = 0,
+        Top,
+        TopRight,
 
+        Left,
+        Center,
+        Right,
+
+        BottomLeft,
+        Bottom,
+        BottomRight
+    };
+
+    bool isIdSame[9];
+
+    int id = m_owner->id();
+
+    isIdSame[TopLeft]     = (map.at(x - 1, y - 1, z).id() == id);
+    isIdSame[Top]         = (map.at(x + 0, y - 1, z).id() == id);
+    isIdSame[TopRight]    = (map.at(x + 1, y - 1, z).id() == id);
+
+    isIdSame[Left]        = (map.at(x - 1, y + 0, z).id() == id);
+    isIdSame[Center]      = (map.at(x + 0, y + 0, z).id() == id);
+    isIdSame[Right]       = (map.at(x + 1, y + 0, z).id() == id);
+
+    isIdSame[BottomLeft]  = (map.at(x - 1, y + 1, z).id() == id);
+    isIdSame[Bottom]      = (map.at(x + 0, y + 1, z).id() == id);
+    isIdSame[BottomRight] = (map.at(x + 1, y + 1, z).id() == id);
+
+    size_t convexBorderSpriteIndex = 0u;
+    size_t concaveBorderSpriteIndex = 0u;
+
+    Vec2I concaveBorderSpritePosition = m_commonData->borderSprites + Vec2I{0, 32};
+
+    if(isIdSame[Left]) convexBorderSpriteIndex += 1;
+    if(isIdSame[Top]) convexBorderSpriteIndex += 2;
+    if(isIdSame[Right]) convexBorderSpriteIndex += 4;
+    if(isIdSame[Bottom]) convexBorderSpriteIndex += 8;
+
+    Vec2I convexBorderSpritePosition = m_commonData->borderSprites + Vec2I{tileSize*convexBorderSpriteIndex, 0};
+
+    sf::Sprite convexBorderSprite;
+    convexBorderSprite.setPosition(sf::Vector2f(x * tileSize, y * tileSize));
+    convexBorderSprite.setTexture(texture());
+    convexBorderSprite.setTextureRect(sf::IntRect(sf::Vector2i(convexBorderSpritePosition.x, convexBorderSpritePosition.y), sf::Vector2i(tileSize, tileSize)));
+    renderTarget.draw(convexBorderSprite, renderStates);
+/*
+    sf::Sprite concaveBorderSprite;
+    concaveBorderSprite.setPosition(sf::Vector2f(x * tileSize, y * tileSize));
+    concaveBorderSprite.setTexture(texture());
+    concaveBorderSprite.setTextureRect(sf::IntRect(sf::Vector2i(concaveBorderSpritePosition.x, concaveBorderSpritePosition.y), sf::Vector2i(tileSize, tileSize)));
+    renderTarget.draw(concaveBorderSprite, renderStates);
+    */
 }
 
 const sf::Texture& OuterBorderedTileView::texture() const
