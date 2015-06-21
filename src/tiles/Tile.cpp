@@ -46,6 +46,10 @@ void Tile::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, 
 {
     m_view->draw(renderTarget, renderStates, x, y, z, map);
 }
+void Tile::drawOutside(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, int x, int y, int z, const MapLayer& map) const
+{
+    m_view->drawOutside(renderTarget, renderStates, x, y, z, map);
+}
 
 const TileModel& Tile::model() const
 {

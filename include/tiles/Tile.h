@@ -25,6 +25,7 @@ public:
     void loadFromConfiguration(ConfigurationNode& config);
 
     virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, int x, int y, int z, const MapLayer& map) const;
+    virtual void drawOutside(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, int x, int y, int z, const MapLayer& map) const;
 
     const TileModel& model() const;
     const TileView& view() const;

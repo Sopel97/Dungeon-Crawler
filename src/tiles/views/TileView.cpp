@@ -21,6 +21,10 @@ void TileView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStat
 {
 
 }
+void TileView::drawOutside(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, int x, int y, int z, const MapLayer& map) const
+{
+
+}
 
 void TileView::loadFromConfiguration(ConfigurationNode& config)
 {
@@ -40,6 +44,19 @@ void TileView::setOwner(Tile* newOwner)
 int TileView::innerBorderGroup() const
 {
     return -1;
+}
+
+int TileView::outerBorderPriority() const
+{
+    return -1;
+}
+bool TileView::hasOuterBorder() const
+{
+    return false;
+}
+bool TileView::coversOuterBorders() const
+{
+    return true;
 }
 
 std::unique_ptr<TileView> TileView::clone() const

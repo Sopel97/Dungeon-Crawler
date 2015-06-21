@@ -3,6 +3,8 @@
 #include "Root.h"
 
 #include "Tile.h"
+#include "TileView.h"
+
 #include "TileStack.h"
 #include "MapLayer.h"
 
@@ -50,10 +52,61 @@ void World::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
             int z = 0;
             for(const auto& tile : tileStack.tiles())
             {
-                tile->draw(renderTarget, renderStates, x, y, z, *m_mapLayer);
+                if(z == 0 && tile->view().coversOuterBorders())
+                {
+                    drawOuterBorder(renderTarget, renderStates, x, y, *m_mapLayer);
+                    tile->draw(renderTarget, renderStates, x, y, z, *m_mapLayer);
+                }
+                else if(z > 0)
+                {
+                    tile->draw(renderTarget, renderStates, x, y, z, *m_mapLayer);
+                }
+                else
+                {
+                    tile->draw(renderTarget, renderStates, x, y, z, *m_mapLayer);
+                    drawOuterBorder(renderTarget, renderStates, x, y, *m_mapLayer);
+                }
+
                 ++z;
             }
         }
+    }
+}
+
+void World::drawOuterBorder(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, int x, int y, const MapLayer& map)
+{
+    auto areTilesEqual = [](const Tile * lhs, const Tile * rhs)->bool {return lhs->id() == rhs->id();};
+    auto borderPriorityCompare = [](const Tile* lhs, const Tile* rhs)->bool{return lhs->view().outerBorderPriority() < rhs->view().outerBorderPriority();};
+    std::vector<const Tile*> differentNeigbourTiles;
+    for(int xoffset = -1; xoffset <= 1; ++xoffset)
+    {
+        for(int yoffset = -1; yoffset <= 1; ++yoffset)
+        {
+            if(xoffset == yoffset) continue;
+            int xx = x + xoffset;
+            int yy = y + yoffset;
+            const Tile& tile = map.at(xx, yy, 0);
+
+            bool firstSuchNeighbour = true;
+            for(const auto& neighbour : differentNeigbourTiles)
+            {
+                if(areTilesEqual(&tile, neighbour))
+                {
+                    firstSuchNeighbour = false;
+                    break;
+                }
+            }
+            if(firstSuchNeighbour)
+            {
+                differentNeigbourTiles.push_back(&tile);
+            }
+        }
+    }
+    std::sort(differentNeigbourTiles.begin(), differentNeigbourTiles.end(), borderPriorityCompare);
+
+    for(const auto& neighbour : differentNeigbourTiles)
+    {
+        neighbour->drawOutside(renderTarget, renderStates, x, y, 0, map);
     }
 }
 

@@ -23,12 +23,16 @@ public:
     virtual void loadFromConfiguration(ConfigurationNode& config);
 
     virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, int x, int y, int z, const MapLayer& map) const;
+    virtual void drawOutside(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, int x, int y, int z, const MapLayer& map) const;
 
     const Tile* owner() const;
 
     void setOwner(Tile* newOwner);
 
     virtual int innerBorderGroup() const;
+    virtual int outerBorderPriority() const;
+    virtual bool hasOuterBorder() const;
+    virtual bool coversOuterBorders() const;
 
     virtual std::unique_ptr<TileView> clone() const;
 protected:
