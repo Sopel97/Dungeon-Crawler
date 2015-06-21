@@ -52,19 +52,29 @@ void World::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
             int z = 0;
             for(const auto& tile : tileStack.tiles())
             {
-                if(z == 0 && tile->view().coversOuterBorders())
+                if(z == 0)
                 {
-                    drawOuterBorder(renderTarget, renderStates, x, y, *m_mapLayer);
-                    tile->draw(renderTarget, renderStates, x, y, z, *m_mapLayer);
-                }
-                else if(z > 0)
-                {
-                    tile->draw(renderTarget, renderStates, x, y, z, *m_mapLayer);
+                    if(tile->view().hasOuterBorder())
+                    {
+                        if(tile->view().coversOuterBorders())
+                        {
+                            drawOuterBorder(renderTarget, renderStates, x, y, *m_mapLayer);
+                            tile->draw(renderTarget, renderStates, x, y, z, *m_mapLayer);
+                        }
+                        else
+                        {
+                            tile->draw(renderTarget, renderStates, x, y, z, *m_mapLayer);
+                            drawOuterBorder(renderTarget, renderStates, x, y, *m_mapLayer);
+                        }
+                    }
+                    else
+                    {
+                        tile->draw(renderTarget, renderStates, x, y, z, *m_mapLayer);
+                    }
                 }
                 else
                 {
                     tile->draw(renderTarget, renderStates, x, y, z, *m_mapLayer);
-                    drawOuterBorder(renderTarget, renderStates, x, y, *m_mapLayer);
                 }
 
                 ++z;
@@ -76,7 +86,7 @@ void World::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
 void World::drawOuterBorder(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, int x, int y, const MapLayer& map)
 {
     auto areTilesEqual = [](const Tile * lhs, const Tile * rhs)->bool {return lhs->id() == rhs->id();};
-    auto borderPriorityCompare = [](const Tile* lhs, const Tile* rhs)->bool{return lhs->view().outerBorderPriority() < rhs->view().outerBorderPriority();};
+    auto borderPriorityCompare = [](const Tile * lhs, const Tile * rhs)->bool {return lhs->view().outerBorderPriority() < rhs->view().outerBorderPriority();};
     std::vector<const Tile*> differentNeigbourTiles;
     int thisTileOuterBorderPriority = map.at(x, y, 0).view().outerBorderPriority();
     for(int xoffset = -1; xoffset <= 1; ++xoffset)
