@@ -43,6 +43,10 @@ void PlainTileView::loadFromConfiguration(ConfigurationNode& config)
         weightSum += weight;
         m_commonData->spritesWeightsSums.emplace_back(weightSum);
     }
+    m_commonData->outerBorderPriority = config["outerBorderPriority"].getDefault<int>(-1);
+
+    bool defaultForBorderCovering = m_commonData->outerBorderPriority == -1 ? true : false;
+    m_commonData->coversOuterBorders = config["coversOuterBorders"].getDefault<bool>(defaultForBorderCovering);
 }
 
 void PlainTileView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, int x, int y, int z, const MapLayer& map) const
@@ -61,6 +65,14 @@ const sf::Texture& PlainTileView::texture() const
 const Geo::Vec2I& PlainTileView::currentSprite() const
 {
     return m_commonData->sprites[m_currentSprite];
+}
+bool PlainTileView::coversOuterBorders() const
+{
+    return m_commonData->coversOuterBorders;
+}
+int PlainTileView::outerBorderPriority() const
+{
+    return m_commonData->outerBorderPriority;
 }
 
 int PlainTileView::selectRandomSprite() const

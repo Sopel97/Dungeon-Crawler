@@ -3,7 +3,7 @@ tile = {
     name = "Test Floor Tile2",
     
     model = "PlainTileModel",
-    view = "OuterBorderedTileView",
+    view = "PlainTileView",
     controller = "PlainTileController",
 
     texture = "Spritesheet",
@@ -16,8 +16,6 @@ tile = {
         {0, 160, 0.75},
         {0, 192, 0.15}
     },
-	
-	borderSprites = {160, 0},
 	
 	outerBorderPriority = 2
     
