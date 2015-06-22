@@ -1,6 +1,6 @@
 tile = {
         
-    name = "Test Floor Tile",
+    name = "Dirt",
     
     model = "PlainTileModel",
     view = "OuterBorderedTileView",

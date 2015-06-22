@@ -47,7 +47,7 @@ void OuterBorderedTileView::loadFromConfiguration(ConfigurationNode& config)
         weightSum += weight;
         m_commonData->spritesWeightsSums.emplace_back(weightSum);
     }
-    m_commonData->borderSprites = Vec2I{config["borderSprites"][1].get<int>(), config["borderSprites"][2].get<int>()};
+    m_commonData->borderSprites = Vec2I {config["borderSprites"][1].get<int>(), config["borderSprites"][2].get<int>()};
     m_commonData->outerBorderPriority = config["outerBorderPriority"].get<int>();
 }
 
@@ -93,30 +93,43 @@ void OuterBorderedTileView::drawOutside(sf::RenderTarget& renderTarget, sf::Rend
     isIdSame[Bottom]      = (map.at(x + 0, y + 1, z).id() == id);
     isIdSame[BottomRight] = (map.at(x + 1, y + 1, z).id() == id);
 
-    size_t convexBorderSpriteIndex = 0u;
-    size_t concaveBorderSpriteIndex = 0u;
+    int sideBorderSpriteIndex = -1;
 
-    Vec2I concaveBorderSpritePosition = m_commonData->borderSprites + Vec2I{0, 32};
+    if(isIdSame[Left]) sideBorderSpriteIndex += 1;
+    if(isIdSame[Top]) sideBorderSpriteIndex += 2;
+    if(isIdSame[Right]) sideBorderSpriteIndex += 4;
+    if(isIdSame[Bottom]) sideBorderSpriteIndex += 8;
 
-    if(isIdSame[Left]) convexBorderSpriteIndex += 1;
-    if(isIdSame[Top]) convexBorderSpriteIndex += 2;
-    if(isIdSame[Right]) convexBorderSpriteIndex += 4;
-    if(isIdSame[Bottom]) convexBorderSpriteIndex += 8;
 
-    Vec2I convexBorderSpritePosition = m_commonData->borderSprites + Vec2I{tileSize*convexBorderSpriteIndex, 0};
+    Vec2I sideBorderSpritePosition = m_commonData->borderSprites + Vec2I {tileSize * sideBorderSpriteIndex, 0};
 
-    sf::Sprite convexBorderSprite;
-    convexBorderSprite.setPosition(sf::Vector2f(x * tileSize, y * tileSize));
-    convexBorderSprite.setTexture(texture());
-    convexBorderSprite.setTextureRect(sf::IntRect(sf::Vector2i(convexBorderSpritePosition.x, convexBorderSpritePosition.y), sf::Vector2i(tileSize, tileSize)));
-    renderTarget.draw(convexBorderSprite, renderStates);
-/*
-    sf::Sprite concaveBorderSprite;
-    concaveBorderSprite.setPosition(sf::Vector2f(x * tileSize, y * tileSize));
-    concaveBorderSprite.setTexture(texture());
-    concaveBorderSprite.setTextureRect(sf::IntRect(sf::Vector2i(concaveBorderSpritePosition.x, concaveBorderSpritePosition.y), sf::Vector2i(tileSize, tileSize)));
-    renderTarget.draw(concaveBorderSprite, renderStates);
-    */
+    if(sideBorderSpriteIndex != -1)
+    {
+        sf::Sprite convexBorderSprite;
+        convexBorderSprite.setPosition(sf::Vector2f(x * tileSize, y * tileSize));
+        convexBorderSprite.setTexture(texture());
+        convexBorderSprite.setTextureRect(sf::IntRect(sf::Vector2i(sideBorderSpritePosition.x, sideBorderSpritePosition.y), sf::Vector2i(tileSize, tileSize)));
+        renderTarget.draw(convexBorderSprite, renderStates);
+    }
+
+
+    int cornerBorderSpriteIndex = -1;
+
+    if(isIdSame[TopLeft] && !isIdSame[Top] && !isIdSame[Left]) cornerBorderSpriteIndex += 1;
+    if(isIdSame[TopRight] && !isIdSame[Top] && !isIdSame[Right]) cornerBorderSpriteIndex += 2;
+    if(isIdSame[BottomRight] && !isIdSame[Bottom] && !isIdSame[Right]) cornerBorderSpriteIndex += 4;
+    if(isIdSame[BottomLeft] && !isIdSame[Bottom] && !isIdSame[Left]) cornerBorderSpriteIndex += 8;
+
+    Vec2I cornerBorderSpritePosition = m_commonData->borderSprites + Vec2I {tileSize * cornerBorderSpriteIndex, tileSize};
+
+    if(cornerBorderSpriteIndex != -1)
+    {
+        sf::Sprite concaveBorderSprite;
+        concaveBorderSprite.setPosition(sf::Vector2f(x * tileSize, y * tileSize));
+        concaveBorderSprite.setTexture(texture());
+        concaveBorderSprite.setTextureRect(sf::IntRect(sf::Vector2i(cornerBorderSpritePosition.x, cornerBorderSpritePosition.y), sf::Vector2i(tileSize, tileSize)));
+        renderTarget.draw(concaveBorderSprite, renderStates);
+    }
 }
 
 const sf::Texture& OuterBorderedTileView::texture() const

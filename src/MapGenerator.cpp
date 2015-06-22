@@ -380,9 +380,9 @@ void MapGenerator::prepareHelperMaps()
 }
 void MapGenerator::generate(MapLayer& map)
 {
-    ResourceHandle<Tile> floorTile = ResourceManager::instance().get<Tile>("Test Floor Tile");
-    ResourceHandle<Tile> floorTile2 = ResourceManager::instance().get<Tile>("Test Floor Tile2");
-    ResourceHandle<Tile> wallTile = ResourceManager::instance().get<Tile>("Test Wall Tile");
+    ResourceHandle<Tile> floorTile = ResourceManager::instance().get<Tile>("Dirt");
+    ResourceHandle<Tile> floorTile2 = ResourceManager::instance().get<Tile>("Black marble floor");
+    ResourceHandle<Tile> wallTile = ResourceManager::instance().get<Tile>("Stone wall");
 
     prepareHelperMaps();
 
@@ -390,8 +390,8 @@ void MapGenerator::generate(MapLayer& map)
     {
         for(size_t y = 0; y < m_height; ++y)
         {
-            //auto& floorTileToPlace = rand()/(float)RAND_MAX < 0.5f ? floorTile : floorTile2;
-            auto& floorTileToPlace = floorTile;
+            auto& floorTileToPlace = rand()/(float)RAND_MAX < 0.5f ? floorTile : floorTile2;
+            //auto& floorTileToPlace = floorTile;
 
             auto& tileStack = map.at(x, y);
             tileStack.push(floorTileToPlace.get().clone().release());

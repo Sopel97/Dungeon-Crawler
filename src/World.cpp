@@ -86,7 +86,7 @@ void World::drawOuterBorder(sf::RenderTarget& renderTarget, sf::RenderStates& re
     {
         for(int yoffset = -1; yoffset <= 1; ++yoffset)
         {
-            if(xoffset == yoffset) continue;
+            if(xoffset == 0 && yoffset == 0) continue;
             int xx = x + xoffset;
             int yy = y + yoffset;
             const Tile& tile = map.at(xx, yy, 0);

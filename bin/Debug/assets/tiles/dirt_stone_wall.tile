@@ -1,6 +1,6 @@
 tile = {
         
-    name = "Test Wall Tile",
+    name = "Stone wall",
     
     model = "PlainTileModel",
     view = "InnerBorderedWallTileView",
