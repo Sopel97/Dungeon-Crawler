@@ -16,7 +16,7 @@ using namespace Geo;
 OuterBorderedTileView::OuterBorderedTileView(Tile* owner) :
     TileView(owner),
     m_commonData(std::make_shared<CommonData>()),
-    m_currentSprite(0)
+    m_selectedSprite(0)
 {
 
 }
@@ -24,7 +24,7 @@ OuterBorderedTileView::OuterBorderedTileView(const OuterBorderedTileView& other)
     TileView(other),
     m_commonData(other.m_commonData)
 {
-    m_currentSprite = selectRandomSprite();
+    m_selectedSprite = selectRandomSprite();
 }
 OuterBorderedTileView::~OuterBorderedTileView()
 {
@@ -56,7 +56,7 @@ void OuterBorderedTileView::draw(sf::RenderTarget& renderTarget, sf::RenderState
     sf::Sprite spr;
     spr.setPosition(sf::Vector2f(x * tileSize, y * tileSize));
     spr.setTexture(texture());
-    spr.setTextureRect(sf::IntRect(sf::Vector2i(currentSprite().x, currentSprite().y), sf::Vector2i(tileSize, tileSize)));
+    spr.setTextureRect(sf::IntRect(sf::Vector2i(selectedSprite().x, selectedSprite().y), sf::Vector2i(tileSize, tileSize)));
     renderTarget.draw(spr, renderStates);
 }
 
@@ -136,9 +136,9 @@ const sf::Texture& OuterBorderedTileView::texture() const
 {
     return m_commonData->texture.get();
 }
-const Vec2I& OuterBorderedTileView::currentSprite() const
+const Vec2I& OuterBorderedTileView::selectedSprite() const
 {
-    return m_commonData->sprites[m_currentSprite];
+    return m_commonData->sprites[m_selectedSprite];
 }
 
 int OuterBorderedTileView::selectRandomSprite() const

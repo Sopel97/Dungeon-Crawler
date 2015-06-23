@@ -12,6 +12,7 @@
 
 #include <memory>
 #include <vector>
+#include <random>
 
 class World;
 
@@ -35,7 +36,7 @@ public:
 
     WindowSpaceManager& windowSpaceManager();
 
-    Random::CMWCEngine rng();
+    Random::StandardRandomNumberGeneratorWrapper<std::minstd_rand>& rng();
 
     std::vector<std::string> scanForFiles(const std::string& path, const std::string& query) const;
 
@@ -43,7 +44,7 @@ protected:
     sf::RenderWindow m_window;
     sf::RenderStates m_renderStates;
     WindowSpaceManager m_windowSpaceManager;
-    Random::CMWCEngine m_rng;
+    Random::StandardRandomNumberGeneratorWrapper<std::minstd_rand> m_rng;
     float m_lastFrameTime;
     int m_lastMeasuredFps;
     int m_currentFpsCounter;

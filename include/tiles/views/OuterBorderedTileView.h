@@ -33,7 +33,7 @@ public:
     virtual void drawOutside(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, int x, int y, int z, const MapLayer& map) const;
 
     const sf::Texture& texture() const;
-    const Geo::Vec2I& currentSprite() const;
+    const Geo::Vec2I& selectedSprite() const;
 
     int selectRandomSprite() const;
 
@@ -54,7 +54,7 @@ protected:
         int outerBorderPriority;
     };
     std::shared_ptr<CommonData> m_commonData;
-    int m_currentSprite;
+    int m_selectedSprite;
 };
 
 REGISTER_TILE_VIEW_TYPE(OuterBorderedTileView)

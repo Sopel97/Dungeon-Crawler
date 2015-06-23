@@ -20,6 +20,8 @@ class MapLayer;
 class World
 {
 public:
+    static constexpr int tileSize = 32; //It is set. It won't change later. Config files must assume it's 32
+
     World(Root& root);
     ~World();
 
@@ -35,6 +37,7 @@ public:
     const MapLayer& map() const;
     const MapGenerator& mapGenerator() const;
 
+    std::vector<Geo::RectangleF> queryTileColliders(const Geo::RectangleF& queryRegion) const;
 protected:
     Root& m_root;
     int m_width;
@@ -47,7 +50,6 @@ protected:
     static constexpr int viewHeight = 15;
     static constexpr int worldWidth = 128;
     static constexpr int worldHeight = 128;
-    static constexpr int tileSize = 32; //It is set. It won't change later. Config files can (and must) assume it's 32
 };
 
 #endif // WORLD_H

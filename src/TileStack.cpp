@@ -8,7 +8,7 @@
 
 #include "../LibS/make_unique.h"
 
-Tile TileStack::m_emptyTile {std::make_unique<TileModel>(nullptr), std::make_unique<TileView>(nullptr), std::make_unique<TileController>(nullptr)};
+const Tile TileStack::m_emptyTile {std::make_unique<TileModel>(nullptr), std::make_unique<TileView>(nullptr), std::make_unique<TileController>(nullptr)};
 
 TileStack::TileStack() :
     m_lastTile(-1)

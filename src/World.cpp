@@ -34,10 +34,11 @@ World::~World()
 
 void World::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
 {
-    m_root.windowSpaceManager().setViewToRegion(WindowSpaceManager::Region::World, m_camera.asRect());
+    m_root.windowSpaceManager().setViewToRegion(WindowSpaceManager::Region::World, m_camera.viewRectangle());
 
-    Vec2F cameraTopLeft     = m_camera.position() - Vec2F(m_camera.width() / 2.0f, m_camera.height() / 2.0f);
-    Vec2F cameraBottomRight = m_camera.position() + Vec2F(m_camera.width() / 2.0f, m_camera.height() / 2.0f);
+    const RectangleF cameraRect = m_camera.viewRectangle();
+    const Vec2F& cameraTopLeft     = cameraRect.min;
+    const Vec2F& cameraBottomRight = cameraRect.max;
     int firstTileX = std::max(Util::fastFloor(cameraTopLeft.x / tileSize), 0);
     int firstTileY = std::max(Util::fastFloor(cameraTopLeft.y / tileSize), 0);
     int lastTileX = std::min(Util::fastFloor(cameraBottomRight.x / tileSize) + 1, m_width - 1);
@@ -140,4 +141,9 @@ const MapLayer& World::map() const
 const MapGenerator& World::mapGenerator() const
 {
     return m_mapGenerator;
+}
+
+std::vector<RectangleF> World::queryTileColliders(const RectangleF& queryRegion) const
+{
+    return m_mapLayer->queryTileColliders(queryRegion);
 }

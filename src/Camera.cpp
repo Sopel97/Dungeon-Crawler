@@ -44,7 +44,7 @@ float Camera::height() const
     return m_height;
 }
 
-RectangleF Camera::asRect() const
+RectangleF Camera::viewRectangle() const
 {
     Vec2F halfSize = Vec2F(m_width, m_height) / 2.0f;
     return RectangleF(m_position - halfSize, m_position + halfSize);

@@ -18,7 +18,7 @@ public:
     float width() const;
     float height() const;
 
-    Geo::RectangleF asRect() const;
+    Geo::RectangleF viewRectangle() const;
 protected:
     Geo::Vec2F m_position; //center
     float m_width;

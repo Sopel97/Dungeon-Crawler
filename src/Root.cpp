@@ -150,7 +150,7 @@ WindowSpaceManager& Root::windowSpaceManager()
     return m_windowSpaceManager;
 }
 
-CMWCEngine Root::rng()
+StandardRandomNumberGeneratorWrapper<std::minstd_rand>& Root::rng()
 {
     return m_rng;
 }

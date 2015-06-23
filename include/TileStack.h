@@ -31,7 +31,7 @@ protected:
     std::vector<Tile*> m_tiles;
     int m_lastTile;
 
-    static Tile m_emptyTile;
+    static const Tile m_emptyTile;
 };
 
 #endif // TILESTACK_H

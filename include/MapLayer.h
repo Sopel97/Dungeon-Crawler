@@ -5,6 +5,8 @@
 
 #include "Tile.h"
 
+#include "../LibS/GeometryLight.h"
+
 class World;
 class TileStack;
 
@@ -26,6 +28,7 @@ public:
     const Tile& at(int x, int y, int z) const;
     Tile* at(int x, int y, int z);
 
+    std::vector<Geo::RectangleF> queryTileColliders(const Geo::RectangleF& queryRegion) const;
 
 protected:
     World& m_world;
@@ -33,8 +36,8 @@ protected:
     int m_height;
     Array2<TileStack> m_tileStacks;
 
-    static TileStack m_emptyTileStack;
-    static Tile m_emptyTile;
+    static const TileStack m_emptyTileStack;
+    static const Tile m_emptyTile;
 };
 
 #endif // MAPLAYER_H

@@ -6,8 +6,12 @@
 #include "TileView.h"
 #include "TileController.h"
 
-TileStack MapLayer::m_emptyTileStack {};
-Tile MapLayer::m_emptyTile {std::make_unique<TileModel>(nullptr), std::make_unique<TileView>(nullptr), std::make_unique<TileController>(nullptr)};
+#include "../LibS/Util.h"
+
+using namespace Geo;
+
+const TileStack MapLayer::m_emptyTileStack {};
+const Tile MapLayer::m_emptyTile {std::make_unique<TileModel>(nullptr), std::make_unique<TileView>(nullptr), std::make_unique<TileController>(nullptr)};
 
 MapLayer::MapLayer(World& world, int width, int height) :
     m_world(world),
@@ -70,4 +74,31 @@ Tile* MapLayer::at(int x, int y, int z)
     if(tileStack.isValid(z)) return tileStack.at(z);
 
     return nullptr;
+}
+
+std::vector<RectangleF> MapLayer::queryTileColliders(const RectangleF& queryRegion) const
+{
+    const Vec2F& queryRegionTopLeft     = queryRegion.min;
+    const Vec2F& queryRegionBottomRight = queryRegion.max;
+    int firstTileX = std::max(Util::fastFloor(queryRegionTopLeft.x / World::tileSize), 0);
+    int firstTileY = std::max(Util::fastFloor(queryRegionTopLeft.y / World::tileSize), 0);
+    int lastTileX = std::min(Util::fastFloor(queryRegionBottomRight.x / World::tileSize), m_width - 1);
+    int lastTileY = std::min(Util::fastFloor(queryRegionBottomRight.y / World::tileSize), m_height - 1);
+
+    std::vector<RectangleF> colliders;
+    for(int x = firstTileX; x <= lastTileX; ++x)
+    {
+        for(int y = firstTileY; y <= lastTileY; ++y)
+        {
+            const TileStack& tileStack = at(x, y);
+            for(const auto& tile : tileStack.tiles())
+            {
+                if(tile->model().hasCollider())
+                {
+                    colliders.emplace_back(tile->model().collider());
+                }
+            }
+        }
+    }
+    return colliders;
 }

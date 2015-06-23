@@ -12,14 +12,14 @@ using namespace Geo;
 PlainTileView::PlainTileView(Tile* owner) :
     TileView(owner),
     m_commonData(std::make_shared<CommonData>()),
-    m_currentSprite(0)
+    m_selectedSprite(0)
 {
 }
 PlainTileView::PlainTileView(const PlainTileView& other) :
     TileView(other),
     m_commonData(other.m_commonData)
 {
-    m_currentSprite = selectRandomSprite();
+    m_selectedSprite = selectRandomSprite();
 }
 PlainTileView::~PlainTileView()
 {
@@ -54,7 +54,7 @@ void PlainTileView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& rende
     sf::Sprite spr;
     spr.setPosition(sf::Vector2f(x * tileSize, y * tileSize));
     spr.setTexture(texture());
-    spr.setTextureRect(sf::IntRect(sf::Vector2i(currentSprite().x, currentSprite().y), sf::Vector2i(tileSize, tileSize)));
+    spr.setTextureRect(sf::IntRect(sf::Vector2i(selectedSprite().x, selectedSprite().y), sf::Vector2i(tileSize, tileSize)));
     renderTarget.draw(spr, renderStates);
 }
 
@@ -62,9 +62,9 @@ const sf::Texture& PlainTileView::texture() const
 {
     return m_commonData->texture.get();
 }
-const Geo::Vec2I& PlainTileView::currentSprite() const
+const Geo::Vec2I& PlainTileView::selectedSprite() const
 {
-    return m_commonData->sprites[m_currentSprite];
+    return m_commonData->sprites[m_selectedSprite];
 }
 bool PlainTileView::coversOuterBorders() const
 {
