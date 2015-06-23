@@ -9,6 +9,11 @@ tile = {
     texture = "Spritesheet",
     spriteSet = {32, 0},
 
-    innerBorderGroup = 1
+    innerBorderGroup = 1,
+	
+	collider = {
+		{0.0, 0.0},
+		{32.0, 32.0}
+	}
     
 }

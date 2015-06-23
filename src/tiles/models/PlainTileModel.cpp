@@ -2,8 +2,11 @@
 
 #include "../LibS/make_unique.h"
 
+using namespace Geo;
+
 PlainTileModel::PlainTileModel(Tile* owner) :
-    TileModel(owner)
+    TileModel(owner),
+    m_commonData(std::make_shared<CommonData>())
 {
 
 }
@@ -15,6 +18,32 @@ PlainTileModel::PlainTileModel(const PlainTileModel& other) :
 PlainTileModel::~PlainTileModel()
 {
 
+}
+
+void PlainTileModel::loadFromConfiguration(ConfigurationNode& config)
+{
+    ConfigurationNode colliderConfig = config["collider"];
+    if(colliderConfig.exists())
+    {
+        m_commonData->hasCollider = true;
+        m_commonData->collider = RectangleF(
+                                     Vec2F(colliderConfig[1][1].get<float>(), colliderConfig[1][2].get<float>()),
+                                     Vec2F(colliderConfig[2][1].get<float>(), colliderConfig[2][2].get<float>())
+                                 );
+    }
+    else
+    {
+        m_commonData->hasCollider = false;
+    }
+}
+
+bool PlainTileModel::hasCollider() const
+{
+    return m_commonData->hasCollider;
+}
+const RectangleF& PlainTileModel::collider() const
+{
+    return m_commonData->collider;
 }
 
 std::unique_ptr<TileModel> PlainTileModel::clone() const

@@ -47,7 +47,7 @@ protected:
     static constexpr int viewHeight = 15;
     static constexpr int worldWidth = 128;
     static constexpr int worldHeight = 128;
-    static constexpr int tileSize = 32;
+    static constexpr int tileSize = 32; //It is set. It won't change later. Config files can (and must) assume it's 32
 };
 
 #endif // WORLD_H

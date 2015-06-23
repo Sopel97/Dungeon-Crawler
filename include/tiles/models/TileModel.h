@@ -3,6 +3,8 @@
 
 #include "Configuration.h"
 
+#include "../LibS/GeometryLight.h"
+
 #include <memory>
 
 class Tile;
@@ -19,6 +21,9 @@ public:
     const Tile* owner() const;
 
     void setOwner(Tile* newOwner);
+
+    virtual bool hasCollider() const;
+    virtual const Geo::RectangleF& collider() const;
 
     virtual std::unique_ptr<TileModel> clone() const;
     virtual std::unique_ptr<TileModel> create(Tile* owner) const;

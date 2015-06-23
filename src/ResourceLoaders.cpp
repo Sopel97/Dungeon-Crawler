@@ -82,7 +82,7 @@ std::pair<std::string, void*> TileLoader::load(const std::string& path) const
 
     tile->loadFromConfiguration(tileConfig);
 
-    std::cout << "Loaded tile: " << tileName << " (" << modelName << ", " << viewName << ", " << controllerName << ")" << '\n';
+    std::cout << "\nLoaded tile: " << tileName << "\n      model: " << modelName << "\n       view: " << viewName << "\n controller: " << controllerName << '\n';
 
     return std::make_pair(tileName, static_cast<void*>(tile.release()));
 }

@@ -2,6 +2,8 @@
 
 #include "../LibS/make_unique.h"
 
+using namespace Geo;
+
 TileModel::TileModel(Tile* owner) :
     m_owner(owner)
 {
@@ -30,6 +32,15 @@ const Tile* TileModel::owner() const
 void TileModel::setOwner(Tile* newOwner)
 {
     m_owner = newOwner;
+}
+
+bool TileModel::hasCollider() const
+{
+    return false;
+}
+const RectangleF& TileModel::collider() const
+{
+    return RectangleF();
 }
 
 std::unique_ptr<TileModel> TileModel::clone() const
