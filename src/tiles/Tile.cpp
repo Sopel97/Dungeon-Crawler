@@ -1,9 +1,8 @@
 #include "Tile.h"
 
-#include "TileView.h"
 #include "TileModel.h"
-#include "TileController.h"
 #include "TileView.h"
+#include "TileController.h"
 
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>

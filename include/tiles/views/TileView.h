@@ -39,7 +39,7 @@ public:
 protected:
     Tile* m_owner;
 
-    static constexpr int tileSize = 32;
+    static constexpr int tileSize = 32; //TODO: think about what this should belong to
 };
 
 #endif // TILEVIEW_H

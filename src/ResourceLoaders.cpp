@@ -1,12 +1,14 @@
 #include "ResourceLoaders.h"
 
+#include "Tile.h"
 #include "TileModel.h"
-
 #include "TileView.h"
-
 #include "TileController.h"
 
-#include "Tile.h"
+#include "Entity.h"
+#include "EntityModel.h"
+#include "EntityView.h"
+#include "EntityController.h"
 
 #include "Configuration.h"
 
@@ -92,6 +94,68 @@ TileLoader::~TileLoader()
 
 }
 
+EntityLoader::EntityLoader()
+{
+}
+std::pair<std::string, void*> EntityLoader::load(const std::string& path) const
+{
+    Configuration config = Configuration(path);
+    ConfigurationNode entityConfig = config["entity"];
+
+    std::string entityName = entityConfig["name"].get<std::string>();
+
+    std::unique_ptr<EntityModel> model = nullptr;
+    std::unique_ptr<EntityView> view = nullptr;
+    std::unique_ptr<EntityController> controller = nullptr;
+
+    std::string modelName = entityConfig["model"].get<std::string>();
+    try
+    {
+        model = entityModels().at(modelName)->create(nullptr);
+    }
+    catch(std::out_of_range& e)
+    {
+        throw std::runtime_error("No entity model with name " + modelName);
+    }
+
+    std::string viewName = entityConfig["view"].get<std::string>();
+    try
+    {
+        view = entityViews().at(viewName)->create(nullptr);
+    }
+    catch(std::out_of_range& e)
+    {
+        throw std::runtime_error("No entity view with name " + viewName);
+    }
+
+    std::string controllerName = entityConfig["controller"].get<std::string>();
+    try
+    {
+        controller = entityControllers().at(controllerName)->create(nullptr);
+    }
+    catch(std::out_of_range& e)
+    {
+        throw std::runtime_error("No entity controller with name " + controllerName);
+    }
+
+    std::unique_ptr<Entity> entity = std::make_unique<Entity>
+                                 (
+                                     std::move(model),
+                                     std::move(view),
+                                     std::move(controller)
+                                 );
+
+    entity->loadFromConfiguration(entityConfig);
+
+    std::cout << "\nLoaded entity: " << entityName << "\n        model: " << modelName << "\n         view: " << viewName << "\n   controller: " << controllerName << '\n';
+
+    return std::make_pair(entityName, static_cast<void*>(entity.release()));
+}
+
+EntityLoader::~EntityLoader()
+{
+
+}
 
 FontLoader::FontLoader()
 {
