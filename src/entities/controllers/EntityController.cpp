@@ -32,6 +32,11 @@ void EntityController::setOwner(Entity* newOwner)
     m_owner = newOwner;
 }
 
+void EntityController::update(float dt)
+{
+
+}
+
 std::unique_ptr<EntityController> EntityController::clone() const
 {
     return std::make_unique<EntityController>(*this);

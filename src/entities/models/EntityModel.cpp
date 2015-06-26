@@ -2,6 +2,10 @@
 
 #include "../LibS/make_unique.h"
 
+using namespace Geo;
+
+Vec2F EntityModel::m_position(0.0f, 0.0f);
+
 EntityModel::EntityModel(Entity* owner) :
     m_owner(owner)
 {
@@ -38,6 +42,10 @@ bool EntityModel::hasCollider() const
 float EntityModel::colliderRadius() const
 {
     return 0.0f;
+}
+const Geo::Vec2F& EntityModel::position() const
+{
+    return m_position;
 }
 
 std::unique_ptr<EntityModel> EntityModel::clone() const

@@ -28,8 +28,11 @@ public:
     virtual void drawOutside(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, int x, int y, int z, const MapLayer& map) const;
 
     const TileModel& model() const;
+    TileModel& model();
     const TileView& view() const;
+    TileView& view();
     const TileController& controller() const;
+    TileController& controller();
 
     int id() const;
 

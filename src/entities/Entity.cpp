@@ -54,11 +54,23 @@ const EntityModel& Entity::model() const
 {
     return *m_model;
 }
+EntityModel& Entity::model()
+{
+    return *m_model;
+}
 const EntityView& Entity::view() const
 {
     return *m_view;
 }
+EntityView& Entity::view()
+{
+    return *m_view;
+}
 const EntityController& Entity::controller() const
+{
+    return *m_controller;
+}
+EntityController& Entity::controller()
 {
     return *m_controller;
 }

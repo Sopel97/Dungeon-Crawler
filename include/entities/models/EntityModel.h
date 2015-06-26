@@ -5,6 +5,8 @@
 
 #include <memory>
 
+#include "../LibS/GeometryLight.h"
+
 class Entity;
 
 class EntityModel
@@ -23,10 +25,15 @@ public:
     virtual bool hasCollider() const;
     virtual float colliderRadius() const;
 
+    virtual const Geo::Vec2F& position() const;
+
     virtual std::unique_ptr<EntityModel> clone() const;
     virtual std::unique_ptr<EntityModel> create(Entity* owner) const;
 protected:
     Entity* m_owner;
+
+private:
+    static Geo::Vec2F m_position;
 };
 
 #endif // ENTITYMODEL_H

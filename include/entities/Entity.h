@@ -27,8 +27,11 @@ public:
     virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) const;
 
     const EntityModel& model() const;
+    EntityModel& model();
     const EntityView& view() const;
+    EntityView& view();
     const EntityController& controller() const;
+    EntityController& controller();
 
     int id() const;
 

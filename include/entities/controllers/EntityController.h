@@ -20,6 +20,8 @@ public:
 
     void setOwner(Entity* newOwner);
 
+    virtual void update(float dt); //NOTE: does not move the entity!!!
+
     virtual std::unique_ptr<EntityController> clone() const;
     virtual std::unique_ptr<EntityController> create(Entity* owner) const;
 protected:

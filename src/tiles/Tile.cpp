@@ -54,11 +54,23 @@ const TileModel& Tile::model() const
 {
     return *m_model;
 }
+TileModel& Tile::model()
+{
+    return *m_model;
+}
 const TileView& Tile::view() const
 {
     return *m_view;
 }
+TileView& Tile::view()
+{
+    return *m_view;
+}
 const TileController& Tile::controller() const
+{
+    return *m_controller;
+}
+TileController& Tile::controller()
 {
     return *m_controller;
 }
