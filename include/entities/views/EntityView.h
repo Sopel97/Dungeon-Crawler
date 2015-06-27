@@ -12,7 +12,7 @@ namespace sf
 }
 class Entity;
 
-class EntityView
+class EntityView //must be functions (ie. all methods return resonable values and there is not pure virtual member functions)
 {
 public:
     EntityView(Entity* owner);

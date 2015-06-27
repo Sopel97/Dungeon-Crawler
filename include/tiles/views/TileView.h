@@ -13,7 +13,7 @@ namespace sf
 class MapLayer;
 class Tile;
 
-class TileView
+class TileView //must be functions (ie. all methods return resonable values and there is not pure virtual member functions)
 {
 public:
     TileView(Tile* owner);

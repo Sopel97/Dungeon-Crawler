@@ -7,7 +7,7 @@
 
 class Tile;
 
-class TileController
+class TileController //must be functions (ie. all methods return resonable values and there is not pure virtual member functions)
 {
 public:
     TileController(Tile* owner);

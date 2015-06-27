@@ -9,7 +9,7 @@
 
 class Tile;
 
-class TileModel
+class TileModel //must be functions (ie. all methods return resonable values and there is not pure virtual member functions)
 {
 public:
     TileModel(Tile* owner);
@@ -29,6 +29,9 @@ public:
     virtual std::unique_ptr<TileModel> create(Tile* owner) const;
 protected:
     Tile* m_owner;
+
+private:
+    static const Geo::RectangleF m_emptyCollider;
 };
 
 #endif // TILEMODEL_H

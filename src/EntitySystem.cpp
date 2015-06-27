@@ -65,11 +65,11 @@ void EntitySystem::removeEntity(Entity* entityToRemove)
     m_entities.erase(std::remove(m_entities.begin(), m_entities.end(), entityToRemove), m_entities.end());
 }
 
-void EntitySystem::updateEntities(float dt) //will also move them and resolve collisions
+void EntitySystem::updateEntities(World* world, float dt) //will also move them and resolve collisions
 {
     for(Entity* entity : m_entities)
     {
-        entity->controller().update(dt);
+        entity->controller().update(world, dt);
     }
 }
 void EntitySystem::drawVisibleEntities(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const Camera& camera)

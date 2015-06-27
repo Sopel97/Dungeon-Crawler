@@ -138,9 +138,18 @@ const MapLayer& World::map() const
 {
     return *m_mapLayer;
 }
+const EntitySystem& World::entitySystem() const
+{
+    return m_entitySystem;
+}
 const MapGenerator& World::mapGenerator() const
 {
     return m_mapGenerator;
+}
+
+void World::update(float dt)
+{
+    m_entitySystem.updateEntities(this, dt);
 }
 
 std::vector<RectangleF> World::queryTileColliders(const RectangleF& queryRegion) const

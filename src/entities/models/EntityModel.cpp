@@ -4,7 +4,7 @@
 
 using namespace Geo;
 
-Vec2F EntityModel::m_position(0.0f, 0.0f);
+const Geo::Vec2F EntityModel::m_zeroVector{0.0f, 0.0f};
 
 EntityModel::EntityModel(Entity* owner) :
     m_owner(owner)
@@ -45,9 +45,12 @@ float EntityModel::colliderRadius() const
 }
 const Geo::Vec2F& EntityModel::position() const
 {
-    return m_position;
+    return m_zeroVector;
 }
-
+const Geo::Vec2F& EntityModel::velocity() const
+{
+    return m_zeroVector;
+}
 std::unique_ptr<EntityModel> EntityModel::clone() const
 {
     return std::make_unique<EntityModel>(*this);

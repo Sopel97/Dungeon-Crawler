@@ -6,8 +6,9 @@
 #include <memory>
 
 class Entity;
+class World;
 
-class EntityController
+class EntityController //must be functions (ie. all methods return resonable values and there is not pure virtual member functions)
 {
 public:
     EntityController(Entity* owner);
@@ -20,7 +21,7 @@ public:
 
     void setOwner(Entity* newOwner);
 
-    virtual void update(float dt); //NOTE: does not move the entity!!!
+    virtual void update(World* world, float dt); //NOTE: does not move the entity!!!
 
     virtual std::unique_ptr<EntityController> clone() const;
     virtual std::unique_ptr<EntityController> create(Entity* owner) const;

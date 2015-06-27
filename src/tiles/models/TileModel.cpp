@@ -4,6 +4,8 @@
 
 using namespace Geo;
 
+const RectangleF TileModel::m_emptyCollider;
+
 TileModel::TileModel(Tile* owner) :
     m_owner(owner)
 {
@@ -40,7 +42,7 @@ bool TileModel::hasCollider() const
 }
 const RectangleF& TileModel::collider() const
 {
-    return RectangleF();
+    return m_emptyCollider;
 }
 
 std::unique_ptr<TileModel> TileModel::clone() const

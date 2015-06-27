@@ -7,6 +7,8 @@
 
 #include "Camera.h"
 
+#include "EntitySystem.h"
+
 #include "../LibS/GeometryLight.h"
 
 namespace sf
@@ -35,7 +37,10 @@ public:
     int height() const;
 
     const MapLayer& map() const;
+    const EntitySystem& entitySystem() const;
     const MapGenerator& mapGenerator() const;
+
+    void update(float dt);
 
     std::vector<Geo::RectangleF> queryTileColliders(const Geo::RectangleF& queryRegion) const;
 protected:
@@ -43,6 +48,7 @@ protected:
     int m_width;
     int m_height;
     std::unique_ptr<MapLayer> m_mapLayer;
+    EntitySystem m_entitySystem;
     Camera m_camera;
     MapGenerator m_mapGenerator;
 

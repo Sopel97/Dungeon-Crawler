@@ -10,6 +10,7 @@ namespace sf
 }
 class Entity;
 class Camera;
+class World;
 
 class EntitySystem
 {
@@ -23,7 +24,7 @@ public:
     void addEntity(Entity* newEntity);
     void removeEntity(Entity* entityToRemove);
 
-    void updateEntities(float dt);
+    void updateEntities(World* world, float dt);
     void drawVisibleEntities(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const Camera& camera);
 protected:
     std::vector<Entity*> m_entities; //eventually will be some spatial storage
