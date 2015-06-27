@@ -3,6 +3,7 @@
 
 #include <map>
 #include <vector>
+#include <list>
 #include <functional>
 #include <queue>
 #include <typeindex>
@@ -11,12 +12,23 @@
 class EventDispatcher
 {
 public:
+    template<typename EventType>
+    class EventCallbackHandle
+    {
+    public:
+        EventCallbackHandle(std::list<std::function<void(const EventType& event)>>& allCallbacks, typename std::list<std::function<void(const EventType& event)>>::iterator callback);
+        void unsubscribe();
+    protected:
+        std::list<std::function<void(const EventType& event)>>* m_allCallbacks;
+        const typename std::list<std::function<void(const EventType& event)>>::iterator m_callback; //iterator to where the callback is strored
+    };
+
     static EventDispatcher& instance();
 
     ~EventDispatcher();
 
     template <class EventType>
-    void subscribe(std::function<void(const EventType&)>&& callback);
+    EventCallbackHandle<EventType> subscribe(std::function<void(const EventType&)>&& callback);
 
     template <class EventType, class... Arguments>
     void broadcast(Arguments&& ... args);
@@ -44,7 +56,7 @@ protected:
     public:
         virtual ~SpecificDispatcher();
 
-        void subscribe(std::function<void(const EventType&)>&& callback);
+        EventCallbackHandle<EventType> subscribe(std::function<void(const EventType&)>&& callback);
 
         template <typename... Arguments>
         void broadcast(Arguments&& ... args);
@@ -56,7 +68,7 @@ protected:
 
     protected:
         std::queue<EventType> m_eventQueue;
-        std::vector<std::function<void(const EventType& event)>> m_callbacks;
+        std::list<std::function<void(const EventType& event)>> m_callbacks; //list is in order to avoid iterator invalidation which allows us to do unsubscribing in nice way
     };
 
     template<typename EventType>
@@ -74,9 +86,9 @@ class Event
 //Template members definitions
 
 template <class EventType>
-void EventDispatcher::subscribe(std::function<void(const EventType&)>&& callback)
+EventDispatcher::EventCallbackHandle<EventType> EventDispatcher::subscribe(std::function<void(const EventType&)>&& callback)
 {
-    getSpecificDispatcher<EventType>()->subscribe(std::move(callback));
+    return getSpecificDispatcher<EventType>()->subscribe(std::move(callback));
 }
 
 template <class EventType, class... Arguments>
@@ -93,9 +105,10 @@ void EventDispatcher::enqueue(Arguments&& ... args)
 
 
 template<typename EventType>
-void EventDispatcher::SpecificDispatcher<EventType>::subscribe(std::function<void(const EventType&)>&& callback)
+EventDispatcher::EventCallbackHandle<EventType> EventDispatcher::SpecificDispatcher<EventType>::subscribe(std::function<void(const EventType&)>&& callback)
 {
     m_callbacks.push_back(std::move(callback));
+    return std::next(m_callbacks.end(), -1);
 }
 
 template<typename EventType>
