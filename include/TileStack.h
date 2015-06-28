@@ -25,6 +25,8 @@ public:
     Tile* at(int z);
     int size() const;
 
+    bool isTall() const;
+
     const std::vector<Tile*>& tiles() const;
 
 protected:

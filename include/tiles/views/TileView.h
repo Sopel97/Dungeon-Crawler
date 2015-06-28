@@ -34,6 +34,8 @@ public:
     virtual bool hasOuterBorder() const;
     virtual bool coversOuterBorders() const;
 
+    virtual bool isTall() const; //tall tiles are required to have colliders
+
     virtual std::unique_ptr<TileView> clone() const;
     virtual std::unique_ptr<TileView> create(Tile* owner) const;
 protected:

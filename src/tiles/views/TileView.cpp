@@ -59,6 +59,11 @@ bool TileView::coversOuterBorders() const
     return true;
 }
 
+bool TileView::isTall() const
+{
+    return false;
+}
+
 std::unique_ptr<TileView> TileView::clone() const
 {
     return std::make_unique<TileView>(*this);

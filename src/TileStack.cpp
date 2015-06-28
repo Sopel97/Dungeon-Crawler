@@ -76,3 +76,11 @@ int TileStack::size() const
 {
     return m_lastTile + 1;
 }
+
+bool TileStack::isTall() const
+{
+    for(const Tile* tile : m_tiles)
+        if(tile->view().isTall()) return true;
+
+    return false;
+}
