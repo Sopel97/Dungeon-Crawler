@@ -4,7 +4,7 @@
 
 using namespace Geo;
 
-const RectangleF TileModel::m_emptyCollider;
+const RectangleF TileModel::m_emptyCollider(Vec2F(0.0f, 0.0f), Vec2F(32.0f, 32.0f));
 
 TileModel::TileModel(Tile* owner) :
     m_owner(owner)

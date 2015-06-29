@@ -183,6 +183,11 @@ int InnerBorderedWallTileView::innerBorderGroup() const
     return m_commonData->innerBorderGroup;
 }
 
+bool InnerBorderedWallTileView::isTall() const
+{
+    return true;
+}
+
 std::unique_ptr<TileView> InnerBorderedWallTileView::clone() const
 {
     return std::make_unique<InnerBorderedWallTileView>(*this);

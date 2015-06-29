@@ -47,6 +47,10 @@ const Geo::Vec2F& EntityModel::position() const
 {
     return m_zeroVector;
 }
+void EntityModel::setPosition(const Vec2F& newPosition)
+{
+
+}
 const Geo::Vec2F& EntityModel::velocity() const
 {
     return m_zeroVector;

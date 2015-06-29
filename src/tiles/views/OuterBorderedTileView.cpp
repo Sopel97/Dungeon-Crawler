@@ -165,11 +165,6 @@ bool OuterBorderedTileView::coversOuterBorders() const
     return false;
 }
 
-bool OuterBorderedTileView::isTall() const
-{
-    return true;
-}
-
 std::unique_ptr<TileView> OuterBorderedTileView::clone() const
 {
     return std::make_unique<OuterBorderedTileView>(*this);

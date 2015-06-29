@@ -4,11 +4,22 @@
 
 #include "Tile.h"
 #include "TileView.h"
+#include "TileModel.h"
+#include "TileController.h"
+
+#include "Entity.h"
+#include "EntityModel.h"
+#include "EntityView.h"
+#include "EntityController.h"
 
 #include "TileStack.h"
 #include "MapLayer.h"
 
 #include "WindowSpaceManager.h"
+
+#include "TallDrawable.h"
+#include "TallEntityDrawable.h"
+#include "TallTileStackDrawable.h"
 
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
@@ -26,6 +37,7 @@ World::World(Root& root) :
     m_mapGenerator(m_width, m_height)
 {
     m_mapGenerator.generate(*m_mapLayer);
+    m_entitySystem.addEntity(root.player().createPlayerEntity(), m_camera.position());
 }
 World::~World()
 {
@@ -44,6 +56,8 @@ void World::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
     int lastTileX = std::min(Util::fastFloor(cameraBottomRight.x / tileSize) + 1, m_width - 1);
     int lastTileY = std::min(Util::fastFloor(cameraBottomRight.y / tileSize) + 1, m_height - 1);
 
+    std::vector<TallDrawable*> tallDrawables;
+
     //x,y are inverted here because we want to draw top down
     for(int y = firstTileY; y <= lastTileY; ++y)
     {
@@ -53,6 +67,11 @@ void World::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
             int z = 0;
             for(const auto& tile : tileStack.tiles())
             {
+                if(tile->view().isTall())
+                {
+                    tallDrawables.push_back(new TallTileStackDrawable(tileStack, x, y, *m_mapLayer));
+                    break;
+                }
                 if(z == 0)
                 {
                     if(tile->view().coversOuterBorders())
@@ -74,6 +93,17 @@ void World::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
                 ++z;
             }
         }
+    }
+
+    for(Entity* visibleEntity : m_entitySystem.getVisibleEntities(m_camera))
+    {
+        tallDrawables.push_back(new TallEntityDrawable(visibleEntity));
+    }
+
+
+    for(auto& tallDrawable : tallDrawables) //TODO: sorting before this
+    {
+        tallDrawable->draw(renderTarget, renderStates);
     }
 }
 

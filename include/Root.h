@@ -8,6 +8,8 @@
 
 #include "ResourceManager.h"
 
+#include "Player.h"
+
 #include "../LibS/Random.h"
 
 #include <memory>
@@ -35,6 +37,7 @@ public:
     void onWindowResized(const sf::Event& event);
 
     WindowSpaceManager& windowSpaceManager();
+    Player& player();
 
     Random::StandardRandomNumberGeneratorWrapper<std::minstd_rand>& rng();
 
@@ -51,6 +54,7 @@ protected:
     ResourceHandle<sf::Font> m_font;
 
     std::unique_ptr<World> m_world;
+    Player m_player;
 
     static constexpr float m_tickTime = 1.0f / 60.0f;
     static constexpr size_t m_defaultWindowWidth = 1024;

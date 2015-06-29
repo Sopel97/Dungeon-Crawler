@@ -149,6 +149,10 @@ WindowSpaceManager& Root::windowSpaceManager()
 {
     return m_windowSpaceManager;
 }
+Player& Root::player()
+{
+    return m_player;
+}
 
 StandardRandomNumberGeneratorWrapper<std::minstd_rand>& Root::rng()
 {

@@ -1,26 +1,25 @@
-#ifndef ENTITYMODEL_H
-#define ENTITYMODEL_H
+#ifndef PLAYERMODEL_H
+#define PLAYERMODEL_H
 
-#include <Configuration.h>
+#include "EntityModel.h"
 
-#include <memory>
+#include "Configuration.h"
 
 #include "../LibS/GeometryLight.h"
 
-class Entity;
+#include "../LibS/make_unique.h"
 
-class EntityModel //must be functions (ie. all methods return resonable values and there is not pure virtual member functions)
+class Entity;
+class Player;
+
+class PlayerModel : public EntityModel
 {
 public:
-    EntityModel(Entity* owner);
-    EntityModel(const EntityModel& other);
-    virtual ~EntityModel();
+    PlayerModel(Entity* owner, Player* player);
+    PlayerModel(const PlayerModel& other);
+    virtual ~PlayerModel();
 
     virtual void loadFromConfiguration(ConfigurationNode& config);
-
-    const Entity* owner() const;
-
-    void setOwner(Entity* newOwner);
 
     virtual bool hasCollider() const;
     virtual float colliderRadius() const;
@@ -32,10 +31,9 @@ public:
     virtual std::unique_ptr<EntityModel> clone() const;
     virtual std::unique_ptr<EntityModel> create(Entity* owner) const;
 protected:
-    Entity* m_owner;
-
-private:
-    static const Geo::Vec2F m_zeroVector;
+    Player* m_playerOwner;
+    Geo::Vec2F m_position;
+    Geo::Vec2F m_velocity;
 };
 
-#endif // ENTITYMODEL_H
+#endif // PLAYERMODEL_H

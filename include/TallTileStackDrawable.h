@@ -11,7 +11,7 @@ class MapLayer;
 class TallTileStackDrawable : public TallDrawable //requires at least one tile in tile stack to be tall
 {
 public:
-    TallTileStackDrawable(TileStack& tileStack, int x, int y, MapLayer& map);
+    TallTileStackDrawable(const TileStack& tileStack, int x, int y, const MapLayer& map);
     virtual ~TallTileStackDrawable();
 
     virtual bool isTile() const;
@@ -24,10 +24,10 @@ public:
     virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
 
 protected:
-    TileStack& m_tileStack;
+    const TileStack& m_tileStack;
     int m_tileX;
     int m_tileY;
-    MapLayer& m_map;
+    const MapLayer& m_map;
 
     Geo::RectangleF m_boundingRectangle;
     Geo::Vec2F m_center;

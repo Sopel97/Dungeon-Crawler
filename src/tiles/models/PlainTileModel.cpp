@@ -11,7 +11,8 @@ PlainTileModel::PlainTileModel(Tile* owner) :
 
 }
 PlainTileModel::PlainTileModel(const PlainTileModel& other) :
-    TileModel(other)
+    TileModel(other),
+    m_commonData(other.m_commonData)
 {
 
 }

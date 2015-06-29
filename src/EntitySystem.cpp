@@ -56,9 +56,10 @@ const std::vector<Entity*>& EntitySystem::entities() const
     return m_entities;
 }
 
-void EntitySystem::addEntity(Entity* newEntity)
+void EntitySystem::addEntity(Entity* newEntity, const Geo::Vec2F& position)
 {
     m_entities.push_back(newEntity);
+    newEntity->model().setPosition(position);
 }
 void EntitySystem::removeEntity(Entity* entityToRemove)
 {
@@ -72,10 +73,7 @@ void EntitySystem::updateEntities(World* world, float dt) //will also move them 
         entity->controller().update(world, dt);
     }
 }
-void EntitySystem::drawVisibleEntities(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const Camera& camera)
+std::vector<Entity*> EntitySystem::getVisibleEntities(const Camera& camera)
 {
-    for(Entity* entity : queryRegion(camera.viewRectangle()))
-    {
-        entity->view().draw(renderTarget, renderStates);
-    }
+    return queryRegion(camera.viewRectangle());
 }

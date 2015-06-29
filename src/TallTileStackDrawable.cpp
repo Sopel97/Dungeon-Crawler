@@ -9,14 +9,14 @@
 
 using namespace Geo;
 
-TallTileStackDrawable::TallTileStackDrawable(TileStack& tileStack, int x, int y, MapLayer& map) :
+TallTileStackDrawable::TallTileStackDrawable(const TileStack& tileStack, int x, int y, const MapLayer& map) :
     m_tileStack(tileStack),
     m_tileX(x),
     m_tileY(y),
     m_map(map)
 {
     int i = 0;
-    for(auto& tile : m_tileStack.tiles())
+    for(const auto& tile : m_tileStack.tiles())
     {
         if(tile->view().isTall())
         {
@@ -61,6 +61,6 @@ void TallTileStackDrawable::draw(sf::RenderTarget& renderTarget, sf::RenderState
     int tileStackSize = m_tileStack.size();
     for(int i = m_indexOfFirstTallTile; i < tileStackSize; ++i)
     {
-        m_tileStack.at(i)->draw(renderTarget, renderStates, m_tileX, m_tileY, i, m_map);
+        m_tileStack.at(i).draw(renderTarget, renderStates, m_tileX, m_tileY, i, m_map);
     }
 }

@@ -21,11 +21,11 @@ public:
     std::vector<Entity*> queryRegion(const Geo::RectangleF& rect);
     const std::vector<Entity*>& entities() const;
 
-    void addEntity(Entity* newEntity);
+    void addEntity(Entity* newEntity, const Geo::Vec2F& position);
     void removeEntity(Entity* entityToRemove);
 
     void updateEntities(World* world, float dt);
-    void drawVisibleEntities(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const Camera& camera);
+    std::vector<Entity*> getVisibleEntities(const Camera& camera);
 protected:
     std::vector<Entity*> m_entities; //eventually will be some spatial storage
 };
