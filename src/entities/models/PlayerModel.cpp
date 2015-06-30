@@ -4,13 +4,15 @@ using namespace Geo;
 
 PlayerModel::PlayerModel(Entity* owner, Player* player) :
     EntityModel(owner),
-    m_playerOwner(player)
+    m_playerOwner(player),
+    m_directionOfMove(Direction::South)
 {
 
 }
 PlayerModel::PlayerModel(const PlayerModel& other) :
     EntityModel(other.m_owner),
-    m_playerOwner(other.m_playerOwner)
+    m_playerOwner(other.m_playerOwner),
+    m_directionOfMove(other.m_directionOfMove)
 {
 
 }
@@ -37,7 +39,7 @@ const Vec2F& PlayerModel::position() const
 {
     return m_position;
 }
-void PlayerModel::setPosition(const Vec2F& newPosition)
+void PlayerModel::setPosition(const Geo::Vec2F& newPosition)
 {
     m_position = newPosition;
 }
@@ -45,7 +47,19 @@ const Vec2F& PlayerModel::velocity() const
 {
     return m_velocity;
 }
+void PlayerModel::setVelocity(const Geo::Vec2F& newVelocity)
+{
+    m_velocity = newVelocity;
+}
 
+EntityModel::Direction PlayerModel::directionOfMove() const
+{
+    return m_directionOfMove;
+}
+void PlayerModel::setDirectionOfMove(EntityModel::Direction newDirection)
+{
+    m_directionOfMove = newDirection;
+}
 std::unique_ptr<EntityModel> PlayerModel::clone() const
 {
     return std::make_unique<PlayerModel>(*this);

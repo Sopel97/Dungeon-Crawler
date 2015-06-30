@@ -32,7 +32,7 @@ public:
     void initResourceLoaders();
     void loadAssets();
 
-    void processAsyncKeyboardInput();
+    void processAsyncKeyboardInput(float dt);
     void onKeyPressed(const sf::Event& event);
     void onWindowResized(const sf::Event& event);
 

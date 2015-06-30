@@ -37,12 +37,14 @@ void PlayerView::loadFromConfiguration(ConfigurationNode& config)
 void PlayerView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) const
 {
     static const Vec2I spriteOffset = Vec2I(-25, -26);
+    const int direction = m_owner->model().directionOfMove();
+
     const Vec2F position = m_owner->model().position();
     const Vec2I spriteSize(32, 32);
     sf::Sprite spr;
     spr.setPosition(sf::Vector2f(position.x + spriteOffset.x, position.y + spriteOffset.y));
     spr.setTexture(texture());
-    spr.setTextureRect(sf::IntRect(sf::Vector2i(m_sprites.x, m_sprites.y), sf::Vector2i(spriteSize.x, spriteSize.y)));
+    spr.setTextureRect(sf::IntRect(sf::Vector2i(m_sprites.x, m_sprites.y + direction * 32), sf::Vector2i(spriteSize.x, spriteSize.y)));
     renderTarget.draw(spr, renderStates);
 }
 

@@ -37,7 +37,8 @@ World::World(Root& root) :
     m_mapGenerator(m_width, m_height)
 {
     m_mapGenerator.generate(*m_mapLayer);
-    m_entitySystem.addEntity(root.player().createPlayerEntity(), m_camera.position());
+    m_playerEntity = root.player().createPlayerEntity();
+    m_entitySystem.addEntity(m_playerEntity, m_camera.position());
 }
 World::~World()
 {
@@ -180,6 +181,8 @@ const MapGenerator& World::mapGenerator() const
 void World::update(float dt)
 {
     m_entitySystem.updateEntities(this, dt);
+
+    m_camera.setPosition(m_playerEntity->model().position());
 }
 
 std::vector<RectangleF> World::queryTileColliders(const RectangleF& queryRegion) const

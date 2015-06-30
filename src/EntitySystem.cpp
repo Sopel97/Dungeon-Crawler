@@ -72,6 +72,13 @@ void EntitySystem::updateEntities(World* world, float dt) //will also move them 
     {
         entity->controller().update(world, dt);
     }
+
+    //TODO: resolving collisions
+
+    for(Entity* entity : m_entities)
+    {
+        entity->controller().move(Geo::Vec2F{1.0f, 1.0f}, dt);
+    }
 }
 std::vector<Entity*> EntitySystem::getVisibleEntities(const Camera& camera)
 {

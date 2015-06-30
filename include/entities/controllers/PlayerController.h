@@ -22,10 +22,15 @@ public:
 
     virtual void update(World* world, float dt);
 
+    virtual void move(const Geo::Vec2F& factor, float dt);
+    virtual void accelerate(const Geo::Vec2F& dv);
+
     virtual std::unique_ptr<EntityController> clone() const;
     virtual std::unique_ptr<EntityController> create(Entity* owner) const;
+
 protected:
     Player* m_playerOwner;
+    bool m_acceleratedInLastFrame;
 };
 
 #endif // PLAYERCONTROLLER_H

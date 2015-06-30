@@ -51,6 +51,7 @@ protected:
     EntitySystem m_entitySystem;
     Camera m_camera;
     MapGenerator m_mapGenerator;
+    Entity* m_playerEntity;
 
     static constexpr int viewWidth = 15;
     static constexpr int viewHeight = 15;

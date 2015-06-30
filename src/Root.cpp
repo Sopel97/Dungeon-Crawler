@@ -35,7 +35,7 @@ Root& Root::instance()
 
 void Root::tick(float dt)
 {
-
+    m_world->update(dt);
 }
 
 void Root::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
@@ -79,8 +79,8 @@ void Root::run()
 
         sf::Time elapsedTime = clock.getElapsedTime();
         float time = elapsedTime.asSeconds();
-        float dt = time - lastDraw;
-        m_lastFrameTime = dt;
+        float dt = time - lastTick; //delta time is for the tick
+        m_lastFrameTime = time - lastDraw;
 
         while(m_window.pollEvent(event))
         {
@@ -90,7 +90,7 @@ void Root::run()
         }
         if(time >= m_tickTime + lastTick)
         {
-            if(m_window.hasFocus()) processAsyncKeyboardInput();
+            if(m_window.hasFocus()) processAsyncKeyboardInput(dt);
             tick(dt);
             lastTick = time;
         }
@@ -110,13 +110,9 @@ void Root::run()
     }
 
 }
-void Root::processAsyncKeyboardInput()
+void Root::processAsyncKeyboardInput(float dt)
 {
-    constexpr float speed = 5.0f;
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) m_world->moveCamera(Vec2F(-speed, 0.0f)); //just for testing
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) m_world->moveCamera(Vec2F(speed, 0.0f));
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) m_world->moveCamera(Vec2F(0.0f, -speed));
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) m_world->moveCamera(Vec2F(0.0f, speed));
+    m_player.processAsyncKeyboardInput(dt);
 }
 void Root::initResourceLoaders()
 {

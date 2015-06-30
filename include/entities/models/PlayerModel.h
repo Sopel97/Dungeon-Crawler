@@ -27,6 +27,10 @@ public:
     virtual const Geo::Vec2F& position() const;
     virtual void setPosition(const Geo::Vec2F& newPosition);
     virtual const Geo::Vec2F& velocity() const;
+    virtual void setVelocity(const Geo::Vec2F& newVelocity);
+
+    virtual EntityModel::Direction directionOfMove() const;
+    virtual void setDirectionOfMove(EntityModel::Direction newDirection);
 
     virtual std::unique_ptr<EntityModel> clone() const;
     virtual std::unique_ptr<EntityModel> create(Entity* owner) const;
@@ -34,6 +38,7 @@ protected:
     Player* m_playerOwner;
     Geo::Vec2F m_position;
     Geo::Vec2F m_velocity;
+    Direction m_directionOfMove;
 };
 
 #endif // PLAYERMODEL_H

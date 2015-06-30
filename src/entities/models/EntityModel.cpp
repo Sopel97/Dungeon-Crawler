@@ -4,7 +4,7 @@
 
 using namespace Geo;
 
-const Geo::Vec2F EntityModel::m_zeroVector{0.0f, 0.0f};
+const Geo::Vec2F EntityModel::m_someVector{0.0f, 0.0f};
 
 EntityModel::EntityModel(Entity* owner) :
     m_owner(owner)
@@ -45,15 +45,28 @@ float EntityModel::colliderRadius() const
 }
 const Geo::Vec2F& EntityModel::position() const
 {
-    return m_zeroVector;
+    return m_someVector;
 }
-void EntityModel::setPosition(const Vec2F& newPosition)
+void EntityModel::setPosition(const Geo::Vec2F& newPosition)
 {
 
 }
 const Geo::Vec2F& EntityModel::velocity() const
 {
-    return m_zeroVector;
+    return m_someVector;
+}
+void EntityModel::setVelocity(const Geo::Vec2F& newVelocity)
+{
+
+}
+
+EntityModel::Direction EntityModel::directionOfMove() const
+{
+    return Direction::South;
+}
+void EntityModel::setDirectionOfMove(EntityModel::Direction newDirection)
+{
+
 }
 std::unique_ptr<EntityModel> EntityModel::clone() const
 {
