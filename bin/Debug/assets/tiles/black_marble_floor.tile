@@ -17,6 +17,8 @@ tile = {
         {0+32*6, 224}
     },
 	
-	outerBorderPriority = 2
+	outerBorderPriority = 2,
+
+    drag = 0.92
     
 }

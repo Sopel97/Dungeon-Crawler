@@ -36,6 +36,8 @@ void PlainTileModel::loadFromConfiguration(ConfigurationNode& config)
     {
         m_commonData->hasCollider = false;
     }
+
+    m_commonData->drag = config["drag"].get<float>();
 }
 
 bool PlainTileModel::hasCollider() const
@@ -45,6 +47,11 @@ bool PlainTileModel::hasCollider() const
 const RectangleF& PlainTileModel::collider() const
 {
     return m_commonData->collider;
+}
+
+float PlainTileModel::drag() const
+{
+    return  m_commonData->drag;
 }
 
 std::unique_ptr<TileModel> PlainTileModel::clone() const

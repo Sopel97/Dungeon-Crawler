@@ -29,6 +29,9 @@ public:
     virtual const Geo::Vec2F& velocity() const;
     virtual void setVelocity(const Geo::Vec2F& newVelocity);
 
+    virtual float minSpeed() const;
+    virtual float maxSpeed() const;
+
     virtual EntityModel::Direction directionOfMove() const;
     virtual void setDirectionOfMove(EntityModel::Direction newDirection);
 

@@ -147,7 +147,7 @@ void World::drawOuterBorder(sf::RenderTarget& renderTarget, sf::RenderStates& re
     }
 }
 
-void World::moveCamera(const Geo::Vec2F& displacement)
+void World::moveCamera(const Vec2F& displacement)
 {
     m_camera.move(displacement);
 }
@@ -178,11 +178,24 @@ const MapGenerator& World::mapGenerator() const
     return m_mapGenerator;
 }
 
+Vec2I World::worldToTile(const Vec2F& position) const
+{
+    return Vec2I(position.x / tileSize, position.y / tileSize);
+}
+
 void World::update(float dt)
 {
     m_entitySystem.updateEntities(this, dt);
 
     m_camera.setPosition(m_playerEntity->model().position());
+}
+
+float World::drag(const Vec2F& position) const
+{
+    Vec2I tilePosition = worldToTile(position);
+    const TileStack& tileStack = m_mapLayer->at(tilePosition.x, tilePosition.y);
+    const Tile& tile = tileStack.at(0);
+    return tile.model().drag();
 }
 
 std::vector<RectangleF> World::queryTileColliders(const RectangleF& queryRegion) const

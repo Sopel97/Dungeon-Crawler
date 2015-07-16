@@ -112,7 +112,7 @@ void Root::run()
 }
 void Root::processAsyncKeyboardInput(float dt)
 {
-    m_player.processAsyncKeyboardInput(dt);
+    m_player.processAsyncKeyboardInput(m_world.get(), dt);
 }
 void Root::initResourceLoaders()
 {

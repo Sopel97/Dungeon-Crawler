@@ -25,6 +25,8 @@ public:
     virtual bool hasCollider() const;
     virtual const Geo::RectangleF& collider() const;
 
+    virtual float drag() const;
+
     virtual std::unique_ptr<TileModel> clone() const;
     virtual std::unique_ptr<TileModel> create(Tile* owner) const;
 protected:

@@ -19,6 +19,8 @@ tile = {
 	
 	borderSprites = {160, 0},
 	
-	outerBorderPriority = 3
+	outerBorderPriority = 3,
+
+    drag = 0.98
     
 }

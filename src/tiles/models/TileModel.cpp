@@ -45,6 +45,11 @@ const RectangleF& TileModel::collider() const
     return m_emptyCollider;
 }
 
+float TileModel::drag() const
+{
+    return 1.0f;
+}
+
 std::unique_ptr<TileModel> TileModel::clone() const
 {
     return std::make_unique<TileModel>(*this);

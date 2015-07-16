@@ -40,7 +40,11 @@ public:
     const EntitySystem& entitySystem() const;
     const MapGenerator& mapGenerator() const;
 
+    Geo::Vec2I worldToTile(const Geo::Vec2F& position) const;
+
     void update(float dt);
+
+    float drag(const Geo::Vec2F& position) const;
 
     std::vector<Geo::RectangleF> queryTileColliders(const Geo::RectangleF& queryRegion) const;
 protected:

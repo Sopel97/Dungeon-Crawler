@@ -9,6 +9,8 @@
 
 #include "../LibS/GeometryLight.h"
 
+#include <cmath>
+
 using namespace Geo;
 
 PlayerController::PlayerController(Entity* owner, Player* player) :
@@ -39,11 +41,25 @@ void PlayerController::update(World* world, float dt)
 {
     auto& model = m_owner->model();
     Vec2F velocity = model.velocity();
+    const Vec2F& position = model.position();
+    float minSpeed = model.minSpeed();
+    float maxSpeed = model.maxSpeed();
+
+    float speed = velocity.magnitude();
+    if(speed > maxSpeed)
+    {
+        velocity *= maxSpeed/speed;
+    }
     if(!m_acceleratedInLastFrame)
     {
-        velocity *= 0.8;
-        if(velocity.magnitude() < 1.0f) velocity = Vec2F(0.0f, 0.0f);
+        velocity *= std::pow(1.0f-world->drag(position), dt);
+        if(velocity.magnitude() < minSpeed) velocity = Vec2F(0.0f, 0.0f);
     }
+
+    if(velocity.x < -0.01f && std::abs(velocity.x) > std::abs(velocity.y)) model.setDirectionOfMove(EntityModel::Direction::West);
+    if(velocity.x > 0.01f && std::abs(velocity.x) > std::abs(velocity.y))  model.setDirectionOfMove(EntityModel::Direction::East);
+    if(velocity.y < -0.01f && std::abs(velocity.y) > std::abs(velocity.x)) model.setDirectionOfMove(EntityModel::Direction::North);
+    if(velocity.y > 0.01f && std::abs(velocity.y) > std::abs(velocity.x))  model.setDirectionOfMove(EntityModel::Direction::South);
 
     model.setVelocity(velocity);
 
@@ -59,21 +75,10 @@ void PlayerController::move(const Geo::Vec2F& factor, float dt)
 }
 void PlayerController::accelerate(const Geo::Vec2F& dv)
 {
-    constexpr float maxSpeed = 64.0f;
     auto& model = m_owner->model();
     Vec2F velocity = model.velocity();
 
-    if(velocity.x < -0.01f && std::abs(velocity.x) > std::abs(velocity.y)) model.setDirectionOfMove(EntityModel::Direction::West);
-    if(velocity.x > 0.01f && std::abs(velocity.x) > std::abs(velocity.y))  model.setDirectionOfMove(EntityModel::Direction::East);
-    if(velocity.y < -0.01f && std::abs(velocity.y) > std::abs(velocity.x)) model.setDirectionOfMove(EntityModel::Direction::North);
-    if(velocity.y > 0.01f && std::abs(velocity.y) > std::abs(velocity.x))  model.setDirectionOfMove(EntityModel::Direction::South);
-
     velocity += dv;
-    if(velocity.magnitude() > maxSpeed)
-    {
-        velocity.normalize();
-        velocity *= maxSpeed;
-    }
 
     model.setVelocity(velocity);
 

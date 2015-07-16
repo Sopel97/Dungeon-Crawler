@@ -9,10 +9,10 @@
 
 class Entity;
 
-class EntityModel //must be functions (ie. all methods return resonable values and there is not pure virtual member functions)
+class EntityModel //must be functional (ie. all methods return resonable values and there is no pure virtual member functions)
 {
 public:
-    enum Direction //orderes as in sprites
+    enum Direction //ordered as in sprites
     {
         North = 0,
         West = 1,
@@ -37,6 +37,10 @@ public:
     virtual void setPosition(const Geo::Vec2F& newPosition);
     virtual const Geo::Vec2F& velocity() const;
     virtual void setVelocity(const Geo::Vec2F& newVelocity);
+
+    virtual float minSpeed() const;
+    virtual float maxSpeed() const;
+    //TODO: maybe add deceleration property so drag is applied to deceleration and then it is substracted from velocity rather than to whole velocity
 
     virtual Direction directionOfMove() const;
     virtual void setDirectionOfMove(Direction newDirection);
