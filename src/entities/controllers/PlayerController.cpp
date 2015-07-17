@@ -16,14 +16,16 @@ using namespace Geo;
 PlayerController::PlayerController(Entity* owner, Player* player) :
     EntityController(owner),
     m_playerOwner(player),
-    m_acceleratedInLastFrame(false)
+    m_acceleratedHorizontallyInLastFrame(false),
+    m_acceleratedVerticallyInLastFrame(false)
 {
 
 }
 PlayerController::PlayerController(const PlayerController& other) :
     EntityController(other.m_owner),
     m_playerOwner(other.m_playerOwner),
-    m_acceleratedInLastFrame(other.m_acceleratedInLastFrame)
+    m_acceleratedHorizontallyInLastFrame(other.m_acceleratedHorizontallyInLastFrame),
+    m_acceleratedVerticallyInLastFrame(other.m_acceleratedVerticallyInLastFrame)
 {
 
 }
@@ -39,8 +41,6 @@ void PlayerController::loadFromConfiguration(ConfigurationNode& config)
 
 void PlayerController::update(World* world, float dt)
 {
-    constexpr float deceleration = 200.0f;
-
     auto& model = m_owner->model();
     Vec2F velocity = model.velocity();
     const Vec2F& position = model.position();
@@ -49,19 +49,36 @@ void PlayerController::update(World* world, float dt)
     float speed = velocity.magnitude();
     if(speed > maxSpeed)
     {
-        velocity *= maxSpeed/speed;
+        velocity *= maxSpeed / speed;
         speed = maxSpeed;
     }
-    if(!m_acceleratedInLastFrame) //TODO: try to make it slow down even when moving resonably
+
+    float deceleration = 200.0f;
+    if(!m_acceleratedHorizontallyInLastFrame && !m_acceleratedVerticallyInLastFrame)
+        deceleration /= 1.41f;
+    float d = deceleration * dt * world->drag(position);
+    if(!m_acceleratedHorizontallyInLastFrame)
     {
-        float d = deceleration*dt*world->drag(position);
-        if(d > speed)
+        float avx = std::abs(velocity.x);
+        if(d > avx)
         {
-            velocity = Vec2F(0.0f, 0.0f);
+            velocity.x = 0.0f;
         }
         else
         {
-            velocity *= (speed-d)/speed;
+            velocity.x *= (avx-d)/avx;
+        }
+    }
+    if(!m_acceleratedVerticallyInLastFrame)
+    {
+        float avy = std::abs(velocity.y);
+        if(d > avy)
+        {
+            velocity.y = 0.0f;
+        }
+        else
+        {
+            velocity.y *= (avy-d)/avy;
         }
     }
 
@@ -72,14 +89,15 @@ void PlayerController::update(World* world, float dt)
 
     model.setVelocity(velocity);
 
-    m_acceleratedInLastFrame = false;
+    m_acceleratedHorizontallyInLastFrame = false;
+    m_acceleratedVerticallyInLastFrame = false;
 }
 
 void PlayerController::move(const Geo::Vec2F& factor, float dt)
 {
     auto& model = m_owner->model();
     Vec2F position = model.position();
-    position += model.velocity()*factor*dt;
+    position += model.velocity() * factor * dt;
     model.setPosition(position);
 }
 void PlayerController::accelerate(const Geo::Vec2F& dv)
@@ -91,7 +109,14 @@ void PlayerController::accelerate(const Geo::Vec2F& dv)
 
     model.setVelocity(velocity);
 
-    m_acceleratedInLastFrame = true;
+    if(std::abs(dv.x) > 0.0f)
+    {
+        m_acceleratedHorizontallyInLastFrame = true;
+    }
+    if(std::abs(dv.y) > 0.0f)
+    {
+        m_acceleratedVerticallyInLastFrame = true;
+    }
 }
 
 std::unique_ptr<EntityController> PlayerController::clone() const

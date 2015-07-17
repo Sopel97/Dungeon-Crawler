@@ -23,12 +23,11 @@ public:
 
     bool isValid(int x, int y) const;
 
+    //it is up to the user to ensure m_emptyTileStack is not modyfied
     const TileStack& at(int x, int y) const;
     TileStack& at(int x, int y);
-    const Tile& at(int x, int y, int z) const; //TODO: make them both return the same type because it is giving problems. same for methods in tilestack
-                                               //(probably will only return reference and will require user to ensure that coordinates are valid)
-                                               //(or will return the empty tile which can (but shouldn't) be modifyable)
-    Tile* at(int x, int y, int z);
+    const Tile& at(int x, int y, int z) const;
+    Tile& at(int x, int y, int z);
 
     std::vector<Geo::RectangleF> queryTileColliders(const Geo::RectangleF& queryRegion) const;
 
@@ -38,8 +37,7 @@ protected:
     int m_height;
     Array2<TileStack> m_tileStacks;
 
-    static const TileStack m_emptyTileStack;
-    static const Tile m_emptyTile;
+    static TileStack m_emptyTileStack;
 };
 
 #endif // MAPLAYER_H

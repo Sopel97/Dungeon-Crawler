@@ -8,7 +8,7 @@
 
 #include "../LibS/make_unique.h"
 
-const Tile TileStack::m_emptyTile {std::make_unique<TileModel>(nullptr), std::make_unique<TileView>(nullptr), std::make_unique<TileController>(nullptr)};
+Tile TileStack::m_emptyTile {std::make_unique<TileModel>(nullptr), std::make_unique<TileView>(nullptr), std::make_unique<TileController>(nullptr)};
 
 TileStack::TileStack() :
     m_lastTile(-1)
@@ -67,10 +67,10 @@ const Tile& TileStack::at(int z) const
     if(isValid(z)) return *(m_tiles[z]);
     return m_emptyTile;
 }
-Tile* TileStack::at(int z)
+Tile& TileStack::at(int z)
 {
-    if(isValid(z)) return m_tiles[z];
-    return nullptr;
+    if(isValid(z)) return *(m_tiles[z]);
+    return m_emptyTile;
 }
 int TileStack::size() const
 {

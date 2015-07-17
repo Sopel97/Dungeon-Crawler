@@ -10,8 +10,7 @@
 
 using namespace Geo;
 
-const TileStack MapLayer::m_emptyTileStack {};
-const Tile MapLayer::m_emptyTile {std::make_unique<TileModel>(nullptr), std::make_unique<TileView>(nullptr), std::make_unique<TileController>(nullptr)};
+TileStack MapLayer::m_emptyTileStack {};
 
 MapLayer::MapLayer(World& world, int width, int height) :
     m_world(world),
@@ -57,23 +56,16 @@ const TileStack& MapLayer::at(int x, int y) const
 }
 TileStack& MapLayer::at(int x, int y)
 {
-    //this one CANNOT return empty tile because it could be modified outside which is bad
-    //but will ALWAYS return some TileStack so it is up to the user to pass valid x,y coordinates
+    if(!isValid(x, y)) return m_emptyTileStack;
     return m_tileStacks(x, y);
 }
 const Tile& MapLayer::at(int x, int y, int z) const
 {
-    const TileStack& tileStack = at(x, y);
-    if(tileStack.isValid(z)) return tileStack.at(z);
-
-    return m_emptyTile;
+    return at(x, y).at(z);
 }
-Tile* MapLayer::at(int x, int y, int z)
+Tile& MapLayer::at(int x, int y, int z)
 {
-    TileStack& tileStack = at(x, y);
-    if(tileStack.isValid(z)) return tileStack.at(z);
-
-    return nullptr;
+    return at(x, y).at(z);
 }
 
 std::vector<RectangleF> MapLayer::queryTileColliders(const RectangleF& queryRegion) const

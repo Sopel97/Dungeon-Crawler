@@ -30,7 +30,8 @@ public:
 
 protected:
     Player* m_playerOwner;
-    bool m_acceleratedInLastFrame;
+    bool m_acceleratedHorizontallyInLastFrame;
+    bool m_acceleratedVerticallyInLastFrame;
 };
 
 #endif // PLAYERCONTROLLER_H
