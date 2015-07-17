@@ -22,7 +22,11 @@
 std::pair<std::string, void*> TextureLoader::load(const std::string& path) const
 {
     sf::Texture* texture = new sf::Texture;
-    if(!texture->loadFromFile(path)) return std::make_pair(path, nullptr);
+    if(!texture->loadFromFile(path))
+    {
+        texture->setSmooth(true); //not sure
+        return std::make_pair(path, nullptr);
+    }
     return std::make_pair(path, texture);
 }
 TextureLoader::~TextureLoader()

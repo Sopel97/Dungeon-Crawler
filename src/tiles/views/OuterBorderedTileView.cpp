@@ -101,7 +101,7 @@ void OuterBorderedTileView::drawOutside(sf::RenderTarget& renderTarget, sf::Rend
     if(isIdSame[Bottom]) sideBorderSpriteIndex += 8;
 
 
-    Vec2I sideBorderSpritePosition = m_commonData->borderSprites + Vec2I {tileSize * sideBorderSpriteIndex, 0};
+    Vec2I sideBorderSpritePosition = m_commonData->borderSprites + Vec2I {tileFullSpriteSize * sideBorderSpriteIndex, 0};
 
     if(sideBorderSpriteIndex != -1)
     {
@@ -120,7 +120,7 @@ void OuterBorderedTileView::drawOutside(sf::RenderTarget& renderTarget, sf::Rend
     if(isIdSame[BottomRight] && !isIdSame[Bottom] && !isIdSame[Right]) cornerBorderSpriteIndex += 4;
     if(isIdSame[BottomLeft] && !isIdSame[Bottom] && !isIdSame[Left]) cornerBorderSpriteIndex += 8;
 
-    Vec2I cornerBorderSpritePosition = m_commonData->borderSprites + Vec2I {tileSize * cornerBorderSpriteIndex, tileSize};
+    Vec2I cornerBorderSpritePosition = m_commonData->borderSprites + Vec2I {tileFullSpriteSize * cornerBorderSpriteIndex, tileFullSpriteSize};
 
     if(cornerBorderSpriteIndex != -1)
     {

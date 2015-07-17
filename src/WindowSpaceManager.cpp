@@ -52,7 +52,7 @@ void WindowSpaceManager::setViewToRect(const RectangleI& windowViewRect, const R
     Vec2F windowViewSizeRelativeToWindow = windowViewSize / windowSize;
 
     sf::FloatRect view(windowViewTopLeftRelativeToWindow.x, windowViewTopLeftRelativeToWindow.y, windowViewSizeRelativeToWindow.x, windowViewSizeRelativeToWindow.y);
-    sf::View panelView(sf::Vector2f(worldViewRect.min.x + (worldViewRect.width() + 0.1f) / 2.0f , (worldViewRect.min.y + (worldViewRect.height() + 0.1f) / 2.0f)), sf::Vector2f(worldViewRect.width(), worldViewRect.height()));
+    sf::View panelView(sf::Vector2f(worldViewRect.min.x + worldViewRect.width() / 2.0f, (worldViewRect.min.y + worldViewRect.height() / 2.0f)), sf::Vector2f(worldViewRect.width(), worldViewRect.height()));
     panelView.setViewport(view);
     m_window.setView(panelView);
 }

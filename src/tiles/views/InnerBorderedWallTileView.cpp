@@ -35,20 +35,20 @@ void InnerBorderedWallTileView::loadFromConfiguration(ConfigurationNode& config)
     Vec2I spriteSet {config["spriteSet"][1].get<int>(), config["spriteSet"][2].get<int>()};
     m_commonData->spriteSet = spriteSet;
 
-    m_commonData->full = spriteSet + Vec2I(2 * tileSize, 3 * tileSize);
-    m_commonData->top = spriteSet + Vec2I(2 * tileSize, 1 * tileSize);
-    m_commonData->left = spriteSet + Vec2I(1 * tileSize, 2 * tileSize);
-    m_commonData->topLeft = spriteSet + Vec2I(1 * tileSize, 1 * tileSize);
-    m_commonData->bottomRight = spriteSet + Vec2I(3 * tileSize, 3 * tileSize);
+    m_commonData->full = spriteSet + Vec2I(2 * tileFullSpriteSize, 3 * tileFullSpriteSize);
+    m_commonData->top = spriteSet + Vec2I(2 * tileFullSpriteSize, 1 * tileFullSpriteSize);
+    m_commonData->left = spriteSet + Vec2I(1 * tileFullSpriteSize, 2 * tileFullSpriteSize);
+    m_commonData->topLeft = spriteSet + Vec2I(1 * tileFullSpriteSize, 1 * tileFullSpriteSize);
+    m_commonData->bottomRight = spriteSet + Vec2I(3 * tileFullSpriteSize, 3 * tileFullSpriteSize);
 
-    m_commonData->outerLeft = spriteSet + Vec2I(0 * tileSize, 1 * tileSize);
-    m_commonData->innerTopRight = spriteSet + Vec2I(3 * tileSize, 1 * tileSize);
-    m_commonData->innerBottomLeft = spriteSet + Vec2I(1 * tileSize, 3 * tileSize);
-    m_commonData->outerTopRight = spriteSet + Vec2I(3 * tileSize, 0 * tileSize);
-    m_commonData->outerBottomLeft = spriteSet + Vec2I(0 * tileSize, 3 * tileSize);
-    m_commonData->outerTop = spriteSet + Vec2I(1 * tileSize, 0 * tileSize);
-    m_commonData->outerTopLeft = spriteSet + Vec2I(2 * tileSize, 2 * tileSize);
-    m_commonData->innerBottomRight = spriteSet + Vec2I(0 * tileSize, 0 * tileSize);
+    m_commonData->outerLeft = spriteSet + Vec2I(0 * tileFullSpriteSize, 1 * tileFullSpriteSize);
+    m_commonData->innerTopRight = spriteSet + Vec2I(3 * tileFullSpriteSize, 1 * tileFullSpriteSize);
+    m_commonData->innerBottomLeft = spriteSet + Vec2I(1 * tileFullSpriteSize, 3 * tileFullSpriteSize);
+    m_commonData->outerTopRight = spriteSet + Vec2I(3 * tileFullSpriteSize, 0 * tileFullSpriteSize);
+    m_commonData->outerBottomLeft = spriteSet + Vec2I(0 * tileFullSpriteSize, 3 * tileFullSpriteSize);
+    m_commonData->outerTop = spriteSet + Vec2I(1 * tileFullSpriteSize, 0 * tileFullSpriteSize);
+    m_commonData->outerTopLeft = spriteSet + Vec2I(2 * tileFullSpriteSize, 2 * tileFullSpriteSize);
+    m_commonData->innerBottomRight = spriteSet + Vec2I(0 * tileFullSpriteSize, 0 * tileFullSpriteSize);
 
     m_commonData->innerBorderGroup = config["innerBorderGroup"].get<int>();
 }

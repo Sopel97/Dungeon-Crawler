@@ -31,6 +31,9 @@ public:
     virtual std::unique_ptr<EntityView> create(Entity* owner) const;
 protected:
     Entity* m_owner;
+
+    static constexpr int tileSize = 32; //TODO: think about what this should belong to
+    static constexpr int tileFullSpriteSize = 34; //includes the boundary size that is required to prevent tearing
 };
 
 #endif // ENTITYVIEW_H
