@@ -60,6 +60,15 @@ void EntityModel::setVelocity(const Geo::Vec2F& newVelocity)
 
 }
 
+float EntityModel::distanceTravelled() const
+{
+    return 0.0f;
+}
+void EntityModel::setDistanceTravelled(float newDistanceTravelled)
+{
+
+}
+
 float EntityModel::maxSpeed() const
 {
     return 10.0f;

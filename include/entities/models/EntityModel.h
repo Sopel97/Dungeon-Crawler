@@ -37,6 +37,8 @@ public:
     virtual void setPosition(const Geo::Vec2F& newPosition);
     virtual const Geo::Vec2F& velocity() const;
     virtual void setVelocity(const Geo::Vec2F& newVelocity);
+    virtual float distanceTravelled() const;
+    virtual void setDistanceTravelled(float newDistanceTravelled);
 
     virtual float maxSpeed() const;
 

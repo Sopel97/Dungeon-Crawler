@@ -97,8 +97,14 @@ void PlayerController::move(const Geo::Vec2F& factor, float dt)
 {
     auto& model = m_owner->model();
     Vec2F position = model.position();
-    position += model.velocity() * factor * dt;
+    float distanceTravelled = model.distanceTravelled();
+
+    Vec2F displacement = model.velocity() * factor * dt;
+    position += displacement;
+    distanceTravelled += displacement.magnitude();
+
     model.setPosition(position);
+    model.setDistanceTravelled(distanceTravelled);
 }
 void PlayerController::accelerate(const Geo::Vec2F& dv)
 {
