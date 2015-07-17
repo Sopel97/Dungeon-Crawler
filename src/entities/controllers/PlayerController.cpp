@@ -39,21 +39,30 @@ void PlayerController::loadFromConfiguration(ConfigurationNode& config)
 
 void PlayerController::update(World* world, float dt)
 {
+    constexpr float deceleration = 200.0f;
+
     auto& model = m_owner->model();
     Vec2F velocity = model.velocity();
     const Vec2F& position = model.position();
-    float minSpeed = model.minSpeed();
     float maxSpeed = model.maxSpeed();
 
     float speed = velocity.magnitude();
     if(speed > maxSpeed)
     {
         velocity *= maxSpeed/speed;
+        speed = maxSpeed;
     }
-    if(!m_acceleratedInLastFrame)
+    if(!m_acceleratedInLastFrame) //TODO: try to make it slow down even when moving resonably
     {
-        velocity *= std::pow(1.0f-world->drag(position), dt);
-        if(velocity.magnitude() < minSpeed) velocity = Vec2F(0.0f, 0.0f);
+        float d = deceleration*dt*world->drag(position);
+        if(d > speed)
+        {
+            velocity = Vec2F(0.0f, 0.0f);
+        }
+        else
+        {
+            velocity *= (speed-d)/speed;
+        }
     }
 
     if(velocity.x < -0.01f && std::abs(velocity.x) > std::abs(velocity.y)) model.setDirectionOfMove(EntityModel::Direction::West);

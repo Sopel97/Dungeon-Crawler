@@ -60,10 +60,6 @@ void EntityModel::setVelocity(const Geo::Vec2F& newVelocity)
 
 }
 
-float EntityModel::minSpeed() const
-{
-    return 1.0f;
-}
 float EntityModel::maxSpeed() const
 {
     return 10.0f;

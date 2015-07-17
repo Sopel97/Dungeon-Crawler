@@ -19,6 +19,6 @@ tile = {
 	
 	outerBorderPriority = 2,
 
-    drag = 0.92
+    drag = 0.85
     
 }

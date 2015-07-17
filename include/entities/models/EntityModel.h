@@ -38,9 +38,7 @@ public:
     virtual const Geo::Vec2F& velocity() const;
     virtual void setVelocity(const Geo::Vec2F& newVelocity);
 
-    virtual float minSpeed() const;
     virtual float maxSpeed() const;
-    //TODO: maybe add deceleration property so drag is applied to deceleration and then it is substracted from velocity rather than to whole velocity
 
     virtual Direction directionOfMove() const;
     virtual void setDirectionOfMove(Direction newDirection);

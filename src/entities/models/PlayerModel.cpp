@@ -52,10 +52,6 @@ void PlayerModel::setVelocity(const Geo::Vec2F& newVelocity)
     m_velocity = newVelocity;
 }
 
-float PlayerModel::minSpeed() const
-{
-    return 10.0f;
-}
 float PlayerModel::maxSpeed() const
 {
     return 64.0f;
