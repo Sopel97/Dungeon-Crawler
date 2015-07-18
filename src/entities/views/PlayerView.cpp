@@ -8,13 +8,15 @@
 
 #include "../LibS/make_unique.h"
 
+#include "GameConstants.h"
+
 using namespace Geo;
 
 PlayerView::PlayerView(Entity* owner, Player* player) :
     EntityView(owner),
     m_playerOwner(player),
     m_texture(ResourceManager::instance().get<sf::Texture>("Spritesheet")),
-    m_sprites(tileFullSpriteSize*5, tileFullSpriteSize*2)
+    m_sprites(GameConstants::tileFullSpriteSize*5, GameConstants::tileFullSpriteSize*2)
 {
 
 }
@@ -54,11 +56,11 @@ void PlayerView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderSt
     }
 
     const Vec2F position = m_owner->model().position();
-    const Vec2I spriteSize(tileSize, tileSize);
+    const Vec2I spriteSize(GameConstants::tileSize, GameConstants::tileSize);
     sf::Sprite spr;
     spr.setPosition(sf::Vector2f(position.x + spriteOffset.x, position.y + spriteOffset.y));
     spr.setTexture(texture());
-    spr.setTextureRect(sf::IntRect(sf::Vector2i(m_sprites.x + steppingSpriteVariant * tileFullSpriteSize, m_sprites.y + direction * tileFullSpriteSize), sf::Vector2i(spriteSize.x, spriteSize.y)));
+    spr.setTextureRect(sf::IntRect(sf::Vector2i(m_sprites.x + steppingSpriteVariant * GameConstants::tileFullSpriteSize, m_sprites.y + direction * GameConstants::tileFullSpriteSize), sf::Vector2i(spriteSize.x, spriteSize.y)));
     renderTarget.draw(spr, renderStates);
 }
 

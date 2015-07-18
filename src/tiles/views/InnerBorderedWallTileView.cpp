@@ -7,6 +7,8 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 
+#include "GameConstants.h"
+
 using namespace Geo;
 
 InnerBorderedWallTileView::InnerBorderedWallTileView(Tile* owner) :
@@ -35,20 +37,20 @@ void InnerBorderedWallTileView::loadFromConfiguration(ConfigurationNode& config)
     Vec2I spriteSet {config["spriteSet"][1].get<int>(), config["spriteSet"][2].get<int>()};
     m_commonData->spriteSet = spriteSet;
 
-    m_commonData->full = spriteSet + Vec2I(2 * tileFullSpriteSize, 3 * tileFullSpriteSize);
-    m_commonData->top = spriteSet + Vec2I(2 * tileFullSpriteSize, 1 * tileFullSpriteSize);
-    m_commonData->left = spriteSet + Vec2I(1 * tileFullSpriteSize, 2 * tileFullSpriteSize);
-    m_commonData->topLeft = spriteSet + Vec2I(1 * tileFullSpriteSize, 1 * tileFullSpriteSize);
-    m_commonData->bottomRight = spriteSet + Vec2I(3 * tileFullSpriteSize, 3 * tileFullSpriteSize);
+    m_commonData->full = spriteSet + Vec2I(2 * GameConstants::tileFullSpriteSize, 3 * GameConstants::tileFullSpriteSize);
+    m_commonData->top = spriteSet + Vec2I(2 * GameConstants::tileFullSpriteSize, 1 * GameConstants::tileFullSpriteSize);
+    m_commonData->left = spriteSet + Vec2I(1 * GameConstants::tileFullSpriteSize, 2 * GameConstants::tileFullSpriteSize);
+    m_commonData->topLeft = spriteSet + Vec2I(1 * GameConstants::tileFullSpriteSize, 1 * GameConstants::tileFullSpriteSize);
+    m_commonData->bottomRight = spriteSet + Vec2I(3 * GameConstants::tileFullSpriteSize, 3 * GameConstants::tileFullSpriteSize);
 
-    m_commonData->outerLeft = spriteSet + Vec2I(0 * tileFullSpriteSize, 1 * tileFullSpriteSize);
-    m_commonData->innerTopRight = spriteSet + Vec2I(3 * tileFullSpriteSize, 1 * tileFullSpriteSize);
-    m_commonData->innerBottomLeft = spriteSet + Vec2I(1 * tileFullSpriteSize, 3 * tileFullSpriteSize);
-    m_commonData->outerTopRight = spriteSet + Vec2I(3 * tileFullSpriteSize, 0 * tileFullSpriteSize);
-    m_commonData->outerBottomLeft = spriteSet + Vec2I(0 * tileFullSpriteSize, 3 * tileFullSpriteSize);
-    m_commonData->outerTop = spriteSet + Vec2I(1 * tileFullSpriteSize, 0 * tileFullSpriteSize);
-    m_commonData->outerTopLeft = spriteSet + Vec2I(2 * tileFullSpriteSize, 2 * tileFullSpriteSize);
-    m_commonData->innerBottomRight = spriteSet + Vec2I(0 * tileFullSpriteSize, 0 * tileFullSpriteSize);
+    m_commonData->outerLeft = spriteSet + Vec2I(0 * GameConstants::tileFullSpriteSize, 1 * GameConstants::tileFullSpriteSize);
+    m_commonData->innerTopRight = spriteSet + Vec2I(3 * GameConstants::tileFullSpriteSize, 1 * GameConstants::tileFullSpriteSize);
+    m_commonData->innerBottomLeft = spriteSet + Vec2I(1 * GameConstants::tileFullSpriteSize, 3 * GameConstants::tileFullSpriteSize);
+    m_commonData->outerTopRight = spriteSet + Vec2I(3 * GameConstants::tileFullSpriteSize, 0 * GameConstants::tileFullSpriteSize);
+    m_commonData->outerBottomLeft = spriteSet + Vec2I(0 * GameConstants::tileFullSpriteSize, 3 * GameConstants::tileFullSpriteSize);
+    m_commonData->outerTop = spriteSet + Vec2I(1 * GameConstants::tileFullSpriteSize, 0 * GameConstants::tileFullSpriteSize);
+    m_commonData->outerTopLeft = spriteSet + Vec2I(2 * GameConstants::tileFullSpriteSize, 2 * GameConstants::tileFullSpriteSize);
+    m_commonData->innerBottomRight = spriteSet + Vec2I(0 * GameConstants::tileFullSpriteSize, 0 * GameConstants::tileFullSpriteSize);
 
     m_commonData->innerBorderGroup = config["innerBorderGroup"].get<int>();
 }
@@ -99,9 +101,9 @@ void InnerBorderedWallTileView::draw(sf::RenderTarget& renderTarget, sf::RenderS
         if(resultSprite != nullptr)
         {
             sf::Sprite spr;
-            spr.setPosition(sf::Vector2f(x * tileSize, y * tileSize));
+            spr.setPosition(sf::Vector2f(x * GameConstants::tileSize, y * GameConstants::tileSize));
             spr.setTexture(texture());
-            spr.setTextureRect(sf::IntRect(sf::Vector2i(resultSprite->x, resultSprite->y), sf::Vector2i(tileSize, tileSize)));
+            spr.setTextureRect(sf::IntRect(sf::Vector2i(resultSprite->x, resultSprite->y), sf::Vector2i(GameConstants::tileSize, GameConstants::tileSize)));
             renderTarget.draw(spr, renderStates);
         }
     }
@@ -121,9 +123,9 @@ void InnerBorderedWallTileView::draw(sf::RenderTarget& renderTarget, sf::RenderS
         if(resultSprite != nullptr)
         {
             sf::Sprite spr;
-            spr.setPosition(sf::Vector2f((x - 1) * tileSize, y * tileSize));
+            spr.setPosition(sf::Vector2f((x - 1) * GameConstants::tileSize, y * GameConstants::tileSize));
             spr.setTexture(texture());
-            spr.setTextureRect(sf::IntRect(sf::Vector2i(resultSprite->x, resultSprite->y), sf::Vector2i(tileSize, tileSize)));
+            spr.setTextureRect(sf::IntRect(sf::Vector2i(resultSprite->x, resultSprite->y), sf::Vector2i(GameConstants::tileSize, GameConstants::tileSize)));
             renderTarget.draw(spr, renderStates);
         }
     }
@@ -143,9 +145,9 @@ void InnerBorderedWallTileView::draw(sf::RenderTarget& renderTarget, sf::RenderS
         if(resultSprite != nullptr)
         {
             sf::Sprite spr;
-            spr.setPosition(sf::Vector2f(x * tileSize, (y - 1) * tileSize));
+            spr.setPosition(sf::Vector2f(x * GameConstants::tileSize, (y - 1) * GameConstants::tileSize));
             spr.setTexture(texture());
-            spr.setTextureRect(sf::IntRect(sf::Vector2i(resultSprite->x, resultSprite->y), sf::Vector2i(tileSize, tileSize)));
+            spr.setTextureRect(sf::IntRect(sf::Vector2i(resultSprite->x, resultSprite->y), sf::Vector2i(GameConstants::tileSize, GameConstants::tileSize)));
             renderTarget.draw(spr, renderStates);
         }
     }
@@ -161,9 +163,9 @@ void InnerBorderedWallTileView::draw(sf::RenderTarget& renderTarget, sf::RenderS
         if(resultSprite != nullptr)
         {
             sf::Sprite spr;
-            spr.setPosition(sf::Vector2f((x - 1) * tileSize, (y - 1) * tileSize));
+            spr.setPosition(sf::Vector2f((x - 1) * GameConstants::tileSize, (y - 1) * GameConstants::tileSize));
             spr.setTexture(texture());
-            spr.setTextureRect(sf::IntRect(sf::Vector2i(resultSprite->x, resultSprite->y), sf::Vector2i(tileSize, tileSize)));
+            spr.setTextureRect(sf::IntRect(sf::Vector2i(resultSprite->x, resultSprite->y), sf::Vector2i(GameConstants::tileSize, GameConstants::tileSize)));
             renderTarget.draw(spr, renderStates);
         }
     }

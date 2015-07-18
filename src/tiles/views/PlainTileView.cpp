@@ -7,6 +7,8 @@
 
 #include <algorithm>
 
+#include "GameConstants.h"
+
 using namespace Geo;
 
 PlainTileView::PlainTileView(Tile* owner) :
@@ -52,9 +54,9 @@ void PlainTileView::loadFromConfiguration(ConfigurationNode& config)
 void PlainTileView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, int x, int y, int z, const MapLayer& map) const
 {
     sf::Sprite spr;
-    spr.setPosition(sf::Vector2f(x * tileSize, y * tileSize));
+    spr.setPosition(sf::Vector2f(x * GameConstants::tileSize, y * GameConstants::tileSize));
     spr.setTexture(texture());
-    spr.setTextureRect(sf::IntRect(sf::Vector2i(selectedSprite().x, selectedSprite().y), sf::Vector2i(tileSize, tileSize)));
+    spr.setTextureRect(sf::IntRect(sf::Vector2i(selectedSprite().x, selectedSprite().y), sf::Vector2i(GameConstants::tileSize, GameConstants::tileSize)));
     renderTarget.draw(spr, renderStates);
 }
 

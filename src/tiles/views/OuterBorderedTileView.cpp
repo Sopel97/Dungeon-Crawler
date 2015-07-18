@@ -11,6 +11,8 @@
 
 #include <algorithm>
 
+#include "GameConstants.h"
+
 using namespace Geo;
 
 OuterBorderedTileView::OuterBorderedTileView(Tile* owner) :
@@ -54,9 +56,9 @@ void OuterBorderedTileView::loadFromConfiguration(ConfigurationNode& config)
 void OuterBorderedTileView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, int x, int y, int z, const MapLayer& map) const
 {
     sf::Sprite spr;
-    spr.setPosition(sf::Vector2f(x * tileSize, y * tileSize));
+    spr.setPosition(sf::Vector2f(x * GameConstants::tileSize, y * GameConstants::tileSize));
     spr.setTexture(texture());
-    spr.setTextureRect(sf::IntRect(sf::Vector2i(selectedSprite().x, selectedSprite().y), sf::Vector2i(tileSize, tileSize)));
+    spr.setTextureRect(sf::IntRect(sf::Vector2i(selectedSprite().x, selectedSprite().y), sf::Vector2i(GameConstants::tileSize, GameConstants::tileSize)));
     renderTarget.draw(spr, renderStates);
 }
 
@@ -101,14 +103,14 @@ void OuterBorderedTileView::drawOutside(sf::RenderTarget& renderTarget, sf::Rend
     if(isIdSame[Bottom]) sideBorderSpriteIndex += 8;
 
 
-    Vec2I sideBorderSpritePosition = m_commonData->borderSprites + Vec2I {tileFullSpriteSize * sideBorderSpriteIndex, 0};
+    Vec2I sideBorderSpritePosition = m_commonData->borderSprites + Vec2I {GameConstants::tileFullSpriteSize * sideBorderSpriteIndex, 0};
 
     if(sideBorderSpriteIndex != -1)
     {
         sf::Sprite convexBorderSprite;
-        convexBorderSprite.setPosition(sf::Vector2f(x * tileSize, y * tileSize));
+        convexBorderSprite.setPosition(sf::Vector2f(x * GameConstants::tileSize, y * GameConstants::tileSize));
         convexBorderSprite.setTexture(texture());
-        convexBorderSprite.setTextureRect(sf::IntRect(sf::Vector2i(sideBorderSpritePosition.x, sideBorderSpritePosition.y), sf::Vector2i(tileSize, tileSize)));
+        convexBorderSprite.setTextureRect(sf::IntRect(sf::Vector2i(sideBorderSpritePosition.x, sideBorderSpritePosition.y), sf::Vector2i(GameConstants::tileSize, GameConstants::tileSize)));
         renderTarget.draw(convexBorderSprite, renderStates);
     }
 
@@ -120,14 +122,14 @@ void OuterBorderedTileView::drawOutside(sf::RenderTarget& renderTarget, sf::Rend
     if(isIdSame[BottomRight] && !isIdSame[Bottom] && !isIdSame[Right]) cornerBorderSpriteIndex += 4;
     if(isIdSame[BottomLeft] && !isIdSame[Bottom] && !isIdSame[Left]) cornerBorderSpriteIndex += 8;
 
-    Vec2I cornerBorderSpritePosition = m_commonData->borderSprites + Vec2I {tileFullSpriteSize * cornerBorderSpriteIndex, tileFullSpriteSize};
+    Vec2I cornerBorderSpritePosition = m_commonData->borderSprites + Vec2I {GameConstants::tileFullSpriteSize * cornerBorderSpriteIndex, GameConstants::tileFullSpriteSize};
 
     if(cornerBorderSpriteIndex != -1)
     {
         sf::Sprite concaveBorderSprite;
-        concaveBorderSprite.setPosition(sf::Vector2f(x * tileSize, y * tileSize));
+        concaveBorderSprite.setPosition(sf::Vector2f(x * GameConstants::tileSize, y * GameConstants::tileSize));
         concaveBorderSprite.setTexture(texture());
-        concaveBorderSprite.setTextureRect(sf::IntRect(sf::Vector2i(cornerBorderSpritePosition.x, cornerBorderSpritePosition.y), sf::Vector2i(tileSize, tileSize)));
+        concaveBorderSprite.setTextureRect(sf::IntRect(sf::Vector2i(cornerBorderSpritePosition.x, cornerBorderSpritePosition.y), sf::Vector2i(GameConstants::tileSize, GameConstants::tileSize)));
         renderTarget.draw(concaveBorderSprite, renderStates);
     }
 }
