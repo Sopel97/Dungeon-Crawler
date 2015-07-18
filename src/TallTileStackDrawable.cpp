@@ -4,16 +4,18 @@
 #include "TileView.h"
 #include "TileModel.h"
 
+#include "TileLocation.h"
+
 #include "TileStack.h"
 #include "MapLayer.h"
 
 using namespace Geo;
 
-TallTileStackDrawable::TallTileStackDrawable(const TileStack& tileStack, int x, int y, const MapLayer& map) :
+TallTileStackDrawable::TallTileStackDrawable(const TileStack& tileStack, const TileLocation& tileLocation) :
     m_tileStack(tileStack),
-    m_tileX(x),
-    m_tileY(y),
-    m_map(map)
+    m_tileX(tileLocation.x),
+    m_tileY(tileLocation.y),
+    m_map(tileLocation.map)
 {
     int i = 0;
     for(const auto& tile : m_tileStack.tiles())
@@ -62,6 +64,6 @@ void TallTileStackDrawable::draw(sf::RenderTarget& renderTarget, sf::RenderState
     int tileStackSize = m_tileStack.size();
     for(int i = m_indexOfFirstTallTile; i < tileStackSize; ++i)
     {
-        m_tileStack.at(i).draw(renderTarget, renderStates, m_tileX, m_tileY, i, m_map);
+        m_tileStack.at(i).draw(renderTarget, renderStates, TileLocation(m_map, m_tileX, m_tileY, i));
     }
 }

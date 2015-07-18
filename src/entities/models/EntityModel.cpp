@@ -4,7 +4,7 @@
 
 using namespace Geo;
 
-const Geo::Vec2F EntityModel::m_someVector{0.0f, 0.0f};
+const Geo::Vec2F EntityModel::m_someVector {0.0f, 0.0f};
 
 EntityModel::EntityModel(Entity* owner) :
     m_owner(owner)

@@ -18,6 +18,7 @@ namespace sf
 }
 class MapLayer;
 class Tile;
+class TileLocation;
 
 class InnerBorderedWallTileView : public TileView
 {
@@ -28,7 +29,7 @@ public:
 
     virtual void loadFromConfiguration(ConfigurationNode& config);
 
-    virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, int x, int y, int z, const MapLayer& map) const;
+    virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const;
 
     const sf::Texture& texture() const;
     const Geo::Vec2I& spriteSet() const;

@@ -14,6 +14,7 @@ class MapLayer;
 class TileModel;
 class TileView;
 class TileController;
+class TileLocation;
 
 class Tile
 {
@@ -24,8 +25,8 @@ public:
 
     void loadFromConfiguration(ConfigurationNode& config);
 
-    virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, int x, int y, int z, const MapLayer& map) const;
-    virtual void drawOutside(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, int x, int y, int z, const MapLayer& map) const;
+    virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const;
+    virtual void drawOutside(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const;
 
     const TileModel& model() const;
     TileModel& model();

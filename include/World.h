@@ -18,6 +18,7 @@ namespace sf
 }
 class Root;
 class MapLayer;
+class TileLocation;
 
 class World
 {
@@ -26,7 +27,7 @@ public:
     ~World();
 
     void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
-    void drawOuterBorder(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, int x, int y, const MapLayer& map);
+    void drawOuterBorder(sf::RenderTarget & renderTarget, sf::RenderStates & renderStates, const TileLocation & tileLocation);
 
     void moveCamera(const Geo::Vec2F& displacement);
 

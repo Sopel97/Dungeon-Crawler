@@ -143,11 +143,11 @@ std::pair<std::string, void*> EntityLoader::load(const std::string& path) const
     }
 
     std::unique_ptr<Entity> entity = std::make_unique<Entity>
-                                 (
-                                     std::move(model),
-                                     std::move(view),
-                                     std::move(controller)
-                                 );
+                                     (
+                                         std::move(model),
+                                         std::move(view),
+                                         std::move(controller)
+                                     );
 
     entity->loadFromConfiguration(entityConfig);
 

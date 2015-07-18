@@ -34,8 +34,8 @@ std::vector<Entity*> EntitySystem::queryRegion(const RectangleF& rect)
     std::vector<Entity*> entitiesInRegion;
 
     const Vec2F rectCenter = rect.center();
-    const float halfRectWidth = rect.width()/2.0f;
-    const float halfRectHeight = rect.height()/2.0f;
+    const float halfRectWidth = rect.width() / 2.0f;
+    const float halfRectHeight = rect.height() / 2.0f;
 
     for(Entity* entity : m_entities)
     {
@@ -77,7 +77,7 @@ void EntitySystem::updateEntities(World* world, float dt) //will also move them 
 
     for(Entity* entity : m_entities)
     {
-        entity->controller().move(Geo::Vec2F{1.0f, 1.0f}, dt);
+        entity->controller().move(Geo::Vec2F {1.0f, 1.0f}, dt);
     }
 }
 std::vector<Entity*> EntitySystem::getVisibleEntities(const Camera& camera)

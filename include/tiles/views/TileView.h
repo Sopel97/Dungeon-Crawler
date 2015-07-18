@@ -12,8 +12,9 @@ namespace sf
 }
 class MapLayer;
 class Tile;
+class TileLocation;
 
-class TileView //must be functions (ie. all methods return resonable values and there is not pure virtual member functions)
+class TileView //must be functions (ie. all methods must return resonable values and there is no pure virtual member functions)
 {
 public:
     TileView(Tile* owner);
@@ -22,8 +23,8 @@ public:
 
     virtual void loadFromConfiguration(ConfigurationNode& config);
 
-    virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, int x, int y, int z, const MapLayer& map) const;
-    virtual void drawOutside(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, int x, int y, int z, const MapLayer& map) const;
+    virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const;
+    virtual void drawOutside(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const;
 
     const Tile* owner() const;
 

@@ -66,7 +66,7 @@ void PlayerController::update(World* world, float dt)
         }
         else
         {
-            velocity.x *= (avx-d)/avx;
+            velocity.x *= (avx - d) / avx;
         }
     }
     if(!m_acceleratedVerticallyInLastFrame)
@@ -78,7 +78,7 @@ void PlayerController::update(World* world, float dt)
         }
         else
         {
-            velocity.y *= (avy-d)/avy;
+            velocity.y *= (avy - d) / avy;
         }
     }
 

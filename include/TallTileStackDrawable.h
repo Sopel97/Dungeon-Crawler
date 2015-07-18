@@ -3,6 +3,8 @@
 
 #include "TallDrawable.h"
 
+#include "TileLocation.h"
+
 #include "../LibS/GeometryLight.h"
 
 class TileStack;
@@ -11,7 +13,7 @@ class MapLayer;
 class TallTileStackDrawable : public TallDrawable //requires at least one tile in tile stack to be tall
 {
 public:
-    TallTileStackDrawable(const TileStack& tileStack, int x, int y, const MapLayer& map);
+    TallTileStackDrawable(const TileStack & tileStack, const TileLocation & tileLocation);
     virtual ~TallTileStackDrawable();
 
     virtual const Geo::RectangleF& boundingRectangle() const;

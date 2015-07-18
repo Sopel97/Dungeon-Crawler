@@ -16,7 +16,7 @@ PlayerView::PlayerView(Entity* owner, Player* player) :
     EntityView(owner),
     m_playerOwner(player),
     m_texture(ResourceManager::instance().get<sf::Texture>("Spritesheet")),
-    m_sprites(GameConstants::tileFullSpriteSize*5, GameConstants::tileFullSpriteSize*2)
+    m_sprites(GameConstants::tileFullSpriteSize * 5, GameConstants::tileFullSpriteSize * 2)
 {
 
 }
@@ -52,7 +52,7 @@ void PlayerView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderSt
         constexpr int numberOfSteppingSprites = 2;
         const float distanceTravelled = model.distanceTravelled();
 
-        steppingSpriteVariant = static_cast<int>(distanceTravelled/distanceTravelledPerStep)%numberOfSteppingSprites+1;
+        steppingSpriteVariant = static_cast<int>(distanceTravelled / distanceTravelledPerStep) % numberOfSteppingSprites + 1;
     }
 
     const Vec2F position = m_owner->model().position();

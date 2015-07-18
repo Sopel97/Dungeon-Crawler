@@ -34,186 +34,209 @@
 
 // Forward declaration for Lua
 extern "C" {
-struct lua_State;
+    struct lua_State;
 }
 
-struct LuaKey {
-	enum Type {
-		String,
-		Integer
-	};
+struct LuaKey
+{
+    enum Type
+    {
+        String,
+        Integer
+    };
 
-	Type type;
-	int int_value;
-	std::string string_value;
+    Type type;
+    int int_value;
+    std::string string_value;
 
-	bool operator<( const LuaKey& rhs ) const {
-		if (type == String && rhs.type == Integer) {
-			return false;
-		} else if (type == Integer && rhs.type == String) {
-			return true;
-		} else if (type == Integer && rhs.type == Integer) {
-			return int_value < rhs.int_value;
-		}
+    bool operator<(const LuaKey& rhs) const
+    {
+        if(type == String && rhs.type == Integer)
+        {
+            return false;
+        }
+        else if(type == Integer && rhs.type == String)
+        {
+            return true;
+        }
+        else if(type == Integer && rhs.type == Integer)
+        {
+            return int_value < rhs.int_value;
+        }
 
-		return string_value < rhs.string_value;
-	}
+        return string_value < rhs.string_value;
+    }
 
-	LuaKey (const char* key_value) :
-		type (String),
-		int_value (0),
-		string_value (key_value) { }
-	LuaKey (int key_value) :
-		type (Integer),
-		int_value (key_value),
-		string_value ("") {}
+    LuaKey(const char* key_value) :
+        type(String),
+        int_value(0),
+        string_value(key_value) { }
+    LuaKey(int key_value) :
+        type(Integer),
+        int_value(key_value),
+        string_value("") {}
 };
 
-inline std::ostream& operator<<(std::ostream& output, const LuaKey &key) {
-	if (key.type == LuaKey::Integer)
-		output << key.int_value << "(int)";
-	else
-		output << key.string_value << "(string)";
-	return output;
+inline std::ostream& operator<<(std::ostream& output, const LuaKey& key)
+{
+    if(key.type == LuaKey::Integer)
+        output << key.int_value << "(int)";
+    else
+        output << key.string_value << "(string)";
+    return output;
 }
 struct LuaTable;
 struct LuaTableNode;
 
-struct LuaTableNode {
-	LuaTableNode() :
-		parent (NULL),
-		luaTable (NULL),
-		key("")
-	{ }
-	LuaTableNode operator[](const char *child_str) {
-		LuaTableNode child_node;
+struct LuaTableNode
+{
+    LuaTableNode() :
+        parent(NULL),
+        luaTable(NULL),
+        key("")
+    { }
+    LuaTableNode operator[](const char* child_str)
+    {
+        LuaTableNode child_node;
 
-		child_node.luaTable = luaTable;
-		child_node.parent = this;
-		child_node.key = LuaKey (child_str);
+        child_node.luaTable = luaTable;
+        child_node.parent = this;
+        child_node.key = LuaKey(child_str);
 
-		return child_node;
-	}
-	LuaTableNode operator[](int child_index) {
-		LuaTableNode child_node;
+        return child_node;
+    }
+    LuaTableNode operator[](int child_index)
+    {
+        LuaTableNode child_node;
 
-		child_node.luaTable = luaTable;
-		child_node.parent = this;
-		child_node.key = LuaKey (child_index);
+        child_node.luaTable = luaTable;
+        child_node.parent = this;
+        child_node.key = LuaKey(child_index);
 
-		return child_node;
-	}
-	bool stackQueryValue();
-	void stackPushKey();
-	void stackCreateValue();
-	void stackRestore();
-	LuaTable stackQueryTable();
-	LuaTable stackCreateLuaTable();
+        return child_node;
+    }
+    bool stackQueryValue();
+    void stackPushKey();
+    void stackCreateValue();
+    void stackRestore();
+    LuaTable stackQueryTable();
+    LuaTable stackCreateLuaTable();
 
-	std::vector<LuaKey> getKeyStack();
-	std::string keyStackToString();
+    std::vector<LuaKey> getKeyStack();
+    std::string keyStackToString();
 
-	bool exists();
-	void remove();
-	size_t length();
-	std::vector<LuaKey> keys();
+    bool exists();
+    void remove();
+    size_t length();
+    std::vector<LuaKey> keys();
 
-	// Templates for setters and getters. Can be specialized for custom
-	// types.
-	template <typename T>
-	void set (const T &value);
-	template <typename T>
-	T getDefault (const T &default_value);
+    // Templates for setters and getters. Can be specialized for custom
+    // types.
+    template <typename T>
+    void set(const T& value);
+    template <typename T>
+    T getDefault(const T& default_value);
 
-	template <typename T>
-	T get() {
-		if (!exists()) {
-			std::cerr << "Error: could not find value " << keyStackToString() << "." << std::endl;
-			abort();
-		}
-		return getDefault (T());
-	}
+    template <typename T>
+    T get()
+    {
+        if(!exists())
+        {
+            std::cerr << "Error: could not find value " << keyStackToString() << "." << std::endl;
+            abort();
+        }
+        return getDefault(T());
+    }
 
-	// convenience operators (assignment, conversion, comparison)
-	template <typename T>
-	void operator=(const T &value) {
-		set<T>(value);
-	}
-	template <typename T>
-	operator T() {
-		return get<T>();
-	}
-	template <typename T>
-	bool operator==(T value) {
-		return value == get<T>();
-	}
-	template <typename T>
-	bool operator!=(T value) {
-		return value != get<T>();
-	}
+    // convenience operators (assignment, conversion, comparison)
+    template <typename T>
+    void operator=(const T& value)
+    {
+        set<T>(value);
+    }
+    template <typename T>
+    operator T()
+    {
+        return get<T>();
+    }
+    template <typename T>
+    bool operator==(T value)
+    {
+        return value == get<T>();
+    }
+    template <typename T>
+    bool operator!=(T value)
+    {
+        return value != get<T>();
+    }
 
-	LuaTableNode *parent;
-	LuaTable *luaTable;
-	LuaKey key;
-	int stackTop;
+    LuaTableNode* parent;
+    LuaTable* luaTable;
+    LuaKey key;
+    int stackTop;
 };
 
 template<typename T>
-bool operator==(T value, LuaTableNode node) {
-	return value == (T) node;
+bool operator==(T value, LuaTableNode node)
+{
+    return value == (T) node;
 }
 template<typename T>
-bool operator!=(T value, LuaTableNode node) {
-	return value != (T) node;
+bool operator!=(T value, LuaTableNode node)
+{
+    return value != (T) node;
 }
 
-template<> bool LuaTableNode::getDefault<bool>(const bool &default_value);
-template<> double LuaTableNode::getDefault<double>(const double &default_value);
-template<> float LuaTableNode::getDefault<float>(const float &default_value);
-template<> std::string LuaTableNode::getDefault<std::string>(const std::string &default_value);
-template<> int LuaTableNode::getDefault<int>(const int &default_value);
+template<> bool LuaTableNode::getDefault<bool>(const bool& default_value);
+template<> double LuaTableNode::getDefault<double>(const double& default_value);
+template<> float LuaTableNode::getDefault<float>(const float& default_value);
+template<> std::string LuaTableNode::getDefault<std::string>(const std::string& default_value);
+template<> int LuaTableNode::getDefault<int>(const int& default_value);
 
-template<> void LuaTableNode::set<bool>(const bool &value);
-template<> void LuaTableNode::set<float>(const float &value);
-template<> void LuaTableNode::set<double>(const double &value);
-template<> void LuaTableNode::set<int>(const int &value);
+template<> void LuaTableNode::set<bool>(const bool& value);
+template<> void LuaTableNode::set<float>(const float& value);
+template<> void LuaTableNode::set<double>(const double& value);
+template<> void LuaTableNode::set<int>(const int& value);
 
-struct LuaTable {
-	LuaTable() :
-		filename (""),
-		L (NULL),
-		deleteLuaState (false)
-	{}
-	LuaTable& operator= (const LuaTable &luatable);
-	~LuaTable();
+struct LuaTable
+{
+    LuaTable() :
+        filename(""),
+        L(NULL),
+        deleteLuaState(false)
+    {}
+    LuaTable& operator= (const LuaTable& luatable);
+    ~LuaTable();
 
-	LuaTableNode operator[] (const char* key) {
-		LuaTableNode root_node;
-		root_node.key = LuaKey (key);
-		root_node.parent = NULL;
-		root_node.luaTable = this;
+    LuaTableNode operator[](const char* key)
+    {
+        LuaTableNode root_node;
+        root_node.key = LuaKey(key);
+        root_node.parent = NULL;
+        root_node.luaTable = this;
 
-		return root_node;
-	}
-	LuaTableNode operator[] (int key) {
-		LuaTableNode root_node;
-		root_node.key = LuaKey (key);
-		root_node.parent = NULL;
-		root_node.luaTable = this;
+        return root_node;
+    }
+    LuaTableNode operator[](int key)
+    {
+        LuaTableNode root_node;
+        root_node.key = LuaKey(key);
+        root_node.parent = NULL;
+        root_node.luaTable = this;
 
-		return root_node;
-	}
-	int length();
-	void addSearchPath (const char* path);
-	std::string serialize ();
+        return root_node;
+    }
+    int length();
+    void addSearchPath(const char* path);
+    std::string serialize();
 
-	static LuaTable fromFile (const char *_filename);
-	static LuaTable fromLuaExpression (const char* lua_expr);
-	static LuaTable fromLuaState (lua_State *L);
+    static LuaTable fromFile(const char* _filename);
+    static LuaTable fromLuaExpression(const char* lua_expr);
+    static LuaTable fromLuaState(lua_State* L);
 
-	std::string filename;
-	lua_State *L;
-	bool deleteLuaState;
+    std::string filename;
+    lua_State* L;
+    bool deleteLuaState;
 };
 
 /* LUATABLES_H */

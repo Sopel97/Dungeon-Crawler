@@ -7,6 +7,8 @@
 #include "TileModel.h"
 #include "TileController.h"
 
+#include "TileLocation.h"
+
 #include "Entity.h"
 #include "EntityModel.h"
 #include "EntityView.h"
@@ -35,7 +37,7 @@ World::World(Root& root) :
     m_width(worldWidth),
     m_height(worldHeight),
     m_mapLayer(std::make_unique<MapLayer>(*this, m_width, m_height)),
-    m_camera(Vec2F(m_width*GameConstants::tileSize / 2.0f, m_height*GameConstants::tileSize / 2.0f), viewWidth*GameConstants::tileSize, viewHeight*GameConstants::tileSize),
+    m_camera(Vec2F(m_width * GameConstants::tileSize / 2.0f, m_height * GameConstants::tileSize / 2.0f), viewWidth * GameConstants::tileSize, viewHeight * GameConstants::tileSize),
     m_mapGenerator(m_width, m_height)
 {
     m_mapGenerator.generate(*m_mapLayer);
@@ -70,27 +72,29 @@ void World::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
             int z = 0;
             for(const auto& tile : tileStack.tiles())
             {
+                TileLocation location(*m_mapLayer, x, y, z);
+
                 if(tile->view().isTall())
                 {
-                    tallDrawables.push_back(new TallTileStackDrawable(tileStack, x, y, *m_mapLayer));
+                    tallDrawables.push_back(new TallTileStackDrawable(tileStack, location));
                     break;
                 }
                 if(z == 0)
                 {
                     if(tile->view().coversOuterBorders())
                     {
-                        drawOuterBorder(renderTarget, renderStates, x, y, *m_mapLayer);
-                        tile->draw(renderTarget, renderStates, x, y, z, *m_mapLayer);
+                        drawOuterBorder(renderTarget, renderStates, location);
+                        tile->draw(renderTarget, renderStates, location);
                     }
                     else
                     {
-                        tile->draw(renderTarget, renderStates, x, y, z, *m_mapLayer);
-                        drawOuterBorder(renderTarget, renderStates, x, y, *m_mapLayer);
+                        tile->draw(renderTarget, renderStates, location);
+                        drawOuterBorder(renderTarget, renderStates, location);
                     }
                 }
                 else
                 {
-                    tile->draw(renderTarget, renderStates, x, y, z, *m_mapLayer);
+                    tile->draw(renderTarget, renderStates, location);
                 }
 
                 ++z;
@@ -110,10 +114,15 @@ void World::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
     }
 }
 
-void World::drawOuterBorder(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, int x, int y, const MapLayer& map)
+void World::drawOuterBorder(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& tileLocation)
 {
     auto areTilesEqual = [](const Tile * lhs, const Tile * rhs)->bool {return lhs->id() == rhs->id();};
     auto borderPriorityCompare = [](const Tile * lhs, const Tile * rhs)->bool {return lhs->view().outerBorderPriority() < rhs->view().outerBorderPriority();};
+
+    int x = tileLocation.x;
+    int y = tileLocation.y;
+    const MapLayer& map = tileLocation.map;
+
     std::vector<const Tile*> differentNeigbourTiles;
     int thisTileOuterBorderPriority = map.at(x, y, 0).view().outerBorderPriority();
     for(int xoffset = -1; xoffset <= 1; ++xoffset)
@@ -145,7 +154,7 @@ void World::drawOuterBorder(sf::RenderTarget& renderTarget, sf::RenderStates& re
 
     for(const auto& neighbour : differentNeigbourTiles)
     {
-        neighbour->drawOutside(renderTarget, renderStates, x, y, 0, map);
+        neighbour->drawOutside(renderTarget, renderStates, tileLocation);
     }
 }
 

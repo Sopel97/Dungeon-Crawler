@@ -4,6 +4,8 @@
 #include "TileView.h"
 #include "TileController.h"
 
+#include "TileLocation.h"
+
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 
@@ -41,13 +43,13 @@ void Tile::loadFromConfiguration(ConfigurationNode& config)
     m_controller->loadFromConfiguration(config);
 }
 
-void Tile::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, int x, int y, int z, const MapLayer& map) const
+void Tile::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const
 {
-    m_view->draw(renderTarget, renderStates, x, y, z, map);
+    m_view->draw(renderTarget, renderStates, location);
 }
-void Tile::drawOutside(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, int x, int y, int z, const MapLayer& map) const
+void Tile::drawOutside(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const
 {
-    m_view->drawOutside(renderTarget, renderStates, x, y, z, map);
+    m_view->drawOutside(renderTarget, renderStates, location);
 }
 
 const TileModel& Tile::model() const

@@ -4,6 +4,8 @@
 #include "TileStack.h"
 #include "MapLayer.h"
 
+#include "TileLocation.h"
+
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 
@@ -55,7 +57,7 @@ void InnerBorderedWallTileView::loadFromConfiguration(ConfigurationNode& config)
     m_commonData->innerBorderGroup = config["innerBorderGroup"].get<int>();
 }
 
-void InnerBorderedWallTileView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, int x, int y, int z, const MapLayer& map) const
+void InnerBorderedWallTileView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const
 {
     enum Indices
     {
@@ -75,6 +77,10 @@ void InnerBorderedWallTileView::draw(sf::RenderTarget& renderTarget, sf::RenderS
     bool isGroupSame[9];
 
     int group = innerBorderGroup();
+    int x = location.x;
+    int y = location.y;
+    int z = location.z;
+    const MapLayer& map = location.map;
 
     isGroupSame[TopLeft]     = (map.at(x - 1, y - 1, z).view().innerBorderGroup() == group);
     isGroupSame[Top]         = (map.at(x + 0, y - 1, z).view().innerBorderGroup() == group);
