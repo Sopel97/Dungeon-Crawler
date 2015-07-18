@@ -14,9 +14,10 @@ public:
     TallTileStackDrawable(const TileStack& tileStack, int x, int y, const MapLayer& map);
     virtual ~TallTileStackDrawable();
 
-    virtual bool isTile() const;
     virtual const Geo::RectangleF& boundingRectangle() const;
     virtual const Geo::Vec2F& center() const;
+
+    virtual TallDrawable::DrawableType type() const;
 
     int tileX() const;
     int tileY() const;

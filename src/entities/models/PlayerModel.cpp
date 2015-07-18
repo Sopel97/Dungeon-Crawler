@@ -63,6 +63,11 @@ void PlayerModel::setDistanceTravelled(float newDistanceTravelled)
     m_distanceTravelled = newDistanceTravelled;
 }
 
+Vec2F PlayerModel::displacementWhenMoved(float dt)
+{
+    return m_velocity * dt;
+}
+
 float PlayerModel::maxSpeed() const
 {
     return 64.0f;

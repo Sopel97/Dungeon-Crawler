@@ -34,10 +34,6 @@ TallTileStackDrawable::~TallTileStackDrawable()
 
 }
 
-bool TallTileStackDrawable::isTile() const
-{
-    return true;
-}
 const RectangleF& TallTileStackDrawable::boundingRectangle() const
 {
     return m_boundingRectangle;
@@ -45,6 +41,11 @@ const RectangleF& TallTileStackDrawable::boundingRectangle() const
 const Vec2F& TallTileStackDrawable::center() const
 {
     return m_center;
+}
+
+TallDrawable::DrawableType TallTileStackDrawable::type() const
+{
+    return TallDrawable::DrawableType::TileStack;
 }
 
 int TallTileStackDrawable::tileX() const

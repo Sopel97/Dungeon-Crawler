@@ -96,10 +96,12 @@ void PlayerController::update(World* world, float dt)
 void PlayerController::move(const Geo::Vec2F& factor, float dt)
 {
     auto& model = m_owner->model();
+
     Vec2F position = model.position();
     float distanceTravelled = model.distanceTravelled();
 
-    Vec2F displacement = model.velocity() * factor * dt;
+    Vec2F displacement = model.displacementWhenMoved(dt) * factor;
+
     position += displacement;
     distanceTravelled += displacement.magnitude();
 

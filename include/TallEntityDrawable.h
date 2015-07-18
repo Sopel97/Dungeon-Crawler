@@ -18,9 +18,10 @@ public:
     TallEntityDrawable(Entity* entity);
     virtual ~TallEntityDrawable();
 
-    virtual bool isEntity() const;
     virtual const Geo::RectangleF& boundingRectangle() const;
     virtual const Geo::Vec2F& center() const;
+
+    virtual TallDrawable::DrawableType type() const;
 
     virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
 

@@ -20,10 +20,6 @@ TallEntityDrawable::~TallEntityDrawable()
 
 }
 
-bool TallEntityDrawable::isEntity() const
-{
-    return true;
-}
 const RectangleF& TallEntityDrawable::boundingRectangle() const
 {
     return m_boundingRectangle;
@@ -31,6 +27,11 @@ const RectangleF& TallEntityDrawable::boundingRectangle() const
 const Vec2F& TallEntityDrawable::center() const
 {
     return m_center;
+}
+
+TallDrawable::DrawableType TallEntityDrawable::type() const
+{
+    return TallDrawable::DrawableType::Entity;
 }
 
 void TallEntityDrawable::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)

@@ -40,6 +40,8 @@ public:
     virtual float distanceTravelled() const;
     virtual void setDistanceTravelled(float newDistanceTravelled);
 
+    virtual Geo::Vec2F displacementWhenMoved(float dt);
+
     virtual float maxSpeed() const;
 
     virtual Direction directionOfMove() const;
