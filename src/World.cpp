@@ -26,6 +26,8 @@
 
 #include "../LibS/Util.h"
 
+#include "GameConstants.h"
+
 using namespace Geo;
 
 World::World(Root& root) :
@@ -33,7 +35,7 @@ World::World(Root& root) :
     m_width(worldWidth),
     m_height(worldHeight),
     m_mapLayer(std::make_unique<MapLayer>(*this, m_width, m_height)),
-    m_camera(Vec2F(m_width* tileSize / 2.0f, m_height* tileSize / 2.0f), viewWidth* tileSize, viewHeight* tileSize),
+    m_camera(Vec2F(m_width*GameConstants::tileSize / 2.0f, m_height*GameConstants::tileSize / 2.0f), viewWidth*GameConstants::tileSize, viewHeight*GameConstants::tileSize),
     m_mapGenerator(m_width, m_height)
 {
     m_mapGenerator.generate(*m_mapLayer);
@@ -52,10 +54,10 @@ void World::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
     const RectangleF cameraRect = m_camera.viewRectangle();
     const Vec2F& cameraTopLeft     = cameraRect.min;
     const Vec2F& cameraBottomRight = cameraRect.max;
-    int firstTileX = std::max(Util::fastFloor(cameraTopLeft.x / tileSize), 0);
-    int firstTileY = std::max(Util::fastFloor(cameraTopLeft.y / tileSize), 0);
-    int lastTileX = std::min(Util::fastFloor(cameraBottomRight.x / tileSize) + 1, m_width - 1);
-    int lastTileY = std::min(Util::fastFloor(cameraBottomRight.y / tileSize) + 1, m_height - 1);
+    int firstTileX = std::max(Util::fastFloor(cameraTopLeft.x / GameConstants::tileSize), 0);
+    int firstTileY = std::max(Util::fastFloor(cameraTopLeft.y / GameConstants::tileSize), 0);
+    int lastTileX = std::min(Util::fastFloor(cameraBottomRight.x / GameConstants::tileSize) + 1, m_width - 1);
+    int lastTileY = std::min(Util::fastFloor(cameraBottomRight.y / GameConstants::tileSize) + 1, m_height - 1);
 
     std::vector<TallDrawable*> tallDrawables;
 
@@ -180,7 +182,7 @@ const MapGenerator& World::mapGenerator() const
 
 Vec2I World::worldToTile(const Vec2F& position) const
 {
-    return Vec2I(position.x / tileSize, position.y / tileSize);
+    return Vec2I(position.x / GameConstants::tileSize, position.y / GameConstants::tileSize);
 }
 
 void World::update(float dt)

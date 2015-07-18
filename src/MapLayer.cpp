@@ -8,6 +8,8 @@
 
 #include "../LibS/Util.h"
 
+#include "GameConstants.h"
+
 using namespace Geo;
 
 TileStack MapLayer::m_emptyTileStack {};
@@ -72,10 +74,10 @@ std::vector<RectangleF> MapLayer::queryTileColliders(const RectangleF& queryRegi
 {
     const Vec2F& queryRegionTopLeft     = queryRegion.min;
     const Vec2F& queryRegionBottomRight = queryRegion.max;
-    int firstTileX = std::max(Util::fastFloor(queryRegionTopLeft.x / World::tileSize), 0);
-    int firstTileY = std::max(Util::fastFloor(queryRegionTopLeft.y / World::tileSize), 0);
-    int lastTileX = std::min(Util::fastFloor(queryRegionBottomRight.x / World::tileSize), m_width - 1);
-    int lastTileY = std::min(Util::fastFloor(queryRegionBottomRight.y / World::tileSize), m_height - 1);
+    int firstTileX = std::max(Util::fastFloor(queryRegionTopLeft.x / GameConstants::tileSize), 0);
+    int firstTileY = std::max(Util::fastFloor(queryRegionTopLeft.y / GameConstants::tileSize), 0);
+    int lastTileX = std::min(Util::fastFloor(queryRegionBottomRight.x / GameConstants::tileSize), m_width - 1);
+    int lastTileY = std::min(Util::fastFloor(queryRegionBottomRight.y / GameConstants::tileSize), m_height - 1);
 
     std::vector<RectangleF> colliders;
     for(int x = firstTileX; x <= lastTileX; ++x)

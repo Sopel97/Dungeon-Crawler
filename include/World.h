@@ -22,8 +22,6 @@ class MapLayer;
 class World
 {
 public:
-    static constexpr int tileSize = 32; //It is set. It won't change later. Config files must assume it's 32
-
     World(Root& root);
     ~World();
 
