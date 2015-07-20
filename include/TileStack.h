@@ -3,6 +3,8 @@
 
 #include <vector>
 
+#include "../LibS/GeometryLight.h"
+
 class Tile;
 
 class TileStack
@@ -27,6 +29,9 @@ public:
     int size() const;
 
     bool isTall() const;
+
+    bool hasCollider() const;
+    const Geo::RectangleF& collider() const;
 
     const std::vector<Tile*>& tiles() const;
 

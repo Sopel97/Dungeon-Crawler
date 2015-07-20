@@ -25,6 +25,8 @@ public:
     void removeEntity(Entity* entityToRemove);
 
     void updateEntities(World* world, float dt);
+    void moveEntity(World* world, Entity* entity, float dt);
+
     std::vector<Entity*> getVisibleEntities(const Camera& camera);
 protected:
     std::vector<Entity*> m_entities; //eventually will be some spatial storage

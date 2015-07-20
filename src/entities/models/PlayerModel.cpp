@@ -34,7 +34,7 @@ bool PlayerModel::hasCollider() const
 }
 float PlayerModel::colliderRadius() const
 {
-    return 8.0f;
+    return 6.0f;
 }
 
 const Vec2F& PlayerModel::position() const

@@ -84,3 +84,22 @@ bool TileStack::isTall() const
 
     return false;
 }
+
+bool TileStack::hasCollider() const
+{
+    for(const Tile* tile : m_tiles)
+    {
+        if(tile->model().hasCollider()) return true;
+    }
+
+    return false;
+}
+const Geo::RectangleF& TileStack::collider() const
+{
+    for(const Tile* tile : m_tiles)
+    {
+        if(tile->model().hasCollider()) return tile->model().collider();
+    }
+
+    //TODO: return something
+}

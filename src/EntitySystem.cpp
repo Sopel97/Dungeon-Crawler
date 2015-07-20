@@ -3,10 +3,15 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 
+#include "World.h"
+#include "MapLayer.h"
+
 #include "Entity.h"
 #include "EntityModel.h"
 #include "EntityView.h"
 #include "EntityController.h"
+
+#include "TileStack.h"
 
 #include "Camera.h"
 
@@ -14,6 +19,8 @@
 #include <algorithm>
 #include <memory>
 #include "../LibS/make_unique.h"
+
+#include "GameConstants.h"
 
 using namespace Geo;
 
@@ -77,9 +84,69 @@ void EntitySystem::updateEntities(World* world, float dt) //will also move them 
 
     for(Entity* entity : m_entities)
     {
-        entity->controller().move(Geo::Vec2F {1.0f, 1.0f}, dt);
+        moveEntity(world, entity, dt);
     }
 }
+void EntitySystem::moveEntity(World* world, Entity* entity, float dt)
+{
+    auto& model = entity->model();
+    Vec2F displacementWhenMoved = model.displacementWhenMoved(dt);
+    Vec2F position = model.position();
+    Vec2F idealPositionAfterMove = position + displacementWhenMoved;
+    Vec2F moveFactor(1.0f, 1.0f);
+
+    if(model.hasCollider())
+    {
+        float entityColliderRadius = model.colliderRadius();
+        RectangleF entityCollider(idealPositionAfterMove - Vec2F(entityColliderRadius, entityColliderRadius), idealPositionAfterMove + Vec2F(entityColliderRadius, entityColliderRadius));
+        int xmin = entityCollider.min.x / GameConstants::tileSize;
+        int ymin = entityCollider.min.y / GameConstants::tileSize;
+        int xmax = entityCollider.max.x / GameConstants::tileSize;
+        int ymax = entityCollider.max.y / GameConstants::tileSize;
+
+        std::vector<RectangleF> collidersInRange;
+
+        for(int x = xmin; x <= xmax; ++x)
+        {
+            for(int y = ymin; y <= ymax; ++y)
+            {
+                const TileStack& tileStack = world->map().at(x, y);
+                if(tileStack.hasCollider())
+                {
+                    RectangleF tileCollider = tileStack.collider() + Vec2F(x, y) * GameConstants::tileSize;
+                    collidersInRange.push_back(tileCollider);
+                }
+            }
+        }
+
+        entityCollider -= displacementWhenMoved; //back to initial position
+        entityCollider += Vec2F(displacementWhenMoved.x, 0.0f); //as it moved only in x direction
+
+        for(const auto& rect : collidersInRange)
+        {
+            if(entityCollider.intersects(rect))
+            {
+                moveFactor.x = 0.0f;
+                entityCollider -= Vec2F(displacementWhenMoved.x, 0.0f); //if it can't move there go back
+                break;
+            }
+        }
+
+        entityCollider += Vec2F(0.0f, displacementWhenMoved.y); //as it moved in y direction
+
+        for(const auto& rect : collidersInRange)
+        {
+            if(entityCollider.intersects(rect))
+            {
+                moveFactor.y = 0.0f;
+                break;
+            }
+        }
+    }
+
+    entity->controller().move(moveFactor, dt);
+}
+
 std::vector<Entity*> EntitySystem::getVisibleEntities(const Camera& camera)
 {
     return queryRegion(camera.viewRectangle());
