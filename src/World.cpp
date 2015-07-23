@@ -107,8 +107,9 @@ void World::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
         tallDrawables.push_back(new TallEntityDrawable(visibleEntity));
     }
 
+    std::sort(tallDrawables.begin(), tallDrawables.end(), TallDrawable::ptrCompare);
 
-    for(auto& tallDrawable : tallDrawables) //TODO: sorting before this
+    for(auto& tallDrawable : tallDrawables)
     {
         tallDrawable->draw(renderTarget, renderStates);
     }

@@ -9,6 +9,8 @@
 #include "TileStack.h"
 #include "MapLayer.h"
 
+#include "GameConstants.h"
+
 using namespace Geo;
 
 TallTileStackDrawable::TallTileStackDrawable(const TileStack& tileStack, const TileLocation& tileLocation) :
@@ -23,7 +25,7 @@ TallTileStackDrawable::TallTileStackDrawable(const TileStack& tileStack, const T
         if(tile->view().isTall())
         {
             m_indexOfFirstTallTile = i;
-            m_boundingRectangle = tile->model().collider();
+            m_boundingRectangle = tile->model().collider() + Vec2F(tileLocation.x, tileLocation.y) * GameConstants::tileSize;
             m_center = m_boundingRectangle.center();
 
             break;

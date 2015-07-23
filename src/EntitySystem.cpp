@@ -92,6 +92,7 @@ void EntitySystem::moveEntity(World* world, Entity* entity, float dt)
     auto& model = entity->model();
     Vec2F displacementWhenMoved = model.displacementWhenMoved(dt);
     Vec2F position = model.position();
+    Vec2F velocity = model.velocity();
     Vec2F idealPositionAfterMove = position + displacementWhenMoved;
     Vec2F moveFactor(1.0f, 1.0f);
 
@@ -128,6 +129,7 @@ void EntitySystem::moveEntity(World* world, Entity* entity, float dt)
             {
                 moveFactor.x = 0.0f;
                 entityCollider -= Vec2F(displacementWhenMoved.x, 0.0f); //if it can't move there go back
+                velocity.x = 0.0f;
                 break;
             }
         }
@@ -139,12 +141,14 @@ void EntitySystem::moveEntity(World* world, Entity* entity, float dt)
             if(entityCollider.intersects(rect))
             {
                 moveFactor.y = 0.0f;
+                velocity.y = 0.0f;
                 break;
             }
         }
     }
 
     entity->controller().move(moveFactor, dt);
+    model.setVelocity(velocity);
 }
 
 std::vector<Entity*> EntitySystem::getVisibleEntities(const Camera& camera)

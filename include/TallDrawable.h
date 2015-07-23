@@ -29,6 +29,7 @@ public:
     virtual DrawableType type() const = 0;
 
     static bool compare(const TallDrawable& lhs, const TallDrawable& rhs);
+    static bool ptrCompare(const TallDrawable* lhs, const TallDrawable* rhs);
 protected:
 };
 
