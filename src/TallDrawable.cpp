@@ -27,15 +27,11 @@ bool TallDrawable::compare(const TallDrawable& lhs, const TallDrawable& rhs)
         const TallTileStackDrawable& rhsTile = static_cast<const TallTileStackDrawable&>(rhs);
 
         int lhsY = lhsTile.tileY();
+        int lhsX = lhsTile.tileX();
         int rhsY = rhsTile.tileY();
-        if(lhsY < rhsY) return true;
-        else if(lhsY == rhsY)
-        {
-            int lhsX = lhsTile.tileX();
-            int rhsX = rhsTile.tileX();
+        int rhsX = rhsTile.tileX();
 
-            return lhsX < rhsX; //should never be equal btw
-        }
+        return lhsX+lhsY < rhsX+rhsY;
     }
     else if(!isLhsTile && !isRhsTile) //entity, entity
     {
@@ -56,16 +52,30 @@ bool TallDrawable::compare(const TallDrawable& lhs, const TallDrawable& rhs)
         const TallTileStackDrawable& lhsTile = static_cast<const TallTileStackDrawable&>(tile);
         const TallEntityDrawable& rhsEntity = static_cast<const TallEntityDrawable&>(entity);
 
-        //TODO: this
-
         bool result = false;
+
+        const RectangleF& entityCollider = rhsEntity.boundingRectangle();
+        Vec2F entityTopRight(entityCollider.max.x, entityCollider.min.y);
+        Vec2F entityBottomLeft(entityCollider.min.x, entityCollider.max.y);
+        const RectangleF& tileCollider = lhsTile.boundingRectangle();
+        Vec2F tileTopRight(tileCollider.max.x, tileCollider.min.y);
+        Vec2F tileBottomLeft(tileCollider.min.x, tileCollider.max.y);
+
+        if(entityBottomLeft.x > tileTopRight.x)
+        {
+            result = (tileTopRight.x + tileTopRight.y < entityBottomLeft.x + entityBottomLeft.y);
+        }
+        else if(entityTopRight.y > tileBottomLeft.y)
+        {
+            result = (tileBottomLeft.x + tileBottomLeft.y < entityTopRight.x + entityTopRight.y);
+        }
 
         if(negateResult) return !result;
         else return result;
 
     }
 
-    return false;
+    return true;
 }
 
 bool TallDrawable::ptrCompare(const TallDrawable* lhs, const TallDrawable* rhs)

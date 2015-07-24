@@ -107,6 +107,8 @@ void World::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
         tallDrawables.push_back(new TallEntityDrawable(visibleEntity));
     }
 
+    //TODO: sorting does not work 100%. It gives wrong ordering when going by the long wall.
+    //      Fixing this may be impossible in compare method and may require other methods.
     std::sort(tallDrawables.begin(), tallDrawables.end(), TallDrawable::ptrCompare);
 
     for(auto& tallDrawable : tallDrawables)
