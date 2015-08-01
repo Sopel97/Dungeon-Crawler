@@ -21,12 +21,12 @@ class Tile
 public:
     Tile(std::unique_ptr<TileModel>&& model, std::unique_ptr<TileView>&& view, std::unique_ptr<TileController>&& controller);
     Tile(const Tile& other);
-    virtual ~Tile();
+    ~Tile();
 
     void loadFromConfiguration(ConfigurationNode& config);
 
-    virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const;
-    virtual void drawOutside(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const;
+    void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const;
+    void drawOutside(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const;
 
     const TileModel& model() const;
     TileModel& model();
@@ -35,9 +35,12 @@ public:
     const TileController& controller() const;
     TileController& controller();
 
+    void onTilePlaced(const TileLocation& location);
+    void onTileRemoved(const TileLocation& location);
+
     int id() const;
 
-    virtual std::unique_ptr<Tile> clone() const;
+    std::unique_ptr<Tile> clone() const;
 protected:
     std::unique_ptr<TileModel> m_model;
     std::unique_ptr<TileView> m_view;

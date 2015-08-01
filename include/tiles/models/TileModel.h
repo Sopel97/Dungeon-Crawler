@@ -8,6 +8,7 @@
 #include <memory>
 
 class Tile;
+class TileLocation;
 
 class TileModel //must be functions (ie. all methods return resonable values and there is not pure virtual member functions)
 {
@@ -26,6 +27,9 @@ public:
     virtual const Geo::RectangleF& collider() const;
 
     virtual float drag() const;
+
+    virtual void onTilePlaced(const TileLocation& location);
+    virtual void onTileRemoved(const TileLocation& location);
 
     virtual std::unique_ptr<TileModel> clone() const;
     virtual std::unique_ptr<TileModel> create(Tile* owner) const;

@@ -23,7 +23,6 @@ PlainTileView::PlainTileView(const PlainTileView& other) :
     TileView(other),
     m_commonData(other.m_commonData)
 {
-    m_selectedSprite = selectRandomSprite();
 }
 PlainTileView::~PlainTileView()
 {
@@ -88,6 +87,15 @@ int PlainTileView::selectRandomSprite() const
     float sumOfWeights = spritesWeightsSums.back();
 
     return std::lower_bound(spritesWeightsSums.begin(), spritesWeightsSums.end(), Root::instance().rng().nextFloat(0.0f, sumOfWeights)) - spritesWeightsSums.begin();
+}
+
+void PlainTileView::onTilePlaced(const TileLocation& location)
+{
+    m_selectedSprite = selectRandomSprite();
+}
+void PlainTileView::onTileRemoved(const TileLocation& location)
+{
+
 }
 
 std::unique_ptr<TileView> PlainTileView::clone() const

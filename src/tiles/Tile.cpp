@@ -77,6 +77,19 @@ TileController& Tile::controller()
     return *m_controller;
 }
 
+void Tile::onTilePlaced(const TileLocation& location)
+{
+    m_model->onTilePlaced(location);
+    m_view->onTilePlaced(location);
+    m_controller->onTilePlaced(location);
+}
+void Tile::onTileRemoved(const TileLocation& location)
+{
+    m_model->onTileRemoved(location);
+    m_view->onTileRemoved(location);
+    m_controller->onTileRemoved(location);
+}
+
 int Tile::id() const
 {
     return m_id;

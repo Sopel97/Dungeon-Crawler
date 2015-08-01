@@ -29,6 +29,11 @@ public:
     const Tile& at(int x, int y, int z) const;
     Tile& at(int x, int y, int z);
 
+    void placeTile(Tile* tile, int x, int y);
+    Tile* takeTile(int x, int y);
+    void deleteTile(int x, int y);
+
+
     std::vector<Geo::RectangleF> queryTileColliders(const Geo::RectangleF& queryRegion) const;
 
 protected:

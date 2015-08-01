@@ -50,6 +50,15 @@ float TileModel::drag() const
     return 1.0f;
 }
 
+void TileModel::onTilePlaced(const TileLocation& location)
+{
+
+}
+void TileModel::onTileRemoved(const TileLocation& location)
+{
+
+}
+
 std::unique_ptr<TileModel> TileModel::clone() const
 {
     return std::make_unique<TileModel>(*this);

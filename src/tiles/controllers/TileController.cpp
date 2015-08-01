@@ -32,6 +32,15 @@ void TileController::setOwner(Tile* newOwner)
     m_owner = newOwner;
 }
 
+void TileController::onTilePlaced(const TileLocation& location)
+{
+
+}
+void TileController::onTileRemoved(const TileLocation& location)
+{
+
+}
+
 std::unique_ptr<TileController> TileController::clone() const
 {
     return std::make_unique<TileController>(*this);

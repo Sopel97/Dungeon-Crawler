@@ -21,6 +21,15 @@ PlainTileController::~PlainTileController()
 
 }
 
+void PlainTileController::onTilePlaced(const TileLocation& location)
+{
+
+}
+void PlainTileController::onTileRemoved(const TileLocation& location)
+{
+
+}
+
 std::unique_ptr<TileController> PlainTileController::clone() const
 {
     return std::make_unique<PlainTileController>(*this);

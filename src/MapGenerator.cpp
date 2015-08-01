@@ -393,11 +393,10 @@ void MapGenerator::generate(MapLayer& map)
             auto& floorTileToPlace = m_topologyMap.at(x, y) == TopologyMap::TopologyState::Wall || rand() / (float)RAND_MAX < 0.5f ? floorTile : floorTile2;
             //auto& floorTileToPlace = floorTile;
 
-            auto& tileStack = map.at(x, y);
-            tileStack.push(floorTileToPlace.get().clone().release());
+            map.placeTile(floorTileToPlace.get().clone().release(), x, y);
 
             if(m_topologyMap.at(x, y) == TopologyMap::TopologyState::Wall)
-                tileStack.push(wallTile.get().clone().release());
+                map.placeTile(wallTile.get().clone().release(), x, y);
         }
     }
 

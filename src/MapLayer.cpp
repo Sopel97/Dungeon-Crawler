@@ -6,6 +6,8 @@
 #include "TileView.h"
 #include "TileController.h"
 
+#include "TileLocation.h"
+
 #include "../LibS/Util.h"
 
 #include "GameConstants.h"
@@ -68,6 +70,24 @@ const Tile& MapLayer::at(int x, int y, int z) const
 Tile& MapLayer::at(int x, int y, int z)
 {
     return at(x, y).at(z);
+}
+
+void MapLayer::placeTile(Tile* tile, int x, int y)
+{
+    TileStack& tileStack = at(x, y);
+    tileStack.push(tile);
+    tile->onTilePlaced(TileLocation(*this, x, y, tileStack.topZ()));
+}
+Tile* MapLayer::takeTile(int x, int y)
+{
+    TileStack& tileStack = at(x, y);
+    int z = tileStack.topZ();
+    Tile* tile = tileStack.pop();
+    tile->onTileRemoved(TileLocation(*this, x, y, z));
+}
+void MapLayer::deleteTile(int x, int y)
+{
+    delete takeTile(x, y);
 }
 
 std::vector<RectangleF> MapLayer::queryTileColliders(const RectangleF& queryRegion) const

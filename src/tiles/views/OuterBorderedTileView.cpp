@@ -28,7 +28,6 @@ OuterBorderedTileView::OuterBorderedTileView(const OuterBorderedTileView& other)
     TileView(other),
     m_commonData(other.m_commonData)
 {
-    m_selectedSprite = selectRandomSprite();
 }
 OuterBorderedTileView::~OuterBorderedTileView()
 {
@@ -171,6 +170,15 @@ bool OuterBorderedTileView::hasOuterBorder() const
 bool OuterBorderedTileView::coversOuterBorders() const
 {
     return false;
+}
+
+void OuterBorderedTileView::onTilePlaced(const TileLocation& location)
+{
+    m_selectedSprite = selectRandomSprite();
+}
+void OuterBorderedTileView::onTileRemoved(const TileLocation& location)
+{
+
 }
 
 std::unique_ptr<TileView> OuterBorderedTileView::clone() const

@@ -64,6 +64,15 @@ bool TileView::isTall() const
     return false;
 }
 
+void TileView::onTilePlaced(const TileLocation& location)
+{
+
+}
+void TileView::onTileRemoved(const TileLocation& location)
+{
+
+}
+
 std::unique_ptr<TileView> TileView::clone() const
 {
     return std::make_unique<TileView>(*this);

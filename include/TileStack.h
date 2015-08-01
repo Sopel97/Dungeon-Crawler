@@ -35,6 +35,8 @@ public:
 
     const std::vector<Tile*>& tiles() const;
 
+    int topZ() const;
+
 protected:
     std::vector<Tile*> m_tiles;
     int m_lastTile;

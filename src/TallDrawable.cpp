@@ -3,6 +3,8 @@
 #include "TallEntityDrawable.h"
 #include "TallTileStackDrawable.h"
 
+#include "GameConstants.h"
+
 using namespace Geo;
 
 TallDrawable::TallDrawable()
@@ -31,17 +33,14 @@ bool TallDrawable::compare(const TallDrawable& lhs, const TallDrawable& rhs)
         int rhsY = rhsTile.tileY();
         int rhsX = rhsTile.tileX();
 
-        return lhsX+lhsY < rhsX+rhsY;
+        return lhsX + lhsY < rhsX + rhsY;
     }
     else if(!isLhsTile && !isRhsTile) //entity, entity
     {
-        const TallEntityDrawable& lhsEntity = static_cast<const TallEntityDrawable&>(lhs);
-        const TallEntityDrawable& rhsEntity = static_cast<const TallEntityDrawable&>(rhs);
-
         const Vec2F& lhsCenter = lhs.center();
         const Vec2F& rhsCenter = rhs.center();
 
-        return lhsCenter.x+lhsCenter.y < rhsCenter.x+rhsCenter.y;
+        return lhsCenter.x + lhsCenter.y < rhsCenter.x + rhsCenter.y;
     }
     else //entity, tile
     {

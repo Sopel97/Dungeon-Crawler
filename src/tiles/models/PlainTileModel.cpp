@@ -54,6 +54,15 @@ float PlainTileModel::drag() const
     return  m_commonData->drag;
 }
 
+void PlainTileModel::onTilePlaced(const TileLocation& location)
+{
+
+}
+void PlainTileModel::onTileRemoved(const TileLocation& location)
+{
+
+}
+
 std::unique_ptr<TileModel> PlainTileModel::clone() const
 {
     return std::make_unique<PlainTileModel>(*this);

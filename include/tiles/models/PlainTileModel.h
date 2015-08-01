@@ -25,6 +25,9 @@ public:
 
     virtual float drag() const;
 
+    virtual void onTilePlaced(const TileLocation& location);
+    virtual void onTileRemoved(const TileLocation& location);
+
     virtual std::unique_ptr<TileModel> clone() const;
     virtual std::unique_ptr<TileModel> create(Tile* owner) const;
 protected:

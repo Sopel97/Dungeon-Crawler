@@ -103,3 +103,8 @@ const Geo::RectangleF& TileStack::collider() const
 
     //TODO: return something
 }
+
+int TileStack::topZ() const
+{
+    return m_lastTile;
+}
