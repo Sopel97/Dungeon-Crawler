@@ -3,6 +3,8 @@
 
 #include "TileView.h"
 
+#include "WeightedSpriteSet.h"
+
 #include "ResourceManager.h"
 
 #include "ResourceLoaders.h"
@@ -33,9 +35,7 @@ public:
     virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const;
 
     const sf::Texture& texture() const;
-    const Geo::Vec2I& selectedSprite() const;
 
-    int selectRandomSprite() const;
     virtual bool coversOuterBorders() const;
     virtual int outerBorderPriority() const;
 
@@ -48,14 +48,13 @@ protected:
     struct CommonData
     {
         ResourceHandle<sf::Texture> texture;
-        std::vector<Geo::Vec2I> sprites;
-        std::vector<float> spritesWeightsSums;
+        WeightedSpriteSet spriteSet;
 
         int outerBorderPriority;
         bool coversOuterBorders;
     };
     std::shared_ptr<CommonData> m_commonData;
-    int m_selectedSprite;
+    Geo::Vec2I m_sprite;
 };
 
 REGISTER_TILE_VIEW_TYPE(PlainTileView)

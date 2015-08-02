@@ -115,6 +115,11 @@ void World::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
     {
         tallDrawable->draw(renderTarget, renderStates);
     }
+
+    for(auto& tallDrawable : tallDrawables)
+    {
+        delete tallDrawable;
+    }
 }
 
 void World::drawOuterBorder(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& tileLocation)

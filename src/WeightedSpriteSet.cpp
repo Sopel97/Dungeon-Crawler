@@ -1,0 +1,45 @@
+#include "WeightedSpriteSet.h"
+
+#include "Root.h"
+
+#include <algorithm>
+
+using namespace Geo;
+
+WeightedSpriteSet::WeightedSpriteSet()
+{
+}
+
+void WeightedSpriteSet::loadFromConfiguration(ConfigurationNode& config)
+{
+    m_sprites.clear();
+    m_cumulativeWeights.clear();
+
+    int numberOfSprites = config.length();
+    m_sprites.reserve(numberOfSprites);
+    m_cumulativeWeights.reserve(numberOfSprites);
+
+    float weightSum = 0.0f;
+    for(int i = 1; i <= numberOfSprites; ++i)
+    {
+        int x = config[i][1].get<int>();
+        int y = config[i][2].get<int>();
+
+        float weight = config[i][3].getDefault<float>(1.0f);
+        m_sprites.emplace_back(x, y);
+        weightSum += weight;
+        m_cumulativeWeights.emplace_back(weightSum);
+    }
+}
+
+
+Vec2I WeightedSpriteSet::chooseRandomSprite(const TileLocation& location) const
+{
+    if(m_cumulativeWeights.size() == 0) return {0, 0};
+
+    float sumOfWeights = m_cumulativeWeights.back();
+
+    int spriteIndex = std::lower_bound(m_cumulativeWeights.begin(), m_cumulativeWeights.end(), Root::instance().rng().nextFloat(0.0f, sumOfWeights)) - m_cumulativeWeights.begin();
+
+    return m_sprites[spriteIndex];
+}
