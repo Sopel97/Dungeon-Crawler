@@ -17,7 +17,9 @@ Tile::Tile(std::unique_ptr<TileModel>&& model, std::unique_ptr<TileView>&& view,
     m_model(std::move(model)),
     m_view(std::move(view)),
     m_controller(std::move(controller)),
-    m_id(++m_lastId)
+    m_id(++m_lastId),
+    m_quantity(1),
+    m_maxQuantity(1)
 {
     m_model->setOwner(this);
     m_view->setOwner(this);
@@ -27,7 +29,9 @@ Tile::Tile(const Tile& other) :
     m_model(other.m_model->clone()),
     m_view(other.m_view->clone()),
     m_controller(other.m_controller->clone()),
-    m_id(other.m_id)
+    m_id(other.m_id),
+    m_quantity(other.m_quantity),
+    m_maxQuantity(other.m_maxQuantity)
 {
 
 }
@@ -41,6 +45,8 @@ void Tile::loadFromConfiguration(ConfigurationNode& config)
     m_model->loadFromConfiguration(config);
     m_view->loadFromConfiguration(config);
     m_controller->loadFromConfiguration(config);
+
+    m_maxQuantity = config["maxQuantity"].getDefault<int>(1);
 }
 
 void Tile::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const
@@ -75,6 +81,22 @@ const TileController& Tile::controller() const
 TileController& Tile::controller()
 {
     return *m_controller;
+}
+
+
+int Tile::quantity() const
+{
+    return m_quantity;
+}
+void Tile::setQuantity(int newQuantity)
+{
+    if(newQuantity < 1) newQuantity = 1;
+    if(newQuantity > m_maxQuantity) newQuantity = m_maxQuantity;
+    m_quantity = newQuantity;
+}
+int Tile::maxQuantity() const
+{
+    return m_maxQuantity;
 }
 
 void Tile::onTilePlaced(const TileLocation& location)
