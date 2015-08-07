@@ -72,6 +72,10 @@ void TileView::onTileRemoved(const TileLocation& location)
 {
 
 }
+void TileView::onTileQuantityChanged(int newQuantity)
+{
+
+}
 
 std::unique_ptr<TileView> TileView::clone() const
 {

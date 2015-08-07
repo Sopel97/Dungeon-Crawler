@@ -23,6 +23,7 @@ public:
 
     virtual void onTilePlaced(const TileLocation& location);
     virtual void onTileRemoved(const TileLocation& location);
+    virtual void onTileQuantityChanged(int newQuantity);
 
     virtual std::unique_ptr<TileController> clone() const;
     virtual std::unique_ptr<TileController> create(Tile* owner) const;

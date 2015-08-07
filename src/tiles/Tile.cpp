@@ -92,7 +92,15 @@ void Tile::setQuantity(int newQuantity)
 {
     if(newQuantity < 1) newQuantity = 1;
     if(newQuantity > m_maxQuantity) newQuantity = m_maxQuantity;
-    m_quantity = newQuantity;
+
+    if(m_quantity != newQuantity)
+    {
+        m_quantity = newQuantity;
+
+        m_model->onTileQuantityChanged(m_quantity);
+        m_view->onTileQuantityChanged(m_quantity);
+        m_controller->onTileQuantityChanged(m_quantity);
+    }
 }
 int Tile::maxQuantity() const
 {

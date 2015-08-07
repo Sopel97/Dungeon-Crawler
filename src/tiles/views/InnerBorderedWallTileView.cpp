@@ -196,14 +196,6 @@ bool InnerBorderedWallTileView::isTall() const
     return true;
 }
 
-void InnerBorderedWallTileView::onTilePlaced(const TileLocation& location)
-{
-
-}
-void InnerBorderedWallTileView::onTileRemoved(const TileLocation& location)
-{
-
-}
 
 std::unique_ptr<TileView> InnerBorderedWallTileView::clone() const
 {

@@ -150,11 +150,7 @@ bool OuterBorderedTileView::coversOuterBorders() const
 
 void OuterBorderedTileView::onTilePlaced(const TileLocation& location)
 {
-    m_sprite = m_commonData->spriteSet.chooseRandomSprite(location);
-}
-void OuterBorderedTileView::onTileRemoved(const TileLocation& location)
-{
-
+    m_sprite = m_commonData->spriteSet.chooseRandomSprite();
 }
 
 std::unique_ptr<TileView> OuterBorderedTileView::clone() const

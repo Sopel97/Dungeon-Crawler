@@ -58,6 +58,10 @@ void TileModel::onTileRemoved(const TileLocation& location)
 {
 
 }
+void TileModel::onTileQuantityChanged(int newQuantity)
+{
+
+}
 
 std::unique_ptr<TileModel> TileModel::clone() const
 {

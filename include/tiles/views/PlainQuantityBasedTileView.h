@@ -1,9 +1,9 @@
-#ifndef PLAINTILEVIEW_H
-#define PLAINTILEVIEW_H
+#ifndef PLAINQUANTITYBASEDTILEVIEW_H
+#define PLAINQUANTITYBASEDTILEVIEW_H
 
 #include "TileView.h"
 
-#include "WeightedSpriteSet.h"
+#include "QuantityBasedSpriteSet.h"
 
 #include "ResourceManager.h"
 
@@ -23,12 +23,12 @@ class MapLayer;
 class Tile;
 class TileLocation;
 
-class PlainTileView : public TileView
+class PlainQuantityBasedTileView : public TileView
 {
 public:
-    PlainTileView(Tile* owner);
-    PlainTileView(const PlainTileView& other);
-    virtual ~PlainTileView();
+    PlainQuantityBasedTileView(Tile* owner);
+    PlainQuantityBasedTileView(const PlainQuantityBasedTileView& other);
+    virtual ~PlainQuantityBasedTileView();
 
     virtual void loadFromConfiguration(ConfigurationNode& config);
 
@@ -40,6 +40,7 @@ public:
     virtual int outerBorderPriority() const;
 
     virtual void onTilePlaced(const TileLocation& location);
+    virtual void onTileQuantityChanged(int newQuantity);
 
     virtual std::unique_ptr<TileView> clone() const;
     virtual std::unique_ptr<TileView> create(Tile* owner) const;
@@ -47,7 +48,7 @@ protected:
     struct CommonData
     {
         ResourceHandle<sf::Texture> texture;
-        WeightedSpriteSet spriteSet;
+        QuantityBasedSpriteSet spriteSet;
 
         int outerBorderPriority;
         bool coversOuterBorders;
@@ -56,6 +57,6 @@ protected:
     Geo::Vec2I m_sprite;
 };
 
-REGISTER_TILE_VIEW_TYPE(PlainTileView)
+REGISTER_TILE_VIEW_TYPE(PlainQuantityBasedTileView)
 
-#endif // PLAINTILEVIEW_H
+#endif // PLAINQUANTITYBASEDTILEVIEW_H

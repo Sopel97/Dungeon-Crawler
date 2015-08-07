@@ -33,7 +33,7 @@ void WeightedSpriteSet::loadFromConfiguration(ConfigurationNode& config)
 }
 
 
-Vec2I WeightedSpriteSet::chooseRandomSprite(const TileLocation& location) const
+Vec2I WeightedSpriteSet::chooseRandomSprite() const
 {
     if(m_cumulativeWeights.size() == 0) return {0, 0};
 

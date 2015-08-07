@@ -40,6 +40,10 @@ void TileController::onTileRemoved(const TileLocation& location)
 {
 
 }
+void TileController::onTileQuantityChanged(int newQuantity)
+{
+
+}
 
 std::unique_ptr<TileController> TileController::clone() const
 {

@@ -37,9 +37,6 @@ public:
 
     virtual bool isTall() const;
 
-    virtual void onTilePlaced(const TileLocation& location);
-    virtual void onTileRemoved(const TileLocation& location);
-
     virtual std::unique_ptr<TileView> clone() const;
     virtual std::unique_ptr<TileView> create(Tile* owner) const;
 protected:

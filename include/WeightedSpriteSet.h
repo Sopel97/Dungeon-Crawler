@@ -3,8 +3,6 @@
 
 #include <vector>
 
-#include "TileLocation.h"
-
 #include "Configuration.h"
 
 #include "../LibS/GeometryLight.h"
@@ -16,7 +14,7 @@ public:
 
     void loadFromConfiguration(ConfigurationNode& config);
 
-    Geo::Vec2I chooseRandomSprite(const TileLocation& location) const;
+    Geo::Vec2I chooseRandomSprite() const;
 
 
 protected:
