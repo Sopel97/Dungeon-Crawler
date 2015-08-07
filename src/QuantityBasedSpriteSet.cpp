@@ -38,3 +38,8 @@ Vec2I QuantityBasedSpriteSet::getSprite(int quantity) const
     int index = iter-m_thresholdQuantities.begin();
     return m_sprites[index];
 }
+
+Geo::Vec2I QuantityBasedSpriteSet::defaultSprite() const
+{
+    return m_sprites[0];
+}

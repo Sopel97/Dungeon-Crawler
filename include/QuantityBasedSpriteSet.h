@@ -15,6 +15,7 @@ public:
     void loadFromConfiguration(ConfigurationNode& config);
 
     Geo::Vec2I getSprite(int quantity) const;
+    Geo::Vec2I defaultSprite() const;
 protected:
     std::vector<Geo::Vec2I> m_sprites;
     std::vector<int> m_thresholdQuantities;

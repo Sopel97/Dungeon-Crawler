@@ -43,3 +43,8 @@ Vec2I WeightedSpriteSet::chooseRandomSprite() const
 
     return m_sprites[spriteIndex];
 }
+
+Geo::Vec2I WeightedSpriteSet::defaultSprite() const
+{
+    return m_sprites[0];
+}

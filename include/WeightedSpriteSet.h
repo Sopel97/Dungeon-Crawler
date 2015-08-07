@@ -15,6 +15,7 @@ public:
     void loadFromConfiguration(ConfigurationNode& config);
 
     Geo::Vec2I chooseRandomSprite() const;
+    Geo::Vec2I defaultSprite() const;
 
 
 protected:

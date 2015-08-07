@@ -43,6 +43,8 @@ void OuterBorderedTileView::loadFromConfiguration(ConfigurationNode& config)
 
     m_commonData->borderSprites = Vec2I {config["borderSprites"][1].get<int>(), config["borderSprites"][2].get<int>()};
     m_commonData->outerBorderPriority = config["outerBorderPriority"].get<int>();
+
+    m_sprite = m_commonData->spriteSet.defaultSprite();
 }
 
 void OuterBorderedTileView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const

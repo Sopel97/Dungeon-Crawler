@@ -42,6 +42,8 @@ void PlainTileView::loadFromConfiguration(ConfigurationNode& config)
 
     bool defaultForBorderCovering = m_commonData->outerBorderPriority == -1 ? true : false;
     m_commonData->coversOuterBorders = config["coversOuterBorders"].getDefault<bool>(defaultForBorderCovering);
+
+    m_sprite = m_commonData->spriteSet.defaultSprite();
 }
 
 void PlainTileView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const
