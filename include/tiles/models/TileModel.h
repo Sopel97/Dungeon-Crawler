@@ -26,7 +26,7 @@ public:
     virtual bool hasCollider() const;
     virtual const Geo::RectangleF& collider() const;
 
-    virtual float drag() const;
+    virtual float drag() const; //TODO: make it possible to specify that tile uses the drag of the tile lower
 
     virtual void onTilePlaced(const TileLocation& location);
     virtual void onTileRemoved(const TileLocation& location);
