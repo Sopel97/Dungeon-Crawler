@@ -78,11 +78,11 @@ void WindowSpaceManager::setDefaultView()
 }
 void WindowSpaceManager::updateRegions()
 {
-    constexpr int playerGuiWidth = 200;
+    constexpr int playerUiWidth = 240;
 
     Vec2I windowSize {(int)m_window.getSize().x, (int)m_window.getSize().y};
 
-    int worldViewSize = std::min(windowSize.x - playerGuiWidth, windowSize.y);
+    int worldViewSize = std::min(windowSize.x - playerUiWidth, windowSize.y);
 
     m_regions[Region::PlayerUi] = Region
     {
@@ -90,10 +90,10 @@ void WindowSpaceManager::updateRegions()
         (
             Vec2I
             (
-                windowSize.x - playerGuiWidth,
+                windowSize.x - playerUiWidth,
                 0
             ),
-            playerGuiWidth,
+            playerUiWidth,
             windowSize.y
         ),
         Region::PlayerUi,
@@ -109,7 +109,7 @@ void WindowSpaceManager::updateRegions()
         (
             Vec2I
             (
-                (windowSize.x - playerGuiWidth - worldViewSize) / 2,
+                (windowSize.x - playerUiWidth - worldViewSize) / 2,
                 (windowSize.y - worldViewSize) / 2
             ),
             worldViewSize,

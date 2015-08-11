@@ -28,6 +28,8 @@ public:
     const T* operator->() const;
     T* operator->();
 
+    operator bool() const;
+
     ~ResourceHandle();
 
 protected:
@@ -48,9 +50,9 @@ public:
     std::map<std::type_index, ResourceLoader*>::iterator registerLoader(Arguments&& ... args);
 
     template <class T>
-    std::map<std::string, void*>::iterator load(const std::string& path, const std::string& name); //this name has bigger priority than name given by resource loader
+    ResourceHandle<T> load(const std::string& path, const std::string& name); //this name has bigger priority than name given by resource loader
     template <class T>
-    std::map<std::string, void*>::iterator load(const std::string& path);
+    ResourceHandle<T> load(const std::string& path);
 
     ~ResourceManager();
 protected:
@@ -77,6 +79,12 @@ ResourceHandle<T>::ResourceHandle(const ResourceHandle& other) :
     m_resource(other.m_resource)
 {
 
+}
+
+template <class T>
+ResourceHandle<T>::operator bool() const
+{
+    return m_resource != nullptr;
 }
 
 template <class T>
@@ -130,16 +138,17 @@ std::map<std::type_index, ResourceLoader*>::iterator ResourceManager::registerLo
 }
 
 template <class T>
-std::map<std::string, void*>::iterator ResourceManager::load(const std::string& path, const std::string& name)
+ResourceHandle<T> ResourceManager::load(const std::string& path, const std::string& name)
 {
     auto iter = m_resourceLoaders.find(std::type_index(typeid(T)));
     if(iter != m_resourceLoaders.end())
     {
         auto resourceIter = m_resources.find(name);
-        if(resourceIter != m_resources.end()) return resourceIter;
+        if(resourceIter != m_resources.end()) return ResourceHandle<T>(static_cast<T*>(resourceIter->second));;
         std::pair<std::string, void*> resource = iter->second->load(path);
         if(resource.second == nullptr) throw std::runtime_error(std::string("Could not load resource from path ") + path);
-        return m_resources.insert(std::make_pair(name, resource.second)).first;
+        m_resources.insert(std::make_pair(name, resource.second));
+        return ResourceHandle<T>(static_cast<T*>(resource.second));
     }
     else
     {
@@ -148,14 +157,15 @@ std::map<std::string, void*>::iterator ResourceManager::load(const std::string& 
 }
 
 template <class T>
-std::map<std::string, void*>::iterator ResourceManager::load(const std::string& path)
+ResourceHandle<T> ResourceManager::load(const std::string& path)
 {
     auto iter = m_resourceLoaders.find(std::type_index(typeid(T)));
     if(iter != m_resourceLoaders.end())
     {
         std::pair<std::string, void*> resource = iter->second->load(path);
         if(resource.second == nullptr) throw std::runtime_error(std::string("Could not load resource from path ") + path);
-        return m_resources.insert(resource).first;
+        m_resources.insert(resource);
+        return ResourceHandle<T>(static_cast<T*>(resource.second));
     }
     else
     {

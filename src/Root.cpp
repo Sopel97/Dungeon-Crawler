@@ -128,8 +128,14 @@ void Root::initResourceLoaders()
 void Root::loadAssets()
 {
     ResourceManager::instance().load<sf::Texture>("assets\\gfx\\spritesheet.png", "Spritesheet");
-    ResourceManager::instance().load<sf::Texture>("assets\\gfx\\ui_background.png", "UiBackground");
-    ResourceManager::instance().load<sf::Texture>("assets\\gfx\\ui_vertical_bars.png", "UiVerticalBars");
+    if(ResourceHandle<sf::Texture> texture = ResourceManager::instance().load<sf::Texture>("assets\\gfx\\ui_background.png", "UiBackground"))
+    {
+        texture->setRepeated(true);
+    }
+    if(ResourceHandle<sf::Texture> texture = ResourceManager::instance().load<sf::Texture>("assets\\gfx\\ui_vertical_bars.png", "UiVerticalBars"))
+    {
+        texture->setRepeated(true);
+    }
     ResourceManager::instance().load<sf::Texture>("assets\\gfx\\ui_non_repeating.png", "UiNonRepeating");
 
     for(const auto& tile : scanForFiles("assets\\tiles\\", "*.tile"))
