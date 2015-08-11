@@ -22,7 +22,9 @@ Root::Root() :
     m_lastFrameTime(0.0f),
     m_lastMeasuredFps(0),
     m_currentFpsCounter(0),
-    m_world(nullptr)
+    m_world(nullptr),
+    m_player(),
+    m_playerUi(*this, m_player)
 {
     //ctor
 }
@@ -44,12 +46,14 @@ void Root::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
 
     sf::VertexArray vertexBuffer(sf::PrimitiveType::Triangles);
     SFMLUtil::appendAsTriangleList(vertexBuffer, m_windowSpaceManager.regionRect(WindowSpaceManager::Region::World), sf::Color::Red);
-    SFMLUtil::appendAsTriangleList(vertexBuffer, m_windowSpaceManager.regionRect(WindowSpaceManager::Region::PlayerGui), sf::Color::Green);
+    SFMLUtil::appendAsTriangleList(vertexBuffer, m_windowSpaceManager.regionRect(WindowSpaceManager::Region::PlayerUi), sf::Color::Green);
 
     m_windowSpaceManager.setDefaultView();
     m_window.draw(vertexBuffer, m_renderStates);
 
     m_world->draw(renderTarget, renderStates);
+
+    m_playerUi.draw(renderTarget, renderStates);
 
     m_windowSpaceManager.setDefaultView();
     sf::Text fpsText(sf::String(std::to_string(m_lastMeasuredFps)), m_font.get(), 20);
@@ -124,6 +128,9 @@ void Root::initResourceLoaders()
 void Root::loadAssets()
 {
     ResourceManager::instance().load<sf::Texture>("assets\\gfx\\spritesheet.png", "Spritesheet");
+    ResourceManager::instance().load<sf::Texture>("assets\\gfx\\ui_background.png", "UiBackground");
+    ResourceManager::instance().load<sf::Texture>("assets\\gfx\\ui_vertical_bars.png", "UiVerticalBars");
+    ResourceManager::instance().load<sf::Texture>("assets\\gfx\\ui_non_repeating.png", "UiNonRepeating");
 
     for(const auto& tile : scanForFiles("assets\\tiles\\", "*.tile"))
     {

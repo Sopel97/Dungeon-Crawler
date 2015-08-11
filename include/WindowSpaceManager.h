@@ -20,7 +20,7 @@ public:
         enum Id
         {
             World,
-            PlayerGui
+            PlayerUi
         };
 
         Region() = default;

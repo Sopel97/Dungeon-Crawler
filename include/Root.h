@@ -9,6 +9,7 @@
 #include "ResourceManager.h"
 
 #include "Player.h"
+#include "PlayerUi.h"
 
 #include "../LibS/Random.h"
 
@@ -55,6 +56,7 @@ protected:
 
     std::unique_ptr<World> m_world;
     Player m_player;
+    PlayerUi m_playerUi;
 
     static constexpr float m_tickTime = 1.0f / 60.0f;
     static constexpr size_t m_defaultWindowWidth = 1024;

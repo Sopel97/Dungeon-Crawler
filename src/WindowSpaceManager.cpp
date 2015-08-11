@@ -84,7 +84,7 @@ void WindowSpaceManager::updateRegions()
 
     int worldViewSize = std::min(windowSize.x - playerGuiWidth, windowSize.y);
 
-    m_regions[Region::PlayerGui] = Region
+    m_regions[Region::PlayerUi] = Region
     {
         RectangleI
         (
@@ -96,7 +96,7 @@ void WindowSpaceManager::updateRegions()
             playerGuiWidth,
             windowSize.y
         ),
-        Region::PlayerGui,
+        Region::PlayerUi,
         std::vector<Scene>
         {
             Scene::Main
