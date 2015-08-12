@@ -43,7 +43,12 @@ InventoryView PlayerEquipmentInventory::createInventoryView()
     slotViews.emplace_back(m_contents[0], Vec2I(143, 17+43*1), InventorySlotView::ContentRequirement::Hand);
     slotViews.emplace_back(m_contents[0], Vec2I(143, 17+43*2), InventorySlotView::ContentRequirement::Ammo);
 
-    return InventoryView(std::move(slotViews));
+    InventoryView inventoryView(std::move(slotViews));
+    inventoryView.setMinimizable(true);
+    inventoryView.setCloseable(false);
+    inventoryView.setResizeable(false);
+
+    return inventoryView;
 }
 
 int PlayerEquipmentInventory::numberOfSlots() const
