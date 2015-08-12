@@ -2,7 +2,7 @@
 
 using namespace Geo;
 
-InventorySlotView::InventorySlotView(Tile*& content, const Vec2I& position, TileRequirement requirement) :
+InventorySlotView::InventorySlotView(Tile*& content, const Vec2I& position, ContentRequirement requirement) :
     m_content(content),
     m_position(position),
     m_contentRequirement(requirement)

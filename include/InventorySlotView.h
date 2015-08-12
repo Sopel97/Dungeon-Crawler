@@ -8,12 +8,21 @@ class Tile;
 class InventorySlotView
 {
 public:
-    enum class TileRequirement
+    enum class ContentRequirement
     {
-        None
+        None,
+        Head,
+        Chest,
+        Legs,
+        Feet,
+        Hand,
+        Necklace,
+        Ring,
+        Ammo,
+        Container
     };
 
-    InventorySlotView(Tile*& content, const Geo::Vec2I& position, TileRequirement requirement = TileRequirement::None);
+    InventorySlotView(Tile*& content, const Geo::Vec2I& position, ContentRequirement requirement = ContentRequirement::None);
 
     bool setContent(Tile* newContent);
     bool isValidContent(Tile* tile) const;
@@ -24,7 +33,7 @@ public:
 protected:
     Tile*& m_content; //reference to pointer in inventory that owns the tile. It is to allow moving tiles through view.
     Geo::Vec2I m_position; //relative to inventory inner region
-    TileRequirement m_contentRequirement;
+    ContentRequirement m_contentRequirement;
 };
 
 #endif // INVENTORYSLOTVIEW_H
