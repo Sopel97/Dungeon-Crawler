@@ -19,7 +19,7 @@ public:
     InventoryView& operator =(InventoryView&&) = default;
 
     void addInventorySlotView(const InventorySlotView& slot);
-    void setOffset(int newOffset);
+    void setOffsetFromTop(int newOffset);
 
     bool isMinimizable() const;
     bool isCloseable() const;
@@ -29,10 +29,21 @@ public:
     void setCloseable(bool newValue);
     void setResizeable(bool newValue);
 
+    void setInnerHeight(int newInnerHeight);
+
+    void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
+
 protected:
+    static int m_topBarSize;
+    static int m_leftMarginSize;
+    static int m_bottomMarginSize;
+    static int m_rightMarginSize;
+
     std::vector<InventorySlotView> m_slotViews;
 
-    int m_offset; //offset from top
+    int m_offsetFromTop;
+    int m_scroll;
+    int m_height;
 
     bool m_isMinimizable;
     bool m_isCloseable;

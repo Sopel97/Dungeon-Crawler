@@ -1,6 +1,8 @@
 #ifndef PLAYERUI_H
 #define PLAYERUI_H
 
+#include <vector>
+
 namespace sf
 {
     class RenderTarget;
@@ -8,6 +10,7 @@ namespace sf
 }
 class Player;
 class Root;
+class InventoryView;
 
 class PlayerUi
 {
@@ -19,6 +22,8 @@ public:
 protected:
     Root& m_root;
     Player& m_player;
+
+    std::vector<InventoryView> m_inventories;
 };
 
 #endif // PLAYERUI_H

@@ -38,3 +38,8 @@ void Player::processAsyncKeyboardInput(World* world, float dt)
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) m_playerEntity->controller().accelerate(Vec2F(0.0f, -acc * dt * drag));
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) m_playerEntity->controller().accelerate(Vec2F(0.0f, acc * dt * drag));
 }
+
+PlayerEquipmentInventory& Player::equipmentInventory()
+{
+    return m_equipmentInventory;
+}

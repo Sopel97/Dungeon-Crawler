@@ -26,7 +26,8 @@ Root::Root() :
     m_player(),
     m_playerUi(*this, m_player)
 {
-    //ctor
+    initResourceLoaders();
+    loadAssets();
 }
 
 Root& Root::instance()
@@ -66,9 +67,6 @@ void Root::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
 
 void Root::run()
 {
-    initResourceLoaders();
-    loadAssets();
-
     m_font = ResourceManager::instance().get<sf::Font>("Font");
     m_world = std::make_unique<World>(*this);
 

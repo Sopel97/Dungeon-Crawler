@@ -31,22 +31,23 @@ InventoryView PlayerEquipmentInventory::createInventoryView()
     std::vector<InventorySlotView> slotViews;
 
     slotViews.emplace_back(m_contents[0], Vec2I(57, 17+43*0), InventorySlotView::ContentRequirement::Necklace);
-    slotViews.emplace_back(m_contents[0], Vec2I(57, 17+43*1), InventorySlotView::ContentRequirement::Hand);
+    slotViews.emplace_back(m_contents[0], Vec2I(57, 17+43*1), InventorySlotView::ContentRequirement::Sword);
     slotViews.emplace_back(m_contents[0], Vec2I(57, 17+43*2), InventorySlotView::ContentRequirement::Ring);
 
-    slotViews.emplace_back(m_contents[0], Vec2I(100, 4+43*0), InventorySlotView::ContentRequirement::Head);
-    slotViews.emplace_back(m_contents[0], Vec2I(100, 4+43*1), InventorySlotView::ContentRequirement::Chest);
-    slotViews.emplace_back(m_contents[0], Vec2I(100, 4+43*2), InventorySlotView::ContentRequirement::Legs);
-    slotViews.emplace_back(m_contents[0], Vec2I(100, 4+43*3), InventorySlotView::ContentRequirement::Feet);
+    slotViews.emplace_back(m_contents[0], Vec2I(100, 4+43*0), InventorySlotView::ContentRequirement::Helmet);
+    slotViews.emplace_back(m_contents[0], Vec2I(100, 4+43*1), InventorySlotView::ContentRequirement::Chestplate);
+    slotViews.emplace_back(m_contents[0], Vec2I(100, 4+43*2), InventorySlotView::ContentRequirement::Pants);
+    slotViews.emplace_back(m_contents[0], Vec2I(100, 4+43*3), InventorySlotView::ContentRequirement::Boots);
 
     slotViews.emplace_back(m_contents[0], Vec2I(143, 17+43*0), InventorySlotView::ContentRequirement::Container);
-    slotViews.emplace_back(m_contents[0], Vec2I(143, 17+43*1), InventorySlotView::ContentRequirement::Hand);
+    slotViews.emplace_back(m_contents[0], Vec2I(143, 17+43*1), InventorySlotView::ContentRequirement::Shield);
     slotViews.emplace_back(m_contents[0], Vec2I(143, 17+43*2), InventorySlotView::ContentRequirement::Ammo);
 
     InventoryView inventoryView(std::move(slotViews));
     inventoryView.setMinimizable(true);
     inventoryView.setCloseable(false);
     inventoryView.setResizeable(false);
+    inventoryView.setInnerHeight(177);
 
     return inventoryView;
 }
