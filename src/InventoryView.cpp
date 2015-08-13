@@ -120,9 +120,17 @@ void InventoryView::setResizeable(bool newValue)
     m_isResizeable = newValue;
 }
 
+void InventoryView::setHeight(int newHeight)
+{
+    m_height = newHeight;
+}
 void InventoryView::setInnerHeight(int newInnerHeight)
 {
     m_height = newInnerHeight + m_topBarHeight + m_bottomBarHeight;
+}
+void InventoryView::setMaxHeight()
+{
+    m_height = m_maxHeight;
 }
 
 void InventoryView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
@@ -179,7 +187,7 @@ void InventoryView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& rende
     backgroundSprite.setTextureRect(sf::IntRect(sf::Vector2i(0, m_scroll), sf::Vector2i(inventoryWindowWidth - m_leftBarWidth - m_rightBarWidth, sideBarHeight)));
     renderTarget.draw(backgroundSprite, renderStates);
 
-    //if(m_isResizeable)
+    if(m_isResizeable)
     {
         constexpr int scrollBarWidth = 12;
         int scrollBarHeight = inventoryContentRect.height();

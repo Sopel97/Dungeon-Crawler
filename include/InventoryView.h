@@ -36,7 +36,9 @@ public:
     void setCloseable(bool newValue);
     void setResizeable(bool newValue);
 
+    void setHeight(int newHeight);
     void setInnerHeight(int newInnerHeight);
+    void setMaxHeight();
 
     void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
     void update();
