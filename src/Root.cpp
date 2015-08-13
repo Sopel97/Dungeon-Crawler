@@ -22,9 +22,9 @@ Root::Root() :
     m_lastFrameTime(0.0f),
     m_lastMeasuredFps(0),
     m_currentFpsCounter(0),
-    m_world(nullptr),
-    m_player(),
-    m_playerUi(*this, m_player)
+    m_player(nullptr),
+    m_playerUi(nullptr),
+    m_world(nullptr)
 {
     initResourceLoaders();
     loadAssets();
@@ -54,7 +54,7 @@ void Root::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
 
     m_world->draw(renderTarget, renderStates);
 
-    m_playerUi.draw(renderTarget, renderStates);
+    m_playerUi->draw(renderTarget, renderStates);
 
     m_windowSpaceManager.setDefaultView();
     sf::Text fpsText(sf::String(std::to_string(m_lastMeasuredFps)), m_font.get(), 20);
@@ -68,6 +68,8 @@ void Root::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
 void Root::run()
 {
     m_font = ResourceManager::instance().get<sf::Font>("Font");
+    m_player = std::make_unique<Player>();
+    m_playerUi = std::make_unique<PlayerUi>(*this, *m_player);
     m_world = std::make_unique<World>(*this);
 
     sf::Clock clock;
@@ -114,7 +116,7 @@ void Root::run()
 }
 void Root::processAsyncKeyboardInput(float dt)
 {
-    m_player.processAsyncKeyboardInput(m_world.get(), dt);
+    m_player->processAsyncKeyboardInput(m_world.get(), dt);
 }
 void Root::initResourceLoaders()
 {
@@ -158,7 +160,7 @@ WindowSpaceManager& Root::windowSpaceManager()
 }
 Player& Root::player()
 {
-    return m_player;
+    return *m_player;
 }
 
 StandardRandomNumberGeneratorWrapper<std::minstd_rand>& Root::rng()

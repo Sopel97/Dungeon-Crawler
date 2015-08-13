@@ -14,6 +14,7 @@ PlayerUi::PlayerUi(Root& root, Player& player) :
     m_root(root),
     m_player(player)
 {
+    m_inventories.push_back(m_player.equipmentInventory().createInventoryView());
 }
 
 PlayerUi::~PlayerUi()
@@ -23,6 +24,5 @@ PlayerUi::~PlayerUi()
 
 void PlayerUi::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
 {
-    if(m_inventories.empty()) m_inventories.push_back(m_player.equipmentInventory().createInventoryView());
     for(auto& inv : m_inventories) inv.draw(renderTarget, renderStates);
 }

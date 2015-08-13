@@ -40,8 +40,11 @@ public:
     bool isEmpty() const;
     Tile const* content() const;
     Tile* releaseContent();
+    const Geo::Vec2I& position() const;
 
     void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
+
+    static const Geo::Vec2I& slotSize();
 
 protected:
     static ResourceHandle<sf::Texture> m_texture;

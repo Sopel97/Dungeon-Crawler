@@ -5,12 +5,14 @@
 
 #include <vector>
 
+class Inventory;
+
 class InventoryView
 {
 public:
-    InventoryView();
-    InventoryView(const std::vector<InventorySlotView>& slots);
-    InventoryView(std::vector<InventorySlotView>&& slots);
+    InventoryView(Inventory* parent);
+    InventoryView(Inventory* parent, const std::vector<InventorySlotView>& slots);
+    InventoryView(Inventory* parent, std::vector<InventorySlotView>&& slots);
 
     InventoryView(const InventoryView&) = default;
     InventoryView(InventoryView&&) = default;
@@ -20,6 +22,11 @@ public:
 
     void addInventorySlotView(const InventorySlotView& slot);
     void setOffsetFromTop(int newOffset);
+
+    Inventory const* parentInventory() const;
+    int height() const;
+    int minHeight() const;
+    int maxHeight() const;
 
     bool isMinimizable() const;
     bool isCloseable() const;
@@ -32,18 +39,23 @@ public:
     void setInnerHeight(int newInnerHeight);
 
     void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
+    void update();
 
 protected:
-    static int m_topBarSize;
-    static int m_leftMarginSize;
-    static int m_bottomMarginSize;
-    static int m_rightMarginSize;
+    static int m_minSensibleHeight;
+    static int m_topBarHeight;
+    static int m_leftBarWidth;
+    static int m_bottomBarHeight;
+    static int m_rightBarWidth;
 
+    Inventory* m_parentInventory;
     std::vector<InventorySlotView> m_slotViews;
 
     int m_offsetFromTop;
     int m_scroll;
     int m_height;
+    int m_minHeight;
+    int m_maxHeight;
 
     bool m_isMinimizable;
     bool m_isCloseable;

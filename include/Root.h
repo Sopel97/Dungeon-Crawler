@@ -54,9 +54,9 @@ protected:
     int m_currentFpsCounter;
     ResourceHandle<sf::Font> m_font;
 
+    std::unique_ptr<Player> m_player;
+    std::unique_ptr<PlayerUi> m_playerUi;
     std::unique_ptr<World> m_world;
-    Player m_player;
-    PlayerUi m_playerUi;
 
     static constexpr float m_tickTime = 1.0f / 60.0f;
     static constexpr size_t m_defaultWindowWidth = 1024;
