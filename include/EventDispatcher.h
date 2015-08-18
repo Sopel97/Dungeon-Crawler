@@ -12,12 +12,13 @@
 class EventDispatcher
 {
 public:
-    template<typename EventType>
+    template <typename EventType>
     class EventCallbackHandle
     {
     public:
         EventCallbackHandle(std::list<std::function<void(const EventType& event)>>& allCallbacks, typename std::list<std::function<void(const EventType& event)>>::iterator callback);
         void unsubscribe();
+
     protected:
         std::list<std::function<void(const EventType& event)>>* m_allCallbacks;
         const typename std::list<std::function<void(const EventType& event)>>::iterator m_callback; //iterator to where the callback is strored
@@ -50,7 +51,7 @@ protected:
         virtual void update() = 0;
     };
 
-    template<typename EventType>
+    template <typename EventType>
     class SpecificDispatcher : public ISpecificDispatcher
     {
     public:
@@ -85,6 +86,25 @@ class Event
 
 //Template members definitions
 
+template <typename EventType>
+EventDispatcher::EventCallbackHandle<EventType>::EventCallbackHandle(std::list<std::function<void(const EventType& event)>>& allCallbacks, typename std::list<std::function<void(const EventType& event)>>::iterator callback) :
+    m_allCallbacks(&allCallbacks),
+    m_callback(callback)
+{
+}
+
+template <typename EventType>
+void EventDispatcher::EventCallbackHandle<EventType>::unsubscribe()
+{
+    m_allCallbacks->erase(m_callback);
+}
+
+template <typename EventType>
+EventDispatcher::SpecificDispatcher<EventType>::~SpecificDispatcher()
+{
+
+}
+
 template <class EventType>
 EventDispatcher::EventCallbackHandle<EventType> EventDispatcher::subscribe(std::function<void(const EventType&)>&& callback)
 {
@@ -108,7 +128,7 @@ template<typename EventType>
 EventDispatcher::EventCallbackHandle<EventType> EventDispatcher::SpecificDispatcher<EventType>::subscribe(std::function<void(const EventType&)>&& callback)
 {
     m_callbacks.push_back(std::move(callback));
-    return std::next(m_callbacks.end(), -1);
+    return EventCallbackHandle<EventType>(m_callbacks, std::prev(m_callbacks.end(), 1));
 }
 
 template<typename EventType>

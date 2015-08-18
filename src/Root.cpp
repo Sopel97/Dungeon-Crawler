@@ -69,7 +69,7 @@ void Root::run()
 {
     m_font = ResourceManager::instance().get<sf::Font>("Font");
     m_player = std::make_unique<Player>();
-    m_playerUi = std::make_unique<PlayerUi>(*this, *m_player);
+    m_playerUi.reset(m_player->createPlayerUi());
     m_world = std::make_unique<World>(*this);
 
     sf::Clock clock;
