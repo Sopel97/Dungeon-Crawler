@@ -18,15 +18,9 @@ public:
 
     virtual int numberOfSlots() const;
 
-    virtual bool isOpened() const;
-    virtual void onOpened();
-    virtual void onClosed();
-
 protected:
 private:
     std::vector<Tile*> m_contents;
-
-    bool m_isOpened;
 };
 
 #endif // PLAYEREQUIPMENTINVENTORY_H

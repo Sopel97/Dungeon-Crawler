@@ -17,10 +17,6 @@ public:
 
     virtual int numberOfSlots() const = 0;
 
-    virtual bool isOpened() const = 0;
-    virtual void onOpened() = 0;
-    virtual void onClosed() = 0;
-
 protected:
 
 };
