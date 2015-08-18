@@ -81,6 +81,10 @@ Inventory const* InventoryView::parentInventory() const
 {
     return m_parentInventory;
 }
+int InventoryView::offsetFromTop() const
+{
+    return m_offsetFromTop;
+}
 int InventoryView::height() const
 {
     return m_height;

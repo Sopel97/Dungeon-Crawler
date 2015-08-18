@@ -26,11 +26,26 @@ void PlayerUi::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStat
 
 bool PlayerUi::tryOpenInventory(Inventory* inventory)
 {
-    m_inventories.push_back(inventory->createInventoryView());
+    InventoryView newInventoryView = inventory->createInventoryView();
+    InventoryView& lastInventoryView = m_inventories.back();
+
+    newInventoryView.setOffsetFromTop(lastInventoryView.offsetFromTop() + lastInventoryView.height());
+
+    m_inventories.push_back(std::move(newInventoryView));
 
     return true; //later will check if there is enough place on the bar
 }
 void PlayerUi::closeInventory(Inventory* inventory)
 {
+    int heightToBeRemoved = 0;
+    for(auto& inv : m_inventories)
+    {
+        if(inv.parentInventory() == inventory) heightToBeRemoved += inv.height(); //if it is to be removed
+        else //if not, we push it up
+        {
+            inv.setOffsetFromTop(inv.offsetFromTop() - heightToBeRemoved);
+        }
+    }
+
     m_inventories.erase(std::remove_if(m_inventories.begin(), m_inventories.end(), [inventory](const InventoryView& inv){return inv.parentInventory() == inventory;}), m_inventories.end());
 }

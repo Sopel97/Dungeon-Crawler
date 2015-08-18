@@ -24,6 +24,7 @@ public:
     void setOffsetFromTop(int newOffset);
 
     Inventory const* parentInventory() const;
+    int offsetFromTop() const;
     int height() const;
     int minHeight() const;
     int maxHeight() const;
