@@ -3,6 +3,7 @@
 
 #include <memory>
 #include "make_unique.h"
+
 namespace Random
 {
     class RandomEngineBase;

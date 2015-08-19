@@ -1,0 +1,9 @@
+If used, file "AllegroUtil.cpp" must be pointed to linker.
+Rest of the library is header only.
+
+Some little parts of code may be partially copied from the Internet.
+I specified the author where needed.
+If I missed something please contact with me.
+
+
+None of the random engines seem to work correctly, will have to look into it.
