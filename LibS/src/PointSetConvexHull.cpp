@@ -1,30 +1,30 @@
 template <class T>
-ConvexHull<T>::ConvexHull(const std::vector<Vec2<T>>& p) : m_points(p), m_sorted(false)
+PointSetConvexHull<T>::PointSetConvexHull(const std::vector<Vec2<T>>& p) : m_points(p), m_sorted(false)
 {
 
 }
 template <class T>
-ConvexHull<T>::ConvexHull(std::vector<Vec2<T>>&& p) : m_points(p), m_sorted(false)
+PointSetConvexHull<T>::PointSetConvexHull(std::vector<Vec2<T>>&& p) : m_points(p), m_sorted(false)
 {
 
 }
 template <class T>
-void ConvexHull<T>::sortPoints() //made lhs.x <= rhs.x to omit warning about floating point comparsion
+void PointSetConvexHull<T>::sortPoints() //made lhs.x <= rhs.x to omit warning about floating point comparsion
 {
     std::sort(m_points.begin(), m_points.end(), [](const Vec2<T>& lhs, const Vec2<T>& rhs) -> bool {return (lhs.x < rhs.x || (lhs.x <= rhs.x && lhs.y < rhs.y));});
 }
 template <class T>
-const Polygon<T>& ConvexHull<T>::convexHull()
+const Polygon<T>& PointSetConvexHull<T>::convexHull()
 {
     return m_convexHull;
 }
 template <class T>
-const std::vector<Vec2<T>>& ConvexHull<T>::points()
+const std::vector<Vec2<T>>& PointSetConvexHull<T>::points()
 {
     return m_points;
 }
 template <class T>
-void ConvexHull<T>::calculate()
+void PointSetConvexHull<T>::calculate()
 {
     if(!m_sorted)
     {
@@ -56,7 +56,7 @@ void ConvexHull<T>::calculate()
 
 
 template <class T>
-T ConvexHull<T>::cross(const Vec2<T>& o, const Vec2<T>& a, const Vec2<T>& b)
+T PointSetConvexHull<T>::cross(const Vec2<T>& o, const Vec2<T>& a, const Vec2<T>& b)
 {
     return (a.x - o.x) * (b.y - o.y) - (a.y - o.y) * (b.x - o.x);
 }

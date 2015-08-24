@@ -10,27 +10,27 @@ Raycast<T> Raycaster::raycast(const Ray<T>& ray, const Circle<T>& circle)
     const T& r = circle.radius;
 
     T a = dx * dx + dy * dy;
-    T b = 2.0 * px * dx - 2.0 * cx * dx + 2.0 * py * dy - 2.0 * cy * dy;
-    T c = -(r * r - px * px - cx * cx - py * py - cy * cy + 2.0 * py * cy + 2.0 * px * cx);
-    T delta = b * b - 4.0 * a * c;
-    if(delta < 0.0) Raycast<T>::empty(ray);
+    T b = T(2) * px * dx - T(2) * cx * dx + T(2) * py * dy - T(2) * cy * dy;
+    T c = -(r * r - px * px - cx * cx - py * py - cy * cy + T(2) * py * cy + T(2) * px * cx);
+    T delta = b * b - T(4) * a * c;
+    if(delta < T(0)) Raycast<T>::empty(ray);
 
     T sqrtDelta = sqrt(delta);
-    T t1 = (-b - sqrtDelta) / (2.0 * a);
-    T t2 = (-b + sqrtDelta) / (2.0 * a);
+    T t1 = (-b - sqrtDelta) / (T(2) * a);
+    T t2 = (-b + sqrtDelta) / (T(2) * a);
 
     std::vector<typename Raycast<T>::Hit> hits;
     if(t1 < t2) std::swap(t1, t2);
-    if(t1 >= 0.0)
+    if(t1 >= T(0))
     {
         Vec2<T> collisionPoint = ray.origin + ray.direction * t1;
-        Vec2<T> n = ((circle.origin - collisionPoint) * -1.0).normalized();
+        Vec2<T> n = ((circle.origin - collisionPoint) * T(-1)).normalized();
         hits.push_back(typename Raycast<T>::Hit {t1, n, collisionPoint});
     }
-    if(t2 >= 0.0)
+    if(t2 >= T(0))
     {
         Vec2<T> collisionPoint = ray.origin + ray.direction * t2;
-        Vec2<T> n = ((circle.origin - collisionPoint) * -1.0).normalized();
+        Vec2<T> n = ((circle.origin - collisionPoint) * T(-1)).normalized();
         hits.push_back(typename Raycast<T>::Hit {t2, n, collisionPoint});
     }
     return Raycast<T>(ray, std::move(hits));
@@ -50,22 +50,22 @@ Raycast<T> Raycaster::raycast(const Ray<T>& ray, const Mesh2<Circle<T>>& circleM
         const T& r = circle.radius;
 
         T a = dx * dx + dy * dy;
-        T b = 2.0 * px * dx - 2.0 * cx * dx + 2.0 * py * dy - 2.0 * cy * dy;
-        T c = -(r * r - px * px - cx * cx - py * py - cy * cy + 2.0 * py * cy + 2.0 * px * cx);
-        T delta = b * b - 4.0 * a * c;
-        if(delta < 0.0) continue;
+        T b = T(2) * px * dx - T(2) * cx * dx + T(2) * py * dy - T(2) * cy * dy;
+        T c = -(r * r - px * px - cx * cx - py * py - cy * cy + T(2) * py * cy + T(2) * px * cx);
+        T delta = b * b - T(4) * a * c;
+        if(delta < T(0)) continue;
 
         T sqrtDelta = sqrt(delta);
-        T t1 = (-b - sqrtDelta) / (2.0 * a);
-        T t2 = (-b + sqrtDelta) / (2.0 * a);
+        T t1 = (-b - sqrtDelta) / (T(2) * a);
+        T t2 = (-b + sqrtDelta) / (T(2) * a);
 
-        if(t1 >= 0.0)
+        if(t1 >= T(0))
         {
             Vec2<T> collisionPoint = ray.origin + ray.direction * t1;
             Vec2<T> n = ((circle.origin - collisionPoint) * -1.0).normalized();
             hits.push_back(typename Raycast<T>::Hit {t1, n, collisionPoint});
         }
-        if(t2 >= 0.0)
+        if(t2 >= T(0))
         {
             Vec2<T> collisionPoint = ray.origin + ray.direction * t2;
             Vec2<T> n = ((circle.origin - collisionPoint) * -1.0).normalized();
@@ -99,7 +99,7 @@ Raycast<T> Raycaster::raycast(const Ray<T>& ray, const LineSegment<T>& lineSegme
     */
     T t1 = (rdx * (sby - roy) + rdy * (rox - sbx)) / (sdx * rdy - sdy * rdx);
     T t0 = (sbx + sdx * t1 - rox) / rdx;
-    if(t0 < 0.0 || t1 < 0.0 || t1 > 1.0) return Raycast<T>::empty(ray);
+    if(t0 < T(0) || t1 < T(0) || t1 > T(1)) return Raycast<T>::empty(ray);
     Vec2<T> collisionPoint = ray.origin + ray.direction * t0;
     return Raycast<T>(ray, std::vector<typename Raycast<T>::Hit> {t0, (lineSegment.end - lineSegment.begin).normalRight(), collisionPoint});
 }
@@ -127,7 +127,7 @@ Raycast<T> Raycaster::raycast(const Ray<T>& ray, const Polygon<T>& polygon)
 
         T t1 = (rdx * (sby - roy) + rdy * (rox - sbx)) / (sdx * rdy - sdy * rdx);
         T t0 = (sbx + sdx * t1 - rox) / rdx;
-        if(t0 < 0.0 || t1 < 0.0 || t1 > 1.0) continue;
+        if(t0 < T(0) || t1 < T(0) || t1 > T(1)) continue;
         Vec2<T> collisionPoint = ray.origin + ray.direction * t0;
         hits.push_back(typename Raycast<T>::Hit {t0, (edge.end - edge.begin).normalRight(), collisionPoint});
     }

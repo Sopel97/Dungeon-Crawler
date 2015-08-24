@@ -2,7 +2,7 @@
 
 #include "../LibS/make_unique.h"
 
-using namespace Geo;
+using namespace ls;
 
 const RectangleF TileModel::m_emptyCollider(Vec2F(0.0f, 0.0f), Vec2F(32.0f, 32.0f));
 

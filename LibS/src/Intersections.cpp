@@ -43,7 +43,7 @@ bool Intersections::intersection(const Vec2<T>& a, const LineSegment<T>& b)
     Vec2<T> t = (b.end - b.begin) / (a - b.begin);
     if(std::abs(t.x - t.y) < EPSILON)
     {
-        if(t.x >= 0.0 && t.x < 1.0) return true;
+        if(t.x >= T(0) && t.x < T(1)) return true;
     }
     return false;
 }
@@ -58,7 +58,7 @@ bool Intersections::intersection(const Vec2<T>& a, const Ray<T>& b)
     Vec2<T> t = (b.direction - b.origin) / (a - b.origin);
     if(std::abs(t.x - t.y) < EPSILON)
     {
-        if(t.x >= 0.0) return true;
+        if(t.x >= T(0)) return true;
     }
     return false;
 }
@@ -130,7 +130,7 @@ bool Intersections::intersection(const LineSegment<T>& a, const LineSegment<T>& 
     s = (-s1_y * (a.begin.x - b.begin.x) + s1_x * (a.begin.y - b.begin.y)) / (-s2_x * s1_y + s1_x * s2_y);
     t = (s2_x * (a.begin.y - b.begin.y) - s2_y * (a.begin.x - b.begin.x)) / (-s2_x * s1_y + s1_x * s2_y);
 
-    if(s >= 0 && s <= 1 && t >= 0 && t <= 1)
+    if(s >= T(0) && s <= T(1) && t >= T(0) && t <= T(1))
     {
         // Collision detected
         intersectionPoint.x = a.begin.x + (t * s1_x);
@@ -167,9 +167,9 @@ bool Intersections::intersection(const Triangle<T>& a, const Vec2<T>& b)
         return (v1.x - v3.x) * (v2.y - v3.y) - (v2.x - v3.x) * (v1.y - v3.y);
     };
 
-    if(sign(b, a.vertices[0], a.vertices[1]) < 0.0) return false;
-    if(sign(b, a.vertices[1], a.vertices[2]) < 0.0) return false;
-    if(sign(b, a.vertices[2], a.vertices[0]) < 0.0) return false;
+    if(sign(b, a.vertices[0], a.vertices[1]) < T(0)) return false;
+    if(sign(b, a.vertices[1], a.vertices[2]) < T(0)) return false;
+    if(sign(b, a.vertices[2], a.vertices[0]) < T(0)) return false;
 
     return true;
 }
@@ -543,7 +543,7 @@ bool Intersections::intersection(const LineSegment<T>& a, const Ray<T>& b)
     */
     T t1 = (rdx * (sby - roy) + rdy * (rox - sbx)) / (sdx * rdy - sdy * rdx);
     T t0 = (sbx + sdx * t1 - rox) / rdx;
-    return (t0 >= 0.0 && t1 >= 0.0 && t1 <= 1.0);
+    return (t0 >= T(0) && t1 >= T(0) && t1 <= T(1));
 }
 template <class T>
 bool Intersections::intersection(const Ray<T>& a, const LineSegment<T>& b)
@@ -605,7 +605,7 @@ bool Intersections::intersection(const Ray<T>& a, const Ray<T>& b)
     T t1 = (d1x * o2y - d1y * o2x + o1x * d1y - o1y * d1y) / (d1y * d2x - d1x * d2y);
     T t2 = (o2x + d2x * t1 - o1x) / d1x;
 
-    return (t1 >= 0.0 && t2 >= 0.0);
+    return (t1 >= T(0) && t2 >= T(0));
 }
 
 template <class T>

@@ -19,6 +19,10 @@ typedef EuclideanGraph<double> EuclideanGraphD;
 typedef EuclideanGraph<float> EuclideanGraphF;
 typedef EuclideanGraph<int> EuclideanGraphI;
 
+extern template class EuclideanGraph<double>;
+extern template class EuclideanGraph<float>;
+extern template class EuclideanGraph<int>;
+
 #include "../src/EuclideanGraph.cpp"
 
 #endif // EUCLIDEANGRAPH_H

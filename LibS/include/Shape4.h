@@ -16,17 +16,15 @@ public:
 
     Shape4& operator = (const Shape4&) = default;
     Shape4& operator = (Shape4 &&) = default;
-
-    virtual void translate(const Vec4<T>& v) = 0;
-    virtual void scale(const Vec4<T>& c, const Vec4<T>& s) = 0;
-    virtual void scale(const Vec4<T>& c, const T s) = 0;
-    virtual void scale(const Vec4<T>& s) = 0;
-    virtual void scale(const T s) = 0;
 };
 
 typedef Shape4<double> Shape4D;
 typedef Shape4<float> Shape4F;
 typedef Shape4<int> Shape4I;
+
+extern template class Shape4<double>;
+extern template class Shape4<float>;
+extern template class Shape4<int>;
 
 #include "../src/Shape4.cpp"
 #endif // SHAPE4_H

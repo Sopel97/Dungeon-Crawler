@@ -68,33 +68,6 @@ void Rectangle<T>::scale(const Vec2<T>& s)
     max.scale(s);
 }
 template <class T>
-void Rectangle<T>::transform(const std::function<void(Vec2<T>&)>& transformationFunction)
-{
-    transformationFunction(min);
-    transformationFunction(max);
-}
-template <class T>
-void Rectangle<T>::transform(const Transformation2<T>& transformation)
-{
-    transformation.transform(min);
-    transformation.transform(max);
-}
-template <class T>
-Rectangle<T> Rectangle<T>::transformed(const std::function<void(Vec2<T>&)>& transformationFunction) const
-{
-    Rectangle<T> copy(*this);
-    copy.transform(transformationFunction);
-    return copy;
-}
-template <class T>
-Rectangle<T> Rectangle<T>::transformed(const Transformation2<T>& transformation) const
-{
-    Rectangle<T> copy(*this);
-    copy.transform(transformation);
-    return copy;
-}
-
-template <class T>
 T Rectangle<T>::distanceTo(const Vec2<T>& point) const
 {
     return point.distanceTo(nearestPointTo(point));
@@ -102,7 +75,7 @@ T Rectangle<T>::distanceTo(const Vec2<T>& point) const
 template <class T>
 Vec2<T> Rectangle<T>::nearestPointTo(const Vec2<T>& point) const
 {
-    if(point.intersects(*this)) return point;
+    if(Intersections::intersection(point, *this)) return point;
 
     return Vec2<T>(clamp(point.x, min.x, max.x), clamp(point.y, min.y, max.y));
 }
@@ -119,7 +92,7 @@ Polyline<T> Rectangle<T>::asPolyline() const
     }
     );
 }
-
+/*
 template <class T>
 Vec2<T> Rectangle<T>::pickRandomPoint(Random::RandomEngineBase& randomEngine) const
 {
@@ -132,25 +105,21 @@ Vec2<T> Rectangle<T>::pickRandomPoint(Random::RandomEngineBase& randomEngine, ty
 {
     return pickRandomPoint(randomEngine);
 }
+*/
 template <class T>
 Vec2<T> Rectangle<T>::center() const
 {
-    return (min + max) / 2.0;
+    return (min + max) / T(2);
 }
 template <class T>
-T Rectangle<T>::signedArea() const
+T Rectangle<T>::area() const
 {
-    return (max.x-min.x)*(max.y-min.y);
+    return width() * height();
 }
 
 
 template <class T>
 Rectangle<T> Rectangle<T>::unitRectangle()
 {
-    return Rectangle<T>(Vec2<T> {0.0, 0.0}, 1.0, 1.0);
-}
-template <class T>
-std::unique_ptr<Shape2<T>> Rectangle<T>::clone() const
-{
-    return std::make_unique<Rectangle<T>>(*this);
+    return Rectangle<T>(Vec2<T> {T(0), T(0)}, T(1), T(1));
 }

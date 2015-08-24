@@ -5,7 +5,7 @@
 
 #include "Configuration.h"
 
-#include "../LibS/GeometryLight.h"
+#include "../LibS/Geometry.h"
 
 class QuantityBasedSpriteSet
 {
@@ -14,10 +14,10 @@ public:
 
     void loadFromConfiguration(ConfigurationNode& config);
 
-    Geo::Vec2I getSprite(int quantity) const;
-    Geo::Vec2I defaultSprite() const;
+    ls::Vec2I getSprite(int quantity) const;
+    ls::Vec2I defaultSprite() const;
 protected:
-    std::vector<Geo::Vec2I> m_sprites;
+    std::vector<ls::Vec2I> m_sprites;
     std::vector<int> m_thresholdQuantities;
 };
 

@@ -22,7 +22,7 @@
 
 #include "GameConstants.h"
 
-using namespace Geo;
+using namespace ls;
 
 EntitySystem::EntitySystem()
 {
@@ -63,7 +63,7 @@ const std::vector<Entity*>& EntitySystem::entities() const
     return m_entities;
 }
 
-void EntitySystem::addEntity(Entity* newEntity, const Geo::Vec2F& position)
+void EntitySystem::addEntity(Entity* newEntity, const ls::Vec2F& position)
 {
     m_entities.push_back(newEntity);
     newEntity->model().setPosition(position);
@@ -125,7 +125,7 @@ void EntitySystem::moveEntity(World* world, Entity* entity, float dt)
 
         for(const auto& rect : collidersInRange)
         {
-            if(entityCollider.intersects(rect))
+            if(Intersections::intersection(entityCollider, rect))
             {
                 moveFactor.x = 0.0f;
                 entityCollider -= Vec2F(displacementWhenMoved.x, 0.0f); //if it can't move there go back
@@ -138,7 +138,7 @@ void EntitySystem::moveEntity(World* world, Entity* entity, float dt)
 
         for(const auto& rect : collidersInRange)
         {
-            if(entityCollider.intersects(rect))
+            if(Intersections::intersection(entityCollider, rect))
             {
                 moveFactor.y = 0.0f;
                 velocity.y = 0.0f;

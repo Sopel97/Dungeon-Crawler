@@ -1,22 +1,17 @@
 #ifndef STANDARDRANDOMNUMBERGENERATORWRAPPER_H
 #define STANDARDRANDOMNUMBERGENERATORWRAPPER_H
 
-template <class StandardEngine>
-class StandardRandomNumberGeneratorWrapper : public RandomEngineT<typename StandardEngine::result_type>
+template <class RNG>
+class StandardRandomNumberGeneratorWrapper : public RandomEngine
 {
 public:
-    typedef typename StandardEngine::result_type GeneratedValuesType;
+    StandardRandomNumberGeneratorWrapper(uint32_t seed);
+    virtual ~StandardRandomNumberGeneratorWrapper();
 
-    StandardRandomNumberGeneratorWrapper(GeneratedValuesType seed = 0xb5f3c6a7);
-    StandardRandomNumberGeneratorWrapper(const StandardRandomNumberGeneratorWrapper<StandardEngine>&) = default;
-
-    ~StandardRandomNumberGeneratorWrapper();
-
-    virtual GeneratedValuesType nextRaw();
-
-    virtual std::unique_ptr<RandomEngineBase> clone() const;
+    virtual int32_t nextInt32();
+    virtual uint32_t nextUint32();
 protected:
-    StandardEngine m_engine;
+    RNG m_rng;
 };
 
 #include "../src/StandardRandomNumberGeneratorWrapper.cpp"

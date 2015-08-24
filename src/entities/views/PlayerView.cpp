@@ -10,7 +10,7 @@
 
 #include "GameConstants.h"
 
-using namespace Geo;
+using namespace ls;
 
 PlayerView::PlayerView(Entity* owner, Player* player) :
     EntityView(owner),

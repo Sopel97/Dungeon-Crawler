@@ -11,7 +11,7 @@
 
 #include "GameConstants.h"
 
-using namespace Geo;
+using namespace ls;
 
 TallTileStackDrawable::TallTileStackDrawable(const TileStack& tileStack, const TileLocation& tileLocation) :
     m_tileStack(tileStack),

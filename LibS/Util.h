@@ -3,9 +3,9 @@
 
 #include <iostream>
 #include <vector>
-#include "Geometry.h"
+#include "Shapes.h"
 
-using namespace Geo;
+using namespace ls;
 
 class Util
 {

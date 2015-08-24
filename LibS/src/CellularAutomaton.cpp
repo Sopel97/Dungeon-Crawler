@@ -134,10 +134,10 @@ size_t CellularAutomaton<Rules>::quantityOfStateInMooreNeighbourhood(States stat
 
     if(m_topology == CellularAutomatonGridTopology::Finite)
     {
-        if(x > 0                  && m_grid(x - 1, y) == state) ++quantity;
-        if(x < m_grid.sizeX() - 1 && m_grid(x + 1, y) == state) ++quantity;
-        if(y > 0                  && m_grid(x, y - 1) == state) ++quantity;
-        if(y < m_grid.sizeY() - 1 && m_grid(x, y + 1) == state) ++quantity;
+        if(x > 0                                    && m_grid(x - 1, y) == state) ++quantity;
+        if(x < static_cast<int>(m_grid.sizeX()) - 1 && m_grid(x + 1, y) == state) ++quantity;
+        if(y > 0                                    && m_grid(x, y - 1) == state) ++quantity;
+        if(y < static_cast<int>(m_grid.sizeY()) - 1 && m_grid(x, y + 1) == state) ++quantity;
     }
     else if(m_topology == CellularAutomatonGridTopology::Toroidal)
     {

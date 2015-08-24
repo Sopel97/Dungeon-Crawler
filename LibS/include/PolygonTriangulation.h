@@ -32,6 +32,10 @@ typedef PolygonTriangulation<double> PolygonTriangulationD;
 typedef PolygonTriangulation<float> PolygonTriangulationF;
 typedef PolygonTriangulation<int> PolygonTriangulationI;
 
+extern template class PolygonTriangulation<double>;
+extern template class PolygonTriangulation<float>;
+extern template class PolygonTriangulation<int>;
+
 #include "../src/PolygonTriangulation.cpp"
 
 #endif // POLYGONTRIANGULATION_H

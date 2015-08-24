@@ -1,12 +1,6 @@
 #include "../include/Intersections.h"
 
 template <class T>
-void Vec2<T>::fill(T value)
-{
-    x = value;
-    y = value;
-}
-template <class T>
 template <class TSecond>
 Vec2<typename std::common_type<T, TSecond>::type> Vec2<T>::operator+(const Vec2<TSecond>& v1) const
 {
@@ -66,14 +60,14 @@ T Vec2<T>::distanceTo(const LineSegment<T>& lineSegment) const
 template <class T>
 void Vec2<T>::normalize()
 {
-    T invertedSquareRoot = 1. / std::sqrt(x * x + y * y);
+    T invertedSquareRoot = T(1) / std::sqrt(x * x + y * y);
     x *= invertedSquareRoot;
     y *= invertedSquareRoot;
 }
 template <class T>
 Vec2<T> Vec2<T>::normalized() const
 {
-    T invertedSquareRoot = 1. / std::sqrt(x * x + y * y);
+    T invertedSquareRoot = T(1) / std::sqrt(x * x + y * y);
     return Vec2<T>(x * invertedSquareRoot, y * invertedSquareRoot);
 }
 template <class T>
@@ -262,31 +256,6 @@ void Vec2<T>::scale(const T s)
     y *= s;
 }
 template <class T>
-void Vec2<T>::transform(const std::function<void(Vec2<T>&)>& transformationFunction)
-{
-    transformationFunction(*this);
-}
-template <class T>
-void Vec2<T>::transform(const Transformation2<T>& transformation)
-{
-    transformation.transform(*this);
-}
-template <class T>
-Vec2<T> Vec2<T>::transformed(const std::function<void(Vec2<T>&)>& transformationFunction) const
-{
-    Vec2<T> copy(*this);
-    copy.transform(transformationFunction);
-    return copy;
-}
-template <class T>
-Vec2<T> Vec2<T>::transformed(const Transformation2<T>& transformation) const
-{
-    Vec2<T> copy(*this);
-    copy.transform(transformation);
-    return copy;
-}
-
-template <class T>
 T Vec2<T>::distanceTo(const Vec2<T>& v1) const
 {
     T dx = x - v1.x;
@@ -298,13 +267,7 @@ Vec2<T> Vec2<T>::nearestPointTo(const Vec2<T>& v1) const
 {
     return *this;
 }
-
-
-template <class T>
-Polyline<T> Vec2<T>::asPolyline() const
-{
-    return Polyline<T>({*this});
-}
+/*
 template <class T>
 Vec2<T> Vec2<T>::pickRandomPoint(Random::RandomEngineBase& randomEngine) const
 {
@@ -315,23 +278,13 @@ Vec2<T> Vec2<T>::pickRandomPoint(Random::RandomEngineBase& randomEngine, typenam
 {
     return pickRandomPoint(randomEngine);
 }
-
-template <class T>
-Vec2<T> Vec2<T>::center() const
-{
-    return *this;
-}
+*/
 template <class T>
 Vec2<T> Vec2<T>::direction(const Angle<T>& angle)
 {
 
 }
 
-template <class T>
-std::unique_ptr<Shape2<T>> Vec2<T>::clone() const
-{
-    return std::make_unique<Vec2<T>>(*this);
-}
 
 /* non-member functions */
 /*

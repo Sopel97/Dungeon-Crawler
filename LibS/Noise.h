@@ -5,10 +5,11 @@
 #include <random>
 #include <algorithm>
 #include <functional>
-namespace Noise
+
+#include "Constants.h"
+
+namespace ls
 {
-    const double PI = 3.14159265358979323846;
-    const double INV_PI = 0.31830988618379067154;
     template<class T>
     T max(const T& a, const T& b)
     {

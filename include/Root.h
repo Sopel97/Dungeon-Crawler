@@ -40,7 +40,7 @@ public:
     WindowSpaceManager& windowSpaceManager();
     Player& player();
 
-    Random::StandardRandomNumberGeneratorWrapper<std::minstd_rand>& rng();
+    ls::StandardRandomNumberGeneratorWrapper<std::minstd_rand>& rng();
 
     std::vector<std::string> scanForFiles(const std::string& path, const std::string& query) const;
 
@@ -48,7 +48,7 @@ protected:
     sf::RenderWindow m_window;
     sf::RenderStates m_renderStates;
     WindowSpaceManager m_windowSpaceManager;
-    Random::StandardRandomNumberGeneratorWrapper<std::minstd_rand> m_rng;
+    ls::StandardRandomNumberGeneratorWrapper<std::minstd_rand> m_rng;
     float m_lastFrameTime;
     int m_lastMeasuredFps;
     int m_currentFpsCounter;

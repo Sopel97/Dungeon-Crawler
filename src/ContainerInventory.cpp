@@ -3,9 +3,9 @@
 #include "InventorySlotView.h"
 #include "InventoryView.h"
 
-#include "../LibS/GeometryLight.h"
+#include "../LibS/Geometry.h"
 
-using namespace Geo;
+using namespace ls;
 
 ContainerInventory::ContainerInventory(int size)
 {

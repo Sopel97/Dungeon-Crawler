@@ -3,7 +3,7 @@
 
 #include "Configuration.h"
 
-#include "../LibS/GeometryLight.h"
+#include "../LibS/Geometry.h"
 
 #include <memory>
 
@@ -24,7 +24,7 @@ public:
     void setOwner(Tile* newOwner);
 
     virtual bool hasCollider() const;
-    virtual const Geo::RectangleF& collider() const;
+    virtual const ls::RectangleF& collider() const;
 
     virtual float drag() const; //TODO: make it possible to specify that tile uses the drag of the tile lower
 
@@ -38,7 +38,7 @@ protected:
     Tile* m_owner;
 
 private:
-    static const Geo::RectangleF m_emptyCollider;
+    static const ls::RectangleF m_emptyCollider;
 };
 
 #endif // TILEMODEL_H

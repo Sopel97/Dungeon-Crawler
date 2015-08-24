@@ -44,6 +44,9 @@ typedef AffineTransformation<double> AffineTransformationD;
 typedef AffineTransformation<float> AffineTransformationF;
 typedef AffineTransformation<int> AffineTransformationI;
 
+extern template class AffineTransformation<double>;
+extern template class AffineTransformation<float>;
+extern template class AffineTransformation<int>;
 
 #include "../src/AffineTransformation.cpp"
 

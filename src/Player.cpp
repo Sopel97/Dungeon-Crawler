@@ -17,11 +17,11 @@
 
 #include "../LibS/make_unique.h"
 
-#include "../LibS/GeometryLight.h"
+#include "../LibS/Geometry.h"
 
 #include <algorithm>
 
-using namespace Geo;
+using namespace ls;
 
 Player::Player() :
     m_playerEntity(nullptr)

@@ -64,6 +64,10 @@ typedef GraphNode<double> GraphNodeD;
 typedef GraphNode<float> GraphNodeF;
 typedef GraphNode<int> GraphNodeI;
 
+extern template class GraphNode<double>;
+extern template class GraphNode<float>;
+extern template class GraphNode<int>;
+
 
 #include "../src/Node.cpp"
 

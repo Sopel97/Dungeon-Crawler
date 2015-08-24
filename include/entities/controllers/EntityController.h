@@ -5,7 +5,7 @@
 
 #include <memory>
 
-#include "../LibS/GeometryLight.h"
+#include "../LibS/Geometry.h"
 
 class Entity;
 class World;
@@ -25,8 +25,8 @@ public:
 
     virtual void update(World* world, float dt); //NOTE: does not move the entity!!!
 
-    virtual void move(const Geo::Vec2F& factor, float dt); //how much of a velocity to move
-    virtual void accelerate(const Geo::Vec2F& dv);
+    virtual void move(const ls::Vec2F& factor, float dt); //how much of a velocity to move
+    virtual void accelerate(const ls::Vec2F& dv);
 
     virtual std::unique_ptr<EntityController> clone() const;
     virtual std::unique_ptr<EntityController> create(Entity* owner) const;

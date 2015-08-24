@@ -11,7 +11,9 @@
 
 #include "GameConstants.h"
 
-using namespace Geo;
+#include "../LibS/make_unique.h"
+
+using namespace ls;
 
 InnerBorderedWallTileView::InnerBorderedWallTileView(Tile* owner) :
     TileView(owner),
@@ -182,7 +184,7 @@ const sf::Texture& InnerBorderedWallTileView::texture() const
 {
     return m_commonData->texture.get();
 }
-const Geo::Vec2I& InnerBorderedWallTileView::spriteSet() const
+const ls::Vec2I& InnerBorderedWallTileView::spriteSet() const
 {
     return m_commonData->spriteSet;
 }

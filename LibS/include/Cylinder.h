@@ -43,6 +43,11 @@ public:
 typedef Cylinder<double> CylinderD;
 typedef Cylinder<float> CylinderF;
 typedef Cylinder<int> CylinderI;
+
+extern template class Cylinder<double>;
+extern template class Cylinder<float>;
+extern template class Cylinder<int>;
+
 #include "../src/Cylinder.cpp"
 
 #endif // CYLINDER_H_INCLUDED

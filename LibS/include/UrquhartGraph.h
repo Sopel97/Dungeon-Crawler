@@ -10,13 +10,19 @@ public:
     UrquhartGraph(const PointSetDelaunayTriangulation<T>& triangulation);
 
 protected:
+    std::vector<NodeType*> m_nodes;
 
-    void calculate(const PointSetDelaunayTriangulation<T>& triangulation);
+    void fromTriangulation(const PointSetDelaunayTriangulation<T>& triangulation);
+    void fromChosenTriangulationConnections(const std::vector<Vec2<T>>& points, const std::set<typename Triangulation<T>::EdgeInd>& connections);
 };
 
 typedef UrquhartGraph<double> UrquhartGraphD;
 typedef UrquhartGraph<float> UrquhartGraphF;
 typedef UrquhartGraph<int> UrquhartGraphI;
+
+extern template class UrquhartGraph<double>;
+extern template class UrquhartGraph<float>;
+extern template class UrquhartGraph<int>;
 
 #include "../src/UrquhartGraph.cpp"
 

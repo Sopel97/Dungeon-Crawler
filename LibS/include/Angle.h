@@ -25,6 +25,8 @@ public:
     Angle<T> operator*(const T scalar) const;
     Angle<T> operator/(const T scalar) const;
 
+    Angle<T> operator-() const;
+
     Angle<T>& operator+=(const Angle<T>& a);
     Angle<T>& operator-=(const Angle<T>& a);
     Angle<T>& operator*=(const T scalar);
@@ -62,6 +64,10 @@ private:
 typedef Angle<double> AngleD;
 typedef Angle<float> AngleF;
 typedef Angle<int> AngleI;
+
+extern template class Angle<double>;
+extern template class Angle<float>;
+extern template class Angle<int>;
 
 #include "../src/Angle.cpp"
 

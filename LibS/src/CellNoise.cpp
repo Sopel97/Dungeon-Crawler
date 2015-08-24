@@ -36,8 +36,8 @@ T CellNoise<T>::rawNoise1(const T x)
     }
     std::sort(distances.begin(), distances.end());
     T result = computeResult(distances);
-    if(result > 1.) result = 1.;
-    else if(result < 0.) result = 0.;
+    if(result > T(1)) result = T(1);
+    else if(result < T(0)) result = T(0);
     return result;
 }
 template <class T>
@@ -73,8 +73,8 @@ T CellNoise<T>::rawNoise2(const T x, const T y)
     }
     std::sort(distances.begin(), distances.end());
     T result = computeResult(distances);
-    if(result > 1.) result = 1.;
-    else if(result < 0.) result = 0.;
+    if(result > T(1)) result = T(1);
+    else if(result < T(0)) result = T(0);
     return result;
 
 }
@@ -120,8 +120,8 @@ T CellNoise<T>::rawNoise3(const T x, const T y, const T z)
     }
     std::sort(distances.begin(), distances.end());
     T result = computeResult(distances);
-    if(result > 1.) result = 1.;
-    else if(result < 0.) result = 0.;
+    if(result > T(1)) result = T(1);
+    else if(result < T(0)) result = T(0);
     return result;
 }
 

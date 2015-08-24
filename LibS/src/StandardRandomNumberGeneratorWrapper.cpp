@@ -1,23 +1,22 @@
-template <class StandardEngine>
-StandardRandomNumberGeneratorWrapper<StandardEngine>::StandardRandomNumberGeneratorWrapper(typename StandardEngine::result_type seed) :
-    RandomEngineT<typename StandardEngine::result_type>(seed, StandardEngine::max()),
-    m_engine(seed)
+template <class RNG>
+StandardRandomNumberGeneratorWrapper<RNG>::StandardRandomNumberGeneratorWrapper(uint32_t seed = 5489u) :
+    m_rng(seed)
 {
 
 }
-template <class StandardEngine>
-StandardRandomNumberGeneratorWrapper<StandardEngine>::~StandardRandomNumberGeneratorWrapper()
+template <class RNG>
+StandardRandomNumberGeneratorWrapper<RNG>::~StandardRandomNumberGeneratorWrapper()
 {
 
 }
-template <class StandardEngine>
-typename StandardEngine::result_type StandardRandomNumberGeneratorWrapper<StandardEngine>::nextRaw()
-{
-    return m_engine();
-}
 
-template <class StandardEngine>
-std::unique_ptr<RandomEngineBase> StandardRandomNumberGeneratorWrapper<StandardEngine>::clone() const
+template <class RNG>
+int32_t StandardRandomNumberGeneratorWrapper<RNG>::nextInt32()
 {
-    return std::make_unique<StandardRandomNumberGeneratorWrapper<StandardEngine>>(*this);
+    return static_cast<int32_t>(m_rng());
+}
+template <class RNG>
+uint32_t StandardRandomNumberGeneratorWrapper<RNG>::nextUint32()
+{
+    return static_cast<uint32_t>(m_rng());
 }

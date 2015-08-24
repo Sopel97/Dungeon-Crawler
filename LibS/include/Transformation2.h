@@ -16,6 +16,10 @@ typedef Transformation2<double> Transformation2D;
 typedef Transformation2<float> Transformation2F;
 typedef Transformation2<int> Transformation2I;
 
+extern template class Transformation2<double>;
+extern template class Transformation2<float>;
+extern template class Transformation2<int>;
+
 #include "../src/Transformation2.cpp"
 
 #endif // TRANSFORMATION2_H

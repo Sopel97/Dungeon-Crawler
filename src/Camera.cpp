@@ -1,6 +1,6 @@
 #include "Camera.h"
 
-using namespace Geo;
+using namespace ls;
 
 Camera::Camera(const Vec2F& position, float width, float height) :
     m_position(position),

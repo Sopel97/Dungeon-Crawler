@@ -105,37 +105,6 @@ void Polyline<T>::scale(const Vec2<T>& s)
     }
 }
 template <class T>
-void Polyline<T>::transform(const std::function<void(Vec2<T>&)>& transformationFunction)
-{
-    for(auto& v : vertices)
-    {
-        transformationFunction(v);
-    }
-}
-template <class T>
-void Polyline<T>::transform(const Transformation2<T>& transformation)
-{
-    for(auto& v : vertices)
-    {
-        transformation.transform(v);
-    }
-}
-template <class T>
-Polyline<T> Polyline<T>::transformed(const std::function<void(Vec2<T>&)>& transformationFunction) const
-{
-    Polyline<T> copy(*this);
-    copy.transform(transformationFunction);
-    return copy;
-}
-template <class T>
-Polyline<T> Polyline<T>::transformed(const Transformation2<T>& transformation) const
-{
-    Polyline<T> copy(*this);
-    copy.transform(transformation);
-    return copy;
-}
-
-template <class T>
 Vec2<T> Polyline<T>::project(const Vec2<T>& b) const
 {
     Vec2<T> projection;
@@ -157,11 +126,13 @@ std::pair<T, T> Polyline<T>::projectMinMax(const Vec2<T>& b) const
     }
     return std::pair<T, T>(minProjection, maxProjection);
 }
+/*
 template <class T>
 std::unique_ptr<typename Shape2<T>::RandomPointPickerPreprocessedData> Polyline<T>::createPreprocessedDataForRandomPointPicker() const
 {
     return std::make_unique<RandomPointPickerPreprocessedData>();
 }
+*/
 template <class T>
 T Polyline<T>::distanceTo(const Vec2<T>& point) const
 {
@@ -188,11 +159,6 @@ Vec2<T> Polyline<T>::nearestPointTo(const Vec2<T>& point) const
     }
     return nearestPoint;
 }
-template <class T>
-Polyline<T> Polyline<T>::asPolyline() const
-{
-    return *this;
-}
 
 template <class T>
 size_t Polyline<T>::size() const
@@ -215,9 +181,4 @@ template <class T>
 Polyline<T> Polyline<T>::fromTriangle(const Triangle<T>& triangle)
 {
     return Polyline<T> {triangle.vertices[0], triangle.vertices[1], triangle.vertices[2], triangle.vertices[0]};
-}
-template <class T>
-std::unique_ptr<Shape2<T>> Polyline<T>::clone() const
-{
-    return std::make_unique<Polyline<T>>(*this);
 }

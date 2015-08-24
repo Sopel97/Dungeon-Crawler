@@ -10,18 +10,18 @@
 
 #include "Root.h"
 
-#include "../LibS/GeometryLight.h"
+#include "../LibS/Geometry.h"
 
 #include <cstdlib>
 
-using namespace Geo;
+using namespace ls;
 
 /*
     Helper classes
 */
 MapGenerator::TopologyMap::TopologyMap(size_t width, size_t height) :
-    m_automaton(CaveTopologyRules(), width, height, Geo::CellularAutomatonGridTopology::Toroidal),
-    m_initialAutomatonState(CaveTopologyRules(), width, height, Geo::CellularAutomatonGridTopology::Toroidal),
+    m_automaton(CaveTopologyRules(), width, height, ls::CellularAutomatonGridTopology::Toroidal),
+    m_initialAutomatonState(CaveTopologyRules(), width, height, ls::CellularAutomatonGridTopology::Toroidal),
     m_width(width),
     m_height(height)
 {
@@ -71,7 +71,7 @@ MapGenerator::TopologyMap::CaveTopologyRules::CaveTopologyRules() : m_iteration(
 
 }
 
-MapGenerator::TopologyMap::CaveTopologyRules::States MapGenerator::TopologyMap::CaveTopologyRules::operator()(const Geo::CellularAutomaton<MapGenerator::TopologyMap::CaveTopologyRules>& automaton, size_t x, size_t y)
+MapGenerator::TopologyMap::CaveTopologyRules::States MapGenerator::TopologyMap::CaveTopologyRules::operator()(const ls::CellularAutomaton<MapGenerator::TopologyMap::CaveTopologyRules>& automaton, size_t x, size_t y)
 {
     ++m_iteration;
     if(m_iteration < 5)
@@ -154,7 +154,7 @@ size_t MapGenerator::RegionMap::regionSize(size_t regionsId) const
 
 
 MapGenerator::RectangleMap::RectangleMap(size_t width, size_t height) :
-    m_rectangleSizes(width, height, Geo::Vec2I(0, 0)),
+    m_rectangleSizes(width, height, ls::Vec2I(0, 0)),
     m_width(width),
     m_height(height)
 {
@@ -162,7 +162,7 @@ MapGenerator::RectangleMap::RectangleMap(size_t width, size_t height) :
 }
 
 
-const Geo::Vec2I& MapGenerator::RectangleMap::at(size_t x, size_t y) const
+const ls::Vec2I& MapGenerator::RectangleMap::at(size_t x, size_t y) const
 {
     return m_rectangleSizes(x, y);
 }
@@ -175,7 +175,7 @@ MapGenerator::MapFillingRectangles::MapFillingRectangles(size_t width, size_t he
 }
 
 
-const std::vector<Geo::RectangleI>& MapGenerator::MapFillingRectangles::rectangles() const
+const std::vector<ls::RectangleI>& MapGenerator::MapFillingRectangles::rectangles() const
 {
     return m_rectangles;
 }

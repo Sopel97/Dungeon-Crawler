@@ -5,7 +5,7 @@
 
 #include "TileLocation.h"
 
-#include "../LibS/GeometryLight.h"
+#include "../LibS/Geometry.h"
 
 class TileStack;
 class MapLayer;
@@ -16,8 +16,8 @@ public:
     TallTileStackDrawable(const TileStack & tileStack, const TileLocation & tileLocation);
     virtual ~TallTileStackDrawable();
 
-    virtual const Geo::RectangleF& boundingRectangle() const;
-    virtual const Geo::Vec2F& center() const;
+    virtual const ls::RectangleF& boundingRectangle() const;
+    virtual const ls::Vec2F& center() const;
 
     virtual TallDrawable::DrawableType type() const;
 
@@ -32,8 +32,8 @@ protected:
     int m_tileY;
     const MapLayer& m_map;
 
-    Geo::RectangleF m_boundingRectangle;
-    Geo::Vec2F m_center;
+    ls::RectangleF m_boundingRectangle;
+    ls::Vec2F m_center;
     int m_indexOfFirstTallTile;
 };
 

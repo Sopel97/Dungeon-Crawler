@@ -33,17 +33,17 @@ void VoronoiDiagram<T>::calculate(const PointSetDelaunayTriangulation<T>& triang
             const double detb = m_dreference.cross(db);
 
             // nothing is less than zero degrees
-            if(std::abs(detb) <= EPSILON && db.dot(m_dreference) >= 0) return false;
+            if(std::abs(detb) <= EPSILON && db.dot(m_dreference) >= T(0)) return false;
 
             const double deta = m_dreference.cross(da);
 
             // zero degrees is less than anything else
-            if(std::abs(deta) <= EPSILON && da.dot(m_dreference) >= 0) return true;
+            if(std::abs(deta) <= EPSILON && da.dot(m_dreference) >= T(0)) return true;
 
-            if(deta * detb >= 0)
+            if(deta * detb >= T(0))
             {
                 // both on same side of reference, compare to each other
-                return da.cross(db) > 0;
+                return da.cross(db) > T(0);
             }
 
             // TODO: polygons for which only one side of reference is reached should be removed because
@@ -51,7 +51,7 @@ void VoronoiDiagram<T>::calculate(const PointSetDelaunayTriangulation<T>& triang
             //       Somehow make it give such information in return
 
             // vectors "less than" zero degrees are actually large, near 2 pi
-            return deta > 0;
+            return deta > T(0);
 
 
             //return std::atan2(da.y, da.x) < std::atan2(db.y, db.x);

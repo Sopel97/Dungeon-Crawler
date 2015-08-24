@@ -73,57 +73,19 @@ public:
     Angle<T> angle() const;
     Angle<T> angle(const Vec2<T>& other) const;
 
-    void fill(T value);
+    void translate(const Vec2<T>& v);
+    void scale(const Vec2<T>& c, const Vec2<T>& s);
+    void scale(const Vec2<T>& c, const T s);
+    void scale(const Vec2<T>& s);
+    void scale(const T s);
 
-    virtual void translate(const Vec2<T>& v);
-    virtual void scale(const Vec2<T>& c, const Vec2<T>& s);
-    virtual void scale(const Vec2<T>& c, const T s);
-    virtual void scale(const Vec2<T>& s);
-    virtual void scale(const T s);
-
-    virtual void transform(const std::function<void(Vec2<T>&)>& transformationFunction);
-    virtual void transform(const Transformation2<T>& transformation);
-    Vec2<T> transformed(const std::function<void(Vec2<T>&)>& transformationFunction) const;
-    Vec2<T> transformed(const Transformation2<T>& transformation) const;
-
-    virtual T distanceTo(const Vec2<T>& v1) const;
+    T distanceTo(const Vec2<T>& v1) const;
     virtual Vec2<T> nearestPointTo(const Vec2<T>& point) const;
 
-#ifndef GEOMETRY_LIGHT
-    virtual bool intersects(const Shape2<T>* other) const {return other->intersects(*this);}
-    virtual bool contains(const Shape2<T>* other) const {return other->isContained(*this);}
-    virtual bool isContained(const Shape2<T>* other) const {return other->contains(*this);}
-#endif // GEOMETRY_LIGHT
-    SHAPE2_DOUBLE_DISPATCHING_METHODS
+    //Vec2<T> pickRandomPoint(Random::RandomEngineBase& randomEngine) const;
+    //Vec2<T> pickRandomPoint(Random::RandomEngineBase& randomEngine, typename Shape2<T>::RandomPointPickerPreprocessedData& preprocessedData) const; //preprocessed data is of base type. All shapes have to cast it to use it.
 
-    virtual std::unique_ptr<Shape2<T>> clone() const;
-
-    Polyline<T> asPolyline() const;
-
-    virtual Vec2<T> pickRandomPoint(Random::RandomEngineBase& randomEngine) const;
-    virtual Vec2<T> pickRandomPoint(Random::RandomEngineBase& randomEngine, typename Shape2<T>::RandomPointPickerPreprocessedData& preprocessedData) const; //preprocessed data is of base type. All shapes have to cast it to use it.
-    virtual Vec2<T> center() const;
-protected:
 };
-/* think of a way to make it so TFirst cannot be a vec2 type or remove these functions at all
-template <class TFirst, class TSecond>
-Vec2<typename std::common_type<TFirst, TSecond>::type> operator+(TFirst lhs, const Vec2<TSecond>& rhs);
-template <class TFirst, class TSecond>
-Vec2<typename std::common_type<TFirst, TSecond>::type> operator-(TFirst lhs, const Vec2<TSecond>& rhs);
-template <class TFirst, class TSecond>
-Vec2<typename std::common_type<TFirst, TSecond>::type> operator*(TFirst lhs, const Vec2<TSecond>& rhs);
-template <class TFirst, class TSecond>
-Vec2<typename std::common_type<TFirst, TSecond>::type> operator/(TFirst lhs, const Vec2<TSecond>& rhs);
-
-template <class T, size_t X, size_t Y>
-Vec2<T> operator+(T lhs, const Vec2Proxy<T, X, Y>& rhs);
-template <class T, size_t X, size_t Y>
-Vec2<T> operator-(T lhs, const Vec2Proxy<T, X, Y>& rhs);
-template <class T, size_t X, size_t Y>
-Vec2<T> operator*(T lhs, const Vec2Proxy<T, X, Y>& rhs);
-template <class T, size_t X, size_t Y>
-Vec2<T> operator/(T lhs, const Vec2Proxy<T, X, Y>& rhs);
-//*/
 template <class T>
 const Vec2<T> Vec2<T>::unitX = Vec2<T> {1, 0};
 template <class T>
@@ -132,6 +94,10 @@ const Vec2<T> Vec2<T>::unitY = Vec2<T> {0, 1};
 typedef Vec2<double> Vec2D;
 typedef Vec2<float> Vec2F;
 typedef Vec2<int> Vec2I;
+
+extern template class Vec2<double>;
+extern template class Vec2<float>;
+extern template class Vec2<int>;
 
 #include "../src/Vec2.cpp"
 #endif // Vec2_H_INCLUDED

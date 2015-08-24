@@ -105,37 +105,6 @@ void Polygon<T>::scale(const Vec2<T>& s)
     }
 }
 template <class T>
-void Polygon<T>::transform(const std::function<void(Vec2<T>&)>& transformationFunction)
-{
-    for(auto& v : vertices)
-    {
-        transformationFunction(v);
-    }
-}
-template <class T>
-void Polygon<T>::transform(const Transformation2<T>& transformation)
-{
-    for(auto& v : vertices)
-    {
-        transformation.transform(v);
-    }
-}
-template <class T>
-Polygon<T> Polygon<T>::transformed(const std::function<void(Vec2<T>&)>& transformationFunction) const
-{
-    Polygon<T> copy(*this);
-    copy.transform(transformationFunction);
-    return copy;
-}
-template <class T>
-Polygon<T> Polygon<T>::transformed(const Transformation2<T>& transformation) const
-{
-    Polygon<T> copy(*this);
-    copy.transform(transformation);
-    return copy;
-}
-
-template <class T>
 Vec2<T> Polygon<T>::project(const Vec2<T>& b) const
 {
     Vec2<T> projection;
@@ -165,7 +134,7 @@ T Polygon<T>::distanceTo(const Vec2<T>& point) const
 template <class T>
 Vec2<T> Polygon<T>::nearestPointTo(const Vec2<T>& point) const
 {
-    if(point.intersects(*this)) return point;
+    if(Intersections::intersection(point, *this)) return point;
 
     T minDistance = std::numeric_limits<T>::max();
     Vec2<T> nearestPoint(std::numeric_limits<T>::max(), std::numeric_limits<T>::max());
@@ -185,6 +154,7 @@ Vec2<T> Polygon<T>::nearestPointTo(const Vec2<T>& point) const
     }
     return nearestPoint;
 }
+/*
 template <class T>
 std::unique_ptr<typename Shape2<T>::RandomPointPickerPreprocessedData> Polygon<T>::createPreprocessedDataForRandomPointPicker() const
 {
@@ -206,6 +176,7 @@ Vec2<T> Polygon<T>::pickRandomPoint(Random::RandomEngineBase& randomEngine, type
     if(chosenTriangleIter == polygonPreprocessedData.trianglesByArea.end()) chosenTriangleIter = polygonPreprocessedData.trianglesByArea.begin();
     return chosenTriangleIter->first->pickRandomPoint(randomEngine);
 }
+*/
 template <class T>
 Polyline<T> Polygon<T>::asPolyline() const
 {
@@ -216,15 +187,15 @@ Polyline<T> Polygon<T>::asPolyline() const
 template <class T>
 Vec2<T> Polygon<T>::center() const
 {
-    double xsum = 0.0;
-    double ysum = 0.0;
-    double area = 0.0;
+    T xsum = T(0);
+    T ysum = T(0);
+    T area = T(0);
     for(size_t i = 0; i < size(); ++i)
     {
         const Vec2D& p0 = vertices[i];
         const Vec2D& p1 = vertices[(i + 1) % size()];
 
-        double areaSum = (p0.x * p1.y) - (p1.x * p0.y);
+        T areaSum = (p0.x * p1.y) - (p1.x * p0.y);
 
         xsum += (p0.x + p1.x) * areaSum;
         ysum += (p0.y + p1.y) * areaSum;
@@ -232,8 +203,8 @@ Vec2<T> Polygon<T>::center() const
         area += areaSum;
     }
 
-    double centMassX = xsum / (area * 3.0);
-    double centMassY = ysum / (area * 3.0);
+    T centMassX = xsum / (area * T(3));
+    T centMassY = ysum / (area * T(3));
 
     return Vec2D {centMassX, centMassY};
 }
@@ -241,7 +212,7 @@ template <class T>
 bool Polygon<T>::isConvex() const
 {
     size_t numberOfVertices = vertices.size();
-    T prevCross = 0.0; //will be initialized by correct cross when i equals 0 in the loop
+    T prevCross = 0; //will be initialized by correct cross when i equals 0 in the loop
     for(size_t i = 0; i < numberOfVertices; ++i)
     {
         const Vec2<T>& v0 = vertices[i];
@@ -254,7 +225,7 @@ bool Polygon<T>::isConvex() const
         T cross = e0.cross(e1);
         if(i != 0)
         {
-            if(cross * prevCross < 0.0) return false; //if cross and prev cross have different signs
+            if(cross * prevCross < T(0)) return false; //if cross and prev cross have different signs
         }
         prevCross = cross;
     }
@@ -263,7 +234,7 @@ bool Polygon<T>::isConvex() const
 template <class T>
 T Polygon<T>::signedArea() const
 {
-    double area = 0.0;
+    T area = 0;
     for(size_t i = 0; i < size(); ++i)
     {
         const Vec2D& p0 = vertices[i];
@@ -271,7 +242,7 @@ T Polygon<T>::signedArea() const
 
         area += (p0.x * p1.y) - (p1.x * p0.y);
     }
-    return area / 2.0;
+    return area / T(2);
 }
 
 template <class T>
@@ -287,7 +258,7 @@ Polygon<T> Polygon<T>::regular(const Vec2D& center, int sides, int radius)
     polygon.vertices.reserve(sides);
     for(int i = 0; i < sides; ++i)
     {
-        polygon.vertices.emplace_back(radius * std::cos(2.0 * PI * i / sides), radius * std::sin(2.0 * PI * i / sides));
+        polygon.vertices.emplace_back(radius * std::cos(T(2) * PI * i / sides), radius * std::sin(T(2) * PI * i / sides));
     }
     return polygon;
 }
@@ -304,9 +275,4 @@ template <class T>
 Polygon<T> Polygon<T>::fromTriangle(const Triangle<T>& triangle)
 {
     return Polygon<T> {triangle.vertices[0], triangle.vertices[1], triangle.vertices[2]};
-}
-template <class T>
-std::unique_ptr<Shape2<T>> Polygon<T>::clone() const
-{
-    return std::make_unique<Polygon<T>>(*this);
 }

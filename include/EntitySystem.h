@@ -1,7 +1,7 @@
 #ifndef ENTITYSYSTEM_H
 #define ENTITYSYSTEM_H
 
-#include "../LibS/GeometryLight.h"
+#include "../LibS/Geometry.h"
 
 namespace sf
 {
@@ -18,10 +18,10 @@ public:
     EntitySystem();
     ~EntitySystem();
 
-    std::vector<Entity*> queryRegion(const Geo::RectangleF& rect);
+    std::vector<Entity*> queryRegion(const ls::RectangleF& rect);
     const std::vector<Entity*>& entities() const;
 
-    void addEntity(Entity* newEntity, const Geo::Vec2F& position);
+    void addEntity(Entity* newEntity, const ls::Vec2F& position);
     void removeEntity(Entity* entityToRemove);
 
     void updateEntities(World* world, float dt);

@@ -1,6 +1,6 @@
 #include "PlayerModel.h"
 
-using namespace Geo;
+using namespace ls;
 
 PlayerModel::PlayerModel(Entity* owner, Player* player) :
     EntityModel(owner),
@@ -41,7 +41,7 @@ const Vec2F& PlayerModel::position() const
 {
     return m_position;
 }
-void PlayerModel::setPosition(const Geo::Vec2F& newPosition)
+void PlayerModel::setPosition(const ls::Vec2F& newPosition)
 {
     m_position = newPosition;
 }
@@ -49,7 +49,7 @@ const Vec2F& PlayerModel::velocity() const
 {
     return m_velocity;
 }
-void PlayerModel::setVelocity(const Geo::Vec2F& newVelocity)
+void PlayerModel::setVelocity(const ls::Vec2F& newVelocity)
 {
     m_velocity = newVelocity;
 }

@@ -5,7 +5,7 @@
 
 #include "GameConstants.h"
 
-using namespace Geo;
+using namespace ls;
 
 TallDrawable::TallDrawable()
 {

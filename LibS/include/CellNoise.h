@@ -48,6 +48,10 @@ typedef CellNoise<double> CellNoiseD;
 typedef CellNoise<float> CellNoiseF;
 typedef CellNoise<int> CellNoiseI;
 
+extern template class CellNoise<double>;
+extern template class CellNoise<float>;
+extern template class CellNoise<int>;
+
 #include "../src/CellNoise.cpp"
 
 #endif // CELLNOISE_H_INCLUDED

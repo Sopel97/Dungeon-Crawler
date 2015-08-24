@@ -44,6 +44,11 @@ public:
 typedef Cuboid<double> CuboidD;
 typedef Cuboid<float> CuboidF;
 typedef Cuboid<int> CuboidI;
+
+extern template class Cuboid<double>;
+extern template class Cuboid<float>;
+extern template class Cuboid<int>;
+
 #include "../src/Cuboid.cpp"
 
 #endif // CUBOID_H_INCLUDED

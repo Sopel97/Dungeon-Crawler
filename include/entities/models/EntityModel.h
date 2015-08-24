@@ -5,7 +5,7 @@
 
 #include <memory>
 
-#include "../LibS/GeometryLight.h"
+#include "../LibS/Geometry.h"
 
 class Entity;
 
@@ -33,14 +33,14 @@ public:
     virtual bool hasCollider() const;
     virtual float colliderRadius() const;
 
-    virtual const Geo::Vec2F& position() const;
-    virtual void setPosition(const Geo::Vec2F& newPosition);
-    virtual const Geo::Vec2F& velocity() const;
-    virtual void setVelocity(const Geo::Vec2F& newVelocity);
+    virtual const ls::Vec2F& position() const;
+    virtual void setPosition(const ls::Vec2F& newPosition);
+    virtual const ls::Vec2F& velocity() const;
+    virtual void setVelocity(const ls::Vec2F& newVelocity);
     virtual float distanceTravelled() const;
     virtual void setDistanceTravelled(float newDistanceTravelled);
 
-    virtual Geo::Vec2F displacementWhenMoved(float dt);
+    virtual ls::Vec2F displacementWhenMoved(float dt);
 
     virtual float maxSpeed() const;
 
@@ -53,7 +53,7 @@ protected:
     Entity* m_owner;
 
 private:
-    static const Geo::Vec2F m_someVector;
+    static const ls::Vec2F m_someVector;
 };
 
 #endif // ENTITYMODEL_H

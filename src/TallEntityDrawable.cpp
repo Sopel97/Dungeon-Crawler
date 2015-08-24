@@ -4,7 +4,7 @@
 #include "EntityModel.h"
 #include "EntityView.h"
 
-using namespace Geo;
+using namespace ls;
 
 TallEntityDrawable::TallEntityDrawable(Entity* entity) :
     m_entity(entity)

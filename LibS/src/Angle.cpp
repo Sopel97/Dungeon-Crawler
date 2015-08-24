@@ -57,8 +57,14 @@ Angle<T>& Angle<T>::operator*=(const T scalar)
 template <class T>
 Angle<T>& Angle<T>::operator/=(const T scalar)
 {
-    m_radians ;
+    m_radians /= scalar;
     return *this;
+}
+
+template <class T>
+Angle<T> Angle<T>::operator-() const
+{
+    return radians(-m_radians);
 }
 
 template <class T>
@@ -79,7 +85,7 @@ T Angle<T>::tan() const
 template <class T>
 T Angle<T>::cot() const
 {
-    return 1.0 / std::tan(m_radians);
+    return T(1) / std::tan(m_radians);
 }
 
 template <class T>
@@ -100,7 +106,7 @@ T Angle<T>::atan() const
 template <class T>
 T Angle<T>::acot() const
 {
-    return (PI / 2.0) - std::atan(m_radians);
+    return (PI / T(2)) - std::atan(m_radians);
 }
 
 template <class T>
@@ -121,7 +127,7 @@ T Angle<T>::tanh() const
 template <class T>
 T Angle<T>::coth() const
 {
-    return 1.0 / std::tanh(m_radians);
+    return T(1) / std::tanh(m_radians);
 }
 
 template <class T>
@@ -142,7 +148,7 @@ T Angle<T>::atanh() const
 template <class T>
 T Angle<T>::acoth() const
 {
-    return std::atanh(1.0 / m_radians);
+    return std::atanh(T(1) / m_radians);
 }
 
 template <class T>

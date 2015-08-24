@@ -1,6 +1,6 @@
 #include "QuantityBasedSpriteSet.h"
 
-using namespace Geo;
+using namespace ls;
 
 QuantityBasedSpriteSet::QuantityBasedSpriteSet()
 {
@@ -39,7 +39,7 @@ Vec2I QuantityBasedSpriteSet::getSprite(int quantity) const
     return m_sprites[index];
 }
 
-Geo::Vec2I QuantityBasedSpriteSet::defaultSprite() const
+ls::Vec2I QuantityBasedSpriteSet::defaultSprite() const
 {
     return m_sprites[0];
 }

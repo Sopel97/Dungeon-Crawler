@@ -108,6 +108,9 @@ int SimplexNoise<T>::simplex[64][4]  =
 typedef SimplexNoise<double> SimplexNoiseD;
 typedef SimplexNoise<float> SimplexNoiseF;
 
+extern template class SimplexNoise<double>;
+extern template class SimplexNoise<float>;
+
 #include "../src/SimplexNoise.cpp"
 #endif // NOISE_H_INCLUDED
 

@@ -23,7 +23,7 @@ void EuclideanGraph<T, NodeType>::fromChosenTriangulationConnections(const std::
     m_nodes.clear();
 
     m_nodes.reserve(points.size());
-    for(const auto& point : points())
+    for(const auto& point : points)
     {
         m_nodes.push_back(new NodeType(point));
     }

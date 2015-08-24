@@ -2,7 +2,7 @@
 
 #include "../LibS/make_unique.h"
 
-using namespace Geo;
+using namespace ls;
 
 PlainTileModel::PlainTileModel(Tile* owner) :
     TileModel(owner),

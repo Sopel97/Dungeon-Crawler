@@ -15,7 +15,9 @@
 
 #include "GameConstants.h"
 
-using namespace Geo;
+#include "../LibS/make_unique.h"
+
+using namespace ls;
 
 OuterBorderedTileView::OuterBorderedTileView(Tile* owner) :
     TileView(owner),

@@ -5,7 +5,7 @@
 
 #include "Configuration.h"
 
-#include "../LibS/GeometryLight.h"
+#include "../LibS/Geometry.h"
 
 #include "../LibS/make_unique.h"
 
@@ -24,14 +24,14 @@ public:
     virtual bool hasCollider() const;
     virtual float colliderRadius() const;
 
-    virtual const Geo::Vec2F& position() const;
-    virtual void setPosition(const Geo::Vec2F& newPosition);
-    virtual const Geo::Vec2F& velocity() const;
-    virtual void setVelocity(const Geo::Vec2F& newVelocity);
+    virtual const ls::Vec2F& position() const;
+    virtual void setPosition(const ls::Vec2F& newPosition);
+    virtual const ls::Vec2F& velocity() const;
+    virtual void setVelocity(const ls::Vec2F& newVelocity);
     virtual float distanceTravelled() const;
     virtual void setDistanceTravelled(float newDistanceTravelled);
 
-    virtual Geo::Vec2F displacementWhenMoved(float dt);
+    virtual ls::Vec2F displacementWhenMoved(float dt);
 
     virtual float maxSpeed() const;
 
@@ -42,8 +42,8 @@ public:
     virtual std::unique_ptr<EntityModel> create(Entity* owner) const;
 protected:
     Player* m_playerOwner;
-    Geo::Vec2F m_position;
-    Geo::Vec2F m_velocity;
+    ls::Vec2F m_position;
+    ls::Vec2F m_velocity;
     Direction m_directionOfMove;
     float m_distanceTravelled;
 };

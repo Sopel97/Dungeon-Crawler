@@ -134,7 +134,7 @@ T Vec3<T>::distance(const Vec3<T>& v)
 template <class T>
 void Vec3<T>::normalize()
 {
-    T invMag = 1.0 / magnitude();
+    T invMag = T(1) / magnitude();
     x *= invMag;
     y *= invMag;
     z *= invMag;
@@ -142,7 +142,7 @@ void Vec3<T>::normalize()
 template <class T>
 Vec3<T> Vec3<T>::normalized()
 {
-    T invMag = 1.0 / magnitude();
+    T invMag = T(1) / magnitude();
     return Vec3<T>(x * invMag, y * invMag, z * invMag);
 }
 template <class T>

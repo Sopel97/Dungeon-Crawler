@@ -7,11 +7,11 @@
 
 #include "../LibS/make_unique.h"
 
-#include "../LibS/GeometryLight.h"
+#include "../LibS/Geometry.h"
 
 #include <cmath>
 
-using namespace Geo;
+using namespace ls;
 
 PlayerController::PlayerController(Entity* owner, Player* player) :
     EntityController(owner),
@@ -88,7 +88,7 @@ void PlayerController::update(World* world, float dt)
     m_acceleratedVerticallyInLastFrame = false;
 }
 
-void PlayerController::move(const Geo::Vec2F& factor, float dt)
+void PlayerController::move(const ls::Vec2F& factor, float dt)
 {
     auto& model = m_owner->model();
 
@@ -123,7 +123,7 @@ void PlayerController::move(const Geo::Vec2F& factor, float dt)
         }
     }
 }
-void PlayerController::accelerate(const Geo::Vec2F& dv)
+void PlayerController::accelerate(const ls::Vec2F& dv)
 {
     auto& model = m_owner->model();
     Vec2F velocity = model.velocity();

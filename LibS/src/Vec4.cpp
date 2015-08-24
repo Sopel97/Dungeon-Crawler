@@ -141,7 +141,7 @@ T Vec4<T>::distance(const Vec4<T>& v)
 template <class T>
 void Vec4<T>::normalize()
 {
-    T invMag = 1.0 / magnitude();
+    T invMag = T(1) / magnitude();
     x *= invMag;
     y *= invMag;
     z *= invMag;
@@ -150,7 +150,7 @@ void Vec4<T>::normalize()
 template <class T>
 Vec4<T> Vec4<T>::normalized()
 {
-    T invMag = 1.0 / magnitude();
+    T invMag = T(1) / magnitude();
     return Vec4<T>(x * invMag, y * invMag, z * invMag, w * invMag);
 }
 template <class T>

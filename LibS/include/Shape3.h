@@ -16,17 +16,15 @@ public:
 
     Shape3& operator = (const Shape3&) = default;
     Shape3& operator = (Shape3 &&) = default;
-
-    virtual void translate(const Vec3<T>& v) = 0;
-    virtual void scale(const Vec3<T>& c, const Vec3<T>& s) = 0;
-    virtual void scale(const Vec3<T>& c, const T s) = 0;
-    virtual void scale(const Vec3<T>& s) = 0;
-    virtual void scale(const T s) = 0;
 };
 
 typedef Shape3<double> Shape3D;
 typedef Shape3<float> Shape3F;
 typedef Shape3<int> Shape3I;
+
+extern template class Shape3<double>;
+extern template class Shape3<float>;
+extern template class Shape3<int>;
 
 #include "../src/Shape3.cpp"
 #endif // SHAPE3_H

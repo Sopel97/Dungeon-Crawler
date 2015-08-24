@@ -12,7 +12,7 @@
 
 #include "GameConstants.h"
 
-using namespace Geo;
+using namespace ls;
 
 TileStack MapLayer::m_emptyTileStack {};
 
@@ -84,6 +84,7 @@ Tile* MapLayer::takeTile(int x, int y)
     int z = tileStack.topZ();
     Tile* tile = tileStack.pop();
     tile->onTileRemoved(TileLocation(*this, x, y, z));
+    return tile;
 }
 void MapLayer::deleteTile(int x, int y)
 {

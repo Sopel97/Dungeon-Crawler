@@ -5,7 +5,7 @@
 
 #include "Tile.h"
 
-#include "../LibS/GeometryLight.h"
+#include "../LibS/Geometry.h"
 
 class World;
 class TileStack;
@@ -34,7 +34,7 @@ public:
     void deleteTile(int x, int y);
 
 
-    std::vector<Geo::RectangleF> queryTileColliders(const Geo::RectangleF& queryRegion) const;
+    std::vector<ls::RectangleF> queryTileColliders(const ls::RectangleF& queryRegion) const;
 
 protected:
     World& m_world;

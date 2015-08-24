@@ -61,32 +61,6 @@ void LineSegment<T>::scale(const Vec2<T>& s)
     end.scale(s);
 }
 template <class T>
-void LineSegment<T>::transform(const std::function<void(Vec2<T>&)>& transformationFunction)
-{
-    transformationFunction(begin);
-    transformationFunction(end);
-}
-template <class T>
-void LineSegment<T>::transform(const Transformation2<T>& transformation)
-{
-    transformation.transform(begin);
-    transformation.transform(end);
-}
-template <class T>
-LineSegment<T> LineSegment<T>::transformed(const std::function<void(Vec2<T>&)>& transformationFunction) const
-{
-    LineSegment<T> copy(*this);
-    copy.transform(transformationFunction);
-    return copy;
-}
-template <class T>
-LineSegment<T> LineSegment<T>::transformed(const Transformation2<T>& transformation) const
-{
-    LineSegment<T> copy(*this);
-    copy.transform(transformation);
-    return copy;
-}
-template <class T>
 T LineSegment<T>::distanceTo(const Vec2<T>& point) const
 {
     return point.distanceTo(nearestPointTo(point));
@@ -100,12 +74,7 @@ Vec2<T> LineSegment<T>::nearestPointTo(const Vec2<T>& point) const
     t = clamp(t, T(0.0), T(1.0));
     return begin + AB * t;
 }
-template <class T>
-Polyline<T> LineSegment<T>::asPolyline() const
-{
-    return Polyline<T>({begin, end});
-}
-
+/*
 template <class T>
 Vec2<T> LineSegment<T>::pickRandomPoint(Random::RandomEngineBase& randomEngine) const
 {
@@ -117,10 +86,11 @@ Vec2<T> LineSegment<T>::pickRandomPoint(Random::RandomEngineBase& randomEngine, 
 {
     return pickRandomPoint(randomEngine);
 }
+*/
 template <class T>
 Vec2<T> LineSegment<T>::center() const
 {
-    return (begin + end) * 0.5;
+    return (begin + end) / T(2);
 }
 
 template <class T>
@@ -129,8 +99,3 @@ bool LineSegment<T>::intersects(const LineSegment<T>& lineSegment, Vec2<T>& inte
     return Intersections::intersection(*this, lineSegment, intersectionPoint);
 }
 
-template <class T>
-std::unique_ptr<Shape2<T>> LineSegment<T>::clone() const
-{
-    return std::make_unique<LineSegment<T>>(*this);
-}

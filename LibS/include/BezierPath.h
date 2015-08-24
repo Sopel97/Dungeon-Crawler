@@ -29,6 +29,10 @@ typedef BezierPath<double> BezierPathD;
 typedef BezierPath<float> BezierPathF;
 typedef BezierPath<int> BezierPathI;
 
+extern template class BezierPath<double>;
+extern template class BezierPath<float>;
+extern template class BezierPath<int>;
+
 #include "../src/BezierPath.cpp"
 
 #endif // BEZIERPATH_H

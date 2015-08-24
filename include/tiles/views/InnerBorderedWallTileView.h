@@ -8,7 +8,7 @@
 
 #include "ResourceLoaders.h"
 
-#include "../LibS/GeometryLight.h"
+#include "../LibS/Geometry.h"
 
 namespace sf
 {
@@ -32,7 +32,7 @@ public:
     virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const;
 
     const sf::Texture& texture() const;
-    const Geo::Vec2I& spriteSet() const;
+    const ls::Vec2I& spriteSet() const;
     virtual int innerBorderGroup() const;
 
     virtual bool isTall() const;
@@ -44,23 +44,23 @@ protected:
     {
         ResourceHandle<sf::Texture> texture;
 
-        Geo::Vec2I spriteSet;
+        ls::Vec2I spriteSet;
 
         //specific names are based on appearance in file "inner_bordered_wall_sprites_preview.png"
-        Geo::Vec2I full;
-        Geo::Vec2I top;
-        Geo::Vec2I left;
-        Geo::Vec2I topLeft;
-        Geo::Vec2I bottomRight;
+        ls::Vec2I full;
+        ls::Vec2I top;
+        ls::Vec2I left;
+        ls::Vec2I topLeft;
+        ls::Vec2I bottomRight;
 
-        Geo::Vec2I outerLeft;
-        Geo::Vec2I innerTopRight;
-        Geo::Vec2I innerBottomLeft;
-        Geo::Vec2I outerTopRight;
-        Geo::Vec2I outerBottomLeft;
-        Geo::Vec2I outerTop;
-        Geo::Vec2I outerTopLeft;
-        Geo::Vec2I innerBottomRight;
+        ls::Vec2I outerLeft;
+        ls::Vec2I innerTopRight;
+        ls::Vec2I innerBottomLeft;
+        ls::Vec2I outerTopRight;
+        ls::Vec2I outerBottomLeft;
+        ls::Vec2I outerTop;
+        ls::Vec2I outerTopLeft;
+        ls::Vec2I innerBottomRight;
 
         int innerBorderGroup;
     };

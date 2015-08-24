@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "../LibS/GeometryLight.h"
+#include "../LibS/Geometry.h"
 
 class Tile;
 
@@ -31,7 +31,7 @@ public:
     bool isTall() const;
 
     bool hasCollider() const;
-    const Geo::RectangleF& collider() const;
+    const ls::RectangleF& collider() const;
 
     const std::vector<Tile*>& tiles() const;
 

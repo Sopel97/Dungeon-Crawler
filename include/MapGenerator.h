@@ -1,7 +1,7 @@
 #ifndef MAPGENERATOR_H
 #define MAPGENERATOR_H
 
-#include "../LibS/GeometryLight.h"
+#include "../LibS/Geometry.h"
 #include "../LibS/Array2.h"
 
 #include <algorithm>
@@ -15,7 +15,7 @@ public:
     MapGenerator(size_t width, size_t height);
 
     void updateHelperMaps();
-    std::vector<Geo::LineSegmentF> produceConnectionsBetweenDisconnectedRegions();
+    std::vector<ls::LineSegmentF> produceConnectionsBetweenDisconnectedRegions();
     void removeSmallRegionsFromTopologyMap(); //does not update
     void prepareHelperMaps();
 
@@ -51,12 +51,12 @@ protected:
 
             CaveTopologyRules();
 
-            States operator()(const Geo::CellularAutomaton<CaveTopologyRules>& automaton, size_t x, size_t y);
+            States operator()(const ls::CellularAutomaton<CaveTopologyRules>& automaton, size_t x, size_t y);
         protected:
             int m_iteration; //this should be added to parameter list for operator ()
         };
-        Geo::CellularAutomaton<CaveTopologyRules> m_automaton;
-        Geo::CellularAutomaton<CaveTopologyRules> m_initialAutomatonState;
+        ls::CellularAutomaton<CaveTopologyRules> m_automaton;
+        ls::CellularAutomaton<CaveTopologyRules> m_initialAutomatonState;
         size_t m_width;
         size_t m_height;
     };
@@ -98,7 +98,7 @@ protected:
             {
                 for(size_t y = 0; y < m_height; ++y)
                 {
-                    std::vector<Geo::Vec2I> localRects;
+                    std::vector<ls::Vec2I> localRects;
                     size_t xx = x;
                     size_t lastMaxY = m_height;
                     while(topologyMap.at(xx, y) == TopologyMap::TopologyState::Passage && xx < m_width)
@@ -111,22 +111,22 @@ protected:
                         lastMaxY = yy;
                         ++xx;
 
-                        Geo::Vec2I size(xx - x, yy - y);
+                        ls::Vec2I size(xx - x, yy - y);
                         rectangleSizeAdjustingFunction(size);
                         if(size.y <= 0 || size.x <= 0) break;
                         localRects.push_back(size);
                     }
 
                     if(!localRects.empty())
-                        m_rectangleSizes(x, y) = (*std::max_element(localRects.begin(), localRects.end(), [](const Geo::Vec2I & lhs, const Geo::Vec2I & rhs)->bool {return lhs.x * lhs.y < rhs.x* rhs.y;}));
-                    else m_rectangleSizes(x, y) = Geo::Vec2I(0, 0);
+                        m_rectangleSizes(x, y) = (*std::max_element(localRects.begin(), localRects.end(), [](const ls::Vec2I & lhs, const ls::Vec2I & rhs)->bool {return lhs.x * lhs.y < rhs.x* rhs.y;}));
+                    else m_rectangleSizes(x, y) = ls::Vec2I(0, 0);
                 }
             }
         }
-        const Geo::Vec2I& at(size_t x, size_t y) const;
+        const ls::Vec2I& at(size_t x, size_t y) const;
 
     protected:
-        Array2<Geo::Vec2I> m_rectangleSizes;
+        Array2<ls::Vec2I> m_rectangleSizes;
         size_t m_width;
         size_t m_height;
     };
@@ -139,15 +139,15 @@ protected:
         template <class F>
         void updateFromRegionMapAndRectangleMap(const RegionMap& regionMap, const RectangleMap& rectangleMap, F rectangleSizeAdjustingFunction)
         {
-            auto intersects = [](const Geo::RectangleI & a, const Geo::RectangleI & b)->bool //local implementation to ensure that it checks for tangent boudaries
+            auto intersects = [](const ls::RectangleI & a, const ls::RectangleI & b)->bool //local implementation to ensure that it checks for tangent boudaries
             {
                 return a.max.x > b.min.x && a.min.x < b.max.x && a.max.y > b.min.y && a.min.y < b.max.y;
             };
-            auto isRectangleValid = [](const Geo::RectangleI & r)->bool
+            auto isRectangleValid = [](const ls::RectangleI & r)->bool
             {
                 return r.max.x > r.min.x && r.max.y > r.min.y;
             };
-            auto isRectangleNotValid = [&isRectangleValid](const Geo::RectangleI & r)->bool
+            auto isRectangleNotValid = [&isRectangleValid](const ls::RectangleI & r)->bool
             {
                 return !isRectangleValid;
             };
@@ -160,23 +160,23 @@ protected:
             };
             //auto rectangleSizeAdjustingFunction = [](Vec2I & size) {if(size.x > size.y * 2) size.x = size.y * 2; else if(size.y > size.x * 2) size.y = size.x * 2;};
 
-            std::vector<std::vector<Geo::RectangleI>> rectanglesInRegion;
+            std::vector<std::vector<ls::RectangleI>> rectanglesInRegion;
             rectanglesInRegion.resize(regionMap.numberOfRegions());
 
-            std::vector<Geo::RectangleI> sortedRectangles;
+            std::vector<ls::RectangleI> sortedRectangles;
 
             for(size_t x = 0; x < m_width; ++x)
             {
                 for(size_t y = 0; y < m_height; ++y)
                 {
-                    Geo::Vec2I size = rectangleMap.at(x, y);
+                    ls::Vec2I size = rectangleMap.at(x, y);
                     if(size.x <= 0 || size.y <= 0) continue;
-                    Geo::RectangleI rectangle(Geo::Vec2I(x, y), size.x, size.y);
+                    ls::RectangleI rectangle(ls::Vec2I(x, y), size.x, size.y);
                     sortedRectangles.push_back(rectangle);
                 }
             }
 
-            std::sort(sortedRectangles.begin(), sortedRectangles.end(), [](const Geo::RectangleI & lhs, const Geo::RectangleI & rhs)->bool {return lhs.area() > rhs.area();}); //descending by area
+            std::sort(sortedRectangles.begin(), sortedRectangles.end(), [](const ls::RectangleI & lhs, const ls::RectangleI & rhs)->bool {return lhs.area() > rhs.area();}); //descending by area
 
             for(auto& rectangleToInsert : sortedRectangles)
             {
@@ -200,7 +200,7 @@ protected:
 
                     if(intersectingRectangle.area() < rectangleToInsert.area())
                     {
-                        Geo::RectangleI r1, r2; //for two ways of shrinking of the rectangle. One horizontally, one vertically.
+                        ls::RectangleI r1, r2; //for two ways of shrinking of the rectangle. One horizontally, one vertically.
                         r1 = r2 = intersectingRectangle;
 
                         if(r1.min.x < rectangleToInsert.min.x)
@@ -229,11 +229,11 @@ protected:
                             r2.max = r2.min;
                         }
 
-                        Geo::Vec2I size1(r1.width(), r1.height());
+                        ls::Vec2I size1(r1.width(), r1.height());
                         rectangleSizeAdjustingFunction(size1);
                         r1.max = r1.min + size1;
 
-                        Geo::Vec2I size2(r2.width(), r2.height());
+                        ls::Vec2I size2(r2.width(), r2.height());
                         rectangleSizeAdjustingFunction(size2);
                         r2.max = r2.min + size2;
 
@@ -242,7 +242,7 @@ protected:
                     }
                     else
                     {
-                        Geo::RectangleI r1, r2;
+                        ls::RectangleI r1, r2;
                         r1 = r2 = rectangleToInsert;
 
                         if(r1.min.x < intersectingRectangle.min.x)
@@ -271,11 +271,11 @@ protected:
                             r2.max = r2.min;
                         }
 
-                        Geo::Vec2I size1(r1.width(), r1.height());
+                        ls::Vec2I size1(r1.width(), r1.height());
                         rectangleSizeAdjustingFunction(size1);
                         r1.max = r1.min + size1;
 
-                        Geo::Vec2I size2(r2.width(), r2.height());
+                        ls::Vec2I size2(r2.width(), r2.height());
                         rectangleSizeAdjustingFunction(size2);
                         r2.max = r2.min + size2;
 
@@ -322,7 +322,7 @@ protected:
                 {
                     if(rectangleFillMap(x, y) == FillState::Unfilled)
                     {
-                        rectanglesInRegion[regionMap.at(x, y)].push_back(Geo::RectangleI(Geo::Vec2I(x, y), 1, 1));
+                        rectanglesInRegion[regionMap.at(x, y)].push_back(ls::RectangleI(ls::Vec2I(x, y), 1, 1));
                     }
                 }
             }
@@ -334,10 +334,10 @@ protected:
             }
         }
 
-        const std::vector<Geo::RectangleI>& rectangles() const;
+        const std::vector<ls::RectangleI>& rectangles() const;
 
     protected:
-        std::vector<Geo::RectangleI> m_rectangles;
+        std::vector<ls::RectangleI> m_rectangles;
         size_t m_width;
         size_t m_height;
     };

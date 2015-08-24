@@ -44,6 +44,10 @@ typedef PointSetDelaunayTriangulation<double> PointSetDelaunayTriangulationD;
 typedef PointSetDelaunayTriangulation<float> PointSetDelaunayTriangulationF;
 typedef PointSetDelaunayTriangulation<int> PointSetDelaunayTriangulationI;
 
+extern template class PointSetDelaunayTriangulation<double>;
+extern template class PointSetDelaunayTriangulation<float>;
+extern template class PointSetDelaunayTriangulation<int>;
+
 #include "../src/PointSetDelaunayTriangulation.cpp"
 
 #endif // POINTSETDELAUNAYTRIANGULATION_H

@@ -30,7 +30,9 @@
 
 #include "GameConstants.h"
 
-using namespace Geo;
+#include "../LibS/make_unique.h"
+
+using namespace ls;
 
 World::World(Root& root) :
     m_root(root),

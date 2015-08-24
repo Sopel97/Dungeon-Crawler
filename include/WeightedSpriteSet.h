@@ -5,7 +5,7 @@
 
 #include "Configuration.h"
 
-#include "../LibS/GeometryLight.h"
+#include "../LibS/Geometry.h"
 
 class WeightedSpriteSet
 {
@@ -14,12 +14,12 @@ public:
 
     void loadFromConfiguration(ConfigurationNode& config);
 
-    Geo::Vec2I chooseRandomSprite() const;
-    Geo::Vec2I defaultSprite() const;
+    ls::Vec2I chooseRandomSprite() const;
+    ls::Vec2I defaultSprite() const;
 
 
 protected:
-    std::vector<Geo::Vec2I> m_sprites;
+    std::vector<ls::Vec2I> m_sprites;
     std::vector<float> m_cumulativeWeights;
 };
 

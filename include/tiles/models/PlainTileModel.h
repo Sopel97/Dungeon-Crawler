@@ -5,7 +5,7 @@
 
 #include "ResourceLoaders.h"
 
-#include "../LibS/GeometryLight.h"
+#include "../LibS/Geometry.h"
 
 #include <memory>
 
@@ -21,7 +21,7 @@ public:
     virtual void loadFromConfiguration(ConfigurationNode& config);
 
     virtual bool hasCollider() const;
-    virtual const Geo::RectangleF& collider() const;
+    virtual const ls::RectangleF& collider() const;
 
     virtual float drag() const;
 
@@ -31,7 +31,7 @@ protected:
     struct CommonData
     {
         bool hasCollider;
-        Geo::RectangleF collider;
+        ls::RectangleF collider;
         float drag;
     };
     std::shared_ptr<CommonData> m_commonData;

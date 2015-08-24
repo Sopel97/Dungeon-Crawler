@@ -11,7 +11,9 @@
 
 #include "GameConstants.h"
 
-using namespace Geo;
+#include "../LibS/make_unique.h"
+
+using namespace ls;
 
 PlainTileView::PlainTileView(Tile* owner) :
     TileView(owner),

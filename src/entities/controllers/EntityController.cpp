@@ -37,11 +37,11 @@ void EntityController::update(World* world, float dt)
 
 }
 
-void EntityController::move(const Geo::Vec2F& factor, float dt)
+void EntityController::move(const ls::Vec2F& factor, float dt)
 {
 
 }
-void EntityController::accelerate(const Geo::Vec2F& dv)
+void EntityController::accelerate(const ls::Vec2F& dv)
 {
 
 }

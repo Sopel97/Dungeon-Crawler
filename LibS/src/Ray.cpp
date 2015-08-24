@@ -64,39 +64,6 @@ void Ray<T>::scale(const Vec2<T>& s)
     direction.normalize();
 }
 template <class T>
-void Ray<T>::transform(const std::function<void(Vec2<T>&)>& transformationFunction)
-{
-    Vec2<T> somePointOnRay = origin + direction;
-    transformationFunction(somePointOnRay);
-
-    transformationFunction(origin);
-    direction = somePointOnRay - origin;
-}
-template <class T>
-void Ray<T>::transform(const Transformation2<T>& transformation)
-{
-    Vec2<T> somePointOnRay = origin + direction;
-    transformation.transform(somePointOnRay);
-
-    transformation.transform(origin);
-    direction = somePointOnRay - origin;
-}
-template <class T>
-Ray<T> Ray<T>::transformed(const std::function<void(Vec2<T>&)>& transformationFunction) const
-{
-    Ray<T> copy(*this);
-    copy.transform(transformationFunction);
-    return copy;
-}
-template <class T>
-Ray<T> Ray<T>::transformed(const Transformation2<T>& transformation) const
-{
-    Ray<T> copy(*this);
-    copy.transform(transformation);
-    return copy;
-}
-
-template <class T>
 T Ray<T>::distanceTo(const Vec2<T>& point) const
 {
     return point.distanceTo(nearestPointTo(point));
@@ -110,15 +77,4 @@ Vec2<T> Ray<T>::nearestPointTo(const Vec2<T>& point) const
     return origin + direction * t;
 }
 
-template <class T>
-Polyline<T> Ray<T>::asPolyline() const
-{
-    //dont know
-    return Polyline<T>({origin});
-}
 
-template <class T>
-std::unique_ptr<Shape2<T>> Ray<T>::clone() const
-{
-    return std::make_unique<Ray<T>>(*this);
-}

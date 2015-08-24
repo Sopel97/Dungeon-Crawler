@@ -2,9 +2,9 @@
 
 #include "../LibS/make_unique.h"
 
-using namespace Geo;
+using namespace ls;
 
-const Geo::Vec2F EntityModel::m_someVector {0.0f, 0.0f};
+const ls::Vec2F EntityModel::m_someVector {0.0f, 0.0f};
 
 EntityModel::EntityModel(Entity* owner) :
     m_owner(owner)
@@ -43,19 +43,19 @@ float EntityModel::colliderRadius() const
 {
     return 0.0f;
 }
-const Geo::Vec2F& EntityModel::position() const
+const ls::Vec2F& EntityModel::position() const
 {
     return m_someVector;
 }
-void EntityModel::setPosition(const Geo::Vec2F& newPosition)
+void EntityModel::setPosition(const ls::Vec2F& newPosition)
 {
 
 }
-const Geo::Vec2F& EntityModel::velocity() const
+const ls::Vec2F& EntityModel::velocity() const
 {
     return m_someVector;
 }
-void EntityModel::setVelocity(const Geo::Vec2F& newVelocity)
+void EntityModel::setVelocity(const ls::Vec2F& newVelocity)
 {
 
 }

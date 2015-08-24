@@ -94,7 +94,7 @@ bool TileStack::hasCollider() const
 
     return false;
 }
-const Geo::RectangleF& TileStack::collider() const
+const ls::RectangleF& TileStack::collider() const
 {
     for(const Tile* tile : m_tiles)
     {

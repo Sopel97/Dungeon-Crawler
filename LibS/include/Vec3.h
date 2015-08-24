@@ -55,11 +55,11 @@ public:
 
     void fill(T value);
 
-    virtual void translate(const Vec3<T>& v) {};
-    virtual void scale(const Vec3<T>& c, const Vec3<T>& s) {};
-    virtual void scale(const Vec3<T>& c, const T s) {};
-    virtual void scale(const Vec3<T>& s) {};
-    virtual void scale(const T s) {};
+    void translate(const Vec3<T>& v) {};
+    void scale(const Vec3<T>& c, const Vec3<T>& s) {};
+    void scale(const Vec3<T>& c, const T s) {};
+    void scale(const Vec3<T>& s) {};
+    void scale(const T s) {};
 
     template <class Transformation>
     void transform(Transformation&& func);
@@ -78,6 +78,10 @@ const Vec3<T> Vec3<T>::unitZ = Vec3<T> {0, 0, 1};
 typedef Vec3<double> Vec3D;
 typedef Vec3<float> Vec3F;
 typedef Vec3<int> Vec3I;
+
+extern template class Vec3<double>;
+extern template class Vec3<float>;
+extern template class Vec3<int>;
 
 #include "../src/Vec3.cpp"
 #endif // Vec3_H_INCLUDED

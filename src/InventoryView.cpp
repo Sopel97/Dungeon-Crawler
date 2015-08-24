@@ -5,9 +5,9 @@
 
 #include "ResourceManager.h"
 
-#include "../LibS/GeometryLight.h"
+#include "../LibS/Geometry.h"
 
-using namespace Geo;
+using namespace ls;
 
 int InventoryView::m_minSensibleHeight = 67;
 int InventoryView::m_topBarHeight = 15;

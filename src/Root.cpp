@@ -7,12 +7,13 @@
 
 #include "ResourceLoaders.h"
 
-#include "../LibS/GeometryLight.h"
+#include "../LibS/Geometry.h"
+#include "../LibS/make_unique.h"
 
 #include <windows.h>
 
-using namespace Geo;
-using namespace Random;
+
+using namespace ls;
 
 Root::Root() :
     m_window(sf::VideoMode(m_defaultWindowWidth, m_defaultWindowHeight), "Dungeon Crawler Test"),

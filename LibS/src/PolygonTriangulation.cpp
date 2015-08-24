@@ -42,7 +42,7 @@ void PolygonTriangulation<T>::calculate()
 
         /* we want a counter-clockwise polygon in V */
 
-        if(m_polygon.signedArea() > 0.0)
+        if(m_polygon.signedArea() > T(0))
             for(size_t v = 0; v < n; ++v) V[v] = v;
         else
             for(size_t v = 0; v < n; ++v) V[v] = (n - 1) - v;
@@ -129,7 +129,7 @@ bool PolygonTriangulation<T>::snip(size_t u, size_t v, size_t w, size_t n, const
     for(size_t p = 0; p < n; p++)
     {
         if((p == u) || (p == v) || (p == w)) continue;
-        if(triangle.intersects(m_polygon.vertices[V[p]])) return false;
+        if(Intersections::intersection(triangle, m_polygon.vertices[V[p]])) return false;
     }
 
     return true;

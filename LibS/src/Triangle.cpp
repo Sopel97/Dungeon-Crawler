@@ -61,34 +61,6 @@ void Triangle<T>::scale(const Vec2<T>& s)
     vertices[1].scale(s);
     vertices[2].scale(s);
 }
-template <class T>
-void Triangle<T>::transform(const std::function<void(Vec2<T>&)>& transformationFunction)
-{
-    transformationFunction(vertices[0]);
-    transformationFunction(vertices[1]);
-    transformationFunction(vertices[2]);
-}
-template <class T>
-void Triangle<T>::transform(const Transformation2<T>& transformation)
-{
-    transformation.transform(vertices[0]);
-    transformation.transform(vertices[1]);
-    transformation.transform(vertices[2]);
-}
-template <class T>
-Triangle<T> Triangle<T>::transformed(const std::function<void(Vec2<T>&)>& transformationFunction) const
-{
-    Triangle<T> copy(*this);
-    copy.transform(transformationFunction);
-    return copy;
-}
-template <class T>
-Triangle<T> Triangle<T>::transformed(const Transformation2<T>& transformation) const
-{
-    Triangle<T> copy(*this);
-    copy.transform(transformation);
-    return copy;
-}
 
 template <class T>
 T Triangle<T>::distanceTo(const Vec2<T>& point) const
@@ -98,7 +70,7 @@ T Triangle<T>::distanceTo(const Vec2<T>& point) const
 template <class T>
 Vec2<T> Triangle<T>::nearestPointTo(const Vec2<T>& point) const
 {
-    if(point.intersects(*this)) return point;
+    if(Intersections::intersection(point, *this)) return point;
 
     T minDistance = std::numeric_limits<T>::max();
     Vec2<T> nearestPoint(std::numeric_limits<T>::max(), std::numeric_limits<T>::max());
@@ -130,9 +102,9 @@ Polyline<T> Triangle<T>::asPolyline() const
 template <class T>
 Vec2<T> Triangle<T>::center() const
 {
-    return (vertices[0] + vertices[1] + vertices[2]) / 3.0;
+    return (vertices[0] + vertices[1] + vertices[2]) / T(3);
 }
-
+/*
 template <class T>
 std::unique_ptr<typename Shape2<T>::RandomPointPickerPreprocessedData> Triangle<T>::createPreprocessedDataForRandomPointPicker() const
 {
@@ -187,34 +159,29 @@ Vec2<T> Triangle<T>::pickRandomPoint(Random::RandomEngineBase& randomEngine, typ
     return point;
     return pickRandomPoint(randomEngine);
 }
-
+*/
 
 template <class T>
 Triangle<T> Triangle<T>::equilateral(const Vec2D& center, const T base)
 {
-    T height = base * std::sqrt(3) * 0.5;
-    return Triangle<T>(Vec2D {center.x - base * 0.5, center.y - height * 0.5},
-                       Vec2D {center.x, center.y + height * 0.5},
-                       Vec2D {center.x - base * 0.5, center.y + height * 0.5});
+    T height = base * std::sqrt(T(3)) / T(2);
+    return Triangle<T>(Vec2D {center.x - base / T(2), center.y - height / T(2)},
+                       Vec2D {center.x, center.y + height / T(2)},
+                       Vec2D {center.x - base / T(2), center.y + height / T(2)});
 }
 template <class T>
 Triangle<T> Triangle<T>::isosceles(const Vec2D& center, const T base, const T height)
 {
-    return Triangle<T>(Vec2D {center.x - base * 0.5, center.y - height * 0.5},
-                       Vec2D {center.x, center.y + height * 0.5},
-                       Vec2D {center.x + base * 0.5, center.y - height * 0.5});
+    return Triangle<T>(Vec2D {center.x - base / T(2), center.y - height / T(2)},
+                       Vec2D {center.x, center.y + height / T(2)},
+                       Vec2D {center.x + base / T(2), center.y - height / T(2)});
 }
 template <class T>
 Triangle<T> Triangle<T>::rightTriangle(const Vec2D& rightAngledVertex, const T width, const T height)
 {
     return Triangle<T>(rightAngledVertex,
-                       rightAngledVertex + Vec2D {0.0, height},
-                       rightAngledVertex + Vec2D {width, 0.0});
-}
-template <class T>
-std::unique_ptr<Shape2<T>> Triangle<T>::clone() const
-{
-    return std::make_unique<Triangle<T>>(*this);
+                       rightAngledVertex + Vec2D {T(0), height},
+                       rightAngledVertex + Vec2D {width, T(0)});
 }
 template <class T>
 T Triangle<T>::signedArea() const
@@ -222,5 +189,5 @@ T Triangle<T>::signedArea() const
     const Vec2<T>& a = vertices[0];
     const Vec2<T>& b = vertices[1];
     const Vec2<T>& c = vertices[2];
-    return ((b.x-a.x)*(c.y-a.y) - (c.x-a.x)*(b.y-a.y)) / 2.0;
+    return ((b.x-a.x)*(c.y-a.y) - (c.x-a.x)*(b.y-a.y)) / T(2);
 }

@@ -3,13 +3,13 @@
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 
-using namespace Geo;
+using namespace ls;
 
 ResourceHandle<sf::Texture> InventorySlotView::m_texture {nullptr};
 Vec2I InventorySlotView::m_slotTexture {0, 19};
 Vec2I InventorySlotView::m_slotTextureSize {40, 40};
 Vec2I InventorySlotView::m_requirementIconSize {32, 32};
-std::map<InventorySlotView::ContentRequirement, Geo::Vec2I> InventorySlotView::m_requirementIcons
+std::map<InventorySlotView::ContentRequirement, ls::Vec2I> InventorySlotView::m_requirementIcons
 {
     {InventorySlotView::ContentRequirement::Necklace, Vec2I(40 + 32 * 0, 19)},
     {InventorySlotView::ContentRequirement::Helmet, Vec2I(40 + 32 * 1, 19)},

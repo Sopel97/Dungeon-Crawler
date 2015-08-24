@@ -9,7 +9,7 @@
 
 #include "EntitySystem.h"
 
-#include "../LibS/GeometryLight.h"
+#include "../LibS/Geometry.h"
 
 namespace sf
 {
@@ -29,7 +29,7 @@ public:
     void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
     void drawOuterBorder(sf::RenderTarget & renderTarget, sf::RenderStates & renderStates, const TileLocation & tileLocation);
 
-    void moveCamera(const Geo::Vec2F& displacement);
+    void moveCamera(const ls::Vec2F& displacement);
 
     const Camera& camera() const;
     int width() const;
@@ -39,13 +39,13 @@ public:
     const EntitySystem& entitySystem() const;
     const MapGenerator& mapGenerator() const;
 
-    Geo::Vec2I worldToTile(const Geo::Vec2F& position) const;
+    ls::Vec2I worldToTile(const ls::Vec2F& position) const;
 
     void update(float dt);
 
-    float drag(const Geo::Vec2F& position) const;
+    float drag(const ls::Vec2F& position) const;
 
-    std::vector<Geo::RectangleF> queryTileColliders(const Geo::RectangleF& queryRegion) const;
+    std::vector<ls::RectangleF> queryTileColliders(const ls::RectangleF& queryRegion) const;
 protected:
     Root& m_root;
     int m_width;

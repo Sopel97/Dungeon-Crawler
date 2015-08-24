@@ -68,6 +68,10 @@ typedef Triangulation<double> TriangulationD;
 typedef Triangulation<float> TriangulationF;
 typedef Triangulation<int> TriangulationI;
 
+extern template class Triangulation<double>;
+extern template class Triangulation<float>;
+extern template class Triangulation<int>;
+
 #include "../src/Triangulation.cpp"
 
 #endif // TRIANGULATION_H

@@ -1,6 +1,6 @@
 #include "WindowSpaceManager.h"
 
-using namespace Geo;
+using namespace ls;
 
 WindowSpaceManager::Region::Region(const RectangleI& rect, WindowSpaceManager::Region::Id id, const std::vector<WindowSpaceManager::Scene>& parentScenes, int zIndex) :
     m_rect(rect),
@@ -150,7 +150,7 @@ const WindowSpaceManager::Region* WindowSpaceManager::pointedRegion(const Vec2I&
         const Region& candidate = region.second;
         if(!candidate.isPresentOnScene(m_currentScene)) continue;
         if(candidate.zIndex() < highestZ) continue;
-        if(candidate.rect().intersects(windowCoords))
+        if(Intersections::intersection(candidate.rect(), windowCoords))
         {
             bestCandidate = &candidate;
             highestZ = candidate.zIndex();

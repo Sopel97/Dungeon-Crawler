@@ -5,9 +5,9 @@
 
 #include "Tile.h"
 
-#include "../LibS/GeometryLight.h"
+#include "../LibS/Geometry.h"
 
-using namespace Geo;
+using namespace ls;
 
 PlayerEquipmentInventory::PlayerEquipmentInventory()
 {

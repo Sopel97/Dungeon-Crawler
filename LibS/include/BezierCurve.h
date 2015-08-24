@@ -32,6 +32,10 @@ typedef BezierCurve<double> BezierCurveD;
 typedef BezierCurve<float> BezierCurveF;
 typedef BezierCurve<int> BezierCurveI;
 
+extern template class BezierCurve<double>;
+extern template class BezierCurve<float>;
+extern template class BezierCurve<int>;
+
 #include "../src/BezierCurve.cpp"
 
 #endif // BEZIERCURVW_H

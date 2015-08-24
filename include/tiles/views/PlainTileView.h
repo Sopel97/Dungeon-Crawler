@@ -9,7 +9,7 @@
 
 #include "ResourceLoaders.h"
 
-#include "../LibS/GeometryLight.h"
+#include "../LibS/Geometry.h"
 
 #include <vector>
 
@@ -53,7 +53,7 @@ protected:
         bool coversOuterBorders;
     };
     std::shared_ptr<CommonData> m_commonData;
-    Geo::Vec2I m_sprite;
+    ls::Vec2I m_sprite;
 };
 
 REGISTER_TILE_VIEW_TYPE(PlainTileView)

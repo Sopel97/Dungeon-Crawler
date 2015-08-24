@@ -56,11 +56,11 @@ public:
 
     void fill(T value);
 
-    virtual void translate(const Vec4<T>& v) {};
-    virtual void scale(const Vec4<T>& c, const Vec4<T>& s) {};
-    virtual void scale(const Vec4<T>& c, const T s) {};
-    virtual void scale(const Vec4<T>& s) {};
-    virtual void scale(const T s) {};
+    void translate(const Vec4<T>& v) {};
+    void scale(const Vec4<T>& c, const Vec4<T>& s) {};
+    void scale(const Vec4<T>& c, const T s) {};
+    void scale(const Vec4<T>& s) {};
+    void scale(const T s) {};
 
     template <class Transformation>
     void transform(Transformation&& func);
@@ -78,6 +78,10 @@ const Vec4<T> Vec4<T>::unitW = Vec4<T> {0, 0, 1, 1};
 typedef Vec4<double> Vec4D;
 typedef Vec4<float> Vec4F;
 typedef Vec4<int> Vec4I;
+
+extern template class Vec4<double>;
+extern template class Vec4<float>;
+extern template class Vec4<int>;
 
 #include "../src/Vec4.cpp"
 

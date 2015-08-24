@@ -65,7 +65,7 @@ void PointSetDelaunayTriangulation<T>::calculate()
             // then this triangle should never get checked again.
             // Remove it from the open list, add it to the closed list, and skip.
             T dx = vertices[c].x - open[j].circumcircle.origin.x;
-            if(dx > 0.0 && dx * dx > open[j].circumcircle.radius)
+            if(dx > T(0) && dx * dx > open[j].circumcircle.radius)
             {
                 m_closedTriangles.push_back(open[j]);
                 open.erase(open.begin() + j);
@@ -230,12 +230,12 @@ Triangle<T> PointSetDelaunayTriangulation<T>::superTriangle(const std::vector<Ve
     T dx = xmax - xmin;
     T dy = ymax - ymin;
     T dmax = std::max(dx, dy);
-    T xmid = xmin + dx * 0.5;
-    T ymid = ymin + dy * 0.5;
+    T xmid = xmin + dx / T(2);
+    T ymid = ymin + dy / T(2);
 
-    return Triangle<T>(Vec2<T>(xmid - 20.0 * dmax, ymid -      dmax),
-                       Vec2<T>(xmid              , ymid + 20.0 * dmax),
-                       Vec2<T>(xmid + 20.0 * dmax, ymid -      dmax));
+    return Triangle<T>(Vec2<T>(xmid - T(20) * dmax, ymid -      dmax),
+                       Vec2<T>(xmid                 , ymid + T(20) * dmax),
+                       Vec2<T>(xmid + T(20) * dmax, ymid -      dmax));
 }
 
 template <class T>
@@ -262,29 +262,29 @@ typename PointSetDelaunayTriangulation<T>::CircumCircle PointSetDelaunayTriangul
     if(absy1y2 < EPSILON)
     {
         T m2  = -((x3 - x2) / (y3 - y2));
-        T mx2 = (x2 + x3) / 2.0;
-        T my2 = (y2 + y3) / 2.0;
+        T mx2 = (x2 + x3) / T(2);
+        T my2 = (y2 + y3) / T(2);
 
-        xc  = (x2 + x1) / 2.0;
+        xc  = (x2 + x1) / T(2);
         yc  = m2 * (xc - mx2) + my2;
     }
     else if(absy2y3 < EPSILON)
     {
         T m1  = -((x2 - x1) / (y2 - y1));
-        T mx1 = (x1 + x2) / 2.0;
-        T my1 = (y1 + y2) / 2.0;
+        T mx1 = (x1 + x2) / T(2);
+        T my1 = (y1 + y2) / T(2);
 
-        xc  = (x3 + x2) / 2.0;
+        xc  = (x3 + x2) / T(2);
         yc  = m1 * (xc - mx1) + my1;
     }
     else
     {
         T m1  = -((x2 - x1) / (y2 - y1));
         T m2  = -((x3 - x2) / (y3 - y2));
-        T mx1 = (x1 + x2) / 2.0;
-        T mx2 = (x2 + x3) / 2.0;
-        T my1 = (y1 + y2) / 2.0;
-        T my2 = (y2 + y3) / 2.0;
+        T mx1 = (x1 + x2) / T(2);
+        T mx2 = (x2 + x3) / T(2);
+        T my1 = (y1 + y2) / T(2);
+        T my2 = (y2 + y3) / T(2);
 
         xc  = (m1 * mx1 - m2 * mx2 + my2 - my1) / (m1 - m2);
         yc  = (absy1y2 > absy2y3) ?

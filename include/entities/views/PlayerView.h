@@ -9,7 +9,7 @@
 
 #include <memory>
 
-#include "../LibS/GeometryLight.h"
+#include "../LibS/Geometry.h"
 
 namespace sf
 {
@@ -38,7 +38,7 @@ public:
 protected:
     Player* m_playerOwner;
     ResourceHandle<sf::Texture> m_texture;
-    Geo::Vec2I m_sprites;
+    ls::Vec2I m_sprites;
 };
 
 #endif // PLAYERVIEW_H

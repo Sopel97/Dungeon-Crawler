@@ -1,7 +1,7 @@
 #ifndef TALLDRAWABLE_H
 #define TALLDRAWABLE_H
 
-#include "../LibS/GeometryLight.h"
+#include "../LibS/Geometry.h"
 
 namespace sf
 {
@@ -21,8 +21,8 @@ public:
     TallDrawable();
     virtual ~TallDrawable();
 
-    virtual const Geo::RectangleF& boundingRectangle() const = 0;
-    virtual const Geo::Vec2F& center() const = 0;
+    virtual const ls::RectangleF& boundingRectangle() const = 0;
+    virtual const ls::Vec2F& center() const = 0;
 
     virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) = 0;
 

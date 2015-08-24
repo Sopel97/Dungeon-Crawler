@@ -44,7 +44,7 @@ AffineTransformation<T> AffineTransformation<T>::fromTriangleToTriangleMapping(c
 template <class T>
 void AffineTransformation<T>::rotateClockwise(const Angle<T>& angle)
 {
-    rotateAntiClockwiseByRadians(-angle.radians());
+    rotateAntiClockwise(-angle);
 }
 template <class T>
 void AffineTransformation<T>::rotateAntiClockwise(const Angle<T>& angle)
@@ -55,7 +55,7 @@ void AffineTransformation<T>::rotateAntiClockwise(const Angle<T>& angle)
     T bb = sinus;
     T dd = -sinus;
     T ee = cosinus;
-    combine(AffineTransformation<T>(aa, bb, 0, dd, ee, 0));
+    combine(AffineTransformation<T>(aa, bb, T(0), dd, ee, T(0)));
 }
 
 template <class T>
@@ -63,7 +63,7 @@ void AffineTransformation<T>::translate(const Vec2<T>& translationVector)
 {
     T cc = translationVector.x;
     T ff = translationVector.y;
-    combine(AffineTransformation<T>(1, 0, cc, 0, 1, ff));
+    combine(AffineTransformation<T>(T(1), T(0), cc, T(0), T(1), ff));
 }
 
 template <class T>
@@ -71,50 +71,50 @@ void AffineTransformation<T>::scale(const Vec2<T>& scalingVector)
 {
     T aa = scalingVector.x;
     T ee = scalingVector.y;
-    combine(AffineTransformation<T>(aa, 0, 0, 0, ee, 0));
+    combine(AffineTransformation<T>(aa, T(0), T(0), T(0), ee, T(0)));
 }
 
 template <class T>
 void AffineTransformation<T>::scale(T factor)
 {
     T ae = factor;
-    combine(AffineTransformation<T>(ae, 0, 0, 0, ae, 0));
+    combine(AffineTransformation<T>(ae, T(0), T(0), T(0), ae, T(0)));
 }
 
 template <class T>
 void AffineTransformation<T>::shearInXDirection(T factor)
 {
     T bb = factor;
-    combine(AffineTransformation<T>(1, bb, 0, 0, 1, 0));
+    combine(AffineTransformation<T>(T(1), bb, T(0), T(0), T(1), T(0)));
 }
 template <class T>
 void AffineTransformation<T>::shearInYDirection(T factor)
 {
     T dd = factor;
-    combine(AffineTransformation<T>(1, 0, 0, dd, 1, 0));
+    combine(AffineTransformation<T>(T(1), T(0), T(0), dd, T(1), T(0)));
 }
 template <class T>
 void AffineTransformation<T>::shear(const Vec2<T>& shearingVector)
 {
     T bb = shearingVector.x;
     T dd = shearingVector.y;
-    combine(AffineTransformation<T>(1, bb, 0, dd, 1, 0));
+    combine(AffineTransformation<T>(T(1), bb, T(0), dd, T(1), T(0)));
 }
 
 template <class T>
 void AffineTransformation<T>::reflectAboutOrigin()
 {
-    combine(AffineTransformation<T>(-1, 0, 0, 0, -1, 0));
+    combine(AffineTransformation<T>(T(-1), T(0), T(0), T(0), T(-1), T(0)));
 }
 template <class T>
 void AffineTransformation<T>::reflectAboutXAxis()
 {
-    combine(AffineTransformation<T>(1, 0, 0, 0, -1, 0));
+    combine(AffineTransformation<T>(T(1), T(0), T(0), T(0), T(-1), T(0)));
 }
 template <class T>
 void AffineTransformation<T>::reflectAboutYAxis()
 {
-    combine(AffineTransformation<T>(-1, 0, 0, 0, 1, 0));
+    combine(AffineTransformation<T>(T(-1), T(0), T(0), T(0), T(1), T(0)));
 }
 
 template <class T>

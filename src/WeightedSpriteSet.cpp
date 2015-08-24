@@ -4,7 +4,7 @@
 
 #include <algorithm>
 
-using namespace Geo;
+using namespace ls;
 
 WeightedSpriteSet::WeightedSpriteSet()
 {
@@ -44,7 +44,7 @@ Vec2I WeightedSpriteSet::chooseRandomSprite() const
     return m_sprites[spriteIndex];
 }
 
-Geo::Vec2I WeightedSpriteSet::defaultSprite() const
+ls::Vec2I WeightedSpriteSet::defaultSprite() const
 {
     return m_sprites[0];
 }

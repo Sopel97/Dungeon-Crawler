@@ -8,8 +8,8 @@ public:
     struct Hit
     {
         T distance;
-        Vec2D normal;
-        Vec2D hitPoint;
+        Vec2<T> normal;
+        Vec2<T> hitPoint;
     };
 
     Ray<T> ray; //read-only, will debate whether it should be a reference
@@ -35,6 +35,10 @@ public:
 typedef Raycast<double> RaycastD;
 typedef Raycast<float> RaycastF;
 typedef Raycast<int> RaycastI;
+
+extern template class Raycast<double>;
+extern template class Raycast<float>;
+extern template class Raycast<int>;
 
 #include "../src/Raycast.cpp"
 
