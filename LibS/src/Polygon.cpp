@@ -16,19 +16,6 @@ Polygon<T>::Polygon(Vec2<T>* v, size_t count)
     vertices.assign(v, v + count);
 }
 template <class T>
-template <class X>
-Polygon<T>::Polygon(const Polygon<X>& p) : vertices(p.vertives)
-{
-}
-template <class T>
-template <class X>
-Polygon<T>& Polygon<T>::operator=(const Polygon<X>& p)
-{
-    vertices = p.vertices;
-    return *this;
-}
-
-template <class T>
 Polygon<T> Polygon<T>::operator+(const Vec2<T>& v) const
 {
     Polygon newPolygon(*this);
@@ -59,6 +46,19 @@ Polygon<T>& Polygon<T>::operator-=(const Vec2<T>& v)
         vertex -= v;
     }
     return *this;
+}
+
+template <class T>
+template <class T2>
+Polygon<T>::operator Polygon<T2>() const
+{
+    Polygon<T2> poly;
+    poly.reserve(vertices.size());
+    for(const auto& v : vertices)
+    {
+        poly.push_back(static_cast<Vec2<T2>>(v));
+    }
+    return poly;
 }
 
 template <class T>
@@ -154,29 +154,6 @@ Vec2<T> Polygon<T>::nearestPointTo(const Vec2<T>& point) const
     }
     return nearestPoint;
 }
-/*
-template <class T>
-std::unique_ptr<typename Shape2<T>::RandomPointPickerPreprocessedData> Polygon<T>::createPreprocessedDataForRandomPointPicker() const
-{
-    PolygonTriangulation<T> triangulation(*this);
-    return std::make_unique<RandomPointPickerPreprocessedData>(std::move(triangulation));
-}
-template <class T>
-Vec2<T> Polygon<T>::pickRandomPoint(Random::RandomEngineBase& randomEngine) const
-{
-    return pickRandomPoint(randomEngine, *createPreprocessedDataForRandomPointPicker());
-}
-template <class T>
-Vec2<T> Polygon<T>::pickRandomPoint(Random::RandomEngineBase& randomEngine, typename Shape2<T>::RandomPointPickerPreprocessedData& preprocessedData) const
-{
-    Polygon<T>::RandomPointPickerPreprocessedData& polygonPreprocessedData = static_cast<Polygon<T>::RandomPointPickerPreprocessedData&>(preprocessedData);
-    T sumOfAreas = polygonPreprocessedData.trianglesByArea.back().second;
-    T randomArea = randomEngine.next<T>(T(0.0), sumOfAreas);
-    auto chosenTriangleIter = std::upper_bound(polygonPreprocessedData.trianglesByArea.begin(), polygonPreprocessedData.trianglesByArea.end(), randomArea, [](const T& lhs, const std::pair<const Triangle<T>*, T>& rhs)->bool{return lhs < rhs.second;});
-    if(chosenTriangleIter == polygonPreprocessedData.trianglesByArea.end()) chosenTriangleIter = polygonPreprocessedData.trianglesByArea.begin();
-    return chosenTriangleIter->first->pickRandomPoint(randomEngine);
-}
-*/
 template <class T>
 Polyline<T> Polygon<T>::asPolyline() const
 {
@@ -185,15 +162,15 @@ Polyline<T> Polygon<T>::asPolyline() const
     return out;
 }
 template <class T>
-Vec2<T> Polygon<T>::center() const
+Vec2<T> Polygon<T>::centerOfMass() const
 {
     T xsum = T(0);
     T ysum = T(0);
     T area = T(0);
     for(size_t i = 0; i < size(); ++i)
     {
-        const Vec2D& p0 = vertices[i];
-        const Vec2D& p1 = vertices[(i + 1) % size()];
+        const Vec2<T>& p0 = vertices[i];
+        const Vec2<T>& p1 = vertices[(i + 1) % size()];
 
         T areaSum = (p0.x * p1.y) - (p1.x * p0.y);
 
@@ -206,7 +183,7 @@ Vec2<T> Polygon<T>::center() const
     T centMassX = xsum / (area * T(3));
     T centMassY = ysum / (area * T(3));
 
-    return Vec2D {centMassX, centMassY};
+    return Vec2<T> (centMassX, centMassY);
 }
 template <class T>
 bool Polygon<T>::isConvex() const
@@ -237,12 +214,17 @@ T Polygon<T>::signedArea() const
     T area = 0;
     for(size_t i = 0; i < size(); ++i)
     {
-        const Vec2D& p0 = vertices[i];
-        const Vec2D& p1 = vertices[(i + 1) % size()];
+        const Vec2<T>& p0 = vertices[i];
+        const Vec2<T>& p1 = vertices[(i + 1) % size()];
 
         area += (p0.x * p1.y) - (p1.x * p0.y);
     }
     return area / T(2);
+}
+template <class T>
+T Polygon<T>::area() const
+{
+    return std::abs(signedArea());
 }
 
 template <class T>

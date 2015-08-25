@@ -34,7 +34,7 @@ InventoryView ContainerInventory::createInventoryView()
     int col = 0;
     for(int i = 0; i < slotCount; ++i)
     {
-        slotViews.emplace_back(m_contents[i], Vec2F(margins + (InventorySlotView::slotSize().x + spacesBetweenSlots)*col, margins + (InventorySlotView::slotSize().y + spacesBetweenSlots)*row), InventorySlotView::ContentRequirement::None);
+        slotViews.emplace_back(m_contents[i], Vec2I(margins + (InventorySlotView::slotSize().x + spacesBetweenSlots)*col, margins + (InventorySlotView::slotSize().y + spacesBetweenSlots)*row), InventorySlotView::ContentRequirement::None);
 
         ++col;
         if(col == 5)

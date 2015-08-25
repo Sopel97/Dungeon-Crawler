@@ -7,20 +7,6 @@ Triangle<T>::Triangle(const Vec2<T>* p) : vertices {p[0], p[1], p[2]}
 {
 }
 template <class T>
-template <class X>
-Triangle<T>::Triangle(const Triangle<X>& t) : vertices {t.vertices[0], t.vertices[1], t.vertices[2]}
-{
-}
-template <class T>
-template <class X>
-Triangle<T>& Triangle<T>::operator =(const Triangle<X>& t)
-{
-    vertices[0] = t.vertices[0];
-    vertices[1] = t.vertices[1];
-    vertices[2] = t.vertices[2];
-    return *this;
-}
-template <class T>
 Triangle<T> Triangle<T>::operator +(const Vec2<T>& p) const
 {
     return Triangle<T>(vertices[0] + p, vertices[1] + p, vertices[2] + p);
@@ -45,6 +31,13 @@ Triangle<T>& Triangle<T>::operator -=(const Vec2<T>& p)
     vertices[1] -= p;
     vertices[2] -= p;
     return *this;
+}
+
+template <class T>
+template <class T2>
+Triangle<T>::operator Triangle<T2>() const
+{
+    return Triangle<T2>(static_cast<Vec2<T2>>(vertices[0]), static_cast<Vec2<T2>>(vertices[1]), static_cast<Vec2<T2>>(vertices[2]));
 }
 
 template <class T>
@@ -100,88 +93,31 @@ Polyline<T> Triangle<T>::asPolyline() const
     });
 }
 template <class T>
-Vec2<T> Triangle<T>::center() const
+Vec2<T> Triangle<T>::centerOfMass() const
 {
     return (vertices[0] + vertices[1] + vertices[2]) / T(3);
 }
-/*
 template <class T>
-std::unique_ptr<typename Shape2<T>::RandomPointPickerPreprocessedData> Triangle<T>::createPreprocessedDataForRandomPointPicker() const
-{
-    return std::make_unique<Triangle<T>::RandomPointPickerPreprocessedData>
-           (
-               vertices[2] - vertices[1],
-               vertices[2] - vertices[0],
-               vertices[1] - vertices[0],
-               vertices[0] - vertices[1]
-           );
-}
-template <class T>
-Vec2<T> Triangle<T>::pickRandomPoint(Random::RandomEngineBase& randomEngine) const
-{
-    T t1 = randomEngine.next<T>(T(0.0), T(1.0));
-    T t2 = randomEngine.next<T>(T(0.0), T(1.0));
-    Vec2<T> point(vertices[0] + (vertices[2] - vertices[0]) * t1 + (vertices[1] - vertices[0]) * t2);
-    if
-    (
-        ((vertices[2].x - vertices[1].x) * (point.y - vertices[1].y) - (vertices[2].y - vertices[1].y) * (point.x - vertices[1].x))
-        *
-        ((vertices[2].x - vertices[1].x) * (vertices[0].y - vertices[1].y) - (vertices[2].y - vertices[1].y) * (vertices[0].x - vertices[1].x))
-        <
-        0.0
-    ) //points vertices[0] and point are on the opposite sides of the edge
-    {
-        Vec2<T> edgeCenter = vertices[1] + (vertices[2] - vertices[1]) / 2.0;
-        point = edgeCenter * 2.0 - point;
-    }
-    return point;
-}
-
-template <class T>
-Vec2<T> Triangle<T>::pickRandomPoint(Random::RandomEngineBase& randomEngine, typename Shape2<T>::RandomPointPickerPreprocessedData& preprocessedData) const
-{
-    Triangle<T>::RandomPointPickerPreprocessedData& trianglePreprocessedData = static_cast<Triangle<T>::RandomPointPickerPreprocessedData&>(preprocessedData);
-    T t1 = randomEngine.next<T>(T(0.0), T(1.0));
-    T t2 = randomEngine.next<T>(T(0.0), T(1.0));
-    Vec2<T> point(vertices[0] + trianglePreprocessedData.edge02 * t1 + trianglePreprocessedData.edge01 * t2);
-    if
-    (
-        (trianglePreprocessedData.edge12.x * (point.y - vertices[1].y) - trianglePreprocessedData.edge12.y * (point.x - vertices[1].x))
-        *
-        (trianglePreprocessedData.edge12.x * trianglePreprocessedData.edge10.y - trianglePreprocessedData.edge12.y * trianglePreprocessedData.edge10.x)
-        <
-        0.0
-    ) //points vertices[0] and point are on the opposite sides of the edge
-    {
-        Vec2<T> edgeCenter = vertices[1] + trianglePreprocessedData.edge12 / 2.0;
-        point = edgeCenter * 2.0 - point;
-    }
-    return point;
-    return pickRandomPoint(randomEngine);
-}
-*/
-
-template <class T>
-Triangle<T> Triangle<T>::equilateral(const Vec2D& center, const T base)
+Triangle<T> Triangle<T>::equilateral(const Vec2<T>& center, const T base)
 {
     T height = base * std::sqrt(T(3)) / T(2);
-    return Triangle<T>(Vec2D {center.x - base / T(2), center.y - height / T(2)},
-                       Vec2D {center.x, center.y + height / T(2)},
-                       Vec2D {center.x - base / T(2), center.y + height / T(2)});
+    return Triangle<T>(Vec2<T> {center.x - base / T(2), center.y - height / T(2)},
+                       Vec2<T> {center.x, center.y + height / T(2)},
+                       Vec2<T> {center.x - base / T(2), center.y + height / T(2)});
 }
 template <class T>
-Triangle<T> Triangle<T>::isosceles(const Vec2D& center, const T base, const T height)
+Triangle<T> Triangle<T>::isosceles(const Vec2<T>& center, const T base, const T height)
 {
-    return Triangle<T>(Vec2D {center.x - base / T(2), center.y - height / T(2)},
-                       Vec2D {center.x, center.y + height / T(2)},
-                       Vec2D {center.x + base / T(2), center.y - height / T(2)});
+    return Triangle<T>(Vec2<T> {center.x - base / T(2), center.y - height / T(2)},
+                       Vec2<T> {center.x, center.y + height / T(2)},
+                       Vec2<T> {center.x + base / T(2), center.y - height / T(2)});
 }
 template <class T>
-Triangle<T> Triangle<T>::rightTriangle(const Vec2D& rightAngledVertex, const T width, const T height)
+Triangle<T> Triangle<T>::rightTriangle(const Vec2<T>& rightAngledVertex, const T width, const T height)
 {
     return Triangle<T>(rightAngledVertex,
-                       rightAngledVertex + Vec2D {T(0), height},
-                       rightAngledVertex + Vec2D {width, T(0)});
+                       rightAngledVertex + Vec2<T> {T(0), height},
+                       rightAngledVertex + Vec2<T> {width, T(0)});
 }
 template <class T>
 T Triangle<T>::signedArea() const
@@ -189,5 +125,10 @@ T Triangle<T>::signedArea() const
     const Vec2<T>& a = vertices[0];
     const Vec2<T>& b = vertices[1];
     const Vec2<T>& c = vertices[2];
-    return ((b.x-a.x)*(c.y-a.y) - (c.x-a.x)*(b.y-a.y)) / T(2);
+    return ((b.x - a.x) * (c.y - a.y) - (c.x - a.x) * (b.y - a.y)) / T(2);
+}
+template <class T>
+T Triangle<T>::area() const
+{
+    return std::abs(signedArea());
 }

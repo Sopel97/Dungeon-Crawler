@@ -23,13 +23,9 @@ public:
     static Vec2<T> direction(const Angle<T>& angle);
 
     Vec2(const Vec2<T>& v);
-    template <class X>
-    Vec2(const Vec2<X>& v);
     Vec2(Vec2<T>&& v);
 
     Vec2<T>& operator=(const Vec2<T>& v1);
-    template <class X>
-    Vec2<T>& operator=(const Vec2<X>& v1);
     Vec2<T>& operator=(Vec2<T> && v1);
 
     virtual ~Vec2(){}
@@ -37,18 +33,12 @@ public:
     T& operator[](size_t index);
     const T& operator[](size_t index) const;
 
-    template <class TSecond>
-    Vec2<typename std::common_type<T, TSecond>::type> operator+(const Vec2<TSecond>& v1) const;
-    template <class TSecond>
-    Vec2<typename std::common_type<T, TSecond>::type> operator-(const Vec2<TSecond>& v1) const;
-    template <class TSecond>
-    Vec2<typename std::common_type<T, TSecond>::type> operator*(const Vec2<TSecond>& v1) const;
-    template <class TSecond>
-    Vec2<typename std::common_type<T, TSecond>::type> operator/(const Vec2<TSecond>& v1) const;
-    template <class TSecond>
-    Vec2<typename std::common_type<T, TSecond>::type> operator*(const TSecond scalar) const;
-    template <class TSecond>
-    Vec2<typename std::common_type<T, TSecond>::type> operator/(const TSecond scalar) const;
+    Vec2<T> operator+(const Vec2<T>& v1) const;
+    Vec2<T> operator-(const Vec2<T>& v1) const;
+    Vec2<T> operator*(const Vec2<T>& v1) const;
+    Vec2<T> operator/(const Vec2<T>& v1) const;
+    Vec2<T> operator*(const T scalar) const;
+    Vec2<T> operator/(const T scalar) const;
 
     Vec2<T> operator-() const;
 
@@ -58,6 +48,9 @@ public:
     Vec2<T>& operator*=(const Vec2<T>& v1);
     Vec2<T>& operator/=(const T scalar);
     Vec2<T>& operator/=(const Vec2<T>& v1);
+
+    template <class T2>
+    explicit operator Vec2<T2>() const;
 
     T magnitude() const;
     T quadrance() const;
@@ -81,10 +74,6 @@ public:
 
     T distanceTo(const Vec2<T>& v1) const;
     virtual Vec2<T> nearestPointTo(const Vec2<T>& point) const;
-
-    //Vec2<T> pickRandomPoint(Random::RandomEngineBase& randomEngine) const;
-    //Vec2<T> pickRandomPoint(Random::RandomEngineBase& randomEngine, typename Shape2<T>::RandomPointPickerPreprocessedData& preprocessedData) const; //preprocessed data is of base type. All shapes have to cast it to use it.
-
 };
 template <class T>
 const Vec2<T> Vec2<T>::unitX = Vec2<T> {1, 0};

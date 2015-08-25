@@ -1,40 +1,34 @@
 #include "../include/Intersections.h"
 
 template <class T>
-template <class TSecond>
-Vec2<typename std::common_type<T, TSecond>::type> Vec2<T>::operator+(const Vec2<TSecond>& v1) const
+Vec2<T> Vec2<T>::operator+(const Vec2<T>& v1) const
 {
-    return Vec2<typename std::common_type<T, TSecond>::type>(x + v1.x, y + v1.y);
+    return Vec2<T>(x + v1.x, y + v1.y);
 }
 template <class T>
-template <class TSecond>
-Vec2<typename std::common_type<T, TSecond>::type> Vec2<T>::operator-(const Vec2<TSecond>& v1) const
+Vec2<T> Vec2<T>::operator-(const Vec2<T>& v1) const
 {
-    return Vec2<typename std::common_type<T, TSecond>::type>(x - v1.x, y - v1.y);
+    return Vec2<T>(x - v1.x, y - v1.y);
 }
 template <class T>
-template <class TSecond>
-Vec2<typename std::common_type<T, TSecond>::type> Vec2<T>::operator*(const TSecond scalar) const
+Vec2<T> Vec2<T>::operator*(const T scalar) const
 {
-    return Vec2<typename std::common_type<T, TSecond>::type>(x * scalar, y * scalar);
+    return Vec2<T>(x * scalar, y * scalar);
 }
 template <class T>
-template <class TSecond>
-Vec2<typename std::common_type<T, TSecond>::type> Vec2<T>::operator*(const Vec2<TSecond>& v1) const
+Vec2<T> Vec2<T>::operator*(const Vec2<T>& v1) const
 {
-    return Vec2<typename std::common_type<T, TSecond>::type>(x * v1.x, y * v1.y);
+    return Vec2<T>(x * v1.x, y * v1.y);
 }
 template <class T>
-template <class TSecond>
-Vec2<typename std::common_type<T, TSecond>::type> Vec2<T>::operator/(const TSecond scalar) const
+Vec2<T> Vec2<T>::operator/(const T scalar) const
 {
-    return Vec2<typename std::common_type<T, TSecond>::type>(x / scalar, y / scalar);
+    return Vec2<T>(x / scalar, y / scalar);
 }
 template <class T>
-template <class TSecond>
-Vec2<typename std::common_type<T, TSecond>::type> Vec2<T>::operator/(const Vec2<TSecond>& v1) const
+Vec2<T> Vec2<T>::operator/(const Vec2<T>& v1) const
 {
-    return Vec2<typename std::common_type<T, TSecond>::type>(x / v1.x, y / v1.y);
+    return Vec2<T>(x / v1.x, y / v1.y);
 }
 
 template <class T>
@@ -160,19 +154,6 @@ Vec2<T>& Vec2<T>::operator=(Vec2<T> && v1)
     return *this;
 }
 template <class T>
-template <class X>
-Vec2<T>::Vec2(const Vec2<X>& v) : x(v.x), y(v.y)
-{
-}
-template <class T>
-template <class X>
-Vec2<T>& Vec2<T>::operator=(const Vec2<X>& v1)
-{
-    x = v1.x;
-    y = v1.y;
-    return *this;
-}
-template <class T>
 Vec2<T>& Vec2<T>::operator+=(const Vec2<T>& v1)
 {
     x += v1.x;
@@ -214,6 +195,13 @@ Vec2<T>& Vec2<T>::operator/=(const Vec2<T>& v1)
     y /= v1.y;
     return *this;
 }
+
+template <class T>
+template <class T2>
+Vec2<T>::operator Vec2<T2>() const
+{
+    return Vec2<T2>(static_cast<T2>(x), static_cast<T2>(y));
+}
 template <class T>
 T& Vec2<T>::operator[](size_t index)
 {
@@ -234,14 +222,14 @@ void Vec2<T>::translate(const Vec2<T>& v)
 template <class T>
 void Vec2<T>::scale(const Vec2<T>& c, const Vec2<T>& s)
 {
-    x = (x-c.x)*s.x+c.x;
-    y = (y-c.y)*s.y+c.y;
+    x = (x - c.x) * s.x + c.x;
+    y = (y - c.y) * s.y + c.y;
 }
 template <class T>
 void Vec2<T>::scale(const Vec2<T>& c, const T s)
 {
-    x = (x-c.x)*s+c.x;
-    y = (y-c.y)*s+c.y;
+    x = (x - c.x) * s + c.x;
+    y = (y - c.y) * s + c.y;
 }
 template <class T>
 void Vec2<T>::scale(const Vec2<T>& s)
@@ -267,66 +255,9 @@ Vec2<T> Vec2<T>::nearestPointTo(const Vec2<T>& v1) const
 {
     return *this;
 }
-/*
-template <class T>
-Vec2<T> Vec2<T>::pickRandomPoint(Random::RandomEngineBase& randomEngine) const
-{
-    return *this;
-}
-template <class T>
-Vec2<T> Vec2<T>::pickRandomPoint(Random::RandomEngineBase& randomEngine, typename Shape2<T>::RandomPointPickerPreprocessedData& preprocessedData) const
-{
-    return pickRandomPoint(randomEngine);
-}
-*/
+
 template <class T>
 Vec2<T> Vec2<T>::direction(const Angle<T>& angle)
 {
-
+    return Vec2<T>(angle.cos(), angle.sin());
 }
-
-
-/* non-member functions */
-/*
-template <class TFirst, class TSecond>
-Vec2<typename std::common_type<TFirst, TSecond>::type> operator+(TFirst lhs, const Vec2<TSecond>& rhs)
-{
-    return Vec2<typename std::common_type<TFirst, TSecond>::type>(lhs + rhs.x, lhs + rhs.y);
-}
-template <class TFirst, class TSecond>
-Vec2<typename std::common_type<TFirst, TSecond>::type> operator-(TFirst lhs, const Vec2<TSecond>& rhs)
-{
-    return Vec2<typename std::common_type<TFirst, TSecond>::type>(lhs - rhs.x, lhs - rhs.y);
-}
-template <class TFirst, class TSecond>
-Vec2<typename std::common_type<TFirst, TSecond>::type> operator*(TFirst lhs, const Vec2<TSecond>& rhs)
-{
-    return Vec2<typename std::common_type<TFirst, TSecond>::type>(lhs * rhs.x, lhs * rhs.y);
-}
-template <class TFirst, class TSecond>
-Vec2<typename std::common_type<TFirst, TSecond>::type> operator/(TFirst lhs, const Vec2<TSecond>& rhs)
-{
-    return Vec2<typename std::common_type<TFirst, TSecond>::type>(lhs / rhs.x, lhs / rhs.y);
-}
-
-template <class T, size_t X, size_t Y>
-Vec2<T> operator+(T lhs, const Vec2Proxy<T, X, Y>& rhs)
-{
-    return Vec2<T>(lhs + rhs.getX(), lhs + rhs.getY());
-}
-template <class T, size_t X, size_t Y>
-Vec2<T> operator-(T lhs, const Vec2Proxy<T, X, Y>& rhs)
-{
-    return Vec2<T>(lhs - rhs.getX(), lhs - rhs.getY());
-}
-template <class T, size_t X, size_t Y>
-Vec2<T> operator*(T lhs, const Vec2Proxy<T, X, Y>& rhs)
-{
-    return Vec2<T>(lhs * rhs.getX(), lhs * rhs.getY());
-}
-template <class T, size_t X, size_t Y>
-Vec2<T> operator/(T lhs, const Vec2Proxy<T, X, Y>& rhs)
-{
-    return Vec2<T>(lhs / rhs.getX(), lhs / rhs.getY());
-}
-*/

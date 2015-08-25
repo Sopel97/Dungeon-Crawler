@@ -7,15 +7,15 @@ class Shape
 public:
     using ValueType = T;
 
-    Shape() = default;
+    Shape() {}
 
-    Shape(const Shape&) = default;
-    Shape(Shape&&) = default;
+    Shape(const Shape&) {}
+    Shape(Shape&&) {}
 
     virtual ~Shape(){}
 
-    Shape& operator = (const Shape&) = default;
-    Shape& operator = (Shape &&) = default;
+    Shape& operator = (const Shape&) { return *this;}
+    Shape& operator = (Shape &&) { return *this;}
 };
 
 typedef Shape<double> ShapeD;

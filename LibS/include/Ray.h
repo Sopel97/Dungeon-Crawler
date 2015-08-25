@@ -8,26 +8,25 @@ public:
     Vec2<T> origin;
     Vec2<T> direction; //is expected to be normalized
 
-    Ray() = default;
+    Ray(){}
     Ray(const Vec2<T>& o, const Vec2<T>& d);
 
-    Ray(const Ray<T>&) = default;
-    template <class X>
-    Ray(const Ray<X>& r);
-    Ray(Ray<T>&&) = default;
+    Ray(const Ray<T>& other){origin = other.origin; direction = other.direction;}
+    Ray(Ray<T>&& other){origin = std::move(other.origin); direction = std::move(other.direction);}
 
     virtual ~Ray(){}
 
-    Ray<T>& operator=(const Ray<T>&) = default;
-    template <class X>
-    Ray<T>& operator=(const Ray<X>& r);
-    Ray<T>& operator=(Ray<T> &&) = default;
+    Ray<T>& operator=(const Ray<T>& other){origin = other.origin; direction = other.direction; return *this;}
+    Ray<T>& operator=(Ray<T> && other){origin = std::move(other.origin); direction = std::move(other.direction); return *this;}
 
     Ray<T> operator+(const Vec2<T>& v) const;
     Ray<T> operator-(const Vec2<T>& v) const;
 
     Ray<T>& operator+=(const Vec2<T>& v);
     Ray<T>& operator-=(const Vec2<T>& v);
+
+    template <class T2>
+    explicit operator Ray<T2>() const;
 
     void setDirection(const Vec2<T>& d);
 

@@ -8,26 +8,25 @@ public:
     Vec2<T> begin;
     Vec2<T> end;
 
-    LineSegment() = default;
+    LineSegment(){}
     LineSegment(const Vec2<T>& _begin, const Vec2<T>& _end);
 
-    LineSegment(const LineSegment<T>&) = default;
-    template <class X>
-    LineSegment(const LineSegment<X>& s);
-    LineSegment(LineSegment<T>&&) = default;
+    LineSegment(const LineSegment<T>& other){begin = other.begin; end = other.end;}
+    LineSegment(LineSegment<T>&& other){begin = std::move(other.begin); end = std::move(other.end);}
 
     virtual ~LineSegment(){}
 
-    LineSegment<T>& operator=(const LineSegment<T>&) = default;
-    template <class X>
-    LineSegment<T>& operator=(const LineSegment<X>& s);
-    LineSegment<T>& operator=(LineSegment<T> &&) = default;
+    LineSegment<T>& operator=(const LineSegment<T>& other){begin = other.begin; end = other.end; return *this;}
+    LineSegment<T>& operator=(LineSegment<T> && other){begin = std::move(other.begin); end = std::move(other.end); return *this;}
 
     LineSegment<T> operator+(const Vec2<T>& v) const;
     LineSegment<T> operator-(const Vec2<T>& v) const;
 
     LineSegment<T>& operator+=(const Vec2<T>& v);
     LineSegment<T>& operator-=(const Vec2<T>& v);
+
+    template <class T2>
+    explicit operator LineSegment<T2>() const;
 
     T length() const;
 
@@ -39,11 +38,7 @@ public:
 
     Polyline<T> asPolyline() const;
 
-    //Vec2<T> pickRandomPoint(Random::RandomEngineBase& randomEngine) const;
-    //Vec2<T> pickRandomPoint(Random::RandomEngineBase& randomEngine, typename Shape2<T>::RandomPointPickerPreprocessedData& preprocessedData) const; //preprocessed data is of base type. All shapes have to cast it to use it.
-    Vec2<T> center() const;
-
-    bool intersects(const LineSegment<T>& lineSegment, Vec2<T>& intersectionPoint) const;
+    Vec2<T> centerOfMass() const;
 };
 
 typedef LineSegment<double> LineSegmentD;

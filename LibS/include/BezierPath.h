@@ -7,7 +7,7 @@ class BezierPath
 public:
     std::vector<Vec2<T>> controlPoints;
 
-    BezierPath() = default;
+    BezierPath(){}
 
     void add(const Vec2<T>& point);
     void add(const std::vector<Vec2<T>>& points);

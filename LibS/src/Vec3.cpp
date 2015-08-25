@@ -21,20 +21,6 @@ Vec3<T>::Vec3(const std::initializer_list<T>& list)
     z = *(it + 2);
 }
 template <class T>
-template <class X>
-Vec3<T>::Vec3(const Vec3<X>& v) : x(v.x), y(v.y), z(v.z)
-{
-}
-template <class T>
-template <class X>
-Vec3<T>& Vec3<T>::operator=(const Vec3<X>& v1)
-{
-    x = v1.x;
-    y = v1.y;
-    z = v1.z;
-    return *this;
-}
-template <class T>
 Vec3<T> Vec3<T>::operator+(const Vec3<T>& v1) const
 {
     return Vec3<T>(x + v1.x, y + v1.y, z + v1.z);
@@ -104,6 +90,13 @@ Vec3<T>& Vec3<T>::operator/=(const T scalar)
     y /= scalar;
     z /= scalar;
     return *this;
+}
+
+template <class T>
+template <class T2>
+Vec3<T>::operator Vec3<T2>() const
+{
+    return Vec3<T2>(static_cast<T2>(x), static_cast<T2>(y), static_cast<T2>(z));
 }
 
 template <class T>

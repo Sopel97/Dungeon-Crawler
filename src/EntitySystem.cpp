@@ -40,7 +40,7 @@ std::vector<Entity*> EntitySystem::queryRegion(const RectangleF& rect)
 {
     std::vector<Entity*> entitiesInRegion;
 
-    const Vec2F rectCenter = rect.center();
+    const Vec2F rectCenter = rect.centerOfMass();
     const float halfRectWidth = rect.width() / 2.0f;
     const float halfRectHeight = rect.height() / 2.0f;
 

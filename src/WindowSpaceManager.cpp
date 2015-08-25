@@ -46,8 +46,8 @@ WindowSpaceManager::WindowSpaceManager(sf::RenderWindow& window) :
 void WindowSpaceManager::setViewToRect(const RectangleI& windowViewRect, const RectangleF& worldViewRect)
 {
     Vec2F windowSize {(float)m_window.getSize().x, (float)m_window.getSize().y};
-    Vec2F windowViewTopLeft = windowViewRect.min;
-    Vec2F windowViewSize = windowViewRect.max - windowViewRect.min;
+    Vec2F windowViewTopLeft = Vec2F(windowViewRect.min);
+    Vec2F windowViewSize = Vec2F(windowViewRect.max - windowViewRect.min);
     Vec2F windowViewTopLeftRelativeToWindow = windowViewTopLeft / windowSize;
     Vec2F windowViewSizeRelativeToWindow = windowViewSize / windowSize;
 
@@ -59,7 +59,7 @@ void WindowSpaceManager::setViewToRect(const RectangleI& windowViewRect, const R
 void WindowSpaceManager::setViewToRegion(WindowSpaceManager::Region::Id regionId)
 {
     const RectangleI& rect = regionRect(regionId);
-    setViewToRect(rect, RectangleI(Vec2I(0, 0), rect.width(), rect.height()));
+    setViewToRect(rect, RectangleF(Vec2F(0, 0), rect.width(), rect.height()));
 }
 void WindowSpaceManager::setViewToRegion(WindowSpaceManager::Region::Id regionId, const RectangleF& worldViewRect)
 {

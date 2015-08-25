@@ -47,8 +47,8 @@ void Root::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
     m_window.clear(sf::Color::Black);
 
     sf::VertexArray vertexBuffer(sf::PrimitiveType::Triangles);
-    SFMLUtil::appendAsTriangleList(vertexBuffer, m_windowSpaceManager.regionRect(WindowSpaceManager::Region::World), sf::Color::Red);
-    SFMLUtil::appendAsTriangleList(vertexBuffer, m_windowSpaceManager.regionRect(WindowSpaceManager::Region::PlayerUi), sf::Color::Green);
+    SFMLUtil::appendAsTriangleList(vertexBuffer, RectangleF(m_windowSpaceManager.regionRect(WindowSpaceManager::Region::World)), sf::Color::Red);
+    SFMLUtil::appendAsTriangleList(vertexBuffer, RectangleF(m_windowSpaceManager.regionRect(WindowSpaceManager::Region::PlayerUi)), sf::Color::Green);
 
     m_windowSpaceManager.setDefaultView();
     m_window.draw(vertexBuffer, m_renderStates);

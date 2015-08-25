@@ -21,21 +21,6 @@ Vec4<T>::Vec4(const std::initializer_list<T>& list)
     w = *(it + 3);
 }
 template <class T>
-template <class X>
-Vec4<T>::Vec4(const Vec4<X>& v) : x(v.x), y(v.y), z(v.z), w(v.w)
-{
-}
-template <class T>
-template <class X>
-Vec4<T>& Vec4<T>::operator=(const Vec4<X>& v1)
-{
-    x = v1.x;
-    y = v1.y;
-    z = v1.z;
-    w = v1.w;
-    return *this;
-}
-template <class T>
 Vec4<T> Vec4<T>::operator+(const Vec4<T>& v1) const
 {
     return Vec4<T>(x + v1.x, y + v1.y, z + v1.z, w + v1.w);
@@ -110,6 +95,13 @@ Vec4<T>& Vec4<T>::operator/=(const T scalar)
     z /= scalar;
     w /= scalar;
     return *this;
+}
+
+template <class T>
+template <class T2>
+Vec4<T>::operator Vec4<T2>() const
+{
+    return Vec4<T2>(static_cast<T2>(x), static_cast<T2>(y), static_cast<T2>(z), static_cast<T2>(w));
 }
 
 template <class T>

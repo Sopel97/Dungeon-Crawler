@@ -15,18 +15,6 @@ Polyline<T>::Polyline(Vec2<T>* v, size_t count)
 {
     vertices.assign(v, v + count);
 }
-template <class T>
-template <class X>
-Polyline<T>::Polyline(const Polyline<X>& p) : vertices(p.vertices)
-{
-}
-template <class T>
-template <class X>
-Polyline<T>& Polyline<T>::operator=(const Polyline<X>& p)
-{
-    vertices = p.vertices;
-    return *this;
-}
 
 template <class T>
 Polyline<T> Polyline<T>::operator+(const Vec2<T>& v) const
@@ -59,6 +47,19 @@ Polyline<T>& Polyline<T>::operator-=(const Vec2<T>& v)
         vertex -= v;
     }
     return *this;
+}
+
+template <class T>
+template <class T2>
+Polyline<T>::operator Polyline<T2>() const
+{
+    Polyline<T2> poly;
+    poly.reserve(vertices.size());
+    for(const auto& v : vertices)
+    {
+        poly.push_back(static_cast<Vec2<T2>>(v));
+    }
+    return poly;
 }
 
 template <class T>

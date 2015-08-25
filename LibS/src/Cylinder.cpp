@@ -3,21 +3,6 @@ Cylinder<T>::Cylinder(const Vec3<T>& p1, T r, T h) : center(p1), radius(r), heig
 {
 }
 template <class T>
-template <class X>
-Cylinder<T>::Cylinder(const Cylinder<X>& c) : center(c.p1), radius(c.r), height(c.h)
-{
-}
-
-template <class T>
-template <class X>
-Cylinder<T>& Cylinder<T>::operator =(const Cylinder<X>& c)
-{
-    center = c.center;
-    radius = c.radius;
-    height = c.height;
-    return *this;
-}
-template <class T>
 Cylinder<T> Cylinder<T>::operator +(const Vec3<T>& v) const
 {
     return Cylinder<T>(center + v, radius, height);
@@ -38,6 +23,13 @@ Cylinder<T>& Cylinder<T>::operator -=(const Vec3<T>& v)
 {
     center -= v;
     return *this;
+}
+
+template <class T>
+template <class T2>
+Cylinder<T>::operator Cylinder<T2>() const
+{
+    return Cylinder<T2>(static_cast<Vec3<T2>>(center), static_cast<T2>(radius), static_cast<T2>(height));
 }
 template <class T>
 Circle<T> Cylinder<T>::base() const

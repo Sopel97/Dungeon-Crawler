@@ -9,24 +9,6 @@ class Mesh2 : public Shape2<typename ShapeType::ValueType>
 public:
     typedef typename ShapeType::ValueType T;
 
-    struct RandomPointPickerPreprocessedData : public Shape2<T>::RandomPointPickerPreprocessedData
-    {
-        RandomPointPickerPreprocessedData(const Mesh2<ShapeType>& mesh)
-        {
-            shapesByArea.reserve(mesh.elements.size());
-            for(auto& shape : mesh.elements)
-            {
-                shapesByArea.push_back(std::make_pair(&shape, shape.area()));
-            }
-            size_t numberOfShapes = shapesByArea.size();
-            for(size_t i = 1; i < numberOfShapes; ++i)
-            {
-                shapesByArea[i].second += shapesByArea[i-1].second; //so the area is cumulative
-            }
-        }
-        std::vector<std::pair<const ShapeType*, T>> shapesByArea; //<triangle ptr to triangulation result, CUMULATIVE area> - cumulative area so binary searching is possible without sorting
-    };
-
     std::vector<ShapeType> elements;
     Mesh2();
     Mesh2(const std::vector<ShapeType>& e);
@@ -64,11 +46,6 @@ public:
     Vec2<T> nearestPointTo(const Vec2<T>& point) const;
 
     size_t size() const;
-
-    //std::unique_ptr<typename Shape2<T>::RandomPointPickerPreprocessedData> createPreprocessedDataForRandomPointPicker() const;
-
-    //Vec2<T> pickRandomPoint(Random::RandomEngineBase& randomEngine) const;
-    //Vec2<T> pickRandomPoint(Random::RandomEngineBase& randomEngine, typename Shape2<T>::RandomPointPickerPreprocessedData& preprocessedData) const; //preprocessed data is of base type. All shapes have to cast it to use it.
 };
 
 #include "../src/Mesh2.cpp"

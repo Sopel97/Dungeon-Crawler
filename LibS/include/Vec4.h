@@ -16,21 +16,17 @@ public:
     static const Vec4<T> unitZ;
     static const Vec4<T> unitW;
 
-    Vec4() = default;
+    Vec4(){}
     Vec4(T _x, T _y, T _z, T _w);
     Vec4(const std::initializer_list<T>& list);
 
     virtual ~Vec4(){}
 
-    Vec4(const Vec4<T>& v) = default;
-    template <class X>
-    Vec4(const Vec4<X>& v);
-    Vec4(Vec4<T>&& v) = default;
+    Vec4(const Vec4<T>& v){x = v.x;y = v.y;z = v.z;w = v.w;}
+    Vec4(Vec4<T>&& v){x = std::move(v.x);y = std::move(v.y);z = std::move(v.z);w = std::move(v.w);}
 
-    Vec4<T>& operator=(const Vec4<T>& v1) = default;
-    template <class X>
-    Vec4<T>& operator=(const Vec4<X>& v1);
-    Vec4<T>& operator=(Vec4<T> && v1) = default;
+    Vec4<T>& operator=(const Vec4<T>& v1){x = v1.x;y = v1.y;z = v1.z;w = v1.w; return *this;}
+    Vec4<T>& operator=(Vec4<T> && v1){x = std::move(v1.x);y = std::move(v1.y);z = std::move(v1.z);w = std::move(v1.w); return *this;}
 
     inline T& operator [](int i);
     inline const T& operator [](int i) const;
@@ -48,6 +44,9 @@ public:
     Vec4<T>& operator*=(const T scalar);
     Vec4<T>& operator*=(const Vec4<T>& v1);
     Vec4<T>& operator/=(const T scalar);
+
+    template <class T2>
+    explicit operator Vec4<T2>() const;
 
     T magnitude();
     T distance(const Vec4<T>& v);

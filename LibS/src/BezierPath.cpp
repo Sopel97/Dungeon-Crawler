@@ -27,7 +27,6 @@ Vec2<T> BezierPath<T>::evaluate(T t) const
     int numberOfCurves = (numberOfControlPoints - 1) / 2;
     for(int i = 0; i < numberOfCurves; ++i)
     {
-        int start = i * 2;
         for(int j = 0; j < 3; ++j)
         {
             point += controlPoints[i + j] * m_binomialCoefficients.coefficients(2, j) * pow(T(1) - t, 2 - j) * pow(t, j);

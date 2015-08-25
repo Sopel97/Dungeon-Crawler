@@ -5,30 +5,9 @@ template <class T>
 class Polygon : public Shape2<T> //Supports convex and concave polygons. Does not support self intersecting (complex) polygons (some methods may work, some may not).
 {
 public:
-    /*
-    struct RandomPointPickerPreprocessedData : public Shape2<T>::RandomPointPickerPreprocessedData
-    {
-        RandomPointPickerPreprocessedData(PolygonTriangulation<T>&& triang) :
-            triangulation(std::move(triang))
-        {
-            trianglesByArea.reserve(triangulation.triangleMesh().size());
-            for(auto& triangle : triangulation.triangleMesh().elements)
-            {
-                trianglesByArea.push_back(std::make_pair(&triangle, triangle.area()));
-            }
-            size_t numberOfTriangles = trianglesByArea.size();
-            for(size_t i = 1; i < numberOfTriangles; ++i)
-            {
-                trianglesByArea[i].second += trianglesByArea[i-1].second; //so the area is cumulative
-            }
-        }
-        PolygonTriangulation<T> triangulation;
-        std::vector<std::pair<const Triangle<T>*, T>> trianglesByArea; //<triangle ptr to triangulation result, CUMULATIVE area> - cumulative area so binary searching is possible without sorting
-    };
-*/
     std::vector<Vec2<T>> vertices;
 
-    Polygon() = default;
+    Polygon(){}
     Polygon(const std::initializer_list<Vec2<T>>& list);
     Polygon(const std::vector<Vec2<T>>& v);
     Polygon(std::vector<Vec2<T>>&& v);
@@ -39,23 +18,22 @@ public:
     static Polygon<T> fromRectangle(const Rectangle<T>& rectangle);
     static Polygon<T> fromTriangle(const Triangle<T>& triangle);
 
-    Polygon(const Polygon<T>&) = default;
-    template <class X>
-    Polygon(const Polygon<X>& p);
-    Polygon(Polygon<T>&&) = default;
+    Polygon(const Polygon<T>& other){vertices = other.vertices;}
+    Polygon(Polygon<T>&& other){vertices = std::move(other.vertices);}
 
     virtual ~Polygon(){}
 
-    Polygon<T>& operator=(const Polygon<T>&) = default;
-    template <class X>
-    Polygon<T>& operator=(const Polygon<X>& p);
-    Polygon<T>& operator=(Polygon<T> &&) = default;
+    Polygon<T>& operator=(const Polygon<T>& other){vertices = other.vertices; return *this;}
+    Polygon<T>& operator=(Polygon<T> && other){vertices = std::move(other.vertices); return *this;}
 
     Polygon<T> operator+(const Vec2<T>& v) const;
     Polygon<T> operator-(const Vec2<T>& v) const;
 
     Polygon<T>& operator+=(const Vec2<T>& v);
     Polygon<T>& operator-=(const Vec2<T>& v);
+
+    template <class T2>
+    explicit operator Polygon<T2>() const;
 
     void add(const Vec2<T>& v);
     void add(const std::vector<T>& v);
@@ -73,16 +51,12 @@ public:
     T distanceTo(const Vec2<T>& v1) const;
     Vec2<T> nearestPointTo(const Vec2<T>& point) const;
 
-    //std::unique_ptr<typename Shape2<T>::RandomPointPickerPreprocessedData> createPreprocessedDataForRandomPointPicker() const;
-
-    //Vec2<T> pickRandomPoint(Random::RandomEngineBase& randomEngine) const;
-    //Vec2<T> pickRandomPoint(Random::RandomEngineBase& randomEngine, typename Shape2<T>::RandomPointPickerPreprocessedData& preprocessedData) const; //preprocessed data is of base type. All shapes have to cast it to use it.
-
     Polyline<T> asPolyline() const;
 
-    Vec2<T> center() const;
+    Vec2<T> centerOfMass() const;
     bool isConvex() const;
     T signedArea() const;
+    T area() const;
 
     size_t size() const;
 };

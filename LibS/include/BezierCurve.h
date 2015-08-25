@@ -14,7 +14,7 @@ public:
 
     std::vector<Vec2<T>> controlPoints;
 
-    BezierCurve() = default;
+    BezierCurve(){}
 
     void add(const Vec2<T>& point);
     void add(const std::vector<Vec2<T>>& points);

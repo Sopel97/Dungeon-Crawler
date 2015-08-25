@@ -26,7 +26,7 @@ TallTileStackDrawable::TallTileStackDrawable(const TileStack& tileStack, const T
         {
             m_indexOfFirstTallTile = i;
             m_boundingRectangle = tile->model().collider() + Vec2F(tileLocation.x, tileLocation.y) * GameConstants::tileSize;
-            m_center = m_boundingRectangle.center();
+            m_center = m_boundingRectangle.centerOfMass();
 
             break;
         }

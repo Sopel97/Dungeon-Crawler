@@ -1,18 +1,7 @@
 template <class T>
-template <class X>
-Angle<T>::Angle(const Angle<X>& a) : m_radians(a.m_radians)
-{
-}
-template <class T>
 Angle<T>::Angle(T rad) : m_radians(rad)
 {
 
-}
-template <class T>
-template <class X>
-Angle<T>& Angle<T>::operator=(const Angle<X>& a)
-{
-    m_radians = a.m_radians;
 }
 
 template <class T>
@@ -65,6 +54,12 @@ template <class T>
 Angle<T> Angle<T>::operator-() const
 {
     return radians(-m_radians);
+}
+template <class T>
+template <class T2>
+Angle<T>::operator Angle<T2>() const
+{
+    return Angle<T2>::radians(static_cast<T2>(m_radians));
 }
 
 template <class T>

@@ -26,6 +26,13 @@ Circle<T>& Circle<T>::operator -=(const Vec2<T>& v)
 }
 
 template <class T>
+template <class T2>
+Circle<T>::operator Circle<T2>() const
+{
+    return Circle<T2>(static_cast<Vec2<T2>>(origin), static_cast<T2>(radius));
+}
+
+template <class T>
 void Circle<T>::translate(const Vec2<T>& v)
 {
     origin.translate(v);
@@ -48,22 +55,15 @@ Vec2<T> Circle<T>::nearestPointTo(const Vec2<T>& point) const
 
     return (point - origin).normalized() * radius;
 }
-/*
+
 template <class T>
-Vec2<T> Circle<T>::pickRandomPoint(Random::RandomEngineBase& randomEngine) const
-{
-    T r = std::sqrt(randomEngine.next<T>(T(0.0), T(1.0))) * radius;
-    AngleD angle = AngleD::radians(randomEngine.next<T>(T(0.0), T(2.0) * PI));
-    return origin + Vec2<T>(r * angle.cos(), r * angle.sin());
-}
-template <class T>
-Vec2<T> Circle<T>::pickRandomPoint(Random::RandomEngineBase& randomEngine, typename Shape2<T>::RandomPointPickerPreprocessedData& preprocessedData) const
-{
-    return pickRandomPoint(randomEngine);
-}
-*/
-template <class T>
-Vec2<T> Circle<T>::center() const
+Vec2<T> Circle<T>::centerOfMass() const
 {
     return origin;
+}
+
+template <class T>
+T Circle<T>::area() const
+{
+    return radius*radius*PI;
 }

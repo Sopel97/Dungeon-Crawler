@@ -268,7 +268,7 @@ T Matrix<T, C, R>::max() const
 template <class T, size_t C, size_t R>
 T Matrix<T, C, R>::trace() const
 {
-    static_assert(C == R, "A square matrix is required to make this operation.");
+    static_assert(C == R, "A square matrix is required to perform this operation.");
     T sumOfDiagonal = 0;
     for(size_t i = 0; i < C; ++i) sumOfDiagonal += m_columns[i][i];
     return sumOfDiagonal;
@@ -276,13 +276,13 @@ T Matrix<T, C, R>::trace() const
 template <class T, size_t C, size_t R>
 T Matrix<T, C, R>::determinant() const
 {
-    static_assert(C == R, "A square matrix is required to make this operation.");
+    static_assert(C == R, "A square matrix is required to perform this operation.");
     return 0; //TODO: determinant calculation
 }
 template <class T, size_t C, size_t R>
 typename Matrix<T, C, R>::VecTypeCol Matrix<T, C, R>::diagonal() const
 {
-    static_assert(C == R, "A square matrix is required to make this operation.");
+    static_assert(C == R, "A square matrix is required to perform this operation.");
     Matrix<T, C, R>::VecTypeCol diagonalVector;
     for(size_t i = 0; i < C; ++i) diagonalVector[i] = m_columns[i][i];
     return diagonalVector;

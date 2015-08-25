@@ -5,13 +5,9 @@ template <class T>
 class Polyline : public Shape2<T>
 {
 public:
-    struct RandomPointPickerPreprocessedData : public Shape2<T>::RandomPointPickerPreprocessedData
-    {
-        //currently empty but will be used later
-    };
     std::vector<Vec2<T>> vertices;
 
-    Polyline() = default;
+    Polyline(){}
     Polyline(const std::initializer_list<Vec2<T>>& list);
     Polyline(const std::vector<Vec2<T>>& v);
     Polyline(std::vector<Vec2<T>>&& v);
@@ -20,23 +16,22 @@ public:
     static Polyline<T> fromRectangle(const Rectangle<T>& rectangle);
     static Polyline<T> fromTriangle(const Triangle<T>& triangle);
 
-    Polyline(const Polyline<T>&) = default;
-    template <class X>
-    Polyline(const Polyline<X>& p);
-    Polyline(Polyline<T>&&) = default;
+    Polyline(const Polyline<T>& other){vertices = other.vertices;}
+    Polyline(Polyline<T>&& other){vertices = std::move(other.vertices);}
 
     virtual ~Polyline(){}
 
-    Polyline<T>& operator=(const Polyline<T>&) = default;
-    template <class X>
-    Polyline<T>& operator=(const Polyline<X>& p);
-    Polyline<T>& operator=(Polyline<T> &&) = default;
+    Polyline<T>& operator=(const Polyline<T>& other){vertices = other.vertices; return *this;}
+    Polyline<T>& operator=(Polyline<T> && other){vertices = std::move(other.vertices); return *this;}
 
     Polyline<T> operator+(const Vec2<T>& v) const;
     Polyline<T> operator-(const Vec2<T>& v) const;
 
     Polyline<T>& operator+=(const Vec2<T>& v);
     Polyline<T>& operator-=(const Vec2<T>& v);
+
+    template <class T2>
+    explicit operator Polyline<T2>() const;
 
     void add(const Vec2<T>& v);
     void add(const std::vector<T>& v);
@@ -53,8 +48,6 @@ public:
 
     T distanceTo(const Vec2<T>& v1) const;
     Vec2<T> nearestPointTo(const Vec2<T>& point) const;
-
-    //std::unique_ptr<typename Shape2<T>::RandomPointPickerPreprocessedData> createPreprocessedDataForRandomPointPicker() const;
 
     size_t size() const;
 };
