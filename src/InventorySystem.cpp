@@ -63,7 +63,7 @@ void InventorySystem::closeInventory(Inventory* inventory) //assumes it is prese
         {
             TrackedInventory* parent = current->parentInventory;
             abandonInventory(*current);
-            if(parent == nullptr) break;
+            if(parent == nullptr || isParentOfAnyInventory(*parent)) break; //if it still a parent of some inventory we can't delete it
 
             current = parent;
         }
