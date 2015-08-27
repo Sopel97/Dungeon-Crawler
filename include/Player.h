@@ -1,7 +1,7 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "PlayerEquipmentInventory.h"
+#include "PlayerUi.h"
 
 #include <memory>
 #include <vector>
@@ -18,37 +18,18 @@ class AttemptToInteractWithExternalInventory;
 class Player
 {
 public:
-    Player();
+    Player(Game& game);
 
     Entity* createPlayerEntity();
-    PlayerUi* createPlayerUi();
 
     void onKeyPressed(sf::Event::KeyEvent& keyEvent);
-    void processAsyncKeyboardInput(World* world, float dt);
-
-    bool tryOpenInventory(Inventory* inventory, int x, int y);
-    void closeInventory(Inventory* inventory);
-    bool isInventoryOpened(Inventory* inventory);
-
-    void onAttemptToInteractWithExternalInventory(const AttemptToInteractWithExternalInventory& event);
-
-    PlayerEquipmentInventory& equipmentInventory();
+    void processAsyncKeyboardInput(World& world, float dt);
+    PlayerUi& playerUi();
 
 protected:
-    struct ExternalInventory
-    {
-        Inventory* inventory;
-        int x;
-        int y;
-
-        bool operator==(const Inventory* inv) {return inv == inventory;}
-    };
-
     Entity* m_playerEntity;
-    PlayerUi* m_playerUi; //will be managed by Root
 
-    PlayerEquipmentInventory m_equipmentInventory;
-    std::vector<ExternalInventory> m_externalInventories;
+    PlayerUi m_playerUi;
 };
 
 #endif // PLAYER_H

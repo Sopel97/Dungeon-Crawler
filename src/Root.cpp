@@ -1,5 +1,7 @@
 #include "Root.h"
 
+#include "Game.h"
+
 #include "SFMLUtil.h"
 #include "World.h"
 
@@ -23,12 +25,12 @@ Root::Root() :
     m_lastFrameTime(0.0f),
     m_lastMeasuredFps(0),
     m_currentFpsCounter(0),
-    m_player(nullptr),
-    m_playerUi(nullptr),
-    m_world(nullptr)
+    m_game(nullptr)
 {
     initResourceLoaders();
     loadAssets();
+
+    m_defaultFont = ResourceManager::instance().get<sf::Font>("Font");
 }
 
 Root& Root::instance()
@@ -37,41 +39,9 @@ Root& Root::instance()
     return root;
 }
 
-void Root::tick(float dt)
-{
-    m_world->update(dt);
-}
-
-void Root::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
-{
-    m_window.clear(sf::Color::Black);
-
-    sf::VertexArray vertexBuffer(sf::PrimitiveType::Triangles);
-    SFMLUtil::appendAsTriangleList(vertexBuffer, RectangleF(m_windowSpaceManager.regionRect(WindowSpaceManager::Region::World)), sf::Color::Red);
-    SFMLUtil::appendAsTriangleList(vertexBuffer, RectangleF(m_windowSpaceManager.regionRect(WindowSpaceManager::Region::PlayerUi)), sf::Color::Green);
-
-    m_windowSpaceManager.setDefaultView();
-    m_window.draw(vertexBuffer, m_renderStates);
-
-    m_world->draw(renderTarget, renderStates);
-
-    m_playerUi->draw(renderTarget, renderStates);
-
-    m_windowSpaceManager.setDefaultView();
-    sf::Text fpsText(sf::String(std::to_string(m_lastMeasuredFps)), m_font.get(), 20);
-    fpsText.setPosition(sf::Vector2f(4.0f, 4.0f));
-    fpsText.setColor(sf::Color::White);
-    m_window.draw(fpsText, m_renderStates);
-
-    m_window.display();
-}
-
 void Root::run()
 {
-    m_font = ResourceManager::instance().get<sf::Font>("Font");
-    m_player = std::make_unique<Player>();
-    m_playerUi.reset(m_player->createPlayerUi());
-    m_world = std::make_unique<World>(*this);
+    m_game = std::make_unique<Game>(*this);
 
     sf::Clock clock;
     clock.restart();
@@ -96,7 +66,7 @@ void Root::run()
         if(time >= m_tickTime + lastTick)
         {
             if(m_window.hasFocus()) processAsyncKeyboardInput(dt);
-            tick(dt);
+            m_game->tick(dt);
             lastTick = time;
         }
         if(time >= lastFpsMeasure + 1.0f)
@@ -107,7 +77,10 @@ void Root::run()
         }
         if(m_window.hasFocus())
         {
-            draw(m_window, m_renderStates); //temporarly not capped just to see how fps is doing
+            m_window.clear(sf::Color::Black);
+            m_game->draw(m_window, m_renderStates); //temporarly not capped just to see how fps is doing
+            m_window.display();
+
             ++m_currentFpsCounter;
             lastDraw = time;
         }
@@ -117,7 +90,7 @@ void Root::run()
 }
 void Root::processAsyncKeyboardInput(float dt)
 {
-    m_player->processAsyncKeyboardInput(m_world.get(), dt);
+    m_game->player().processAsyncKeyboardInput(m_game->world(), dt);
 }
 void Root::initResourceLoaders()
 {
@@ -159,9 +132,13 @@ WindowSpaceManager& Root::windowSpaceManager()
 {
     return m_windowSpaceManager;
 }
-Player& Root::player()
+int Root::lastMeasuredFps() const
 {
-    return *m_player;
+    return m_lastMeasuredFps;
+}
+const sf::Font& Root::defaultFont() const
+{
+    return m_defaultFont.get();
 }
 
 StandardRandomNumberGeneratorWrapper<std::minstd_rand>& Root::rng()

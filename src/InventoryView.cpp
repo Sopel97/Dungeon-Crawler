@@ -42,8 +42,7 @@ InventoryView::InventoryView(Inventory* parent, const std::vector<InventorySlotV
 {
     for(const auto& slot : m_slotViews)
     {
-        int slotBottom = slot.position().y + InventorySlotView::slotSize().y;
-        m_maxHeight = std::max(m_maxHeight, slotBottom + 4 + m_bottomBarHeight + m_topBarHeight);
+        addInventorySlotView(slot);
     }
 }
 InventoryView::InventoryView(Inventory* parent, std::vector<InventorySlotView>&& slots) :
@@ -60,8 +59,7 @@ InventoryView::InventoryView(Inventory* parent, std::vector<InventorySlotView>&&
 {
     for(const auto& slot : m_slotViews)
     {
-        int slotBottom = slot.position().y + InventorySlotView::slotSize().y;
-        m_maxHeight = std::max(m_maxHeight, slotBottom + 4 + m_bottomBarHeight + m_topBarHeight);
+        addInventorySlotView(slot);
     }
 }
 
@@ -196,7 +194,7 @@ void InventoryView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& rende
         constexpr int scrollBarWidth = 12;
         int scrollBarHeight = inventoryContentRect.height();
 
-        const Vec2F scrollBarTopLeft {inventoryContentRect.max.x - scrollBarWidth, inventoryContentRect.min.y};
+        const Vec2F scrollBarTopLeft(inventoryContentRect.max.x - scrollBarWidth, inventoryContentRect.min.y);
 
         sf::Sprite scrollBarSprite;
         scrollBarSprite.setPosition(scrollBarTopLeft.x, scrollBarTopLeft.y);

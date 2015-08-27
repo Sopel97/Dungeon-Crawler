@@ -18,6 +18,7 @@
 #include <random>
 
 class World;
+class Game;
 
 class Root
 {
@@ -25,9 +26,6 @@ public:
     Root();
 
     static Root& instance();
-
-    void tick(float dt);
-    void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
 
     void run();
     void initResourceLoaders();
@@ -38,7 +36,8 @@ public:
     void onWindowResized(const sf::Event& event);
 
     WindowSpaceManager& windowSpaceManager();
-    Player& player();
+    int lastMeasuredFps() const;
+    const sf::Font& defaultFont() const;
 
     ls::StandardRandomNumberGeneratorWrapper<std::minstd_rand>& rng();
 
@@ -52,11 +51,9 @@ protected:
     float m_lastFrameTime;
     int m_lastMeasuredFps;
     int m_currentFpsCounter;
-    ResourceHandle<sf::Font> m_font;
+    ResourceHandle<sf::Font> m_defaultFont;
 
-    std::unique_ptr<Player> m_player;
-    std::unique_ptr<PlayerUi> m_playerUi;
-    std::unique_ptr<World> m_world;
+    std::unique_ptr<Game> m_game;
 
     static constexpr float m_tickTime = 1.0f / 60.0f;
     static constexpr size_t m_defaultWindowWidth = 1024;

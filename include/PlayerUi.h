@@ -9,23 +9,19 @@ namespace sf
     class RenderStates;
 }
 class Player;
-class InventoryView;
-class Inventory;
+class Game;
 
 class PlayerUi
 {
 public:
-    PlayerUi(Player& player);
+    PlayerUi(Game& game, Player& player);
     ~PlayerUi();
 
     void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
 
-    bool tryOpenInventory(Inventory* inventory);
-    void closeInventory(Inventory* inventory);
 protected:
+    Game& m_game;
     Player& m_player;
-
-    std::vector<InventoryView> m_inventories;
 };
 
 #endif // PLAYERUI_H

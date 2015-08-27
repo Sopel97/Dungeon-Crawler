@@ -19,11 +19,12 @@ namespace sf
 class Root;
 class MapLayer;
 class TileLocation;
+class Player;
 
 class World
 {
 public:
-    World(Root& root);
+    World(Root& root, Player& player);
     ~World();
 
     void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);

@@ -34,7 +34,7 @@
 
 using namespace ls;
 
-World::World(Root& root) :
+World::World(Root& root, Player& player) :
     m_root(root),
     m_width(worldWidth),
     m_height(worldHeight),
@@ -43,7 +43,7 @@ World::World(Root& root) :
     m_mapGenerator(m_width, m_height)
 {
     m_mapGenerator.generate(*m_mapLayer);
-    m_playerEntity = root.player().createPlayerEntity();
+    m_playerEntity = player.createPlayerEntity();
     m_entitySystem.addEntity(m_playerEntity, m_camera.position());
 }
 World::~World()
