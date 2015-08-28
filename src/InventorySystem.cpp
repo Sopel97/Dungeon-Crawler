@@ -8,66 +8,57 @@
 InventorySystem::InventorySystem() :
     m_equipmentInventory()
 {
-    m_trackedInventories.push_back(TrackedInventory::createInternal(&m_equipmentInventory, nullptr));
+    tryOpenInternalInventory(&m_equipmentInventory, nullptr);
 
     EventDispatcher::instance().subscribe<AttemptToInteractWithExternalInventory>(std::bind(&InventorySystem::onAttemptToInteractWithExternalInventory, this, std::placeholders::_1));
 }
 
 bool InventorySystem::tryOpenExternalInventory(Inventory* inventory, int x, int y)
 {
-    TrackedInventory* candidateToRecycle = findInventory(inventory);
-    if(candidateToRecycle == nullptr)
+    TrackedInventory* trackedInventory = findTrackedInventory(inventory);
+    if(trackedInventory == nullptr)
     {
-        m_trackedInventories.push_back(TrackedInventory::createExternal(inventory, x, y));
+        trackedInventory = &(*m_trackedInventories.emplace(m_trackedInventories.end(), TrackedInventory::createExternal(inventory, x, y)));
     }
-    else
-    {
-        return tryReopenTrackedInventory(*candidateToRecycle);
-    }
+
+    m_openedInventories.push_back(trackedInventory);
+    trackedInventory->isOpened = true;
+
+    updatePositionsOfOpenedInventories();
 
     return true;
 }
-bool InventorySystem::tryOpenInternalInventory(Inventory* inventory, TrackedInventory& parentInventory)
+bool InventorySystem::tryOpenInternalInventory(Inventory* inventory, TrackedInventory* parentInventory)
 {
-    TrackedInventory* candidateToRecycle = findInventory(inventory);
-    if(candidateToRecycle == nullptr)
+    TrackedInventory* trackedInventory = findTrackedInventory(inventory);
+    if(trackedInventory == nullptr)
     {
-        m_trackedInventories.push_back(TrackedInventory::createInternal(inventory, &parentInventory));
+        trackedInventory = &(*m_trackedInventories.emplace(m_trackedInventories.end(), TrackedInventory::createInternal(inventory, parentInventory)));
     }
-    else
-    {
-        return tryReopenTrackedInventory(*candidateToRecycle);
-    }
+
+    m_openedInventories.push_back(trackedInventory);
+    trackedInventory->isOpened = true;
+
+    updatePositionsOfOpenedInventories();
 
     return true;
 }
-bool InventorySystem::tryReopenTrackedInventory(TrackedInventory& inventory)
+void InventorySystem::closeInventory(Inventory* inventory)
 {
-    inventory.isOpened = true;
-    moveInventoryToTheEnd(inventory);
-    return true;
-}
-void InventorySystem::moveInventoryToTheEnd(TrackedInventory& inventory)
-{
-    auto iter = std::find(m_trackedInventories.begin(), m_trackedInventories.end(), inventory);
-    std::rotate(iter, iter + 1, m_trackedInventories.end());
-}
-void InventorySystem::closeInventory(Inventory* inventory) //assumes it is present
-{
-    TrackedInventory* foundInventory = findInventory(inventory);
-    foundInventory->isOpened = false;
-    if(!isParentOfAnyInventory(*foundInventory)) //is the last opened inventory in the chain. Should be removed along with all closed parents
-    {
-        TrackedInventory* current = foundInventory;
-        while(current->isOpened == false)
-        {
-            TrackedInventory* parent = current->parentInventory;
-            abandonInventory(*current);
-            if(parent == nullptr || isParentOfAnyInventory(*parent)) break; //if it still a parent of some inventory we can't delete it
+    TrackedInventory* openedInventory = findTrackedInventory(inventory);
+    if(openedInventory == nullptr) return;
+    m_openedInventories.erase(std::remove(m_openedInventories.begin(), m_openedInventories.end(), openedInventory), m_openedInventories.end());
 
-            current = parent;
-        }
+    openedInventory->isOpened = false;
+    TrackedInventory* current = openedInventory;
+    while(current != nullptr && current->isOpened == false && !isParentOfAnyInventory(*current))
+    {
+        TrackedInventory* parent = current->parentInventory;
+        abandonInventory(*current);
+        current = parent;
     }
+
+    updatePositionsOfOpenedInventories();
 }
 void InventorySystem::abandonInventory(TrackedInventory& inventory)
 {
@@ -75,24 +66,33 @@ void InventorySystem::abandonInventory(TrackedInventory& inventory)
 }
 bool InventorySystem::isInventoryOpened(Inventory* inventory)
 {
-    TrackedInventory* candidate = findInventory(inventory);
-    if(candidate == nullptr) return false;
-    else return candidate->isOpened;
+    return std::find_if(m_openedInventories.begin(), m_openedInventories.end(), [inventory](const TrackedInventory * inv) {return inv->inventory == inventory;}) != m_openedInventories.end();
 }
 bool InventorySystem::isInventoryTracked(Inventory* inventory)
 {
-    return findInventory(inventory) != nullptr;
+    return findTrackedInventory(inventory) != nullptr;
 }
 bool InventorySystem::isParentOfAnyInventory(TrackedInventory& inventory)
 {
-    return std::find_if(m_trackedInventories.begin(), m_trackedInventories.end(), [inventory](const TrackedInventory& inv){return *(inv.parentInventory) == inventory;}) != m_trackedInventories.end();
+    return std::find_if(m_trackedInventories.begin(), m_trackedInventories.end(), [inventory](const TrackedInventory & inv) {return *(inv.parentInventory) == inventory;}) != m_trackedInventories.end();
+}
+
+void InventorySystem::updatePositionsOfOpenedInventories()
+{
+    int currentHeight = 0;
+    for(auto& inventory : m_openedInventories)
+    {
+        InventoryView& inventoryView = inventory->inventoryView;;
+        inventoryView.setOffsetFromTop(currentHeight);
+        currentHeight += inventoryView.height();
+    }
 }
 
 void InventorySystem::onAttemptToInteractWithExternalInventory(const AttemptToInteractWithExternalInventory& event)
 {
     tryOpenExternalInventory(event.inventory(), event.x(), event.y());
 }
-InventorySystem::TrackedInventory* InventorySystem::findInventory(Inventory* inventory)
+InventorySystem::TrackedInventory* InventorySystem::findTrackedInventory(Inventory* inventory)
 {
     auto iter = std::find(m_trackedInventories.begin(), m_trackedInventories.end(), inventory);
 
@@ -104,15 +104,7 @@ PlayerEquipmentInventory& InventorySystem::equipmentInventory()
 {
     return m_equipmentInventory;
 }
-std::vector<InventorySystem::TrackedInventory*> InventorySystem::openedInventories()
+const std::vector<InventorySystem::TrackedInventory*>& InventorySystem::openedInventories() const
 {
-    std::vector<TrackedInventory*> result;
-    for(auto& inv : m_trackedInventories)
-    {
-        if(inv.isOpened)
-        {
-            result.push_back(&inv);
-        }
-    }
-    return result;
+    return m_openedInventories;
 }

@@ -48,7 +48,7 @@ InventoryView ContainerInventory::createInventoryView()
     inventoryView.setMinimizable(true);
     inventoryView.setCloseable(true);
     inventoryView.setResizeable(true);
-    inventoryView.setMaxHeight();
+    inventoryView.setHeightToMax();
 
     return inventoryView;
 }

@@ -130,7 +130,7 @@ void InventoryView::setInnerHeight(int newInnerHeight)
 {
     m_height = newInnerHeight + m_topBarHeight + m_bottomBarHeight;
 }
-void InventoryView::setMaxHeight()
+void InventoryView::setHeightToMax()
 {
     m_height = m_maxHeight;
 }

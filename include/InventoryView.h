@@ -39,7 +39,7 @@ public:
 
     void setHeight(int newHeight);
     void setInnerHeight(int newInnerHeight);
-    void setMaxHeight();
+    void setHeightToMax();
 
     void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
     void update();

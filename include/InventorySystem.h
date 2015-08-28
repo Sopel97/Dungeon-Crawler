@@ -18,18 +18,6 @@ public:
             Internal
         };
 
-        TrackedInventory(Inventory* _inventory, Origin _origin, TrackedInventory* _parent, int _x, int _y) :
-            inventory(_inventory),
-            inventoryView(inventory->createInventoryView()),
-            isOpened(true),
-            origin(_origin),
-            parentInventory(_parent),
-            x(_x),
-            y(_y)
-        {
-
-        }
-
         Inventory* inventory;
         InventoryView inventoryView; //TODO: set view position when opening inventory
         bool isOpened;
@@ -38,9 +26,22 @@ public:
         //else it will have specified a parent which eventually recursively will have
         //a parent that lays on the ground or is in the player's container slot
         Origin origin;
+
         TrackedInventory* parentInventory;
+
         int x;
         int y;
+
+        TrackedInventory(Inventory* _inventory, Origin _origin, TrackedInventory* _parent, int _x, int _y) :
+            inventory(_inventory),
+            inventoryView(inventory->createInventoryView()),
+            origin(_origin),
+            parentInventory(_parent),
+            x(_x),
+            y(_y)
+        {
+
+        }
 
         bool isExternal() const {return origin == Origin::External;}
         bool isInternal() const {return origin == Origin::Internal;}
@@ -75,26 +76,27 @@ public:
     InventorySystem();
 
     bool tryOpenExternalInventory(Inventory* inventory, int x, int y);
-    bool tryOpenInternalInventory(Inventory* inventory, TrackedInventory& parentInventory);
+    bool tryOpenInternalInventory(Inventory* inventory, TrackedInventory* parentInventory);
     void closeInventory(Inventory* inventory);
     bool isInventoryOpened(Inventory* inventory);
     bool isInventoryTracked(Inventory* inventory);
-    TrackedInventory* findInventory(Inventory* inventory);
+    TrackedInventory* findTrackedInventory(Inventory* inventory);
 
-    bool tryReopenTrackedInventory(TrackedInventory& inventory);
-    void moveInventoryToTheEnd(TrackedInventory& inventory);
     void abandonInventory(TrackedInventory& inventory);
     bool isParentOfAnyInventory(TrackedInventory& inventory);
+
+    void updatePositionsOfOpenedInventories();
 
     void onAttemptToInteractWithExternalInventory(const AttemptToInteractWithExternalInventory& event);
 
     PlayerEquipmentInventory& equipmentInventory();
-    std::vector<TrackedInventory*> openedInventories();
+    const std::vector<TrackedInventory*>& openedInventories() const;
 
 protected:
     PlayerEquipmentInventory m_equipmentInventory;
 
     std::vector<TrackedInventory> m_trackedInventories;
+    std::vector<TrackedInventory*> m_openedInventories;
 private:
 };
 
