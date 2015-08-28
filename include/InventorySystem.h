@@ -19,7 +19,7 @@ public:
         };
 
         Inventory* inventory;
-        InventoryView inventoryView; //TODO: set view position when opening inventory
+        InventoryView inventoryView;
         bool isOpened;
 
         //if it is on the ground it will have x,y coordinates specified

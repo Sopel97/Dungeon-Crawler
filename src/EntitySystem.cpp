@@ -80,12 +80,12 @@ void EntitySystem::updateEntities(World* world, float dt) //will also move them 
         entity->controller().update(world, dt);
     }
 
-    //TODO: resolving collisions
-
     for(Entity* entity : m_entities)
     {
         moveEntity(world, entity, dt);
     }
+
+    //TODO: make entities push each other
 }
 void EntitySystem::moveEntity(World* world, Entity* entity, float dt)
 {
