@@ -1,3 +1,4 @@
+#include "..\include\LineSegment.h"
 template <class T>
 LineSegment<T>::LineSegment(const Vec2<T>& _begin, const Vec2<T>& _end) : begin(_begin), end(_end)
 {
@@ -30,11 +31,11 @@ LineSegment<T>& LineSegment<T>::operator-=(const Vec2<T>& v)
 }
 
 template <class T>
-    template <class T2>
-    LineSegment<T>::operator LineSegment<T2>() const
-    {
-        return LineSegment<T2>(static_cast<Vec2<T2>>(begin), static_cast<Vec2<T2>>(end));
-    }
+template <class T2>
+LineSegment<T>::operator LineSegment<T2>() const
+{
+    return LineSegment<T2>(static_cast<Vec2<T2>>(begin), static_cast<Vec2<T2>>(end));
+}
 
 template <class T>
 T LineSegment<T>::length() const

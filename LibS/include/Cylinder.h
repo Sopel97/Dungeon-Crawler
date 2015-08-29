@@ -12,13 +12,13 @@ public:
     Cylinder() = default;
     Cylinder(const Vec3<T>& p1, T r, T h);
 
-    virtual ~Cylinder(){}
+    virtual ~Cylinder() {}
 
-    Cylinder(const Cylinder<T>& c){center = c.center; radius = c.radius; height = c.height;}
-    Cylinder(Cylinder<T>&& c){center = std::move(c.center); radius = std::move(c.radius); height = std::move(c.height);}
+    Cylinder(const Cylinder<T>& c) { center = c.center; radius = c.radius; height = c.height; }
+    Cylinder(Cylinder<T>&& c) { center = std::move(c.center); radius = std::move(c.radius); height = std::move(c.height); }
 
-    Cylinder<T>& operator =(const Cylinder<T>& c){center = c.center; radius = c.radius; height = c.height; return *this;}
-    Cylinder<T>& operator =(Cylinder<T> && c){center = std::move(c.center); radius = std::move(c.radius); height = std::move(c.height); return *this;}
+    Cylinder<T>& operator =(const Cylinder<T>& c) { center = c.center; radius = c.radius; height = c.height; return *this; }
+    Cylinder<T>& operator =(Cylinder<T> && c) { center = std::move(c.center); radius = std::move(c.radius); height = std::move(c.height); return *this; }
 
     Cylinder<T> operator +(const Vec3<T>& v) const;
     Cylinder<T> operator -(const Vec3<T>& v) const;

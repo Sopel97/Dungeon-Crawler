@@ -10,7 +10,6 @@
 #include "ResourceLoaders.h"
 
 #include "../LibS/Geometry.h"
-#include "../LibS/make_unique.h"
 
 #include <windows.h>
 
@@ -18,9 +17,7 @@
 using namespace ls;
 
 Root::Root() :
-    m_window(sf::VideoMode(m_defaultWindowWidth, m_defaultWindowHeight), "Dungeon Crawler Test"),
     m_renderStates(),
-    m_windowSpaceManager(m_window),
     m_rng(12341),
     m_lastFrameTime(0.0f),
     m_lastMeasuredFps(0),
@@ -41,6 +38,9 @@ Root& Root::instance()
 
 void Root::run()
 {
+    m_window.create(sf::VideoMode(m_defaultWindowWidth, m_defaultWindowHeight), "Dungeon Crawler Test");
+    m_windowSpaceManager = std::make_unique<WindowSpaceManager>(m_window);
+
     m_game = std::make_unique<Game>(*this);
 
     sf::Clock clock;
@@ -125,12 +125,12 @@ void Root::onKeyPressed(const sf::Event& event)
 }
 void Root::onWindowResized(const sf::Event& event)
 {
-    m_windowSpaceManager.onWindowResized(event);
+    m_windowSpaceManager->onWindowResized(event);
 }
 
 WindowSpaceManager& Root::windowSpaceManager()
 {
-    return m_windowSpaceManager;
+    return *m_windowSpaceManager;
 }
 int Root::lastMeasuredFps() const
 {
@@ -151,15 +151,15 @@ std::vector<std::string> Root::scanForFiles(const std::string& path, const std::
     std::vector<std::string> files;
     WIN32_FIND_DATA findFileData;
     HANDLE hFind;
-    std::string fullPath = path + query;
+    std::wstring fullPath = stringToWString(path + query);
     hFind = FindFirstFile(fullPath.c_str(), &findFileData);
     if(hFind != INVALID_HANDLE_VALUE)
     {
-        files.push_back(path + findFileData.cFileName);
+        files.push_back(path + wstringToString(findFileData.cFileName));
     }
     while(FindNextFile(hFind, &findFileData))
     {
-        files.push_back(path + findFileData.cFileName);
+        files.push_back(path + wstringToString(findFileData.cFileName));
     }
     FindClose(hFind);
     return files;

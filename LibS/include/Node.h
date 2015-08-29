@@ -6,7 +6,7 @@ template <class T>
 class TreeNode
 {
 public:
-    TreeNode(){}
+    TreeNode() {}
     TreeNode(const Vec2<T>& position);
     TreeNode(const Vec2<T>& position, TreeNode<T>* parent);
     TreeNode(const Vec2<T>& position, TreeNode<T>* parent, TreeNode<T>* child);
@@ -41,7 +41,7 @@ template <class T>
 class GraphNode
 {
 public:
-    GraphNode(){}
+    GraphNode() {}
     GraphNode(const Vec2<T>& position);
     GraphNode(const Vec2<T>& position, const std::vector<GraphNode<T>*>& children);
     GraphNode(const Vec2<T>& position, const std::vector<GraphNode<T>*>&& children);

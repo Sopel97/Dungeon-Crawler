@@ -9,6 +9,7 @@
 
 class Tile;
 class TileLocation;
+class Inventory;
 
 class TileModel //must be functions (ie. all methods return resonable values and there is not pure virtual member functions)
 {
@@ -25,6 +26,8 @@ public:
 
     virtual bool hasCollider() const;
     virtual const ls::RectangleF& collider() const;
+
+    virtual Inventory* inventory();
 
     virtual float drag() const; //TODO: make it possible to specify that tile uses the drag of the tile lower
 

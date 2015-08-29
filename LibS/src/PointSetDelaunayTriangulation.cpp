@@ -36,7 +36,7 @@ void PointSetDelaunayTriangulation<T>::calculate()
         indices.push_back(i);
     }
 
-    std::sort(indices.begin(), indices.end(), [&vertices](const size_t& i, const size_t& j) -> bool {return vertices[i].x > vertices[j].x;});
+    std::sort(indices.begin(), indices.end(), [&vertices] (const size_t& i, const size_t& j) -> bool {return vertices[i].x > vertices[j].x; });
 
     // Next, find the vertices of the supertriangle (which contains all other
     // triangles), and append them onto the end of a (copy of) the vertex array
@@ -233,9 +233,9 @@ Triangle<T> PointSetDelaunayTriangulation<T>::superTriangle(const std::vector<Ve
     T xmid = xmin + dx / T(2);
     T ymid = ymin + dy / T(2);
 
-    return Triangle<T>(Vec2<T>(xmid - T(20) * dmax, ymid -      dmax),
-                       Vec2<T>(xmid                 , ymid + T(20) * dmax),
-                       Vec2<T>(xmid + T(20) * dmax, ymid -      dmax));
+    return Triangle<T>(Vec2<T>(xmid - T(20) * dmax, ymid - dmax),
+        Vec2<T>(xmid, ymid + T(20) * dmax),
+        Vec2<T>(xmid + T(20) * dmax, ymid - dmax));
 }
 
 template <class T>
@@ -261,39 +261,39 @@ typename PointSetDelaunayTriangulation<T>::CircumCircle PointSetDelaunayTriangul
 
     if(absy1y2 < EPSILON)
     {
-        T m2  = -((x3 - x2) / (y3 - y2));
+        T m2 = -((x3 - x2) / (y3 - y2));
         T mx2 = (x2 + x3) / T(2);
         T my2 = (y2 + y3) / T(2);
 
-        xc  = (x2 + x1) / T(2);
-        yc  = m2 * (xc - mx2) + my2;
+        xc = (x2 + x1) / T(2);
+        yc = m2 * (xc - mx2) + my2;
     }
     else if(absy2y3 < EPSILON)
     {
-        T m1  = -((x2 - x1) / (y2 - y1));
+        T m1 = -((x2 - x1) / (y2 - y1));
         T mx1 = (x1 + x2) / T(2);
         T my1 = (y1 + y2) / T(2);
 
-        xc  = (x3 + x2) / T(2);
-        yc  = m1 * (xc - mx1) + my1;
+        xc = (x3 + x2) / T(2);
+        yc = m1 * (xc - mx1) + my1;
     }
     else
     {
-        T m1  = -((x2 - x1) / (y2 - y1));
-        T m2  = -((x3 - x2) / (y3 - y2));
+        T m1 = -((x2 - x1) / (y2 - y1));
+        T m2 = -((x3 - x2) / (y3 - y2));
         T mx1 = (x1 + x2) / T(2);
         T mx2 = (x2 + x3) / T(2);
         T my1 = (y1 + y2) / T(2);
         T my2 = (y2 + y3) / T(2);
 
-        xc  = (m1 * mx1 - m2 * mx2 + my2 - my1) / (m1 - m2);
-        yc  = (absy1y2 > absy2y3) ?
-              m1 * (xc - mx1) + my1 :
-              m2 * (xc - mx2) + my2;
+        xc = (m1 * mx1 - m2 * mx2 + my2 - my1) / (m1 - m2);
+        yc = (absy1y2 > absy2y3) ?
+            m1 * (xc - mx1) + my1 :
+            m2 * (xc - mx2) + my2;
     }
 
     T dx = x2 - xc;
     T dy = y2 - yc;
 
-    return CircumCircle {i, j, k, Circle<T>(Vec2<T>(xc, yc), dx * dx + dy * dy)}; //radius squared.
+    return CircumCircle{i, j, k, Circle<T>(Vec2<T>(xc, yc), dx * dx + dy * dy)}; //radius squared.
 }

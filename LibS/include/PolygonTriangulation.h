@@ -13,7 +13,7 @@ public:
     PolygonTriangulation(const Polygon<T>& polygon);
     PolygonTriangulation(Polygon<T>&& polygon);
 
-    virtual ~PolygonTriangulation(){}
+    virtual ~PolygonTriangulation() {}
 
     const Polygon<T>& polygon() const;
 

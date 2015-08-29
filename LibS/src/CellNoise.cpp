@@ -22,7 +22,7 @@ T CellNoise<T>::rawNoise1(const T x)
     {
         int currentSegmentX = segmentX + xx;
 
-        T lastRandom = lcgRandom(hash((unsigned int)(currentSegmentX), seed, seed * seed));
+        unsigned int lastRandom = lcgRandom(hash((unsigned int)(currentSegmentX), seed, seed * seed));
 
         unsigned int numberFeaturePoints = probLookup(lastRandom);
         for(unsigned int i = 0; i < numberFeaturePoints; ++i)
@@ -30,7 +30,7 @@ T CellNoise<T>::rawNoise1(const T x)
             lastRandom = lcgRandom(lastRandom);
             T xxx = (T)lastRandom / (T)0xFFFFFFFFu + (T)currentSegmentX;
 
-            T distance = fabs(x - xxx); //since distance in 1 dimension is always this
+            T distance = std::abs(x - xxx); //since distance in 1 dimension is always this
             distances.push_back(distance);
         }
     }
@@ -55,7 +55,7 @@ T CellNoise<T>::rawNoise2(const T x, const T y)
             int currentRectX = rectX + xx;
             int currentRectY = rectY + yy;
 
-            T lastRandom = lcgRandom(hash((unsigned int)(currentRectX), (unsigned int)(currentRectY), seed));
+            unsigned int lastRandom = lcgRandom(hash((unsigned int)(currentRectX), (unsigned int)(currentRectY), seed));
 
             unsigned int numberFeaturePoints = probLookup(lastRandom);
             for(unsigned int i = 0; i < numberFeaturePoints; ++i)
@@ -98,7 +98,7 @@ T CellNoise<T>::rawNoise3(const T x, const T y, const T z)
                 int currentCubeY = cubeY + yy;
                 int currentCubeZ = cubeZ + zz;
 
-                T lastRandom = lcgRandom(hash((unsigned int)(currentCubeX), (unsigned int)(currentCubeY), (unsigned int)(currentCubeZ + seed)));
+                unsigned int lastRandom = lcgRandom(hash((unsigned int)(currentCubeX), (unsigned int)(currentCubeY), (unsigned int)(currentCubeZ + seed)));
 
                 unsigned int numberFeaturePoints = probLookup(lastRandom);
                 for(unsigned int i = 0; i < numberFeaturePoints; ++i)
@@ -156,43 +156,37 @@ void CellNoise<T>::setDistanceFunction(DistanceFunction distanceFunction)
 {
     switch(distanceFunction)
     {
-        default:
-        case DistanceFunction::Default:
-        case DistanceFunction::Euclidean:
-            distance2 = [](T x1, T y1, T x2, T y2) -> T
-            {
-                T dx = x2 - x1;
-                T dy = y2 - y1;
-                return sqrt(dx * dx + dy * dy);
-            };
-            distance3 = [](T x1, T y1, T z1, T x2, T y2, T z2) -> T
-            {
-                T dx = x2 - x1;
-                T dy = y2 - y1;
-                T dz = z2 - z1;
-                return sqrt(dx * dx + dy * dy + dz * dz);
-            };
-            break;
-        case DistanceFunction::Manhattan:
-            distance2 = [](T x1, T y1, T x2, T y2) -> T
-            {
-                return fabs(x2 - x1) + fabs(y2 - y1);
-            };
-            distance3 = [](T x1, T y1, T z1, T x2, T y2, T z2) -> T
-            {
-                return fabs(x2 - x1) + fabs(y2 - y1) + fabs(z2 - z1);
-            };
-            break;
-        case DistanceFunction::Chebyshev:
-            distance2 = [](T x1, T y1, T x2, T y2) -> T
-            {
-                return max(fabs(x2 - x1), fabs(y2 - y1));
-            };
-            distance3 = [](T x1, T y1, T z1, T x2, T y2, T z2) -> T
-            {
-                return max(max(fabs(x2 - x1), fabs(y2 - y1)), fabs(z2 - z1));
-            };
-            break;
+    default:
+    case DistanceFunction::Default:
+    case DistanceFunction::Euclidean:
+        distance2 = [] (T x1, T y1, T x2, T y2) -> T {
+            T dx = x2 - x1;
+            T dy = y2 - y1;
+            return static_cast<T>(std::sqrt(dx * dx + dy * dy));
+        };
+        distance3 = [] (T x1, T y1, T z1, T x2, T y2, T z2) -> T {
+            T dx = x2 - x1;
+            T dy = y2 - y1;
+            T dz = z2 - z1;
+            return static_cast<T>(sqrt(dx * dx + dy * dy + dz * dz));
+        };
+        break;
+    case DistanceFunction::Manhattan:
+        distance2 = [] (T x1, T y1, T x2, T y2) -> T {
+            return std::abs(x2 - x1) + std::abs(y2 - y1);
+        };
+        distance3 = [] (T x1, T y1, T z1, T x2, T y2, T z2) -> T {
+            return std::abs(x2 - x1) + std::abs(y2 - y1) + std::abs(z2 - z1);
+        };
+        break;
+    case DistanceFunction::Chebyshev:
+        distance2 = [] (T x1, T y1, T x2, T y2) -> T {
+            return std::max(std::abs(x2 - x1), std::abs(y2 - y1));
+        };
+        distance3 = [] (T x1, T y1, T z1, T x2, T y2, T z2) -> T {
+            return std::max(std::max(std::abs(x2 - x1), std::abs(y2 - y1)), std::abs(z2 - z1));
+        };
+        break;
     }
 }
 
@@ -201,13 +195,12 @@ void CellNoise<T>::setResultComputingFunction(ResultComputingFunction resultComp
 {
     switch(resultComputingFunction)
     {
-        default:
-        case ResultComputingFunction::Default:
-            computeResult = [](const std::vector<T>& distances) -> T
-            {
-                return distances[0];
-            };
-            break;
+    default:
+    case ResultComputingFunction::Default:
+        computeResult = [] (const std::vector<T>& distances) -> T {
+            return distances[0];
+        };
+        break;
     }
 }
 template <class T>

@@ -9,13 +9,13 @@ public:
 
     Shape4() {}
 
-    Shape4(const Shape4&)  {}
-    Shape4(Shape4&&)  {}
+    Shape4(const Shape4&) {}
+    Shape4(Shape4&&) {}
 
-    virtual ~Shape4(){}
+    virtual ~Shape4() {}
 
-    Shape4& operator = (const Shape4&)  { return *this;}
-    Shape4& operator = (Shape4 &&)  { return *this;}
+    Shape4& operator = (const Shape4&) { return *this; }
+    Shape4& operator = (Shape4 &&) { return *this; }
 };
 
 typedef Shape4<double> Shape4D;

@@ -209,56 +209,56 @@ long double RandomEngineT<I>::nextLongDouble()
 template <int I>
 int8_t RandomEngineT<I>::nextInt8(int8_t min, int8_t max)
 {
-    return nextInt8() % (max-min+1) + min;
+    return nextInt8() % (max - min + 1) + min;
 }
 template <int I>
 uint8_t RandomEngineT<I>::nextUint8(uint8_t min, uint8_t max)
 {
-    return nextUint8() % (max-min+1u) + min;
+    return nextUint8() % (max - min + 1u) + min;
 }
 template <int I>
 int16_t RandomEngineT<I>::nextInt16(int16_t min, int16_t max)
 {
-    return nextInt16() % (max-min+1) + min;
+    return nextInt16() % (max - min + 1) + min;
 }
 template <int I>
 uint16_t RandomEngineT<I>::nextUint16(uint16_t min, uint16_t max)
 {
-    return nextUint16() % (max-min+1u) + min;
+    return nextUint16() % (max - min + 1u) + min;
 }
 template <int I>
 int32_t RandomEngineT<I>::nextInt32(int32_t min, int32_t max)
 {
-    return nextInt32() % (max-min+1) + min;
+    return nextInt32() % (max - min + 1) + min;
 }
 template <int I>
 uint32_t RandomEngineT<I>::nextUint32(uint32_t min, uint32_t max)
 {
-    return nextUint32() % (max-min+1u) + min;
+    return nextUint32() % (max - min + 1u) + min;
 }
 template <int I>
 int64_t RandomEngineT<I>::nextInt64(int64_t min, int64_t max)
 {
-    return nextInt64() % (max-min+1) + min;
+    return nextInt64() % (max - min + 1) + min;
 }
 template <int I>
 uint64_t RandomEngineT<I>::nextUint64(uint64_t min, uint64_t max)
 {
-    return nextUint64() % (max-min+1ull) + min;
+    return nextUint64() % (max - min + 1ull) + min;
 }
 
 template <int I>
 float RandomEngineT<I>::nextFloat(float left, float right)
 {
-    return nextFloat() * (right-left) + left;
+    return nextFloat() * (right - left) + left;
 }
 template <int I>
 double RandomEngineT<I>::nextDouble(double left, double right)
 {
-    return nextDouble() * (right-left) + left;
+    return nextDouble() * (right - left) + left;
 }
 template <int I>
 long double RandomEngineT<I>::nextLongDouble(long double left, long double right)
 {
-    return nextLongDouble() * (right-left) + left;
+    return nextLongDouble() * (right - left) + left;
 }

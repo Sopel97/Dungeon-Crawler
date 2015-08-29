@@ -7,7 +7,7 @@ class Polyline : public Shape2<T>
 public:
     std::vector<Vec2<T>> vertices;
 
-    Polyline(){}
+    Polyline() {}
     Polyline(const std::initializer_list<Vec2<T>>& list);
     Polyline(const std::vector<Vec2<T>>& v);
     Polyline(std::vector<Vec2<T>>&& v);
@@ -16,13 +16,13 @@ public:
     static Polyline<T> fromRectangle(const Rectangle<T>& rectangle);
     static Polyline<T> fromTriangle(const Triangle<T>& triangle);
 
-    Polyline(const Polyline<T>& other){vertices = other.vertices;}
-    Polyline(Polyline<T>&& other){vertices = std::move(other.vertices);}
+    Polyline(const Polyline<T>& other) { vertices = other.vertices; }
+    Polyline(Polyline<T>&& other) { vertices = std::move(other.vertices); }
 
-    virtual ~Polyline(){}
+    virtual ~Polyline() {}
 
-    Polyline<T>& operator=(const Polyline<T>& other){vertices = other.vertices; return *this;}
-    Polyline<T>& operator=(Polyline<T> && other){vertices = std::move(other.vertices); return *this;}
+    Polyline<T>& operator=(const Polyline<T>& other) { vertices = other.vertices; return *this; }
+    Polyline<T>& operator=(Polyline<T> && other) { vertices = std::move(other.vertices); return *this; }
 
     Polyline<T> operator+(const Vec2<T>& v) const;
     Polyline<T> operator-(const Vec2<T>& v) const;

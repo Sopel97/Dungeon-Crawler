@@ -15,7 +15,7 @@
 
 #include "GameConstants.h"
 
-#include "../LibS/make_unique.h"
+
 
 using namespace ls;
 
@@ -52,7 +52,7 @@ void OuterBorderedTileView::loadFromConfiguration(ConfigurationNode& config)
 void OuterBorderedTileView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const
 {
     sf::Sprite spr;
-    spr.setPosition(sf::Vector2f(location.x * GameConstants::tileSize, location.y * GameConstants::tileSize));
+    spr.setPosition(sf::Vector2f(static_cast<float>(location.x * GameConstants::tileSize), static_cast<float>(location.y * GameConstants::tileSize)));
     spr.setTexture(texture());
     spr.setTextureRect(sf::IntRect(sf::Vector2i(m_sprite.x, m_sprite.y), sf::Vector2i(GameConstants::tileSize, GameConstants::tileSize)));
     renderTarget.draw(spr, renderStates);
@@ -108,7 +108,7 @@ void OuterBorderedTileView::drawOutside(sf::RenderTarget& renderTarget, sf::Rend
     if(sideBorderSpriteIndex != -1)
     {
         sf::Sprite convexBorderSprite;
-        convexBorderSprite.setPosition(sf::Vector2f(x * GameConstants::tileSize, y * GameConstants::tileSize));
+        convexBorderSprite.setPosition(sf::Vector2f(static_cast<float>(x * GameConstants::tileSize), static_cast<float>(y * GameConstants::tileSize)));
         convexBorderSprite.setTexture(texture());
         convexBorderSprite.setTextureRect(sf::IntRect(sf::Vector2i(sideBorderSpritePosition.x, sideBorderSpritePosition.y), sf::Vector2i(GameConstants::tileSize, GameConstants::tileSize)));
         renderTarget.draw(convexBorderSprite, renderStates);
@@ -127,7 +127,7 @@ void OuterBorderedTileView::drawOutside(sf::RenderTarget& renderTarget, sf::Rend
     if(cornerBorderSpriteIndex != -1)
     {
         sf::Sprite concaveBorderSprite;
-        concaveBorderSprite.setPosition(sf::Vector2f(x * GameConstants::tileSize, y * GameConstants::tileSize));
+        concaveBorderSprite.setPosition(sf::Vector2f(static_cast<float>(x) * static_cast<float>(GameConstants::tileSize), static_cast<float>(y) * static_cast<float>(GameConstants::tileSize)));
         concaveBorderSprite.setTexture(texture());
         concaveBorderSprite.setTextureRect(sf::IntRect(sf::Vector2i(cornerBorderSpritePosition.x, cornerBorderSpritePosition.y), sf::Vector2i(GameConstants::tileSize, GameConstants::tileSize)));
         renderTarget.draw(concaveBorderSprite, renderStates);

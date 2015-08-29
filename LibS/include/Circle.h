@@ -8,16 +8,16 @@ public:
     Vec2<T> origin;
     T radius;
 
-    Circle(){};
+    Circle() {};
     Circle(const Vec2<T>& p1, T r);
 
-    Circle(const Circle<T>& other){origin = other.origin; radius = other.radius;}
-    Circle(Circle<T>&& other){origin = std::move(other.origin); radius = std::move(other.radius);}
+    Circle(const Circle<T>& other) { origin = other.origin; radius = other.radius; }
+    Circle(Circle<T>&& other) { origin = std::move(other.origin); radius = std::move(other.radius); }
 
-    virtual ~Circle(){}
+    virtual ~Circle() {}
 
-    Circle<T>& operator =(Circle<T> && other){origin = std::move(other.origin); radius = std::move(other.radius); return *this;}
-    Circle<T>& operator =(const Circle<T>& other){origin = other.origin; radius = other.radius; return *this;}
+    Circle<T>& operator =(Circle<T> && other) { origin = std::move(other.origin); radius = std::move(other.radius); return *this; }
+    Circle<T>& operator =(const Circle<T>& other) { origin = other.origin; radius = other.radius; return *this; }
 
     Circle<T> operator +(const Vec2<T>& v) const;
     Circle<T> operator -(const Vec2<T>& v) const;

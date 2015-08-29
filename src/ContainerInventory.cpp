@@ -1,5 +1,7 @@
 #include "ContainerInventory.h"
 
+#include "Tile.h"
+
 #include "InventorySlotView.h"
 #include "InventoryView.h"
 
@@ -51,6 +53,12 @@ InventoryView ContainerInventory::createInventoryView()
     inventoryView.setHeightToMax();
 
     return inventoryView;
+}
+
+void ContainerInventory::setSize(int newSize)
+{
+    for(size_t i = newSize; i < m_contents.size(); ++i) delete m_contents[i];
+    m_contents.resize(newSize, nullptr);
 }
 
 int ContainerInventory::numberOfSlots() const

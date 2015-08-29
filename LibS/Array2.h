@@ -3,6 +3,8 @@
 #include <iostream>
 #include <vector>
 #include <utility>
+#include <queue>
+
 using std::size_t;
 
 template <class T>
@@ -136,30 +138,30 @@ public:
             typedef std::forward_iterator_tag iterator_category;
             typedef int difference_type;
 
-            iterator(pointer ptr, int jump) : m_start(ptr), m_ptr(ptr), m_jump(jump) { }
+            iterator(pointer ptr, int jump) : m_start(ptr), m_ptr(ptr), m_jump(jump) {}
 
-            self_type       operator++ (int)                  { self_type i = *this; m_ptr += m_jump; return i;       }
-            self_type       operator-- (int)                  { self_type i = *this; m_ptr -= m_jump; return i;       }
-            self_type&      operator++ ()                     { m_ptr += m_jump; return *this;                        }
-            self_type&      operator-- ()                     { m_ptr -= m_jump; return *this;                        }
+            self_type       operator++ (int) { self_type i = *this; m_ptr += m_jump; return i; }
+            self_type       operator-- (int) { self_type i = *this; m_ptr -= m_jump; return i; }
+            self_type&      operator++ () { m_ptr += m_jump; return *this; }
+            self_type&      operator-- () { m_ptr -= m_jump; return *this; }
 
-            self_type       operator+  (int n)                { self_type i = *this; i.m_ptr += m_jump * n; return i; }
-            self_type       operator-  (int n)                { self_type i = *this; i.m_ptr -= m_jump * n; return i; }
-            self_type&      operator+= (int n)                { m_ptr += m_jump * n; return *this;                    }
-            self_type&      operator-= (int n)                { m_ptr -= m_jump * n; return *this;                    }
+            self_type       operator+  (int n) { self_type i = *this; i.m_ptr += m_jump * n; return i; }
+            self_type       operator-  (int n) { self_type i = *this; i.m_ptr -= m_jump * n; return i; }
+            self_type&      operator+= (int n) { m_ptr += m_jump * n; return *this; }
+            self_type&      operator-= (int n) { m_ptr -= m_jump * n; return *this; }
 
-            difference_type operator-  (const self_type& n)   { return (m_ptr - n.m_ptr) / m_jump;                    }
+            difference_type operator-  (const self_type& n) { return (m_ptr - n.m_ptr) / m_jump; }
 
-            reference       operator[] (int n)                { return m_start[m_jump * n];                           }
-            reference       operator*  ()                     { return *m_ptr;                                        }
-            pointer         operator-> ()                     { return m_ptr;                                         }
+            reference       operator[] (int n) { return m_start[m_jump * n]; }
+            reference       operator*  () { return *m_ptr; }
+            pointer         operator-> () { return m_ptr; }
 
-            bool            operator== (const self_type& rhs) { return m_ptr == rhs.m_ptr;                            }
-            bool            operator<  (const self_type& rhs) { return m_ptr <  rhs.m_ptr;                            }
-            bool            operator>  (const self_type& rhs) { return m_ptr >  rhs.m_ptr;                            }
-            bool            operator<= (const self_type& rhs) { return m_ptr <= rhs.m_ptr;                            }
-            bool            operator>= (const self_type& rhs) { return m_ptr >= rhs.m_ptr;                            }
-            bool            operator!= (const self_type& rhs) { return m_ptr != rhs.m_ptr;                            }
+            bool            operator== (const self_type& rhs) { return m_ptr == rhs.m_ptr; }
+            bool            operator<  (const self_type& rhs) { return m_ptr < rhs.m_ptr; }
+            bool            operator>  (const self_type& rhs) { return m_ptr > rhs.m_ptr; }
+            bool            operator<= (const self_type& rhs) { return m_ptr <= rhs.m_ptr; }
+            bool            operator>= (const self_type& rhs) { return m_ptr >= rhs.m_ptr; }
+            bool            operator!= (const self_type& rhs) { return m_ptr != rhs.m_ptr; }
 
         private:
             pointer m_start;
@@ -390,18 +392,42 @@ public:
     }
     void floodFill(int x, int y, const T& value)
     {
+        T thisCell = at(x, y);
+        if(value == thisCell) return;
         int width = m_sizeX;
         int height = m_sizeY;
 
-        int thisCell = at(x, y);
-
-        if(value == thisCell) return;
-
+        std::queue<std::pair<int, int>> queue;
+        queue.emplace(x, y);
         at(x, y) = value;
-        if(x > 0 && at(x - 1, y) == thisCell) floodFill(x - 1, y, value);
-        if(y > 0 && at(x, y - 1) == thisCell) floodFill(x, y - 1, value);
-        if(x < width - 1 && at(x + 1, y) == thisCell) floodFill(x + 1, y, value);
-        if(y < height - 1 && at(x, y + 1) == thisCell) floodFill(x, y + 1, value);
+
+        while(!queue.empty())
+        {
+            const std::pair<int, int>& coords = queue.front();
+
+            if(coords.first > 0 && at(coords.first - 1, coords.second) == thisCell)
+            {
+                queue.emplace(coords.first - 1, coords.second);
+                at(coords.first - 1, coords.second) = value;
+            }
+            if(coords.second > 0 && at(coords.first, coords.second - 1) == thisCell)
+            {
+                queue.emplace(coords.first, coords.second - 1);
+                at(coords.first, coords.second - 1) = value;
+            }
+            if(coords.first < width - 1 && at(coords.first + 1, coords.second) == thisCell)
+            {
+                queue.emplace(coords.first + 1, coords.second);
+                at(coords.first + 1, coords.second) = value;
+            }
+            if(coords.second < height - 1 && at(coords.first, coords.second + 1) == thisCell)
+            {
+                queue.emplace(coords.first, coords.second + 1);
+                at(coords.first, coords.second + 1) = value;
+            }
+
+            queue.pop();
+        }
     }
 
     T* data() const

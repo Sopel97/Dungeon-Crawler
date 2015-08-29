@@ -1,6 +1,6 @@
 #include "TileModel.h"
 
-#include "../LibS/make_unique.h"
+
 
 using namespace ls;
 
@@ -43,6 +43,11 @@ bool TileModel::hasCollider() const
 const RectangleF& TileModel::collider() const
 {
     return m_emptyCollider;
+}
+
+Inventory* TileModel::inventory()
+{
+    return nullptr;
 }
 
 float TileModel::drag() const

@@ -19,3 +19,8 @@ ConfigurationNode Configuration::operator[](int index)
 {
     return m_table[index];
 }
+
+LuaTable& Configuration::luaTable()
+{
+    return m_table;
+}

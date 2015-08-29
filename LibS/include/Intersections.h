@@ -242,39 +242,39 @@ public:
     //2D shapes
     //Vec2
     template <class T>
-    static bool contains(const Vec2<T>& a, const Circle<T>& b){return false;}
+    static bool contains(const Vec2<T>& a, const Circle<T>& b) { return false; }
     template <class T>
-    static bool contains(const Vec2<T>& a, const LineSegment<T>& b){return false;}
+    static bool contains(const Vec2<T>& a, const LineSegment<T>& b) { return false; }
     template <class T>
-    static bool contains(const Vec2<T>& a, const Polygon<T>& b){return false;}
+    static bool contains(const Vec2<T>& a, const Polygon<T>& b) { return false; }
     template <class T>
-    static bool contains(const Vec2<T>& a, const Polyline<T>& b){return false;}
+    static bool contains(const Vec2<T>& a, const Polyline<T>& b) { return false; }
     template <class T>
-    static bool contains(const Vec2<T>& a, const Ray<T>& b){return false;}
+    static bool contains(const Vec2<T>& a, const Ray<T>& b) { return false; }
     template <class T>
-    static bool contains(const Vec2<T>& a, const Rectangle<T>& b){return false;}
+    static bool contains(const Vec2<T>& a, const Rectangle<T>& b) { return false; }
     template <class T>
-    static bool contains(const Vec2<T>& a, const Triangle<T>& b){return false;}
+    static bool contains(const Vec2<T>& a, const Triangle<T>& b) { return false; }
     template <class T>
-    static bool contains(const Vec2<T>& a, const Vec2<T>& b){return false;}
+    static bool contains(const Vec2<T>& a, const Vec2<T>& b) { return false; }
 
     //LineSegment
     template <class T>
-    static bool contains(const LineSegment<T>& a, const Circle<T>& b){return false;}
+    static bool contains(const LineSegment<T>& a, const Circle<T>& b) { return false; }
     template <class T>
-    static bool contains(const LineSegment<T>& a, const LineSegment<T>& b){return false;}
+    static bool contains(const LineSegment<T>& a, const LineSegment<T>& b) { return false; }
     template <class T>
-    static bool contains(const LineSegment<T>& a, const Polygon<T>& b){return false;}
+    static bool contains(const LineSegment<T>& a, const Polygon<T>& b) { return false; }
     template <class T>
-    static bool contains(const LineSegment<T>& a, const Polyline<T>& b){return false;}
+    static bool contains(const LineSegment<T>& a, const Polyline<T>& b) { return false; }
     template <class T>
-    static bool contains(const LineSegment<T>& a, const Ray<T>& b){return false;}
+    static bool contains(const LineSegment<T>& a, const Ray<T>& b) { return false; }
     template <class T>
-    static bool contains(const LineSegment<T>& a, const Rectangle<T>& b){return false;}
+    static bool contains(const LineSegment<T>& a, const Rectangle<T>& b) { return false; }
     template <class T>
-    static bool contains(const LineSegment<T>& a, const Triangle<T>& b){return false;}
+    static bool contains(const LineSegment<T>& a, const Triangle<T>& b) { return false; }
     template <class T>
-    static bool contains(const LineSegment<T>& a, const Vec2<T>& b){return false;}
+    static bool contains(const LineSegment<T>& a, const Vec2<T>& b) { return false; }
 
     //Rectangle
     template <class T>
@@ -286,7 +286,7 @@ public:
     template <class T>
     static bool contains(const Rectangle<T>& a, const Polyline<T>& b);
     template <class T>
-    static bool contains(const Rectangle<T>& a, const Ray<T>& b){return false;}
+    static bool contains(const Rectangle<T>& a, const Ray<T>& b) { return false; }
     template <class T>
     static bool contains(const Rectangle<T>& a, const Rectangle<T>& b);
     template <class T>
@@ -304,7 +304,7 @@ public:
     template <class T>
     static bool contains(const Circle<T>& a, const Polyline<T>& b);
     template <class T>
-    static bool contains(const Circle<T>& a, const Ray<T>& b){return false;}
+    static bool contains(const Circle<T>& a, const Ray<T>& b) { return false; }
     template <class T>
     static bool contains(const Circle<T>& a, const Rectangle<T>& b);
     template <class T>
@@ -322,7 +322,7 @@ public:
     template <class T>
     static bool contains(const Triangle<T>& a, const Polyline<T>& b);
     template <class T>
-    static bool contains(const Triangle<T>& a, const Ray<T>& b){return false;}
+    static bool contains(const Triangle<T>& a, const Ray<T>& b) { return false; }
     template <class T>
     static bool contains(const Triangle<T>& a, const Rectangle<T>& b);
     template <class T>
@@ -340,7 +340,7 @@ public:
     template <class T>
     static bool contains(const Polygon<T>& a, const Polyline<T>& b);
     template <class T>
-    static bool contains(const Polygon<T>& a, const Ray<T>& b){return false;}
+    static bool contains(const Polygon<T>& a, const Ray<T>& b) { return false; }
     template <class T>
     static bool contains(const Polygon<T>& a, const Rectangle<T>& b);
     template <class T>
@@ -350,39 +350,39 @@ public:
 
     //Polyline
     template <class T>
-    static bool contains(const Polyline<T>& a, const Circle<T>& b){return false;}
+    static bool contains(const Polyline<T>& a, const Circle<T>& b) { return false; }
     template <class T>
-    static bool contains(const Polyline<T>& a, const LineSegment<T>& b){return false;}
+    static bool contains(const Polyline<T>& a, const LineSegment<T>& b) { return false; }
     template <class T>
-    static bool contains(const Polyline<T>& a, const Polygon<T>& b){return false;}
+    static bool contains(const Polyline<T>& a, const Polygon<T>& b) { return false; }
     template <class T>
-    static bool contains(const Polyline<T>& a, const Polyline<T>& b){return false;}
+    static bool contains(const Polyline<T>& a, const Polyline<T>& b) { return false; }
     template <class T>
-    static bool contains(const Polyline<T>& a, const Ray<T>& b){return false;}
+    static bool contains(const Polyline<T>& a, const Ray<T>& b) { return false; }
     template <class T>
-    static bool contains(const Polyline<T>& a, const Rectangle<T>& b){return false;}
+    static bool contains(const Polyline<T>& a, const Rectangle<T>& b) { return false; }
     template <class T>
-    static bool contains(const Polyline<T>& a, const Triangle<T>& b){return false;}
+    static bool contains(const Polyline<T>& a, const Triangle<T>& b) { return false; }
     template <class T>
-    static bool contains(const Polyline<T>& a, const Vec2<T>& b){return false;}
+    static bool contains(const Polyline<T>& a, const Vec2<T>& b) { return false; }
 
     //Ray
     template <class T>
-    static bool contains(const Ray<T>& a, const Circle<T>& b){return false;}
+    static bool contains(const Ray<T>& a, const Circle<T>& b) { return false; }
     template <class T>
-    static bool contains(const Ray<T>& a, const LineSegment<T>& b){return false;}
+    static bool contains(const Ray<T>& a, const LineSegment<T>& b) { return false; }
     template <class T>
-    static bool contains(const Ray<T>& a, const Polygon<T>& b){return false;}
+    static bool contains(const Ray<T>& a, const Polygon<T>& b) { return false; }
     template <class T>
-    static bool contains(const Ray<T>& a, const Polyline<T>& b){return false;}
+    static bool contains(const Ray<T>& a, const Polyline<T>& b) { return false; }
     template <class T>
-    static bool contains(const Ray<T>& a, const Ray<T>& b){return false;}
+    static bool contains(const Ray<T>& a, const Ray<T>& b) { return false; }
     template <class T>
-    static bool contains(const Ray<T>& a, const Rectangle<T>& b){return false;}
+    static bool contains(const Ray<T>& a, const Rectangle<T>& b) { return false; }
     template <class T>
-    static bool contains(const Ray<T>& a, const Triangle<T>& b){return false;}
+    static bool contains(const Ray<T>& a, const Triangle<T>& b) { return false; }
     template <class T>
-    static bool contains(const Ray<T>& a, const Vec2<T>& b){return false;}
+    static bool contains(const Ray<T>& a, const Vec2<T>& b) { return false; }
 
     //Following ones are more complicated than I thought and they may not be implemented correctly for a long time.
     //Meshes
@@ -403,7 +403,7 @@ public:
 
     // Inverse
     template <class A, class B>
-    static bool isContained(const A& a, const B& b){return contains(a,b);} //one is sufficient because it's just an inverse
+    static bool isContained(const A& a, const B& b) { return contains(a, b); } //one is sufficient because it's just an inverse
 
 };
 #include "../src/Intersections.cpp"

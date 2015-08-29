@@ -89,7 +89,7 @@ size_t CellularAutomaton<Rules>::quantityOfStateIn5x5(States state, int x, int y
 template <class Rules>
 size_t CellularAutomaton<Rules>::quantityOfStateInRadius(States state, int x, int y, size_t radius) const
 {
-    return quantityOfStateInRegion(state, static_cast<int>(x) - radius/2, static_cast<int>(y) - radius/2, radius, radius);
+    return quantityOfStateInRegion(state, static_cast<int>(x) - radius / 2, static_cast<int>(y) - radius / 2, radius, radius);
 }
 template <class Rules>
 size_t CellularAutomaton<Rules>::quantityOfStateInRect(States state, const RectangleI& rect) const
@@ -134,9 +134,9 @@ size_t CellularAutomaton<Rules>::quantityOfStateInMooreNeighbourhood(States stat
 
     if(m_topology == CellularAutomatonGridTopology::Finite)
     {
-        if(x > 0                                    && m_grid(x - 1, y) == state) ++quantity;
+        if(x > 0 && m_grid(x - 1, y) == state) ++quantity;
         if(x < static_cast<int>(m_grid.sizeX()) - 1 && m_grid(x + 1, y) == state) ++quantity;
-        if(y > 0                                    && m_grid(x, y - 1) == state) ++quantity;
+        if(y > 0 && m_grid(x, y - 1) == state) ++quantity;
         if(y < static_cast<int>(m_grid.sizeY()) - 1 && m_grid(x, y + 1) == state) ++quantity;
     }
     else if(m_topology == CellularAutomatonGridTopology::Toroidal)

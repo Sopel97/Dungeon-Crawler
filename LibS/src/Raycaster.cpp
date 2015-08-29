@@ -25,13 +25,13 @@ Raycast<T> Raycaster::raycast(const Ray<T>& ray, const Circle<T>& circle)
     {
         Vec2<T> collisionPoint = ray.origin + ray.direction * t1;
         Vec2<T> n = ((circle.origin - collisionPoint) * T(-1)).normalized();
-        hits.push_back(typename Raycast<T>::Hit {t1, n, collisionPoint});
+        hits.push_back(typename Raycast<T>::Hit{t1, n, collisionPoint});
     }
     if(t2 >= T(0))
     {
         Vec2<T> collisionPoint = ray.origin + ray.direction * t2;
         Vec2<T> n = ((circle.origin - collisionPoint) * T(-1)).normalized();
-        hits.push_back(typename Raycast<T>::Hit {t2, n, collisionPoint});
+        hits.push_back(typename Raycast<T>::Hit{t2, n, collisionPoint});
     }
     return Raycast<T>(ray, std::move(hits));
 }
@@ -63,13 +63,13 @@ Raycast<T> Raycaster::raycast(const Ray<T>& ray, const Mesh2<Circle<T>>& circleM
         {
             Vec2<T> collisionPoint = ray.origin + ray.direction * t1;
             Vec2<T> n = ((circle.origin - collisionPoint) * -1.0).normalized();
-            hits.push_back(typename Raycast<T>::Hit {t1, n, collisionPoint});
+            hits.push_back(typename Raycast<T>::Hit{t1, n, collisionPoint});
         }
         if(t2 >= T(0))
         {
             Vec2<T> collisionPoint = ray.origin + ray.direction * t2;
             Vec2<T> n = ((circle.origin - collisionPoint) * -1.0).normalized();
-            hits.push_back(typename Raycast<T>::Hit {t2, n, collisionPoint});
+            hits.push_back(typename Raycast<T>::Hit{t2, n, collisionPoint});
         }
     }
     Raycast<T> cast(ray, std::move(hits));
@@ -110,7 +110,7 @@ Raycast<T> Raycaster::raycast(const Ray<T>& ray, const Polygon<T>& polygon)
     int numberOfEdges = polygon.size();
     for(int i = 0; i < numberOfEdges; ++i)
     {
-        LineSegmentD edge {polygon.vertices[i], polygon.vertices[(i + 1) % numberOfEdges]};
+        LineSegmentD edge{polygon.vertices[i], polygon.vertices[(i + 1) % numberOfEdges]};
 
         //LineSegment raycast
         const T& rdx = ray.direction.x;
@@ -129,7 +129,7 @@ Raycast<T> Raycaster::raycast(const Ray<T>& ray, const Polygon<T>& polygon)
         T t0 = (sbx + sdx * t1 - rox) / rdx;
         if(t0 < T(0) || t1 < T(0) || t1 > T(1)) continue;
         Vec2<T> collisionPoint = ray.origin + ray.direction * t0;
-        hits.push_back(typename Raycast<T>::Hit {t0, (edge.end - edge.begin).normalRight(), collisionPoint});
+        hits.push_back(typename Raycast<T>::Hit{t0, (edge.end - edge.begin).normalRight(), collisionPoint});
     }
     Raycast<T> cast(ray, std::move(hits));
     cast.sortHitPointsByDistance();

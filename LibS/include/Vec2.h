@@ -8,8 +8,8 @@ public:
 
     union
     {
-        struct {T x, y;};
-        struct {T v[2];};
+        struct { T x, y; };
+        struct { T v[2]; };
     };
 
     static const Vec2<T> unitX;
@@ -28,7 +28,7 @@ public:
     Vec2<T>& operator=(const Vec2<T>& v1);
     Vec2<T>& operator=(Vec2<T> && v1);
 
-    virtual ~Vec2(){}
+    virtual ~Vec2() {}
 
     T& operator[](size_t index);
     const T& operator[](size_t index) const;
@@ -76,9 +76,9 @@ public:
     virtual Vec2<T> nearestPointTo(const Vec2<T>& point) const;
 };
 template <class T>
-const Vec2<T> Vec2<T>::unitX = Vec2<T> {1, 0};
+const Vec2<T> Vec2<T>::unitX = Vec2<T>{1, 0};
 template <class T>
-const Vec2<T> Vec2<T>::unitY = Vec2<T> {0, 1};
+const Vec2<T> Vec2<T>::unitY = Vec2<T>{0, 1};
 
 typedef Vec2<double> Vec2D;
 typedef Vec2<float> Vec2F;

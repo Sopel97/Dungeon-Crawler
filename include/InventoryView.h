@@ -63,6 +63,8 @@ protected:
     bool m_isMinimizable;
     bool m_isCloseable;
     bool m_isResizeable;
+
+    void updateMaxHeight();
 };
 
 #endif // INVENTORYVIEW_H

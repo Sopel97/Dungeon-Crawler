@@ -252,8 +252,8 @@ std::vector<LineSegmentF> MapGenerator::produceConnectionsBetweenDisconnectedReg
         size_t a = edges[currentEdge].first;
         size_t b = edges[currentEdge].second;
 
-        size_t ra = m_regionMap.at(centersOfRectangles[a].x, centersOfRectangles[a].y);
-        size_t rb = m_regionMap.at(centersOfRectangles[b].x, centersOfRectangles[b].y);
+        size_t ra = m_regionMap.at(static_cast<size_t>(centersOfRectangles[a].x), static_cast<size_t>(centersOfRectangles[a].y));
+        size_t rb = m_regionMap.at(static_cast<size_t>(centersOfRectangles[b].x), static_cast<size_t>(centersOfRectangles[b].y));
 
         ++currentEdge;
 
@@ -361,8 +361,8 @@ void MapGenerator::prepareHelperMaps()
                         for(float j = -1.5f; j < 1.6f; j += 0.5f)
                         {
                             Vec2F pos = line.begin + dir * i + normal * j;
-                            size_t x = std::round(pos.x);
-                            size_t y = std::round(pos.y);
+                            size_t x = static_cast<size_t>(std::round(pos.x));
+                            size_t y = static_cast<size_t>(std::round(pos.y));
                             if(x < 0u || y < 0u || x >= m_width || y >= m_height) continue;
                             m_topologyMap.setState(x, y, TopologyMap::TopologyState::Passage);
                         }

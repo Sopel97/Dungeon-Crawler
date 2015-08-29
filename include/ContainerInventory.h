@@ -17,6 +17,8 @@ public:
     virtual const std::vector<Tile*>& contents() const;
     virtual InventoryView createInventoryView();
 
+    void setSize(int newSize);
+
     virtual int numberOfSlots() const;
 
 protected:

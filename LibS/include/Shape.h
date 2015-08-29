@@ -12,10 +12,10 @@ public:
     Shape(const Shape&) {}
     Shape(Shape&&) {}
 
-    virtual ~Shape(){}
+    virtual ~Shape() {}
 
-    Shape& operator = (const Shape&) { return *this;}
-    Shape& operator = (Shape &&) { return *this;}
+    Shape& operator = (const Shape&) { return *this; }
+    Shape& operator = (Shape &&) { return *this; }
 };
 
 typedef Shape<double> ShapeD;

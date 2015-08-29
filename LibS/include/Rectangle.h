@@ -7,19 +7,19 @@ class Rectangle : public Shape2<T>
 public:
     Vec2<T> min, max;
 
-    Rectangle(){};
+    Rectangle() {};
     Rectangle(const Vec2<T>& p1, const Vec2<T>& p2);
     Rectangle(const Vec2<T>& p1, const T width, const T height);
 
     static Rectangle<T> unitRectangle();
 
-    Rectangle(const Rectangle<T>& other){min = other.min; max = other.max;};
-    Rectangle(Rectangle<T>&& other){min = std::move(other.min); max = std::move(other.max);};
+    Rectangle(const Rectangle<T>& other) { min = other.min; max = other.max; };
+    Rectangle(Rectangle<T>&& other) { min = std::move(other.min); max = std::move(other.max); };
 
-    virtual ~Rectangle(){}
+    virtual ~Rectangle() {}
 
-    Rectangle<T>& operator =(const Rectangle<T>& other){min = other.min; max = other.max; return *this;};
-    Rectangle<T>& operator =(Rectangle<T> && other){min = std::move(other.min); max = std::move(other.max); return *this;};
+    Rectangle<T>& operator =(const Rectangle<T>& other) { min = other.min; max = other.max; return *this; };
+    Rectangle<T>& operator =(Rectangle<T> && other) { min = std::move(other.min); max = std::move(other.max); return *this; };
 
     Rectangle<T> operator +(const Vec2<T>& v) const;
     Rectangle<T> operator -(const Vec2<T>& v) const;

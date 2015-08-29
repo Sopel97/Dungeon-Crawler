@@ -11,13 +11,13 @@ public:
     Cuboid(const Vec3<T>& p1, const Vec3<T>& p2);
     Cuboid(const Vec3<T>& p1, const T width, const T height, const T depth);
 
-    virtual ~Cuboid(){}
+    virtual ~Cuboid() {}
 
-    Cuboid(const Cuboid<T>& c){min = c.min; max = c.max;}
-    Cuboid(Cuboid<T>&& c){min = std::move(c.min); max = std::move(c.max);}
+    Cuboid(const Cuboid<T>& c) { min = c.min; max = c.max; }
+    Cuboid(Cuboid<T>&& c) { min = std::move(c.min); max = std::move(c.max); }
 
-    Cuboid<T>& operator =(const Cuboid<T>& c){min = c.min; max = c.max; return *this;}
-    Cuboid<T>& operator =(Cuboid<T> && c){min = c.min; max = c.max; return *this;}
+    Cuboid<T>& operator =(const Cuboid<T>& c) { min = c.min; max = c.max; return *this; }
+    Cuboid<T>& operator =(Cuboid<T> && c) { min = c.min; max = c.max; return *this; }
 
     Cuboid<T> operator +(const Vec3<T>& v) const;
     Cuboid<T> operator -(const Vec3<T>& v) const;

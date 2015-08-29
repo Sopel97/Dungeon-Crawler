@@ -7,7 +7,7 @@ Matrix<T, C, R>::Matrix(T value)
     }
 }
 template <class T, size_t C, size_t R>
-Matrix<T, C, R>::Matrix(std::initializer_list<Matrix<T, C, R>::VecTypeCol> cols)
+Matrix<T, C, R>::Matrix(std::initializer_list<typename Matrix<T, C, R>::VecTypeCol> cols)
 {
     for(size_t c = 0; c < C; ++c)
     {
@@ -107,7 +107,7 @@ Matrix<T, X, R> Matrix<T, C, R>::operator*(const Matrix<T, X, C>& other) const
     return result;
 }
 template <class T, size_t C, size_t R>
-typename Matrix<T, C, R>::VecTypeCol Matrix<T, C, R>::operator*(const Matrix<T, C, R>::VecTypeRow& vec) const
+typename Matrix<T, C, R>::VecTypeCol Matrix<T, C, R>::operator*(const typename Matrix<T, C, R>::VecTypeRow& vec) const
 {
     Matrix<T, C, R>::VecTypeCol result;
     for(size_t r = 0; r < R; ++r)

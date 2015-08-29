@@ -3,7 +3,7 @@
 
 #include "InventorySystem.h"
 
-#include "../LibS/make_unique.h"
+#include <memory>
 
 namespace sf
 {

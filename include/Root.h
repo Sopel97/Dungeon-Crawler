@@ -3,8 +3,9 @@
 
 #include "WindowSpaceManager.h"
 
-#include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
+#include <SFML/Graphics.hpp>
+#include <SFML/Window.hpp>
 
 #include "ResourceManager.h"
 
@@ -46,7 +47,7 @@ public:
 protected:
     sf::RenderWindow m_window;
     sf::RenderStates m_renderStates;
-    WindowSpaceManager m_windowSpaceManager;
+    std::unique_ptr<WindowSpaceManager> m_windowSpaceManager;
     ls::StandardRandomNumberGeneratorWrapper<std::minstd_rand> m_rng;
     float m_lastFrameTime;
     int m_lastMeasuredFps;
@@ -58,6 +59,15 @@ protected:
     static constexpr float m_tickTime = 1.0f / 60.0f;
     static constexpr size_t m_defaultWindowWidth = 1024;
     static constexpr size_t m_defaultWindowHeight = 768;
+private:
+    std::wstring stringToWString(const std::string &s) const
+    {
+        return std::wstring(s.begin(), s.end());
+    }
+    std::string wstringToString(const std::wstring &s) const
+    {
+        return std::string(s.begin(), s.end());
+    }
 };
 
 #endif // ROOT_H

@@ -83,7 +83,7 @@ public:
         Live
     };
 
-    ConwaysGameOfLifeRules(){}
+    ConwaysGameOfLifeRules() {}
 
     States operator()(const CellularAutomaton<ConwaysGameOfLifeRules>& automaton, size_t x, size_t y)
     {
@@ -116,7 +116,7 @@ public:
         Conductor
     };
 
-    WireworldRules(){}
+    WireworldRules() {}
 
     States operator()(const CellularAutomaton<WireworldRules>& automaton, size_t x, size_t y)
     {

@@ -14,7 +14,7 @@ TallDrawable::TallDrawable()
 TallDrawable::~TallDrawable()
 {
 
-}
+} 
 
 bool TallDrawable::compare(const TallDrawable& lhs, const TallDrawable& rhs)
 {

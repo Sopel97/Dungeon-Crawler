@@ -42,6 +42,8 @@ protected:
     int m_lastTile;
 
     static Tile m_emptyTile;
+private:
+    static const ls::RectangleF m_defaultCollider;
 };
 
 #endif // TILESTACK_H

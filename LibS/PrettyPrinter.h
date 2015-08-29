@@ -29,13 +29,13 @@ private:
     };
 
     template <typename T>
-    struct is_container : public is_container_helper<T>::type { };
+    struct is_container : public is_container_helper<T>::type {};
 
     template <typename T, size_t N>
-    struct is_container<T[N]> : public std::true_type { };
+    struct is_container<T[N]> : public std::true_type {};
 
     template <typename Ch, typename Tr, typename Al>
-    struct is_container<std::basic_string<Ch, Tr, Al>> : public std::false_type { }; //so strings are not considered as array of chars
+    struct is_container<std::basic_string<Ch, Tr, Al>> : public std::false_type {}; //so strings are not considered as array of chars
 
 public:
     struct DefaultFormatter
@@ -127,20 +127,20 @@ private:
     static void print_tuple_helper(std::ostream& os, const Tuple& t, const Fmt& fmt, std::integral_constant<size_t, I>)
     {
         const size_t N = std::tuple_size<Tuple>::value;
-        print(os, std::get < N - I > (t), fmt);
+        print(os, std::get < N - I >(t), fmt);
         fmt.separator(os, t);
-        print_tuple_helper(os, t, fmt, std::integral_constant < size_t, I - 1 > ());
+        print_tuple_helper(os, t, fmt, std::integral_constant < size_t, I - 1 >());
     }
 
     template <typename Tuple, typename Fmt>
     static void print_tuple_helper(std::ostream& os, const Tuple& t, const Fmt& fmt, std::integral_constant<size_t, 1>)
     {
         const size_t N = std::tuple_size<Tuple>::value;
-        print(os, std::get < N - 1 > (t), fmt);
+        print(os, std::get < N - 1 >(t), fmt);
     }
 
     template <typename Tuple, typename Fmt>
-    static void print_tuple_helper(std::ostream&, const Tuple&, const Fmt&, std::integral_constant<size_t, 0>) { }
+    static void print_tuple_helper(std::ostream&, const Tuple&, const Fmt&, std::integral_constant<size_t, 0>) {}
 
 
     template <typename C, typename Fmt>
@@ -236,7 +236,7 @@ public:
 
         {
             std::cout << "One-element  array: ";
-            const int a[] = { 2048 };
+            const int a[] = {2048};
             PrettyPrinter::printLine(std::cout, a);
         }
 
@@ -264,7 +264,7 @@ public:
 
         {
             std::cout << "Multi-element  array: ";
-            const int a[] = { 100, 200, 300, 400, 500 };
+            const int a[] = {100, 200, 300, 400, 500};
             PrettyPrinter::printLine(std::cout, a);
         }
 
@@ -322,9 +322,9 @@ public:
             std::cout << "Multi-dimensional array: ";
             const int aa[3][5] =
             {
-                { 71, 72, 73, 74, 75 },
-                { 81, 82, 83, 84, 85 },
-                { 91, 92, 93, 94, 95 }
+                {71, 72, 73, 74, 75},
+                {81, 82, 83, 84, 85},
+                {91, 92, 93, 94, 95}
             };
             PrettyPrinter::printLine(std::cout, aa);
         }

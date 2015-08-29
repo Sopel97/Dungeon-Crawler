@@ -7,14 +7,14 @@ class Angle
 public:
     Angle() = default;
 
-    Angle(const Angle<T>& a){m_radians = a.m_radians;}
-    Angle(Angle<T>&& a){m_radians = std::move(a.m_radians);}
+    Angle(const Angle<T>& a) { m_radians = a.m_radians; }
+    Angle(Angle<T>&& a) { m_radians = std::move(a.m_radians); }
 
     static Angle<T> radians(T rad);
     static Angle<T> degrees(T deg);
 
-    Angle<T>& operator=(const Angle<T>& a){m_radians = a.m_radians; return *this;}
-    Angle<T>& operator=(Angle<T> && a){m_radians = std::move(a.m_radians); return *this;}
+    Angle<T>& operator=(const Angle<T>& a) { m_radians = a.m_radians; return *this; }
+    Angle<T>& operator=(Angle<T> && a) { m_radians = std::move(a.m_radians); return *this; }
 
     Angle<T> operator+(const Angle<T>& a) const;
     Angle<T> operator-(const Angle<T>& a) const;

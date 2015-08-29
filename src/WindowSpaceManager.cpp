@@ -59,7 +59,7 @@ void WindowSpaceManager::setViewToRect(const RectangleI& windowViewRect, const R
 void WindowSpaceManager::setViewToRegion(WindowSpaceManager::Region::Id regionId)
 {
     const RectangleI& rect = regionRect(regionId);
-    setViewToRect(rect, RectangleF(Vec2F(0, 0), rect.width(), rect.height()));
+    setViewToRect(rect, RectangleF(Vec2F(0.0f, 0.0f), static_cast<float>(rect.width()), static_cast<float>(rect.height())));
 }
 void WindowSpaceManager::setViewToRegion(WindowSpaceManager::Region::Id regionId, const RectangleF& worldViewRect)
 {

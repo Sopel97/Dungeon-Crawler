@@ -39,7 +39,7 @@ Vec2<T> Vec2<T>::operator-() const
 template <class T>
 T Vec2<T>::magnitude() const
 {
-    return std::sqrt(x * x + y * y);
+    return static_cast<T>(std::sqrt(x * x + y * y));
 }
 template <class T>
 T Vec2<T>::quadrance() const
@@ -54,14 +54,14 @@ T Vec2<T>::distanceTo(const LineSegment<T>& lineSegment) const
 template <class T>
 void Vec2<T>::normalize()
 {
-    T invertedSquareRoot = T(1) / std::sqrt(x * x + y * y);
+    T invertedSquareRoot = T(1) / static_cast<T>(std::sqrt(x * x + y * y));
     x *= invertedSquareRoot;
     y *= invertedSquareRoot;
 }
 template <class T>
 Vec2<T> Vec2<T>::normalized() const
 {
-    T invertedSquareRoot = T(1) / std::sqrt(x * x + y * y);
+    T invertedSquareRoot = T(1) / static_cast<T>(std::sqrt(x * x + y * y));
     return Vec2<T>(x * invertedSquareRoot, y * invertedSquareRoot);
 }
 template <class T>
@@ -101,12 +101,12 @@ Vec2<T> Vec2<T>::normal() const //right one
 template <class T>
 Angle<T> Vec2<T>::angle() const
 {
-    return Angle<T>::radians(atan2(y, x));
+    return Angle<T>::radians(static_cast<T>(atan2(y, x)));
 }
 template <class T>
 Angle<T> Vec2<T>::angle(const Vec2<T>& other) const
 {
-    return Angle<T>::radians(atan2(cross(other), dot(other)));
+    return Angle<T>::radians(static_cast<T>(atan2(cross(other), dot(other))));
 }
 
 
@@ -248,7 +248,7 @@ T Vec2<T>::distanceTo(const Vec2<T>& v1) const
 {
     T dx = x - v1.x;
     T dy = y - v1.y;
-    return std::sqrt(dx * dx + dy * dy);
+    return static_cast<T>(std::sqrt(dx * dx + dy * dy));
 }
 template <class T>
 Vec2<T> Vec2<T>::nearestPointTo(const Vec2<T>& v1) const

@@ -36,11 +36,11 @@ int BezierCurve<T>::degree() const
 template <class T>
 Vec2<T> BezierCurve<T>::evaluate(T t, const BinomialCoefficientsLookup& binomialCoefficients) const
 {
-    Vec2<T> point {T(0), T(0)};
+    Vec2<T> point{T(0), T(0)};
     int numberOfControlPoints = controlPoints.size();
     for(int i = 0; i < numberOfControlPoints; ++i)
     {
-        point += controlPoints[i] * binomialCoefficients.coefficients(numberOfControlPoints - 1, i) * pow(T(1) - t, numberOfControlPoints - 1 - i) * pow(t, i);
+        point += controlPoints[i] * static_cast<T>(binomialCoefficients.coefficients(numberOfControlPoints - 1, i)) * static_cast<T>(std::pow(T(1) - t, numberOfControlPoints - 1 - i)) * static_cast<T>(std::pow(t, i));
     }
     return point;
 }
@@ -49,16 +49,16 @@ template <class T>
 std::vector<Vec2<T>> BezierCurve<T>::evaluateAll(T step, const BinomialCoefficientsLookup& binomialCoefficients) const
 {
     std::vector<Vec2<T>> result;
-    result.reserve(1.0 / step + 1);
+    result.reserve(static_cast<int>(1.0 / step) + 1);
 
     int numberOfControlPoints = controlPoints.size();
     T t = 0;
     while(t <= T(1))
     {
-        Vec2<T> point {T(0), T(0)};
+        Vec2<T> point{T(0), T(0)};
         for(int i = 0; i < numberOfControlPoints; ++i)
         {
-            point += controlPoints[i] * binomialCoefficients.coefficients(numberOfControlPoints - 1, i) * pow(T(1) - t, numberOfControlPoints - 1 - i) * pow(t, i);
+            point += controlPoints[i] * static_cast<T>(binomialCoefficients.coefficients(numberOfControlPoints - 1, i)) * static_cast<T>(std::pow(T(1) - t, numberOfControlPoints - 1 - i)) * static_cast<T>(std::pow(t, i));
         }
         result.push_back(point);
         t += step;

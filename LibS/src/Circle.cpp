@@ -65,5 +65,5 @@ Vec2<T> Circle<T>::centerOfMass() const
 template <class T>
 T Circle<T>::area() const
 {
-    return radius*radius*PI;
+    return radius*radius*static_cast<T>(PI);
 }

@@ -13,7 +13,7 @@
 
 #include "GameConstants.h"
 
-#include "../LibS/make_unique.h"
+
 
 using namespace ls;
 
@@ -53,7 +53,7 @@ void PlainQuantityBasedTileView::loadFromConfiguration(ConfigurationNode& config
 void PlainQuantityBasedTileView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const
 {
     sf::Sprite spr;
-    spr.setPosition(sf::Vector2f(location.x * GameConstants::tileSize, location.y * GameConstants::tileSize));
+    spr.setPosition(sf::Vector2f(static_cast<float>(location.x) * GameConstants::tileSize, static_cast<float>(location.y) * GameConstants::tileSize));
     spr.setTexture(texture());
     spr.setTextureRect(sf::IntRect(sf::Vector2i(m_sprite.x, m_sprite.y), sf::Vector2i(GameConstants::tileSize, GameConstants::tileSize)));
     renderTarget.draw(spr, renderStates);

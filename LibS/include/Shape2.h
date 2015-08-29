@@ -28,11 +28,11 @@ public:
     Shape2() {}
 
     Shape2(const Shape2&) {}
-    Shape2(Shape2&&)  {}
-    Shape2<T>& operator=(const Shape2&) { return *this;}
-    Shape2<T>& operator=(Shape2&&)  { return *this;}
+    Shape2(Shape2&&) {}
+    Shape2<T>& operator=(const Shape2&) { return *this; }
+    Shape2<T>& operator=(Shape2&&) { return *this; }
 
-    virtual ~Shape2(){}
+    virtual ~Shape2() {}
 };
 
 typedef Shape2<double> Shape2D;

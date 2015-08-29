@@ -2,6 +2,7 @@
 #define MAKE_UNIQUE_H_INCLUDED
 
 #include <memory>
+
 namespace std //because it's not in C++11
 {
     template<typename T, typename... Args>

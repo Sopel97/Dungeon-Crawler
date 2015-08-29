@@ -114,7 +114,7 @@ const T& Vec3<T>::operator [](int i) const
 template <class T>
 T Vec3<T>::magnitude()
 {
-    return std::sqrt((x * x) + (y * y) + (z * z));
+    return static_cast<T>(std::sqrt((x * x) + (y * y) + (z * z)));
 }
 template <class T>
 T Vec3<T>::distance(const Vec3<T>& v)
@@ -122,7 +122,7 @@ T Vec3<T>::distance(const Vec3<T>& v)
     T dx = x - v.x;
     T dy = y - v.y;
     T dz = z - v.z;
-    return std::sqrt(dx * dx + dy * dy + dz * dz);
+    return static_cast<T>(std::sqrt(dx * dx + dy * dy + dz * dz));
 }
 template <class T>
 void Vec3<T>::normalize()

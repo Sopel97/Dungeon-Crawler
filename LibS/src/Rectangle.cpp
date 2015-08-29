@@ -33,11 +33,11 @@ Rectangle<T>& Rectangle<T>::operator -=(const Vec2<T>& v)
 }
 
 template <class T>
-    template <class T2>
-    Rectangle<T>::operator Rectangle<T2>() const
-    {
-        return Rectangle<T2>(static_cast<Vec2<T2>>(min), static_cast<Vec2<T2>>(max));
-    }
+template <class T2>
+Rectangle<T>::operator Rectangle<T2>() const
+{
+    return Rectangle<T2>(static_cast<Vec2<T2>>(min), static_cast<Vec2<T2>>(max));
+}
 
 template <class T>
 T Rectangle<T>::width() const

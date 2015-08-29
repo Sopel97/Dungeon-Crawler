@@ -37,7 +37,7 @@ public:
 
     Vec3<T> operator*(const Vec3<T>& vector) const;
 
-    T(&operator[](size_t row))[3] {return m_elements[row];};  //move it to cpp file
+    T(&operator[](size_t row))[3]{return m_elements[row];};  //move it to cpp file
 
     void inverse();
     void transpose();

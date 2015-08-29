@@ -18,7 +18,7 @@
 #include <vector>
 #include <algorithm>
 #include <memory>
-#include "../LibS/make_unique.h"
+
 
 #include "GameConstants.h"
 
@@ -100,10 +100,10 @@ void EntitySystem::moveEntity(World* world, Entity* entity, float dt)
     {
         float entityColliderRadius = model.colliderRadius();
         RectangleF entityCollider(idealPositionAfterMove - Vec2F(entityColliderRadius, entityColliderRadius), idealPositionAfterMove + Vec2F(entityColliderRadius, entityColliderRadius));
-        int xmin = entityCollider.min.x / GameConstants::tileSize;
-        int ymin = entityCollider.min.y / GameConstants::tileSize;
-        int xmax = entityCollider.max.x / GameConstants::tileSize;
-        int ymax = entityCollider.max.y / GameConstants::tileSize;
+        int xmin = static_cast<int>(entityCollider.min.x / static_cast<float>(GameConstants::tileSize));
+        int ymin = static_cast<int>(entityCollider.min.y / static_cast<float>(GameConstants::tileSize));
+        int xmax = static_cast<int>(entityCollider.max.x / static_cast<float>(GameConstants::tileSize));
+        int ymax = static_cast<int>(entityCollider.max.y / static_cast<float>(GameConstants::tileSize));
 
         std::vector<RectangleF> collidersInRange;
 
@@ -114,7 +114,7 @@ void EntitySystem::moveEntity(World* world, Entity* entity, float dt)
                 const TileStack& tileStack = world->map().at(x, y);
                 if(tileStack.hasCollider())
                 {
-                    RectangleF tileCollider = tileStack.collider() + Vec2F(x, y) * GameConstants::tileSize;
+                    RectangleF tileCollider = tileStack.collider() + Vec2F(static_cast<float>(x), static_cast<float>(y)) * static_cast<float>(GameConstants::tileSize);
                     collidersInRange.push_back(tileCollider);
                 }
             }

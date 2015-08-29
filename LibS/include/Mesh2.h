@@ -19,7 +19,7 @@ public:
     Mesh2(const Mesh2<ShapeType>& m);
     Mesh2(Mesh2<ShapeType>&& m);
 
-    virtual ~Mesh2(){}
+    virtual ~Mesh2() {}
 
     Mesh2<ShapeType>& operator=(const Mesh2<ShapeType>& m);
     Mesh2<ShapeType>& operator=(Mesh2<ShapeType> && m);

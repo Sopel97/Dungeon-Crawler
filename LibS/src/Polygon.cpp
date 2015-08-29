@@ -183,7 +183,7 @@ Vec2<T> Polygon<T>::centerOfMass() const
     T centMassX = xsum / (area * T(3));
     T centMassY = ysum / (area * T(3));
 
-    return Vec2<T> (centMassX, centMassY);
+    return Vec2<T>(centMassX, centMassY);
 }
 template <class T>
 bool Polygon<T>::isConvex() const
@@ -193,11 +193,11 @@ bool Polygon<T>::isConvex() const
     for(size_t i = 0; i < numberOfVertices; ++i)
     {
         const Vec2<T>& v0 = vertices[i];
-        const Vec2<T>& v1 = vertices[(i+1)&numberOfVertices];
-        const Vec2<T>& v2 = vertices[(i+2)&numberOfVertices];
+        const Vec2<T>& v1 = vertices[(i + 1)&numberOfVertices];
+        const Vec2<T>& v2 = vertices[(i + 2)&numberOfVertices];
 
-        Vec2<T> e0 = v1-v0;
-        Vec2<T> e1 = v2-v1;
+        Vec2<T> e0 = v1 - v0;
+        Vec2<T> e1 = v2 - v1;
 
         T cross = e0.cross(e1);
         if(i != 0)
@@ -234,13 +234,13 @@ size_t Polygon<T>::size() const
 }
 
 template <class T>
-Polygon<T> Polygon<T>::regular(const Vec2D& center, int sides, int radius)
+Polygon<T> Polygon<T>::regular(const Vec2<T>& center, int sides, T radius)
 {
     Polygon<T> polygon;
     polygon.vertices.reserve(sides);
     for(int i = 0; i < sides; ++i)
     {
-        polygon.vertices.emplace_back(radius * std::cos(T(2) * PI * i / sides), radius * std::sin(T(2) * PI * i / sides));
+        polygon.vertices.emplace_back(radius * static_cast<T>(std::cos(T(2) * static_cast<T>(PI) * static_cast<T>(i) / static_cast<T>(sides))), radius * static_cast<T>(std::sin(T(2) * static_cast<T>(PI) * static_cast<T>(i) / static_cast<T>(sides))));
     }
     return polygon;
 }
@@ -248,10 +248,10 @@ template <class T>
 Polygon<T> Polygon<T>::fromRectangle(const Rectangle<T>& rectangle)
 {
     return Polygon<T> {Vec2<T>{rectangle.min.x, rectangle.min.y},
-                       Vec2<T>{rectangle.max.x, rectangle.min.y},
-                       Vec2<T>{rectangle.max.x, rectangle.max.y},
-                       Vec2<T>{rectangle.min.x, rectangle.max.y}
-                      };
+        Vec2<T>{rectangle.max.x, rectangle.min.y},
+        Vec2<T>{rectangle.max.x, rectangle.max.y},
+        Vec2<T>{rectangle.min.x, rectangle.max.y}
+    };
 }
 template <class T>
 Polygon<T> Polygon<T>::fromTriangle(const Triangle<T>& triangle)

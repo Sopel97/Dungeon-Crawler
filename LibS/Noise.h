@@ -19,7 +19,7 @@ namespace ls
     template <class T>
     int fastFloor(const T x)
     {
-        return x > 0 ? (int) x : (int) x - 1;
+        return x > 0 ? (int)x : (int)x - 1;
     }
 
     template <class T> class SimplexNoise;

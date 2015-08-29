@@ -149,7 +149,7 @@ protected:
             };
             auto isRectangleNotValid = [&isRectangleValid](const ls::RectangleI & r)->bool
             {
-                return !isRectangleValid;
+                return !isRectangleValid(r);
             };
 
             enum class FillState

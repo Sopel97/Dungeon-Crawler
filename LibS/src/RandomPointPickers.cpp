@@ -48,7 +48,7 @@ Vec2<T> RandomPointOnPolygonPicker<T>::nextPoint(RNG& rng) const
 {
     T sumOfAreas = m_trianglesByArea.back().second;
     T randomArea = rng.next(T(0), sumOfAreas);
-    auto chosenTriangleIter = std::upper_bound(m_trianglesByArea.begin(), m_trianglesByArea.end(), randomArea, [](const T& lhs, const std::pair<const Triangle<T>*, T>& rhs)->bool{return lhs < rhs.second;});
+    auto chosenTriangleIter = std::upper_bound(m_trianglesByArea.begin(), m_trianglesByArea.end(), randomArea, [] (const T& lhs, const std::pair<const Triangle<T>*, T>& rhs)->bool {return lhs < rhs.second; });
     if(chosenTriangleIter == m_trianglesByArea.end()) chosenTriangleIter = m_trianglesByArea.begin();
     return RandomPointOnTrianglePicker<T>(*(chosenTriangleIter->first)).nextPoint(rng);
 }
@@ -78,7 +78,7 @@ Vec2<T> RandomPointOnRectanglePicker<T>::nextPoint(RNG& rng) const
 {
     T t1 = rng.next(T(0), T(1));
     T t2 = rng.next(T(0), T(1));
-    return Vec2<T>(m_rectangle.min + (m_rectangle.max-m_rectangle.min) * Vec2<T>(t1, t2));
+    return Vec2<T>(m_rectangle.min + (m_rectangle.max - m_rectangle.min) * Vec2<T>(t1, t2));
 }
 
 template <class T>
@@ -95,13 +95,13 @@ Vec2<T> RandomPointOnTrianglePicker<T>::nextPoint(RNG& rng) const
     T t2 = rng.next(T(0), T(1));
     Vec2<T> point(m_triangle.vertices[0] + (m_triangle.vertices[2] - m_triangle.vertices[0]) * t1 + (m_triangle.vertices[1] - m_triangle.vertices[0]) * t2);
     if
-    (
-        ((m_triangle.vertices[2].x - m_triangle.vertices[1].x) * (point.y - m_triangle.vertices[1].y) - (m_triangle.vertices[2].y - m_triangle.vertices[1].y) * (point.x - m_triangle.vertices[1].x))
-        *
-        ((m_triangle.vertices[2].x - m_triangle.vertices[1].x) * (m_triangle.vertices[0].y - m_triangle.vertices[1].y) - (m_triangle.vertices[2].y - m_triangle.vertices[1].y) * (m_triangle.vertices[0].x - m_triangle.vertices[1].x))
-        <
-        T(0)
-    ) //points vertices[0] and point are on the opposite sides of the edge
+        (
+            ((m_triangle.vertices[2].x - m_triangle.vertices[1].x) * (point.y - m_triangle.vertices[1].y) - (m_triangle.vertices[2].y - m_triangle.vertices[1].y) * (point.x - m_triangle.vertices[1].x))
+            *
+            ((m_triangle.vertices[2].x - m_triangle.vertices[1].x) * (m_triangle.vertices[0].y - m_triangle.vertices[1].y) - (m_triangle.vertices[2].y - m_triangle.vertices[1].y) * (m_triangle.vertices[0].x - m_triangle.vertices[1].x))
+            <
+            T(0)
+            ) //points vertices[0] and point are on the opposite sides of the edge
     {
         Vec2<T> edgeCenter = m_triangle.vertices[1] + (m_triangle.vertices[2] - m_triangle.vertices[1]) / T(2);
         point = edgeCenter * T(2) - point;

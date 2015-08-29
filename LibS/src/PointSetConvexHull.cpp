@@ -11,7 +11,7 @@ PointSetConvexHull<T>::PointSetConvexHull(std::vector<Vec2<T>>&& p) : m_points(p
 template <class T>
 void PointSetConvexHull<T>::sortPoints() //made lhs.x <= rhs.x to omit warning about floating point comparsion
 {
-    std::sort(m_points.begin(), m_points.end(), [](const Vec2<T>& lhs, const Vec2<T>& rhs) -> bool {return (lhs.x < rhs.x || (lhs.x <= rhs.x && lhs.y < rhs.y));});
+    std::sort(m_points.begin(), m_points.end(), [] (const Vec2<T>& lhs, const Vec2<T>& rhs) -> bool {return (lhs.x < rhs.x || (lhs.x <= rhs.x && lhs.y < rhs.y)); });
 }
 template <class T>
 const Polygon<T>& PointSetConvexHull<T>::convexHull()

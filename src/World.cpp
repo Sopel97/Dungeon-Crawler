@@ -30,7 +30,7 @@
 
 #include "GameConstants.h"
 
-#include "../LibS/make_unique.h"
+
 
 using namespace ls;
 
@@ -44,7 +44,7 @@ World::World(Root& root, Player& player) :
 {
     m_mapGenerator.generate(*m_mapLayer);
     m_playerEntity = player.createPlayerEntity();
-    m_entitySystem.addEntity(m_playerEntity, m_camera.position());
+    m_entitySystem.addEntity(m_playerEntity, m_camera.position()); 
 }
 World::~World()
 {
@@ -201,7 +201,7 @@ const MapGenerator& World::mapGenerator() const
 
 Vec2I World::worldToTile(const Vec2F& position) const
 {
-    return Vec2I(position.x / GameConstants::tileSize, position.y / GameConstants::tileSize);
+    return Vec2I(static_cast<int>(position.x) / GameConstants::tileSize, static_cast<int>(position.y) / GameConstants::tileSize);
 }
 
 void World::update(float dt)

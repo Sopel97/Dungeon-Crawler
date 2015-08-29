@@ -15,23 +15,23 @@ public:
     T rawNoise3(const T x, const T y, const T z) const;
     T rawNoise4(const T x, const T y, const T z, const T w) const;
 
-    T rangedRawNoise1(const T x,                                  const T lowerBound, const T higherBound) const;
-    T rangedRawNoise2(const T x, const T y,                       const T lowerBound, const T higherBound) const;
-    T rangedRawNoise3(const T x, const T y, const T z,            const T lowerBound, const T higherBound) const;
+    T rangedRawNoise1(const T x, const T lowerBound, const T higherBound) const;
+    T rangedRawNoise2(const T x, const T y, const T lowerBound, const T higherBound) const;
+    T rangedRawNoise3(const T x, const T y, const T z, const T lowerBound, const T higherBound) const;
     T rangedRawNoise4(const T x, const T y, const T z, const T w, const T lowerBound, const T higherBound) const;
 
-    T octaveNoise1(const T x,                                  const int octaves, const T persistence, const T scale) const;
-    T octaveNoise2(const T x, const T y,                       const int octaves, const T persistence, const T scale) const;
-    T octaveNoise3(const T x, const T y, const T z,            const int octaves, const T persistence, const T scale) const;
+    T octaveNoise1(const T x, const int octaves, const T persistence, const T scale) const;
+    T octaveNoise2(const T x, const T y, const int octaves, const T persistence, const T scale) const;
+    T octaveNoise3(const T x, const T y, const T z, const int octaves, const T persistence, const T scale) const;
     T octaveNoise4(const T x, const T y, const T z, const T w, const int octaves, const T persistence, const T scale) const;
 
-    T rangedOctaveNoise1(const T x,                                  const int octaves, const T persistence, const T scale, const T lowerBound, const T higherBound) const;
-    T rangedOctaveNoise2(const T x, const T y,                       const int octaves, const T persistence, const T scale, const T lowerBound, const T higherBound) const;
-    T rangedOctaveNoise3(const T x, const T y, const T z,            const int octaves, const T persistence, const T scale, const T lowerBound, const T higherBound) const;
+    T rangedOctaveNoise1(const T x, const int octaves, const T persistence, const T scale, const T lowerBound, const T higherBound) const;
+    T rangedOctaveNoise2(const T x, const T y, const int octaves, const T persistence, const T scale, const T lowerBound, const T higherBound) const;
+    T rangedOctaveNoise3(const T x, const T y, const T z, const int octaves, const T persistence, const T scale, const T lowerBound, const T higherBound) const;
     T rangedOctaveNoise4(const T x, const T y, const T z, const T w, const int octaves, const T persistence, const T scale, const T lowerBound, const T higherBound) const;
 
-    T periodicRangedOctaveNoise1(const T x,                                  const int octaves, const T persistence, const T scale, const T lowerBound, const T higherBound, const T xPeriod) const;
-    T periodicSeededRangedOctaveNoise1(const T x, const T seed,              const int octaves, const T persistence, const T scale, const T lowerBound, const T higherBound, const T xPeriod) const; //may be temporary, will use 2d noise for seed
+    T periodicRangedOctaveNoise1(const T x, const int octaves, const T persistence, const T scale, const T lowerBound, const T higherBound, const T xPeriod) const;
+    T periodicSeededRangedOctaveNoise1(const T x, const T seed, const int octaves, const T persistence, const T scale, const T lowerBound, const T higherBound, const T xPeriod) const; //may be temporary, will use 2d noise for seed
 
 private:
     T dot(const int* g, const T x, const T y) const { return g[0] * x + g[1] * y; }
@@ -47,25 +47,25 @@ private:
 template<class T>
 int SimplexNoise<T>::grad3[12][3] =
 {
-    {1, 1, 0}, { -1, 1, 0}, {1, -1, 0}, { -1, -1, 0},
-    {1, 0, 1}, { -1, 0, 1}, {1, 0, -1}, { -1, 0, -1},
-    {0, 1, 1}, {0, -1, 1},  {0, 1, -1}, {0, -1, -1}
+    {1, 1, 0}, {-1, 1, 0}, {1, -1, 0}, {-1, -1, 0},
+    {1, 0, 1}, {-1, 0, 1}, {1, 0, -1}, {-1, 0, -1},
+    {0, 1, 1}, {0, -1, 1}, {0, 1, -1}, {0, -1, -1}
 };
 
 template<class T>
 int SimplexNoise<T>::grad4[32][4] =
 {
-    {0, 1, 1, 1},   {0, 1, 1, -1},   {0, 1, -1, 1},   {0, 1, -1, -1},
-    {0, -1, 1, 1},  {0, -1, 1, -1},  {0, -1, -1, 1},  {0, -1, -1, -1},
-    {1, 0, 1, 1},   {1, 0, 1, -1},   {1, 0, -1, 1},   {1, 0, -1, -1},
-    { -1, 0, 1, 1}, { -1, 0, 1, -1}, { -1, 0, -1, 1}, { -1, 0, -1, -1},
-    {1, 1, 0, 1},   {1, 1, 0, -1},   {1, -1, 0, 1},   {1, -1, 0, -1},
-    { -1, 1, 0, 1}, { -1, 1, 0, -1}, { -1, -1, 0, 1}, { -1, -1, 0, -1},
-    {1, 1, 1, 0},   {1, 1, -1, 0},   {1, -1, 1, 0},   {1, -1, -1, 0},
-    { -1, 1, 1, 0}, { -1, 1, -1, 0}, { -1, -1, 1, 0}, { -1, -1, -1, 0}
+    {0, 1, 1, 1}, {0, 1, 1, -1}, {0, 1, -1, 1}, {0, 1, -1, -1},
+    {0, -1, 1, 1}, {0, -1, 1, -1}, {0, -1, -1, 1}, {0, -1, -1, -1},
+    {1, 0, 1, 1}, {1, 0, 1, -1}, {1, 0, -1, 1}, {1, 0, -1, -1},
+    {-1, 0, 1, 1}, {-1, 0, 1, -1}, {-1, 0, -1, 1}, {-1, 0, -1, -1},
+    {1, 1, 0, 1}, {1, 1, 0, -1}, {1, -1, 0, 1}, {1, -1, 0, -1},
+    {-1, 1, 0, 1}, {-1, 1, 0, -1}, {-1, -1, 0, 1}, {-1, -1, 0, -1},
+    {1, 1, 1, 0}, {1, 1, -1, 0}, {1, -1, 1, 0}, {1, -1, -1, 0},
+    {-1, 1, 1, 0}, {-1, 1, -1, 0}, {-1, -1, 1, 0}, {-1, -1, -1, 0}
 };
 template<class T>
-int SimplexNoise<T>::perm[512]  =
+int SimplexNoise<T>::perm[512] =
 {
     151, 160, 137, 91, 90, 15, 131, 13, 201, 95, 96, 53, 194, 233, 7, 225, 140, 36, 103, 30, 69, 142,
     8, 99, 37, 240, 21, 10, 23, 190, 6, 148, 247, 120, 234, 75, 0, 26, 197, 62, 94, 252, 219, 203, 117,
@@ -94,7 +94,7 @@ int SimplexNoise<T>::perm[512]  =
     138, 236, 205, 93, 222, 114, 67, 29, 24, 72, 243, 141, 128, 195, 78, 66, 215, 61, 156, 180
 };
 template<class T>
-int SimplexNoise<T>::simplex[64][4]  =
+int SimplexNoise<T>::simplex[64][4] =
 {
     {0, 1, 2, 3}, {0, 1, 3, 2}, {0, 0, 0, 0}, {0, 2, 3, 1}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {1, 2, 3, 0},
     {0, 2, 1, 3}, {0, 0, 0, 0}, {0, 3, 1, 2}, {0, 3, 2, 1}, {0, 0, 0, 0}, {0, 0, 0, 0}, {0, 0, 0, 0}, {1, 3, 2, 0},

@@ -74,27 +74,27 @@ public:
 
             Iter(const T& v, const T& s) : m_ptr(v), m_step(s) {}
 
-            self_type       operator++ (int)                  { self_type i = *this; m_ptr += m_step; return i;       }
-            self_type       operator-- (int)                  { self_type i = *this; m_ptr -= m_step; return i;       }
-            self_type&      operator++ ()                     { m_ptr += m_step; return *this;                        }
-            self_type&      operator-- ()                     { m_ptr -= m_step; return *this;                        }
+            self_type       operator++ (int) { self_type i = *this; m_ptr += m_step; return i; }
+            self_type       operator-- (int) { self_type i = *this; m_ptr -= m_step; return i; }
+            self_type&      operator++ () { m_ptr += m_step; return *this; }
+            self_type&      operator-- () { m_ptr -= m_step; return *this; }
 
-            self_type       operator+ (int n)                { self_type i = *this; i.m_ptr += m_step * n; return i; }
-            self_type       operator- (int n)                { self_type i = *this; i.m_ptr -= m_step * n; return i; }
-            self_type&      operator+= (int n)                { m_ptr += m_step * n; return *this;                    }
-            self_type&      operator-= (int n)                { m_ptr -= m_step * n; return *this;                    }
+            self_type       operator+ (int n) { self_type i = *this; i.m_ptr += m_step * n; return i; }
+            self_type       operator- (int n) { self_type i = *this; i.m_ptr -= m_step * n; return i; }
+            self_type&      operator+= (int n) { m_ptr += m_step * n; return *this; }
+            self_type&      operator-= (int n) { m_ptr -= m_step * n; return *this; }
 
-            difference_type operator- (const self_type& n)   { return (m_ptr - n.m_ptr) / m_step;                    }
+            difference_type operator- (const self_type& n) { return (m_ptr - n.m_ptr) / m_step; }
 
-            reference       operator[](int n)                { return m_ptr + m_step * n;                            }
-            reference       operator* ()                     { return m_ptr;                                         }
+            reference       operator[](int n) { return m_ptr + m_step * n; }
+            reference       operator* () { return m_ptr; }
 
-            bool            operator== (const self_type& rhs) { return m_ptr == rhs.m_ptr;                            }
-            bool            operator< (const self_type& rhs) { return m_ptr <  rhs.m_ptr;                            }
-            bool            operator> (const self_type& rhs) { return m_ptr >  rhs.m_ptr;                            }
-            bool            operator<= (const self_type& rhs) { return m_ptr <= rhs.m_ptr;                            }
-            bool            operator>= (const self_type& rhs) { return m_ptr >= rhs.m_ptr;                            }
-            bool            operator!= (const self_type& rhs) { return m_ptr != rhs.m_ptr;                            }
+            bool            operator== (const self_type& rhs) { return m_ptr == rhs.m_ptr; }
+            bool            operator< (const self_type& rhs) { return m_ptr < rhs.m_ptr; }
+            bool            operator> (const self_type& rhs) { return m_ptr > rhs.m_ptr; }
+            bool            operator<= (const self_type& rhs) { return m_ptr <= rhs.m_ptr; }
+            bool            operator>= (const self_type& rhs) { return m_ptr >= rhs.m_ptr; }
+            bool            operator!= (const self_type& rhs) { return m_ptr != rhs.m_ptr; }
         private:
 
             T m_ptr, m_step;

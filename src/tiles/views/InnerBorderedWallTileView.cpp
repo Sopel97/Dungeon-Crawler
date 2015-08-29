@@ -11,7 +11,7 @@
 
 #include "GameConstants.h"
 
-#include "../LibS/make_unique.h"
+
 
 using namespace ls;
 
@@ -109,7 +109,7 @@ void InnerBorderedWallTileView::draw(sf::RenderTarget& renderTarget, sf::RenderS
         if(resultSprite != nullptr)
         {
             sf::Sprite spr;
-            spr.setPosition(sf::Vector2f(x * GameConstants::tileSize, y * GameConstants::tileSize));
+            spr.setPosition(sf::Vector2f(static_cast<float>(x * GameConstants::tileSize), static_cast<float>(y * GameConstants::tileSize)));
             spr.setTexture(texture());
             spr.setTextureRect(sf::IntRect(sf::Vector2i(resultSprite->x, resultSprite->y), sf::Vector2i(GameConstants::tileSize, GameConstants::tileSize)));
             renderTarget.draw(spr, renderStates);
@@ -131,7 +131,7 @@ void InnerBorderedWallTileView::draw(sf::RenderTarget& renderTarget, sf::RenderS
         if(resultSprite != nullptr)
         {
             sf::Sprite spr;
-            spr.setPosition(sf::Vector2f((x - 1) * GameConstants::tileSize, y * GameConstants::tileSize));
+            spr.setPosition(sf::Vector2f(static_cast<float>((x - 1) * GameConstants::tileSize), static_cast<float>(y * GameConstants::tileSize)));
             spr.setTexture(texture());
             spr.setTextureRect(sf::IntRect(sf::Vector2i(resultSprite->x, resultSprite->y), sf::Vector2i(GameConstants::tileSize, GameConstants::tileSize)));
             renderTarget.draw(spr, renderStates);
@@ -153,7 +153,7 @@ void InnerBorderedWallTileView::draw(sf::RenderTarget& renderTarget, sf::RenderS
         if(resultSprite != nullptr)
         {
             sf::Sprite spr;
-            spr.setPosition(sf::Vector2f(x * GameConstants::tileSize, (y - 1) * GameConstants::tileSize));
+            spr.setPosition(sf::Vector2f(static_cast<float>(x * GameConstants::tileSize), static_cast<float>((y - 1) * GameConstants::tileSize)));
             spr.setTexture(texture());
             spr.setTextureRect(sf::IntRect(sf::Vector2i(resultSprite->x, resultSprite->y), sf::Vector2i(GameConstants::tileSize, GameConstants::tileSize)));
             renderTarget.draw(spr, renderStates);
@@ -171,7 +171,7 @@ void InnerBorderedWallTileView::draw(sf::RenderTarget& renderTarget, sf::RenderS
         if(resultSprite != nullptr)
         {
             sf::Sprite spr;
-            spr.setPosition(sf::Vector2f((x - 1) * GameConstants::tileSize, (y - 1) * GameConstants::tileSize));
+            spr.setPosition(sf::Vector2f(static_cast<float>((x - 1) * GameConstants::tileSize), static_cast<float>((y - 1) * GameConstants::tileSize)));
             spr.setTexture(texture());
             spr.setTextureRect(sf::IntRect(sf::Vector2i(resultSprite->x, resultSprite->y), sf::Vector2i(GameConstants::tileSize, GameConstants::tileSize)));
             renderTarget.draw(spr, renderStates);

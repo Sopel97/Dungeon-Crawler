@@ -22,7 +22,7 @@ public:
     PointSetDelaunayTriangulation(const std::vector<Vec2<T>>& points);
     PointSetDelaunayTriangulation(std::vector<Vec2<T>>&& points);
 
-    virtual ~PointSetDelaunayTriangulation(){}
+    virtual ~PointSetDelaunayTriangulation() {}
 
 
     virtual size_t numberOfPoints() const;

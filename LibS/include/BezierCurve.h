@@ -8,13 +8,13 @@ public:
     class BinomialCoefficientsLookup
     {
     public:
-        Array2<T> coefficients;
+        Array2<int> coefficients;
         BinomialCoefficientsLookup(int size);
     };
 
     std::vector<Vec2<T>> controlPoints;
 
-    BezierCurve(){}
+    BezierCurve() {}
 
     void add(const Vec2<T>& point);
     void add(const std::vector<Vec2<T>>& points);

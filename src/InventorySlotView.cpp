@@ -1,5 +1,7 @@
 #include "InventorySlotView.h"
 
+#include "Tile.h"
+
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 
@@ -68,7 +70,7 @@ const Vec2I& InventorySlotView::position() const
 void InventorySlotView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
 {
     sf::Sprite slotSprite;
-    slotSprite.setPosition(m_position.x, m_position.y);
+    slotSprite.setPosition(static_cast<float>(m_position.x), static_cast<float>(m_position.y));
     slotSprite.setTexture(m_texture.get());
     slotSprite.setTextureRect(sf::IntRect(sf::Vector2i(m_slotTexture.x, m_slotTexture.y), sf::Vector2i(m_slotTextureSize.x, m_slotTextureSize.y)));
     renderTarget.draw(slotSprite, renderStates);
@@ -79,7 +81,7 @@ void InventorySlotView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& r
         Vec2I iconOffset = (m_slotTextureSize - m_requirementIconSize) / 2;
 
         sf::Sprite requirementIconSprite;
-        requirementIconSprite.setPosition(m_position.x + iconOffset.x, m_position.y + iconOffset.y);
+        requirementIconSprite.setPosition(static_cast<float>(m_position.x + iconOffset.x), static_cast<float>(m_position.y + iconOffset.y));
         requirementIconSprite.setTexture(m_texture.get());
         requirementIconSprite.setTextureRect(sf::IntRect(sf::Vector2i(iconSpritePosition.x, iconSpritePosition.y), sf::Vector2i(m_requirementIconSize.x, m_requirementIconSize.y)));
         renderTarget.draw(requirementIconSprite, renderStates);

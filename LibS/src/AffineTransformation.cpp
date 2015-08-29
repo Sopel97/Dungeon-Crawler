@@ -49,8 +49,8 @@ void AffineTransformation<T>::rotateClockwise(const Angle<T>& angle)
 template <class T>
 void AffineTransformation<T>::rotateAntiClockwise(const Angle<T>& angle)
 {
-    T sinus = sin(angle.radians());
-    T cosinus = cos(angle.radians());
+    T sinus = angle.sin();
+    T cosinus = angle.cos();
     T aa = cosinus;
     T bb = sinus;
     T dd = -sinus;

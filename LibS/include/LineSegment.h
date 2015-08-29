@@ -8,16 +8,16 @@ public:
     Vec2<T> begin;
     Vec2<T> end;
 
-    LineSegment(){}
+    LineSegment() {}
     LineSegment(const Vec2<T>& _begin, const Vec2<T>& _end);
 
-    LineSegment(const LineSegment<T>& other){begin = other.begin; end = other.end;}
-    LineSegment(LineSegment<T>&& other){begin = std::move(other.begin); end = std::move(other.end);}
+    LineSegment(const LineSegment<T>& other) { begin = other.begin; end = other.end; }
+    LineSegment(LineSegment<T>&& other) { begin = std::move(other.begin); end = std::move(other.end); }
 
-    virtual ~LineSegment(){}
+    virtual ~LineSegment() {}
 
-    LineSegment<T>& operator=(const LineSegment<T>& other){begin = other.begin; end = other.end; return *this;}
-    LineSegment<T>& operator=(LineSegment<T> && other){begin = std::move(other.begin); end = std::move(other.end); return *this;}
+    LineSegment<T>& operator=(const LineSegment<T>& other) { begin = other.begin; end = other.end; return *this; }
+    LineSegment<T>& operator=(LineSegment<T> && other) { begin = std::move(other.begin); end = std::move(other.end); return *this; }
 
     LineSegment<T> operator+(const Vec2<T>& v) const;
     LineSegment<T> operator-(const Vec2<T>& v) const;
@@ -35,8 +35,6 @@ public:
 
     void translate(const Vec2<T>& v);
     void scale(const Vec2<T>& s);
-
-    Polyline<T> asPolyline() const;
 
     Vec2<T> centerOfMass() const;
 };

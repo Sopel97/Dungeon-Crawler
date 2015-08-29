@@ -1,6 +1,6 @@
 #include "EntityView.h"
 
-#include "../LibS/make_unique.h"
+
 
 EntityView::EntityView(Entity* owner) :
     m_owner(owner)

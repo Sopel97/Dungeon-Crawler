@@ -1,27 +1,27 @@
 /*
- * LuaTables++
- * Copyright (c) 2013-2014 Martin Felis <martin@fyxs.org>.
- * All rights reserved.
- *
- * Permission is hereby granted, free of charge, to any person obtaining
- * a copy of this software and associated documentation files (the
- * "Software"), to deal in the Software without restriction, including
- * without limitation the rights to use, copy, modify, merge, publish,
- * distribute, sublicense, and/or sell copies of the Software, and to
- * permit persons to whom the Software is furnished to do so, subject to
- * the following conditions:
- *
- * The above copyright notice and this permission notice shall be
- * included in all copies or substantial portions of the Software.
- *
- * THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
- * EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
- * MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
- * IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
- * CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
- * TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
- * SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
- */
+* LuaTables++
+* Copyright (c) 2013-2014 Martin Felis <martin@fyxs.org>.
+* All rights reserved.
+*
+* Permission is hereby granted, free of charge, to any person obtaining
+* a copy of this software and associated documentation files (the
+* "Software"), to deal in the Software without restriction, including
+* without limitation the rights to use, copy, modify, merge, publish,
+* distribute, sublicense, and/or sell copies of the Software, and to
+* permit persons to whom the Software is furnished to do so, subject to
+* the following conditions:
+*
+* The above copyright notice and this permission notice shall be
+* included in all copies or substantial portions of the Software.
+*
+* THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND,
+* EXPRESS OR IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF
+* MERCHANTABILITY, FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT.
+* IN NO EVENT SHALL THE AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY
+* CLAIM, DAMAGES OR OTHER LIABILITY, WHETHER IN AN ACTION OF CONTRACT,
+* TORT OR OTHERWISE, ARISING FROM, OUT OF OR IN CONNECTION WITH THE
+* SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+*/
 
 #ifndef LUATABLES_H
 #define LUATABLES_H
@@ -70,14 +70,18 @@ struct LuaKey
     LuaKey(const char* key_value) :
         type(String),
         int_value(0),
-        string_value(key_value) { }
+        string_value(key_value)
+    {
+    }
     LuaKey(int key_value) :
         type(Integer),
         int_value(key_value),
-        string_value("") {}
+        string_value("")
+    {
+    }
 };
 
-inline std::ostream& operator<<(std::ostream& output, const LuaKey& key)
+inline std::ostream& operator<<(std::ostream& output, const LuaKey &key)
 {
     if(key.type == LuaKey::Integer)
         output << key.int_value << "(int)";
@@ -94,8 +98,9 @@ struct LuaTableNode
         parent(NULL),
         luaTable(NULL),
         key("")
-    { }
-    LuaTableNode operator[](const char* child_str)
+    {
+    }
+    LuaTableNode operator[](const char *child_str)
     {
         LuaTableNode child_node;
 
@@ -133,9 +138,9 @@ struct LuaTableNode
     // Templates for setters and getters. Can be specialized for custom
     // types.
     template <typename T>
-    void set(const T& value);
+    void set(const T &value);
     template <typename T>
-    T getDefault(const T& default_value);
+    T getDefault(const T &default_value);
 
     template <typename T>
     T get()
@@ -150,7 +155,7 @@ struct LuaTableNode
 
     // convenience operators (assignment, conversion, comparison)
     template <typename T>
-    void operator=(const T& value)
+    void operator=(const T &value)
     {
         set<T>(value);
     }
@@ -170,8 +175,8 @@ struct LuaTableNode
         return value != get<T>();
     }
 
-    LuaTableNode* parent;
-    LuaTable* luaTable;
+    LuaTableNode *parent;
+    LuaTable *luaTable;
     LuaKey key;
     int stackTop;
 };
@@ -179,36 +184,67 @@ struct LuaTableNode
 template<typename T>
 bool operator==(T value, LuaTableNode node)
 {
-    return value == (T) node;
+    return value == (T)node;
 }
 template<typename T>
 bool operator!=(T value, LuaTableNode node)
 {
-    return value != (T) node;
+    return value != (T)node;
 }
 
-template<> bool LuaTableNode::getDefault<bool>(const bool& default_value);
-template<> double LuaTableNode::getDefault<double>(const double& default_value);
-template<> float LuaTableNode::getDefault<float>(const float& default_value);
-template<> std::string LuaTableNode::getDefault<std::string>(const std::string& default_value);
-template<> int LuaTableNode::getDefault<int>(const int& default_value);
+template<> bool LuaTableNode::getDefault<bool>(const bool &default_value);
+template<> double LuaTableNode::getDefault<double>(const double &default_value);
+template<> float LuaTableNode::getDefault<float>(const float &default_value);
+template<> int LuaTableNode::getDefault<int>(const int &default_value);
+template<> std::string LuaTableNode::getDefault<std::string>(const std::string &default_value);
 
-template<> void LuaTableNode::set<bool>(const bool& value);
-template<> void LuaTableNode::set<float>(const float& value);
-template<> void LuaTableNode::set<double>(const double& value);
-template<> void LuaTableNode::set<int>(const int& value);
+template<> void LuaTableNode::set<bool>(const bool &value);
+template<> void LuaTableNode::set<float>(const float &value);
+template<> void LuaTableNode::set<double>(const double &value);
+template<> void LuaTableNode::set<std::string>(const std::string &value);
+
+/// Reference counting Lua state
+struct LuaStateRef
+{
+    LuaStateRef() :
+        L(NULL),
+        count(0),
+        freeOnZeroRefs(true)
+    {
+    }
+
+    LuaStateRef* acquire()
+    {
+        count = count + 1;
+        return this;
+    }
+
+    int release()
+    {
+        count = count - 1;
+        return count;
+    }
+
+    lua_State *L;
+    unsigned int count;
+    bool freeOnZeroRefs;
+};
 
 struct LuaTable
 {
     LuaTable() :
         filename(""),
+        luaStateRef(NULL),
+        luaRef(-1),
         L(NULL),
-        deleteLuaState(false)
-    {}
-    LuaTable& operator= (const LuaTable& luatable);
+        referencesGlobal(false)
+    {
+    }
+    LuaTable(const LuaTable &other);
+    LuaTable& operator= (const LuaTable &other);
     ~LuaTable();
 
-    LuaTableNode operator[](const char* key)
+    LuaTableNode operator[] (const char* key)
     {
         LuaTableNode root_node;
         root_node.key = LuaKey(key);
@@ -217,7 +253,7 @@ struct LuaTable
 
         return root_node;
     }
-    LuaTableNode operator[](int key)
+    LuaTableNode operator[] (int key)
     {
         LuaTableNode root_node;
         root_node.key = LuaKey(key);
@@ -230,13 +266,27 @@ struct LuaTable
     void addSearchPath(const char* path);
     std::string serialize();
 
-    static LuaTable fromFile(const char* _filename);
+    /// Serializes the data in a predictable ordering.
+    std::string orderedSerialize();
+
+    /// Pushes the Lua table onto the stack of the internal Lua state.
+    //  I.e. makes the Lua table active that is associated with this
+    //  LuaTable.
+    void pushRef();
+    /// Pops the Lua table from the stack of the internal Lua state.
+    //  Cleans up a previous pushRef()
+    void popRef();
+
+    static LuaTable fromFile(const char *_filename);
     static LuaTable fromLuaExpression(const char* lua_expr);
-    static LuaTable fromLuaState(lua_State* L);
+    static LuaTable fromLuaState(lua_State *L);
 
     std::string filename;
-    lua_State* L;
-    bool deleteLuaState;
+    LuaStateRef *luaStateRef;
+    int luaRef;
+    lua_State *L;
+
+    bool referencesGlobal;
 };
 
 /* LUATABLES_H */

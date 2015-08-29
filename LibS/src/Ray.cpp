@@ -33,11 +33,11 @@ Ray<T>& Ray<T>::operator-=(const Vec2<T>& v)
 }
 
 template <class T>
-    template <class T2>
-    Ray<T>::operator Ray<T2>() const
-    {
-        return Ray<T2>(static_cast<Vec2<T2>>(origin), static_cast<Vec2<T2>>(direction));
-    }
+template <class T2>
+Ray<T>::operator Ray<T2>() const
+{
+    return Ray<T2>(static_cast<Vec2<T2>>(origin), static_cast<Vec2<T2>>(direction));
+}
 
 template <class T>
 void Ray<T>::setDirection(const Vec2<T>& d)

@@ -6,7 +6,11 @@
 #include "TileView.h"
 #include "TileController.h"
 
-#include "../LibS/make_unique.h"
+
+
+using namespace ls;
+
+const RectangleF TileStack::m_defaultCollider(Vec2F(0.0f, 0.0f), Vec2F(32.0f, 32.0f));
 
 Tile TileStack::m_emptyTile {std::make_unique<TileModel>(nullptr), std::make_unique<TileView>(nullptr), std::make_unique<TileController>(nullptr)};
 
@@ -94,14 +98,14 @@ bool TileStack::hasCollider() const
 
     return false;
 }
-const ls::RectangleF& TileStack::collider() const
+const RectangleF& TileStack::collider() const
 {
     for(const Tile* tile : m_tiles)
     {
         if(tile->model().hasCollider()) return tile->model().collider();
     }
 
-    //TODO: return something
+    return m_defaultCollider;
 }
 
 int TileStack::topZ() const

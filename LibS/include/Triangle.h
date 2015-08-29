@@ -16,13 +16,13 @@ public:
     static Triangle<T> isosceles(const Vec2<T>& center, const T base, const T height);
     static Triangle<T> rightTriangle(const Vec2<T>& rightAngledVertex, const T width, const T height); //with 90 degree angle on the left
 
-    Triangle(const Triangle<T>& other){vertices[0] = other.vertices[0];vertices[1] = other.vertices[1];vertices[2] = other.vertices[2];}
-    Triangle(Triangle<T>&& other){vertices[0] = std::move(other.vertices[0]);vertices[1] = std::move(other.vertices[1]);vertices[2] = std::move(other.vertices[2]);}
+    Triangle(const Triangle<T>& other) { vertices[0] = other.vertices[0]; vertices[1] = other.vertices[1]; vertices[2] = other.vertices[2]; }
+    Triangle(Triangle<T>&& other) { vertices[0] = std::move(other.vertices[0]); vertices[1] = std::move(other.vertices[1]); vertices[2] = std::move(other.vertices[2]); }
 
-    virtual ~Triangle(){}
+    virtual ~Triangle() {}
 
-    Triangle<T>& operator =(const Triangle<T>& other){vertices[0] = other.vertices[0];vertices[1] = other.vertices[1];vertices[2] = other.vertices[2]; return *this;}
-    Triangle<T>& operator =(Triangle<T> && other){vertices[0] = std::move(other.vertices[0]);vertices[1] = std::move(other.vertices[1]);vertices[2] = std::move(other.vertices[2]); return *this;}
+    Triangle<T>& operator =(const Triangle<T>& other) { vertices[0] = other.vertices[0]; vertices[1] = other.vertices[1]; vertices[2] = other.vertices[2]; return *this; }
+    Triangle<T>& operator =(Triangle<T> && other) { vertices[0] = std::move(other.vertices[0]); vertices[1] = std::move(other.vertices[1]); vertices[2] = std::move(other.vertices[2]); return *this; }
 
     Triangle<T> operator +(const Vec2<T>& p) const;
     Triangle<T> operator -(const Vec2<T>& p) const;

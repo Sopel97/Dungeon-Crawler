@@ -162,8 +162,7 @@ bool Intersections::intersection(const LineSegment<T>& a, const LineSegment<T>& 
 template <class T>
 bool Intersections::intersection(const Triangle<T>& a, const Vec2<T>& b)
 {
-    auto sign = [](const Vec2<T>& v1, const Vec2<T>& v2, const Vec2<T>& v3) -> double
-    {
+    auto sign = [] (const Vec2<T>& v1, const Vec2<T>& v2, const Vec2<T>& v3) -> double {
         return (v1.x - v3.x) * (v2.y - v3.y) - (v2.x - v3.x) * (v1.y - v3.y);
     };
 
@@ -293,8 +292,7 @@ bool Intersections::intersection(const Vec2<T>& a, const Rectangle<T>& b)
 template <class T>
 bool Intersections::intersection(const Polygon<T>& a, const Vec2<T>& b)
 {
-    auto determineQuadrant = [](const Vec2<T>& p, const Vec2<T>& c) -> int
-    {
+    auto determineQuadrant = [] (const Vec2<T>& p, const Vec2<T>& c) -> int {
         if(p.x < c.x)
             return p.y < c.y ? 1 : 4;
         else
@@ -315,16 +313,16 @@ bool Intersections::intersection(const Polygon<T>& a, const Vec2<T>& b)
         int quadrantCrossDelta = nextVertexQuadrant - currentVertexQuadrant;
         switch(quadrantCrossDelta)
         {
-            case 2:
-            case -2:
-                if((nextVertex->x - (((nextVertex->y - b.y) * (currentVertex->x - nextVertex->x)) / (currentVertex->y - nextVertex->y))) < b.x) quadrantCrossDelta = -quadrantCrossDelta;
-                break;
-            case 3:
-                quadrantCrossDelta = -1;
-                break;
-            case -3:
-                quadrantCrossDelta = 1;
-                break;
+        case 2:
+        case -2:
+            if((nextVertex->x - (((nextVertex->y - b.y) * (currentVertex->x - nextVertex->x)) / (currentVertex->y - nextVertex->y))) < b.x) quadrantCrossDelta = -quadrantCrossDelta;
+            break;
+        case 3:
+            quadrantCrossDelta = -1;
+            break;
+        case -3:
+            quadrantCrossDelta = 1;
+            break;
         }
 
         totalQuadrantCrossDelta += quadrantCrossDelta;

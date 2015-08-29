@@ -172,11 +172,11 @@ template <class T>
 Polyline<T> Polyline<T>::fromRectangle(const Rectangle<T>& rectangle)
 {
     return Polyline<T> {Vec2<T>{rectangle.min.x, rectangle.min.y},
-                        Vec2<T>{rectangle.max.x, rectangle.min.y},
-                        Vec2<T>{rectangle.max.x, rectangle.max.y},
-                        Vec2<T>{rectangle.min.x, rectangle.max.y},
-                        Vec2<T>{rectangle.min.x, rectangle.min.y}
-                       };
+        Vec2<T>{rectangle.max.x, rectangle.min.y},
+        Vec2<T>{rectangle.max.x, rectangle.max.y},
+        Vec2<T>{rectangle.min.x, rectangle.max.y},
+        Vec2<T>{rectangle.min.x, rectangle.min.y}
+    };
 }
 template <class T>
 Polyline<T> Polyline<T>::fromTriangle(const Triangle<T>& triangle)

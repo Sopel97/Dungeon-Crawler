@@ -1,9 +1,9 @@
 template <class T>
-Triangle<T>::Triangle(const Vec2<T>& p1, const Vec2<T>& p2, const Vec2<T>& p3) : vertices {p1, p2, p3}
+Triangle<T>::Triangle(const Vec2<T>& p1, const Vec2<T>& p2, const Vec2<T>& p3) : vertices{p1, p2, p3}
 {
 }
 template <class T>
-Triangle<T>::Triangle(const Vec2<T>* p) : vertices {p[0], p[1], p[2]}
+Triangle<T>::Triangle(const Vec2<T>* p) : vertices{p[0], p[1], p[2]}
 {
 }
 template <class T>
@@ -100,24 +100,24 @@ Vec2<T> Triangle<T>::centerOfMass() const
 template <class T>
 Triangle<T> Triangle<T>::equilateral(const Vec2<T>& center, const T base)
 {
-    T height = base * std::sqrt(T(3)) / T(2);
+    T height = base * static_cast<T>(SQRT3) / T(2);
     return Triangle<T>(Vec2<T> {center.x - base / T(2), center.y - height / T(2)},
-                       Vec2<T> {center.x, center.y + height / T(2)},
-                       Vec2<T> {center.x - base / T(2), center.y + height / T(2)});
+        Vec2<T> {center.x, center.y + height / T(2)},
+        Vec2<T> {center.x - base / T(2), center.y + height / T(2)});
 }
 template <class T>
 Triangle<T> Triangle<T>::isosceles(const Vec2<T>& center, const T base, const T height)
 {
     return Triangle<T>(Vec2<T> {center.x - base / T(2), center.y - height / T(2)},
-                       Vec2<T> {center.x, center.y + height / T(2)},
-                       Vec2<T> {center.x + base / T(2), center.y - height / T(2)});
+        Vec2<T> {center.x, center.y + height / T(2)},
+        Vec2<T> {center.x + base / T(2), center.y - height / T(2)});
 }
 template <class T>
 Triangle<T> Triangle<T>::rightTriangle(const Vec2<T>& rightAngledVertex, const T width, const T height)
 {
     return Triangle<T>(rightAngledVertex,
-                       rightAngledVertex + Vec2<T> {T(0), height},
-                       rightAngledVertex + Vec2<T> {width, T(0)});
+        rightAngledVertex + Vec2<T> {T(0), height},
+        rightAngledVertex + Vec2<T> {width, T(0)});
 }
 template <class T>
 T Triangle<T>::signedArea() const

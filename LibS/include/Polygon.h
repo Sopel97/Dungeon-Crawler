@@ -7,24 +7,24 @@ class Polygon : public Shape2<T> //Supports convex and concave polygons. Does no
 public:
     std::vector<Vec2<T>> vertices;
 
-    Polygon(){}
+    Polygon() {}
     Polygon(const std::initializer_list<Vec2<T>>& list);
     Polygon(const std::vector<Vec2<T>>& v);
     Polygon(std::vector<Vec2<T>>&& v);
     Polygon(Vec2<T>* v, size_t count);
 
     //static Polygon<T> randomInscribedInCircle(const Circle<T>& circle, int edges); later, when using Random.h will be somehow standarized
-    static Polygon<T> regular(const Vec2D& center, int sides, int radius);
+    static Polygon<T> regular(const Vec2<T>& center, int sides, T radius);
     static Polygon<T> fromRectangle(const Rectangle<T>& rectangle);
     static Polygon<T> fromTriangle(const Triangle<T>& triangle);
 
-    Polygon(const Polygon<T>& other){vertices = other.vertices;}
-    Polygon(Polygon<T>&& other){vertices = std::move(other.vertices);}
+    Polygon(const Polygon<T>& other) { vertices = other.vertices; }
+    Polygon(Polygon<T>&& other) { vertices = std::move(other.vertices); }
 
-    virtual ~Polygon(){}
+    virtual ~Polygon() {}
 
-    Polygon<T>& operator=(const Polygon<T>& other){vertices = other.vertices; return *this;}
-    Polygon<T>& operator=(Polygon<T> && other){vertices = std::move(other.vertices); return *this;}
+    Polygon<T>& operator=(const Polygon<T>& other) { vertices = other.vertices; return *this; }
+    Polygon<T>& operator=(Polygon<T> && other) { vertices = std::move(other.vertices); return *this; }
 
     Polygon<T> operator+(const Vec2<T>& v) const;
     Polygon<T> operator-(const Vec2<T>& v) const;

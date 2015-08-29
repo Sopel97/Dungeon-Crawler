@@ -15,15 +15,18 @@
 //NOTE: 3d shapes are leftover from early stages of the library and will be completly rewritten later.
 namespace ls
 {
-    inline double radiansToDegrees(const double radians)
+    template <class T>
+    T radiansToDegrees(const T radians)
     {
-        return radians * (180.0 / PI);
+        return radians * (T(180.0) / static_cast<T>(PI));
     }
-    inline double degreesToRadians(const double degrees)
+    template <class T>
+    T degreesToRadians(const T degrees)
     {
-        return degrees * (PI / 180.0);
+        return degrees * (static_cast<T>(PI) / T(180.0));
     }
-    inline double clamp(int a, int mi, int ma)
+    template <class T>
+    T clamp(T a, T mi, T ma)
     {
         return std::max(std::min(a, ma), mi);
     }

@@ -17,7 +17,7 @@
 
 #include <string>
 #include <map>
-#include "../LibS/make_unique.h"
+
 
 std::pair<std::string, void*> TextureLoader::load(const std::string& path) const
 {
@@ -54,7 +54,7 @@ std::pair<std::string, void*> TileLoader::load(const std::string& path) const
     {
         model = tileModels().at(modelName)->create(nullptr);
     }
-    catch(std::out_of_range& e)
+    catch(std::out_of_range&)
     {
         throw std::runtime_error("No tile model with name " + modelName);
     }
@@ -64,7 +64,7 @@ std::pair<std::string, void*> TileLoader::load(const std::string& path) const
     {
         view = tileViews().at(viewName)->create(nullptr);
     }
-    catch(std::out_of_range& e)
+    catch(std::out_of_range&)
     {
         throw std::runtime_error("No tile view with name " + viewName);
     }
@@ -74,7 +74,7 @@ std::pair<std::string, void*> TileLoader::load(const std::string& path) const
     {
         controller = tileControllers().at(controllerName)->create(nullptr);
     }
-    catch(std::out_of_range& e)
+    catch(std::out_of_range&)
     {
         throw std::runtime_error("No tile controller with name " + controllerName);
     }
@@ -117,7 +117,7 @@ std::pair<std::string, void*> EntityLoader::load(const std::string& path) const
     {
         model = entityModels().at(modelName)->create(nullptr);
     }
-    catch(std::out_of_range& e)
+    catch(std::out_of_range&)
     {
         throw std::runtime_error("No entity model with name " + modelName);
     }
@@ -127,7 +127,7 @@ std::pair<std::string, void*> EntityLoader::load(const std::string& path) const
     {
         view = entityViews().at(viewName)->create(nullptr);
     }
-    catch(std::out_of_range& e)
+    catch(std::out_of_range&)
     {
         throw std::runtime_error("No entity view with name " + viewName);
     }
@@ -137,7 +137,7 @@ std::pair<std::string, void*> EntityLoader::load(const std::string& path) const
     {
         controller = entityControllers().at(controllerName)->create(nullptr);
     }
-    catch(std::out_of_range& e)
+    catch(std::out_of_range&)
     {
         throw std::runtime_error("No entity controller with name " + controllerName);
     }

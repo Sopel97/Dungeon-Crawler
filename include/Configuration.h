@@ -16,6 +16,8 @@ public:
 
     ConfigurationNode operator[](const std::string& nodePath);
     ConfigurationNode operator[](int index);
+
+    LuaTable& luaTable();
 protected:
     LuaTable m_table;
     std::string m_path;

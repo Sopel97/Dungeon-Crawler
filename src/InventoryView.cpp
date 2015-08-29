@@ -40,10 +40,7 @@ InventoryView::InventoryView(Inventory* parent, const std::vector<InventorySlotV
     m_isCloseable(true),
     m_isResizeable(true)
 {
-    for(const auto& slot : m_slotViews)
-    {
-        addInventorySlotView(slot);
-    }
+    updateMaxHeight();
 }
 InventoryView::InventoryView(Inventory* parent, std::vector<InventorySlotView>&& slots) :
     m_parentInventory(parent),
@@ -57,10 +54,7 @@ InventoryView::InventoryView(Inventory* parent, std::vector<InventorySlotView>&&
     m_isCloseable(true),
     m_isResizeable(true)
 {
-    for(const auto& slot : m_slotViews)
-    {
-        addInventorySlotView(slot);
-    }
+    updateMaxHeight();
 }
 
 void InventoryView::addInventorySlotView(const InventorySlotView& slot)
@@ -159,32 +153,36 @@ void InventoryView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& rende
 
     Root::instance().windowSpaceManager().setDefaultView();
 
+    const Vec2F& inventoryContentTopLeft(inventoryContentRect.min);
+    const Vec2F& inventoryWindowTopLeft(inventoryWindowRect.min);
+    const Vec2F& inventoryWindowBottomRight(inventoryWindowRect.max); 
+
     sf::Sprite topPanelSprite;
-    topPanelSprite.setPosition(inventoryWindowRect.min.x, inventoryWindowRect.min.y);
+    topPanelSprite.setPosition(inventoryWindowTopLeft.x, inventoryWindowTopLeft.y);
     topPanelSprite.setTexture(otherTexture.get());
     topPanelSprite.setTextureRect(sf::IntRect(sf::Vector2i(topBarSpritePosition.x, topBarSpritePosition.y), sf::Vector2i(inventoryWindowWidth, m_topBarHeight)));
     renderTarget.draw(topPanelSprite, renderStates);
 
     sf::Sprite leftBarSprite;
-    leftBarSprite.setPosition(inventoryWindowRect.min.x, inventoryWindowRect.min.y + m_topBarHeight);
+    leftBarSprite.setPosition(inventoryWindowTopLeft.x, inventoryWindowTopLeft.y + m_topBarHeight);
     leftBarSprite.setTexture(verticalBarsTexture.get());
     leftBarSprite.setTextureRect(sf::IntRect(sf::Vector2i(leftBarSpritePosition.x, leftBarSpritePosition.y), sf::Vector2i(m_leftBarWidth, sideBarHeight)));
     renderTarget.draw(leftBarSprite, renderStates);
 
     sf::Sprite rightBarSprite;
-    rightBarSprite.setPosition(inventoryWindowRect.max.x - m_rightBarWidth, inventoryWindowRect.min.y + m_topBarHeight);
+    rightBarSprite.setPosition(inventoryWindowBottomRight.x - m_rightBarWidth, inventoryWindowTopLeft.y + m_topBarHeight);
     rightBarSprite.setTexture(verticalBarsTexture.get());
     rightBarSprite.setTextureRect(sf::IntRect(sf::Vector2i(rightBarSpritePosition.x, rightBarSpritePosition.y), sf::Vector2i(m_rightBarWidth, sideBarHeight)));
     renderTarget.draw(rightBarSprite, renderStates);
 
     sf::Sprite bottomPanelSprite;
-    bottomPanelSprite.setPosition(inventoryWindowRect.min.x, inventoryWindowRect.max.y - m_bottomBarHeight);
+    bottomPanelSprite.setPosition(inventoryWindowTopLeft.x, inventoryWindowBottomRight.y - m_bottomBarHeight);
     bottomPanelSprite.setTexture(otherTexture.get());
     bottomPanelSprite.setTextureRect(sf::IntRect(sf::Vector2i(bottomBarSpritePosition.x, bottomBarSpritePosition.y), sf::Vector2i(inventoryWindowWidth, m_bottomBarHeight)));
     renderTarget.draw(bottomPanelSprite, renderStates);
 
     sf::Sprite backgroundSprite;
-    backgroundSprite.setPosition(inventoryContentRect.min.x, inventoryContentRect.min.y);
+    backgroundSprite.setPosition(inventoryContentTopLeft.x, inventoryContentTopLeft.y);
     backgroundSprite.setTexture(backgroundTexture.get());
     backgroundSprite.setTextureRect(sf::IntRect(sf::Vector2i(0, m_scroll), sf::Vector2i(inventoryWindowWidth - m_leftBarWidth - m_rightBarWidth, sideBarHeight)));
     renderTarget.draw(backgroundSprite, renderStates);
@@ -194,7 +192,7 @@ void InventoryView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& rende
         constexpr int scrollBarWidth = 12;
         int scrollBarHeight = inventoryContentRect.height();
 
-        const Vec2F scrollBarTopLeft(inventoryContentRect.max.x - scrollBarWidth, inventoryContentRect.min.y);
+        const Vec2F scrollBarTopLeft(static_cast<float>(inventoryContentRect.max.x - scrollBarWidth), static_cast<float>(inventoryContentRect.min.y));
 
         sf::Sprite scrollBarSprite;
         scrollBarSprite.setPosition(scrollBarTopLeft.x, scrollBarTopLeft.y);
@@ -216,24 +214,24 @@ void InventoryView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& rende
 
         if(m_height != m_maxHeight)
         {
-            int sliderMin = scrollBarTopLeft.y + scrollButtonsSizes.y / 2 + scrollButtonsSizes.y;
-            int sliderMax = scrollBarTopLeft.y + scrollBarHeight - scrollButtonsSizes.y / 2 - 2*scrollButtonsSizes.y;
+            int sliderMin = static_cast<int>(scrollBarTopLeft.y) + scrollButtonsSizes.y / 2 + scrollButtonsSizes.y;
+            int sliderMax = static_cast<int>(scrollBarTopLeft.y) + scrollBarHeight - scrollButtonsSizes.y / 2 - 2 * scrollButtonsSizes.y;
             int sliderRangeLength = sliderMax - sliderMin;
             int contentViewHeight = m_height - m_topBarHeight - m_bottomBarHeight;
             int fullContentHeight = m_maxHeight - m_topBarHeight - m_bottomBarHeight;
             int scrollRangeLength = fullContentHeight - contentViewHeight;
             float scrolled = static_cast<float>(m_scroll) / static_cast<float>(scrollRangeLength);
-            int sliderPosition = sliderMin + sliderRangeLength * scrolled;
+            int sliderPosition = static_cast<int>(sliderMin + sliderRangeLength * scrolled);
 
             sf::Sprite scrollBarSliderButtonSprite;
-            scrollBarSliderButtonSprite.setPosition(scrollBarTopLeft.x, sliderPosition - scrollButtonsSizes.y / 2);
+            scrollBarSliderButtonSprite.setPosition(scrollBarTopLeft.x, static_cast<float>(sliderPosition - scrollButtonsSizes.y / 2));
             scrollBarSliderButtonSprite.setTexture(otherTexture.get());
             scrollBarSliderButtonSprite.setTextureRect(sf::IntRect(sf::Vector2i(scrollBarSliderButtonSpritePosition.x, scrollBarSliderButtonSpritePosition.y), sf::Vector2i(scrollButtonsSizes.x, scrollButtonsSizes.y)));
             renderTarget.draw(scrollBarSliderButtonSprite, renderStates);
         }
     }
 
-    Root::instance().windowSpaceManager().setViewToRect(inventoryContentRect, RectangleF(Vec2F(0, m_scroll), inventoryWindowWidth - m_leftBarWidth - m_rightBarWidth, sideBarHeight));
+    Root::instance().windowSpaceManager().setViewToRect(inventoryContentRect, RectangleF(Vec2F(0.0f, static_cast<float>(m_scroll)), static_cast<float>(inventoryWindowWidth - m_leftBarWidth - m_rightBarWidth), static_cast<float>(sideBarHeight)));
     for(auto& slot : m_slotViews) slot.draw(renderTarget, renderStates);
 
 }
@@ -244,4 +242,13 @@ void InventoryView::update()
 
     m_height = std::min(std::max(m_height, m_minHeight), m_maxHeight);
     m_scroll = std::min(std::max(m_scroll, 0), fullContentHeight - contentViewHeight);
+}
+
+void InventoryView::updateMaxHeight()
+{
+    for(const auto& slot : m_slotViews)
+    {
+        int slotBottom = slot.position().y + InventorySlotView::slotSize().y;
+        m_maxHeight = std::max(m_maxHeight, slotBottom + 4 + m_bottomBarHeight + m_topBarHeight);
+    }
 }

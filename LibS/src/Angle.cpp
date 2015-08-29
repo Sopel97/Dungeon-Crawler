@@ -65,85 +65,85 @@ Angle<T>::operator Angle<T2>() const
 template <class T>
 T Angle<T>::sin() const
 {
-    return std::sin(m_radians);
+    return static_cast<T>(std::sin(m_radians));
 }
 template <class T>
 T Angle<T>::cos() const
 {
-    return std::cos(m_radians);
+    return static_cast<T>(std::cos(m_radians));
 }
 template <class T>
 T Angle<T>::tan() const
 {
-    return std::tan(m_radians);
+    return static_cast<T>(std::tan(m_radians));
 }
 template <class T>
 T Angle<T>::cot() const
 {
-    return T(1) / std::tan(m_radians);
+    return T(1) / static_cast<T>(std::tan(m_radians));
 }
 
 template <class T>
 T Angle<T>::asin() const
 {
-    return std::asin(m_radians);
+    return static_cast<T>(std::asin(m_radians));
 }
 template <class T>
 T Angle<T>::acos() const
 {
-    return std::acos(m_radians);
+    return static_cast<T>(std::acos(m_radians));
 }
 template <class T>
 T Angle<T>::atan() const
 {
-    return std::atan(m_radians);
+    return static_cast<T>(std::atan(m_radians));
 }
 template <class T>
 T Angle<T>::acot() const
 {
-    return (PI / T(2)) - std::atan(m_radians);
+    return (static_cast<T>(PI) / T(2)) - static_cast<T>(std::atan(m_radians));
 }
 
 template <class T>
 T Angle<T>::sinh() const
 {
-    return std::sinh(m_radians);
+    return static_cast<T>(std::sinh(m_radians));
 }
 template <class T>
 T Angle<T>::cosh() const
 {
-    return std::cosh(m_radians);
+    return static_cast<T>(std::cosh(m_radians));
 }
 template <class T>
 T Angle<T>::tanh() const
 {
-    return std::tanh(m_radians);
+    return static_cast<T>(std::tanh(m_radians));
 }
 template <class T>
 T Angle<T>::coth() const
 {
-    return T(1) / std::tanh(m_radians);
+    return T(1) / static_cast<T>(std::tanh(m_radians));
 }
 
 template <class T>
 T Angle<T>::asinh() const
 {
-    return std::atanh(m_radians);
+    return static_cast<T>(std::atanh(m_radians));
 }
 template <class T>
 T Angle<T>::acosh() const
 {
-    return std::acosh(m_radians);
+    return static_cast<T>(std::acosh(m_radians));
 }
 template <class T>
 T Angle<T>::atanh() const
 {
-    return std::atanh(m_radians);
+    return static_cast<T>(std::atanh(m_radians));
 }
 template <class T>
 T Angle<T>::acoth() const
 {
-    return std::atanh(T(1) / m_radians);
+    return static_cast<T>(std::atanh(T(1) / m_radians));
 }
 
 template <class T>
