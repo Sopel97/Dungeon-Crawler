@@ -19,7 +19,7 @@ $RECYCLE.BIN/
 
 # Builds
 Release/*
-Build/*
+Debug/*
 
 # Other project files
 *.exe
