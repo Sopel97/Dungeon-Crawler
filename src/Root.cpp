@@ -16,7 +16,7 @@
 
 using namespace ls;
 
-Root::Root() :
+Root::Root() : 
     m_renderStates(),
     m_rng(12341),
     m_lastFrameTime(0.0f),

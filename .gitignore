@@ -17,6 +17,10 @@ $RECYCLE.BIN/
 # Windows shortcuts
 *.lnk
 
+# Builds
+Release/*
+Build/*
+
 # Other project files
 *.exe
 *.dll
@@ -38,6 +42,9 @@ $RECYCLE.BIN/
 *.vcxproj*
 *.user
 *.suo
+*.iobj
+*.ipdb
+*.opensdf
 
 # =========================
 # Operating System Files

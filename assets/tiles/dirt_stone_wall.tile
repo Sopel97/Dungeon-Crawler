@@ -1,0 +1,21 @@
+tile = {
+        
+    name = "Stone wall",
+    
+    model = "PlainTileModel",
+    view = "InnerBorderedWallTileView",
+    controller = "PlainTileController",
+
+    texture = "Spritesheet",
+    spriteSet = {34, 0},
+
+    innerBorderGroup = 1,
+	
+	collider = {
+		{0.0, 0.0},
+		{32.0, 32.0}
+	},
+
+    drag = 1
+    
+}
