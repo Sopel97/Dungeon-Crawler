@@ -18,8 +18,8 @@ $RECYCLE.BIN/
 *.lnk
 
 # Builds
-Release/*
-Debug/*
+Release
+Debug
 
 # Other project files
 *.exe

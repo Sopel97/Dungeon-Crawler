@@ -33,17 +33,6 @@ Circle<T>::operator Circle<T2>() const
 }
 
 template <class T>
-void Circle<T>::translate(const Vec2<T>& v)
-{
-    origin.translate(v);
-}
-template <class T>
-void Circle<T>::scale(const Vec2<T>& s) //undefined when s.x != s.y
-{
-    radius *= s.x;
-    origin.scale(s);
-}
-template <class T>
 T Circle<T>::distanceTo(const Vec2<T>& v1) const
 {
     return std::max(T(0.0), v1.distanceTo(origin) - radius);

@@ -105,18 +105,6 @@ Vec4<T>::operator Vec4<T2>() const
 }
 
 template <class T>
-T& Vec4<T>::operator [](int i)
-{
-    return v[i];
-}
-
-template <class T>
-const T& Vec4<T>::operator [](int i) const
-{
-    return v[i];
-}
-
-template <class T>
 T Vec4<T>::magnitude()
 {
     return static_cast<T>(std::sqrt((x * x) + (y * y) + (z * z) + (w * w)));

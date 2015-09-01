@@ -115,22 +115,6 @@ void Mesh2<ShapeType>::add(Mesh2<ShapeType>&& m)
 }
 
 template <class ShapeType>
-void Mesh2<ShapeType>::translate(const Vec2<T>& v)
-{
-    for(auto& shape : elements)
-    {
-        shape.translate(v);
-    }
-}
-template <class ShapeType>
-void Mesh2<ShapeType>::scale(const Vec2<T>& s)
-{
-    for(auto& shape : elements)
-    {
-        shape.scale(s);
-    }
-}
-template <class ShapeType>
 typename Mesh2<ShapeType>::T Mesh2<ShapeType>::distanceTo(const Vec2<T>& point) const
 {
     if(point.intersects(*this)) return 0;

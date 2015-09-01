@@ -51,18 +51,6 @@ T Rectangle<T>::height() const
 }
 
 template <class T>
-void Rectangle<T>::translate(const Vec2<T>& v)
-{
-    min.translate(v);
-    max.translate(v);
-}
-template <class T>
-void Rectangle<T>::scale(const Vec2<T>& s)
-{
-    min.scale(s);
-    max.scale(s);
-}
-template <class T>
 T Rectangle<T>::distanceTo(const Vec2<T>& point) const
 {
     return point.distanceTo(nearestPointTo(point));

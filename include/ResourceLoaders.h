@@ -32,20 +32,20 @@ public:
 #define REGISTER_TILE_MODEL_TYPE(TYPE) \
     namespace ___TypeRegistering \
     { \
-        TileLoader::TileModelTypeRegistrar<TYPE> TYPE ## _var (#TYPE); \
-    } \
+        const TileLoader::TileModelTypeRegistrar<TYPE> TYPE ## _model_var (#TYPE); \
+    }
 
 #define REGISTER_TILE_VIEW_TYPE(TYPE)  \
     namespace ___TypeRegistering \
     { \
-        TileLoader::TileViewTypeRegistrar<TYPE> TYPE ## _var (#TYPE); \
-    } \
+        const TileLoader::TileViewTypeRegistrar<TYPE> TYPE ## _view_var (#TYPE); \
+    }
 
 #define REGISTER_TILE_CONTROLLER_TYPE(TYPE)  \
     namespace ___TypeRegistering \
     { \
-        TileLoader::TileControllerTypeRegistrar<TYPE> TYPE ## _var (#TYPE); \
-    } \
+        const TileLoader::TileControllerTypeRegistrar<TYPE> TYPE ## _controller_var (#TYPE); \
+    }
 
 class TileLoader : public ResourceLoader
 {
@@ -113,20 +113,20 @@ protected:
 #define REGISTER_ENTITY_MODEL_TYPE(TYPE) \
     namespace ___TypeRegistering \
     { \
-        EntityLoader::EntityModelTypeRegistrar<TYPE> TYPE ## _var (#TYPE); \
-    } \
+        const EntityLoader::EntityModelTypeRegistrar<TYPE> TYPE ## _model_var (#TYPE); \
+    }
 
 #define REGISTER_ENTITY_VIEW_TYPE(TYPE)  \
     namespace ___TypeRegistering \
     { \
-        EntityLoader::EntityViewTypeRegistrar<TYPE> TYPE ## _var (#TYPE); \
-    } \
+        const EntityLoader::EntityViewTypeRegistrar<TYPE> TYPE ## _view_var (#TYPE); \
+    }
 
 #define REGISTER_ENTITY_CONTROLLER_TYPE(TYPE)  \
     namespace ___TypeRegistering \
     { \
-        EntityLoader::EntityControllerTypeRegistrar<TYPE> TYPE ## _var (#TYPE); \
-    } \
+        const EntityLoader::EntityControllerTypeRegistrar<TYPE> TYPE ## _controller_var (#TYPE); \
+    } 
 
 class EntityLoader : public ResourceLoader
 {

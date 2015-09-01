@@ -100,18 +100,6 @@ Vec3<T>::operator Vec3<T2>() const
 }
 
 template <class T>
-T& Vec3<T>::operator [](int i)
-{
-    return v[i];
-}
-
-template <class T>
-const T& Vec3<T>::operator [](int i) const
-{
-    return v[i];
-}
-
-template <class T>
 T Vec3<T>::magnitude()
 {
     return static_cast<T>(std::sqrt((x * x) + (y * y) + (z * z)));

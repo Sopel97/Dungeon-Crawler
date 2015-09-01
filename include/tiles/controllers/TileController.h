@@ -7,6 +7,7 @@
 
 class Tile;
 class TileLocation;
+class Player;
 
 class TileController //must not be abstract (ie. all methods return resonable values and there is not pure virtual member functions)
 {
@@ -24,6 +25,7 @@ public:
     virtual void onTilePlaced(const TileLocation& location);
     virtual void onTileRemoved(const TileLocation& location);
     virtual void onTileQuantityChanged(int newQuantity);
+    virtual void onTileUsedByPlayer(const TileLocation& location, Player& player);
 
     virtual std::unique_ptr<TileController> clone() const;
     virtual std::unique_ptr<TileController> create(Tile* owner) const;

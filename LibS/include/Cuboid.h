@@ -32,9 +32,6 @@ public:
     T height() const;
     T depth() const;
 
-    template <class Transformation>
-    void transform(Transformation&& func);
-
     /* INTERSECTIONS */
     template<class S>
     bool intersects(const S& b) const;

@@ -54,12 +54,6 @@ T Cuboid<T>::depth() const
 {
     return max.z - min.z;
 }
-template <class T>
-template <class Transformation>
-void Cuboid<T>::transform(Transformation&& func)
-{
-    func(*this);
-}
 
 /* INTERSECTIONS */
 

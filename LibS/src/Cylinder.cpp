@@ -36,12 +36,6 @@ Circle<T> Cylinder<T>::base() const
 {
     return Circle<T>(Vec2<T>(center.x, center.y), radius);
 }
-template <class T>
-template <class Transformation>
-void Cylinder<T>::transform(Transformation&& func)
-{
-    func(*this);
-}
 
 /* INTERSECTIONS */
 

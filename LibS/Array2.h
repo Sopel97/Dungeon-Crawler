@@ -3,8 +3,6 @@
 #include <iostream>
 #include <vector>
 #include <utility>
-#include <queue>
-
 using std::size_t;
 
 template <class T>
@@ -392,42 +390,18 @@ public:
     }
     void floodFill(int x, int y, const T& value)
     {
-        T thisCell = at(x, y);
-        if(value == thisCell) return;
         int width = m_sizeX;
         int height = m_sizeY;
 
-        std::queue<std::pair<int, int>> queue;
-        queue.emplace(x, y);
+        int thisCell = at(x, y);
+
+        if(value == thisCell) return;
+
         at(x, y) = value;
-
-        while(!queue.empty())
-        {
-            const std::pair<int, int>& coords = queue.front();
-
-            if(coords.first > 0 && at(coords.first - 1, coords.second) == thisCell)
-            {
-                queue.emplace(coords.first - 1, coords.second);
-                at(coords.first - 1, coords.second) = value;
-            }
-            if(coords.second > 0 && at(coords.first, coords.second - 1) == thisCell)
-            {
-                queue.emplace(coords.first, coords.second - 1);
-                at(coords.first, coords.second - 1) = value;
-            }
-            if(coords.first < width - 1 && at(coords.first + 1, coords.second) == thisCell)
-            {
-                queue.emplace(coords.first + 1, coords.second);
-                at(coords.first + 1, coords.second) = value;
-            }
-            if(coords.second < height - 1 && at(coords.first, coords.second + 1) == thisCell)
-            {
-                queue.emplace(coords.first, coords.second + 1);
-                at(coords.first, coords.second + 1) = value;
-            }
-
-            queue.pop();
-        }
+        if(x > 0 && at(x - 1, y) == thisCell) floodFill(x - 1, y, value);
+        if(y > 0 && at(x, y - 1) == thisCell) floodFill(x, y - 1, value);
+        if(x < width - 1 && at(x + 1, y) == thisCell) floodFill(x + 1, y, value);
+        if(y < height - 1 && at(x, y + 1) == thisCell) floodFill(x, y + 1, value);
     }
 
     T* data() const

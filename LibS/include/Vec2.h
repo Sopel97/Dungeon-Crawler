@@ -5,12 +5,7 @@ template <class T>
 class Vec2 : public Shape2<T>
 {
 public:
-
-    union
-    {
-        struct { T x, y; };
-        struct { T v[2]; };
-    };
+    T x, y;
 
     static const Vec2<T> unitX;
     static const Vec2<T> unitY;
@@ -29,9 +24,6 @@ public:
     Vec2<T>& operator=(Vec2<T> && v1);
 
     virtual ~Vec2() {}
-
-    T& operator[](size_t index);
-    const T& operator[](size_t index) const;
 
     Vec2<T> operator+(const Vec2<T>& v1) const;
     Vec2<T> operator-(const Vec2<T>& v1) const;
@@ -66,13 +58,7 @@ public:
     Angle<T> angle() const;
     Angle<T> angle(const Vec2<T>& other) const;
 
-    void translate(const Vec2<T>& v);
-    void scale(const Vec2<T>& c, const Vec2<T>& s);
-    void scale(const Vec2<T>& c, const T s);
-    void scale(const Vec2<T>& s);
-    void scale(const T s);
-
-    T distanceTo(const Vec2<T>& v1) const;
+    T distanceTo(const Vec2<T>&) const;
     virtual Vec2<T> nearestPointTo(const Vec2<T>& point) const;
 };
 template <class T>

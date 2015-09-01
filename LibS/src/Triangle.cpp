@@ -40,20 +40,6 @@ Triangle<T>::operator Triangle<T2>() const
     return Triangle<T2>(static_cast<Vec2<T2>>(vertices[0]), static_cast<Vec2<T2>>(vertices[1]), static_cast<Vec2<T2>>(vertices[2]));
 }
 
-template <class T>
-void Triangle<T>::translate(const Vec2<T>& v)
-{
-    vertices[0].translate(v);
-    vertices[1].translate(v);
-    vertices[2].translate(v);
-}
-template <class T>
-void Triangle<T>::scale(const Vec2<T>& s)
-{
-    vertices[0].scale(s);
-    vertices[1].scale(s);
-    vertices[2].scale(s);
-}
 
 template <class T>
 T Triangle<T>::distanceTo(const Vec2<T>& point) const

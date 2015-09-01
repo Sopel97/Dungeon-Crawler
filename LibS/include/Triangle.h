@@ -33,9 +33,6 @@ public:
     template <class T2>
     explicit operator Triangle<T2>() const;
 
-    void translate(const Vec2<T>& v);
-    void scale(const Vec2<T>& s);
-
     T distanceTo(const Vec2<T>& v1) const;
     Vec2<T> nearestPointTo(const Vec2<T>& point) const;
 

@@ -202,47 +202,7 @@ Vec2<T>::operator Vec2<T2>() const
 {
     return Vec2<T2>(static_cast<T2>(x), static_cast<T2>(y));
 }
-template <class T>
-T& Vec2<T>::operator[](size_t index)
-{
-    return v[index];
-}
-template <class T>
-const T& Vec2<T>::operator[](size_t index) const
-{
-    return v[index];
-}
 
-template <class T>
-void Vec2<T>::translate(const Vec2<T>& v)
-{
-    x += v.x;
-    y += v.y;
-}
-template <class T>
-void Vec2<T>::scale(const Vec2<T>& c, const Vec2<T>& s)
-{
-    x = (x - c.x) * s.x + c.x;
-    y = (y - c.y) * s.y + c.y;
-}
-template <class T>
-void Vec2<T>::scale(const Vec2<T>& c, const T s)
-{
-    x = (x - c.x) * s + c.x;
-    y = (y - c.y) * s + c.y;
-}
-template <class T>
-void Vec2<T>::scale(const Vec2<T>& s)
-{
-    x *= s.x;
-    y *= s.y;
-}
-template <class T>
-void Vec2<T>::scale(const T s)
-{
-    x *= s;
-    y *= s;
-}
 template <class T>
 T Vec2<T>::distanceTo(const Vec2<T>& v1) const
 {
@@ -251,7 +211,7 @@ T Vec2<T>::distanceTo(const Vec2<T>& v1) const
     return static_cast<T>(std::sqrt(dx * dx + dy * dy));
 }
 template <class T>
-Vec2<T> Vec2<T>::nearestPointTo(const Vec2<T>& v1) const
+Vec2<T> Vec2<T>::nearestPointTo(const Vec2<T>&) const
 {
     return *this;
 }

@@ -90,30 +90,6 @@ void Polyline<T>::add(std::vector<T>&& v)
 }
 
 template <class T>
-void Polyline<T>::translate(const Vec2<T>& v)
-{
-    for(auto& vert : vertices)
-    {
-        vert.translate(v);
-    }
-}
-template <class T>
-void Polyline<T>::scale(const Vec2<T>& s)
-{
-    for(auto& vert : vertices)
-    {
-        vert.scale(s);
-    }
-}
-template <class T>
-Vec2<T> Polyline<T>::project(const Vec2<T>& b) const
-{
-    Vec2<T> projection;
-
-    return projection;
-}
-
-template <class T>
 std::pair<T, T> Polyline<T>::projectMinMax(const Vec2<T>& b) const
 {
     T minProjection;

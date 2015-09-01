@@ -44,6 +44,10 @@ void TileController::onTileQuantityChanged(int newQuantity)
 {
 
 }
+void TileController::onTileUsedByPlayer(const TileLocation& location, Player& player)
+{
+
+}
 
 std::unique_ptr<TileController> TileController::clone() const
 {

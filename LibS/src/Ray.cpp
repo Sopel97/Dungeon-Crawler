@@ -46,18 +46,6 @@ void Ray<T>::setDirection(const Vec2<T>& d)
 }
 
 template <class T>
-void Ray<T>::translate(const Vec2<T>& v)
-{
-    origin.translate(v);
-}
-template <class T>
-void Ray<T>::scale(const Vec2<T>& s)
-{
-    origin.scale(s);
-    direction.scale(s);
-    direction.normalize();
-}
-template <class T>
 T Ray<T>::distanceTo(const Vec2<T>& point) const
 {
     return point.distanceTo(nearestPointTo(point));

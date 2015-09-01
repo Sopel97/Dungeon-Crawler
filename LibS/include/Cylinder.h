@@ -31,9 +31,6 @@ public:
 
     Circle<T> base() const;
 
-    template <class Transformation>
-    void transform(Transformation&& func);
-
     /* INTERSECTIONS */
     template<class S>
     bool intersects(const S& b) const;

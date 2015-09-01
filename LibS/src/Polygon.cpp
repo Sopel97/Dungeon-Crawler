@@ -88,29 +88,6 @@ void Polygon<T>::add(std::vector<T>&& v)
     vertices.insert(vertices.end(), v.begin(), v.end());
 }
 
-template <class T>
-void Polygon<T>::translate(const Vec2<T>& v)
-{
-    for(auto& vert : vertices)
-    {
-        vert.translate(v);
-    }
-}
-template <class T>
-void Polygon<T>::scale(const Vec2<T>& s)
-{
-    for(auto& vert : vertices)
-    {
-        vert.scale(s);
-    }
-}
-template <class T>
-Vec2<T> Polygon<T>::project(const Vec2<T>& b) const
-{
-    Vec2<T> projection;
-
-    return projection;
-}
 
 template <class T>
 std::pair<T, T> Polygon<T>::projectMinMax(const Vec2<T>& b) const
@@ -240,7 +217,7 @@ Polygon<T> Polygon<T>::regular(const Vec2<T>& center, int sides, T radius)
     polygon.vertices.reserve(sides);
     for(int i = 0; i < sides; ++i)
     {
-        polygon.vertices.emplace_back(radius * static_cast<T>(std::cos(T(2) * static_cast<T>(PI) * static_cast<T>(i) / static_cast<T>(sides))), radius * static_cast<T>(std::sin(T(2) * static_cast<T>(PI) * static_cast<T>(i) / static_cast<T>(sides))));
+        polygon.vertices.emplace_back(center.x + radius * static_cast<T>(std::cos(T(2) * static_cast<T>(PI) * static_cast<T>(i) / static_cast<T>(sides))), center.y + radius * static_cast<T>(std::sin(T(2) * static_cast<T>(PI) * static_cast<T>(i) / static_cast<T>(sides))));
     }
     return polygon;
 }

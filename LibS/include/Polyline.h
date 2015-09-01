@@ -40,10 +40,6 @@ public:
     void add(Vec2<T>&& v);
     void add(std::vector<T>&& v);
 
-    void translate(const Vec2<T>& v);
-    void scale(const Vec2<T>& s);
-
-    Vec2<T> project(const Vec2<T>& b) const;
     std::pair<T, T> projectMinMax(const Vec2<T>& b) const; //this is used in SAT, but it does not belong here so should be removed
 
     T distanceTo(const Vec2<T>& v1) const;

@@ -5,11 +5,7 @@ template <class T>
 class Vec3 : public Shape3<T>
 {
 public:
-    union
-    {
-        struct { T x, y, z; };
-        struct { T v[3]; };
-    };
+    T x, y, z;
 
     static const Vec3<T> unitX;
     static const Vec3<T> unitY;
@@ -26,9 +22,6 @@ public:
 
     Vec3<T>& operator=(const Vec3<T>& v1) { x = v1.x; y = v1.y; z = v1.z; return *this; }
     Vec3<T>& operator=(Vec3<T> && v1) { x = std::move(v1.x); y = std::move(v1.y); z = std::move(v1.z); return *this; }
-
-    inline T& operator [](int i);
-    inline const T& operator [](int i) const;
 
     Vec3<T> operator+(const Vec3<T>& v1) const;
     Vec3<T> operator-(const Vec3<T>& v1) const;
@@ -53,12 +46,6 @@ public:
     Vec3<T> normalized();
 
     void fill(T value);
-
-    void translate(const Vec3<T>& v) {};
-    void scale(const Vec3<T>& c, const Vec3<T>& s) {};
-    void scale(const Vec3<T>& c, const T s) {};
-    void scale(const Vec3<T>& s) {};
-    void scale(const T s) {};
 
     template <class Transformation>
     void transform(Transformation&& func);

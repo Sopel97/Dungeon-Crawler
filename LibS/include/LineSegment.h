@@ -33,9 +33,6 @@ public:
     T distanceTo(const Vec2<T>& v1) const;
     Vec2<T> nearestPointTo(const Vec2<T>& point) const;
 
-    void translate(const Vec2<T>& v);
-    void scale(const Vec2<T>& s);
-
     Vec2<T> centerOfMass() const;
 };
 

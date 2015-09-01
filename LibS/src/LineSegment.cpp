@@ -44,18 +44,6 @@ T LineSegment<T>::length() const
 }
 
 template <class T>
-void LineSegment<T>::translate(const Vec2<T>& v)
-{
-    begin.translate(v);
-    end.translate(v);
-}
-template <class T>
-void LineSegment<T>::scale(const Vec2<T>& s)
-{
-    begin.scale(s);
-    end.scale(s);
-}
-template <class T>
 T LineSegment<T>::distanceTo(const Vec2<T>& point) const
 {
     return point.distanceTo(nearestPointTo(point));

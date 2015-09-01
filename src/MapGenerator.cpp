@@ -383,6 +383,7 @@ void MapGenerator::generate(MapLayer& map)
     ResourceHandle<Tile> floorTile = ResourceManager::instance().get<Tile>("Dirt");
     ResourceHandle<Tile> floorTile2 = ResourceManager::instance().get<Tile>("Black marble floor");
     ResourceHandle<Tile> wallTile = ResourceManager::instance().get<Tile>("Stone wall");
+    ResourceHandle<Tile> bagTile = ResourceManager::instance().get<Tile>("Bag");
 
     prepareHelperMaps();
 
@@ -390,13 +391,19 @@ void MapGenerator::generate(MapLayer& map)
     {
         for(size_t y = 0; y < m_height; ++y)
         {
-            auto& floorTileToPlace = m_topologyMap.at(x, y) == TopologyMap::TopologyState::Wall || rand() / (float)RAND_MAX < 0.5f ? floorTile : floorTile2;
+            auto& floorTileToPlace = m_topologyMap.at(x, y) == TopologyMap::TopologyState::Wall || rand() / (float)RAND_MAX < 0.4f ? floorTile : floorTile2;
             //auto& floorTileToPlace = floorTile;
 
             map.placeTile(floorTileToPlace.get().clone().release(), x, y);
 
             if(m_topologyMap.at(x, y) == TopologyMap::TopologyState::Wall)
+            {
                 map.placeTile(wallTile.get().clone().release(), x, y);
+            }
+            else
+            {
+                if(rand() / (float)RAND_MAX < 0.05f) map.placeTile(bagTile.get().clone().release(), x, y);
+            }
         }
     }
 
