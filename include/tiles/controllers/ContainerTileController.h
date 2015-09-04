@@ -13,7 +13,7 @@ public:
     ContainerTileController(const ContainerTileController& other);
     virtual ~ContainerTileController();
 
-    virtual void onTileUsedByPlayer(const TileLocation& location, Player& player);
+    virtual void onTileUsedByPlayer(const TileLocation& location);
 
     virtual std::unique_ptr<TileController> clone() const;
     virtual std::unique_ptr<TileController> create(Tile* owner) const;

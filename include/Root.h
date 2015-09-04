@@ -12,6 +12,8 @@
 #include "Player.h"
 #include "PlayerUi.h"
 
+#include <SFML/Window/Event.hpp>
+
 #include "../LibS/Random.h"
 
 #include <memory>
@@ -33,10 +35,13 @@ public:
     void loadAssets();
 
     void processAsyncKeyboardInput(float dt);
-    void onKeyPressed(const sf::Event& event);
-    void onWindowResized(const sf::Event& event);
+    void onMouseButtonPressed(sf::Event::MouseButtonEvent& event);
+    void onMouseButtonReleased(sf::Event::MouseButtonEvent& event);
+    void onMouseMoved(sf::Event::MouseMoveEvent& event);
+    void onWindowResized(sf::Event& event);
 
     WindowSpaceManager& windowSpaceManager();
+    sf::RenderWindow& window();
     int lastMeasuredFps() const;
     const sf::Font& defaultFont() const;
 

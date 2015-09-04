@@ -6,21 +6,21 @@
 class Camera
 {
 public:
-    Camera(const ls::Vec2F& position, float width, float height);
+    Camera(const ls::Vec2F& center, float width, float height);
     ~Camera();
 
     void move(const ls::Vec2F& displacement);
-    void setPosition(const ls::Vec2F& newPosition);
+    void setCenter(const ls::Vec2F& newCenter);
     void setWidth(float newWidth);
     void setHeight(float newHeight);
 
-    const ls::Vec2F& position() const;
+    const ls::Vec2F& center() const;
     float width() const;
     float height() const;
 
     ls::RectangleF viewRectangle() const;
 protected:
-    ls::Vec2F m_position; //center
+    ls::Vec2F m_center; //center
     float m_width;
     float m_height;
 };

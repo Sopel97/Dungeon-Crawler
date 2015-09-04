@@ -59,7 +59,9 @@ void Root::run()
 
         while(m_window.pollEvent(event))
         {
-            if(event.type == sf::Event::EventType::KeyPressed) onKeyPressed(event);
+            if(event.type == sf::Event::EventType::MouseButtonPressed) onMouseButtonPressed(event.mouseButton);
+            if(event.type == sf::Event::EventType::MouseButtonReleased) onMouseButtonReleased(event.mouseButton);
+            if(event.type == sf::Event::EventType::MouseMoved) onMouseMoved(event.mouseMove);
             if(event.type == sf::Event::EventType::Closed) m_window.close();
             if(event.type == sf::Event::EventType::Resized) onWindowResized(event);
         }
@@ -120,10 +122,19 @@ void Root::loadAssets()
     ResourceManager::instance().load<sf::Font>("assets\\fonts\\standard_font.ttf", "Font");
 }
 
-void Root::onKeyPressed(const sf::Event& event)
+void Root::onMouseButtonPressed(sf::Event::MouseButtonEvent& event)
 {
+    m_game->onMouseButtonPressed(event);
 }
-void Root::onWindowResized(const sf::Event& event)
+void Root::onMouseButtonReleased(sf::Event::MouseButtonEvent& event)
+{
+    m_game->onMouseButtonReleased(event);
+}
+void Root::onMouseMoved(sf::Event::MouseMoveEvent& event)
+{
+    m_game->onMouseMoved(event);
+}
+void Root::onWindowResized(sf::Event& event)
 {
     m_windowSpaceManager->onWindowResized(event);
 }
@@ -131,6 +142,10 @@ void Root::onWindowResized(const sf::Event& event)
 WindowSpaceManager& Root::windowSpaceManager()
 {
     return *m_windowSpaceManager;
+}
+sf::RenderWindow& Root::window()
+{
+    return m_window;
 }
 int Root::lastMeasuredFps() const
 {

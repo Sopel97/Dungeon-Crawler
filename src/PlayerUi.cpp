@@ -20,5 +20,8 @@ PlayerUi::~PlayerUi()
 
 void PlayerUi::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
 {
-    for(auto& inv : m_game.inventorySystem().openedInventories()) inv->inventoryView.draw(renderTarget, renderStates);
+    for(auto& inv : m_game.inventorySystem().openedInventories())
+    {
+        inv->inventoryView.draw(renderTarget, renderStates);
+    }
 }

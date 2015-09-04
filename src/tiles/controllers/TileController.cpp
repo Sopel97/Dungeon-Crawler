@@ -44,7 +44,7 @@ void TileController::onTileQuantityChanged(int newQuantity)
 {
 
 }
-void TileController::onTileUsedByPlayer(const TileLocation& location, Player& player)
+void TileController::onTileUsedByPlayer(const TileLocation& location)
 {
 
 }

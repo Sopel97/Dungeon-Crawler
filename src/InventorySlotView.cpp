@@ -26,20 +26,52 @@ std::map<InventorySlotView::ContentRequirement, ls::Vec2I> InventorySlotView::m_
     {InventorySlotView::ContentRequirement::Boots, Vec2I(40 + 32 * 4, 19 + 32)}
 };
 
-InventorySlotView::InventorySlotView(Tile*& content, const Vec2I& position, ContentRequirement requirement) :
-    m_content(content),
+InventorySlotView::InventorySlotView(Tile* content, const Vec2I& position, ContentRequirement requirement) :
+    m_content(&content),
     m_position(position),
     m_contentRequirement(requirement)
 {
     if(!m_texture) m_texture = ResourceManager::instance().get<sf::Texture>("UiNonRepeating");
 }
 
+InventorySlotView::InventorySlotView(const InventorySlotView& other) :
+    m_content(other.m_content),
+    m_position(other.m_position),
+    m_contentRequirement(other.m_contentRequirement)
+{
+
+}
+InventorySlotView::InventorySlotView(InventorySlotView&& other) :
+    m_content(std::move(other.m_content)),
+    m_position(std::move(other.m_position)),
+    m_contentRequirement(std::move(other.m_contentRequirement))
+{
+
+}
+
+InventorySlotView& InventorySlotView::operator=(const InventorySlotView& other)
+{
+    m_content = other.m_content;
+    m_position = other.m_position;
+    m_contentRequirement = other.m_contentRequirement;
+
+    return *this;
+}
+InventorySlotView& InventorySlotView::operator=(InventorySlotView&& other)
+{
+    m_content = std::move(other.m_content);
+    m_position = std::move(other.m_position);
+    m_contentRequirement = std::move(other.m_contentRequirement);
+
+    return *this;
+}
+
 bool InventorySlotView::setContent(Tile* newContent)
 {
     if(isValidContent(newContent))
     {
-        if(m_content != nullptr) delete m_content;
-        m_content = newContent;
+        if(content() != nullptr) delete content();
+        content() = newContent;
         return true;
     }
     else return false;
@@ -50,17 +82,17 @@ bool InventorySlotView::isValidContent(Tile* tile) const
 }
 bool InventorySlotView::isEmpty() const
 {
-    return m_content == nullptr;
+    return content() == nullptr;
 }
-Tile const* InventorySlotView::content() const
+Tile*& InventorySlotView::content() const
 {
-    return m_content;
+    return *m_content;
 }
 Tile* InventorySlotView::releaseContent()
 {
-    Tile* content = m_content;
-    m_content = nullptr;
-    return content;
+    Tile* contentTile = content();
+    content() = nullptr;
+    return contentTile;
 }
 const Vec2I& InventorySlotView::position() const
 {

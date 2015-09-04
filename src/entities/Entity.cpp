@@ -31,7 +31,9 @@ Entity::Entity(const Entity& other) :
     m_controller(other.m_controller->clone()),
     m_id(other.m_id)
 {
-
+    m_model->setOwner(this);
+    m_view->setOwner(this);
+    m_controller->setOwner(this);
 }
 Entity::~Entity()
 {

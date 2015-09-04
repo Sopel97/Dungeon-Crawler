@@ -3,6 +3,10 @@
 
 #include "InventorySystem.h"
 
+#include "UserInputHandler.h"
+
+#include <SFML/Window/Event.hpp>
+
 #include <memory>
 
 namespace sf
@@ -22,13 +26,19 @@ public:
     void tick(float dt);
     void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
 
+    void onMouseButtonPressed(sf::Event::MouseButtonEvent& event);
+    void onMouseButtonReleased(sf::Event::MouseButtonEvent& event);
+    void onMouseMoved(sf::Event::MouseMoveEvent& event);
+
     Player& player();
     World& world();
     InventorySystem& inventorySystem();
 
 protected:
     Root& m_root;
+
     InventorySystem m_inventorySystem;
+    UserInputHandler m_userInputHandler;
 
     std::unique_ptr<Player> m_player;
     std::unique_ptr<World> m_world;

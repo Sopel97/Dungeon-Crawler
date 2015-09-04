@@ -12,7 +12,9 @@
 using namespace ls;
 
 Game::Game(Root& root) :
-    m_root(root)
+    m_root(root),
+    m_inventorySystem(),
+    m_userInputHandler(root, *this)
 {
     m_player = std::make_unique<Player>(*this);
     m_world = std::make_unique<World>(root, *m_player);
@@ -56,4 +58,17 @@ void Game::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
     fpsText.setPosition(sf::Vector2f(4.0f, 4.0f));
     fpsText.setColor(sf::Color::White);
     renderTarget.draw(fpsText, renderStates);
+}
+
+void Game::onMouseButtonPressed(sf::Event::MouseButtonEvent& event)
+{
+    m_userInputHandler.onMouseButtonPressed(event);
+}
+void Game::onMouseButtonReleased(sf::Event::MouseButtonEvent& event)
+{
+    m_userInputHandler.onMouseButtonReleased(event);
+}
+void Game::onMouseMoved(sf::Event::MouseMoveEvent& event)
+{
+    m_userInputHandler.onMouseMoved(event);
 }

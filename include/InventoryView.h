@@ -14,11 +14,11 @@ public:
     InventoryView(Inventory* parent, const std::vector<InventorySlotView>& slots);
     InventoryView(Inventory* parent, std::vector<InventorySlotView>&& slots);
 
-    InventoryView(const InventoryView&) = default;
-    InventoryView(InventoryView&&) = default;
+    InventoryView(const InventoryView& other);
+    InventoryView(InventoryView&& other);
 
-    InventoryView& operator =(const InventoryView&) = default;
-    InventoryView& operator =(InventoryView&&) = default;
+    InventoryView& operator =(const InventoryView& other);
+    InventoryView& operator =(InventoryView&& other);
 
     void addInventorySlotView(const InventorySlotView& slot);
     void setOffsetFromTop(int newOffset);
@@ -28,6 +28,8 @@ public:
     int height() const;
     int minHeight() const;
     int maxHeight() const;
+
+    int size() const;
 
     bool isMinimizable() const;
     bool isCloseable() const;

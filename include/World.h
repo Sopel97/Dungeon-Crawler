@@ -40,7 +40,12 @@ public:
     const EntitySystem& entitySystem() const;
     const MapGenerator& mapGenerator() const;
 
-    ls::Vec2I worldToTile(const ls::Vec2F& position) const;
+    ls::Vec2I worldToTile(const ls::Vec2F& worldPosition) const;
+    ls::Vec2F screenToWorld(const ls::Vec2I& screenPosition) const; //screenPosition is relative to top left of the window
+    ls::Vec2I worldToScreen(const ls::Vec2F& worldPosition) const;
+    ls::Vec2I screenToTile(const ls::Vec2I& screenPosition) const;
+
+    void useTile(const ls::Vec2I& tilePosition);
 
     void update(float dt);
 
@@ -57,10 +62,10 @@ protected:
     MapGenerator m_mapGenerator;
     Entity* m_playerEntity;
 
-    static constexpr int viewWidth = 15;
-    static constexpr int viewHeight = 15;
-    static constexpr int worldWidth = 128;
-    static constexpr int worldHeight = 128;
+    static constexpr int m_viewWidth = 15;
+    static constexpr int m_viewHeight = 15;
+    static constexpr int m_worldWidth = 128;
+    static constexpr int m_worldHeight = 128;
 };
 
 #endif // WORLD_H

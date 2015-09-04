@@ -33,12 +33,18 @@ public:
         Container
     };
 
-    InventorySlotView(Tile*& content, const ls::Vec2I& position, ContentRequirement requirement = ContentRequirement::None);
+    InventorySlotView(Tile* content, const ls::Vec2I& position, ContentRequirement requirement = ContentRequirement::None);
+
+    InventorySlotView(const InventorySlotView& other);
+    InventorySlotView(InventorySlotView&& other);
+
+    InventorySlotView& operator=(const InventorySlotView& other);
+    InventorySlotView& operator=(InventorySlotView&& other);
 
     bool setContent(Tile* newContent);
     bool isValidContent(Tile* tile) const;
     bool isEmpty() const;
-    Tile const* content() const;
+    Tile*& content() const;
     Tile* releaseContent();
     const ls::Vec2I& position() const;
 
@@ -53,7 +59,7 @@ protected:
     static ls::Vec2I m_requirementIconSize;
     static std::map<ContentRequirement, ls::Vec2I> m_requirementIcons;
 
-    Tile*& m_content; //reference to pointer in inventory that owns the tile. It is to allow moving tiles through view.
+    Tile** m_content; //pointer to pointer in inventory that owns the tile. It is to allow moving tiles through view.
     ls::Vec2I m_position; //relative to inventory inner region
     ContentRequirement m_contentRequirement;
 };

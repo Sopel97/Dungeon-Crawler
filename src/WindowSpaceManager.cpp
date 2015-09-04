@@ -43,9 +43,10 @@ WindowSpaceManager::WindowSpaceManager(sf::RenderWindow& window) :
 {
     updateRegions();
 }
-void WindowSpaceManager::setViewToRect(const RectangleI& windowViewRect, const RectangleF& worldViewRect)
+
+sf::View WindowSpaceManager::viewOfRect(const ls::RectangleI& windowViewRect, const ls::RectangleF& worldViewRect)
 {
-    Vec2F windowSize {(float)m_window.getSize().x, (float)m_window.getSize().y};
+    Vec2F windowSize{(float)m_window.getSize().x, (float)m_window.getSize().y};
     Vec2F windowViewTopLeft = Vec2F(windowViewRect.min);
     Vec2F windowViewSize = Vec2F(windowViewRect.max - windowViewRect.min);
     Vec2F windowViewTopLeftRelativeToWindow = windowViewTopLeft / windowSize;
@@ -54,17 +55,30 @@ void WindowSpaceManager::setViewToRect(const RectangleI& windowViewRect, const R
     sf::FloatRect view(windowViewTopLeftRelativeToWindow.x, windowViewTopLeftRelativeToWindow.y, windowViewSizeRelativeToWindow.x, windowViewSizeRelativeToWindow.y);
     sf::View panelView(sf::Vector2f(worldViewRect.min.x + worldViewRect.width() / 2.0f, (worldViewRect.min.y + worldViewRect.height() / 2.0f)), sf::Vector2f(worldViewRect.width(), worldViewRect.height()));
     panelView.setViewport(view);
-    m_window.setView(panelView);
+
+    return panelView;
+}
+sf::View WindowSpaceManager::viewOfRegion(Region::Id regionId)
+{
+    const RectangleI& rect = regionRect(regionId);
+    return viewOfRect(rect, RectangleF(Vec2F(0.0f, 0.0f), static_cast<float>(rect.width()), static_cast<float>(rect.height())));
+}
+sf::View WindowSpaceManager::viewOfRegion(Region::Id regionId, const ls::RectangleF& worldViewRect)
+{
+    const RectangleI& rect = regionRect(regionId);
+    return viewOfRect(rect, worldViewRect);
+}
+void WindowSpaceManager::setViewToRect(const RectangleI& windowViewRect, const RectangleF& worldViewRect)
+{
+    m_window.setView(viewOfRect(windowViewRect, worldViewRect));
 }
 void WindowSpaceManager::setViewToRegion(WindowSpaceManager::Region::Id regionId)
 {
-    const RectangleI& rect = regionRect(regionId);
-    setViewToRect(rect, RectangleF(Vec2F(0.0f, 0.0f), static_cast<float>(rect.width()), static_cast<float>(rect.height())));
+    m_window.setView(viewOfRegion(regionId));
 }
 void WindowSpaceManager::setViewToRegion(WindowSpaceManager::Region::Id regionId, const RectangleF& worldViewRect)
 {
-    const RectangleI& rect = regionRect(regionId);
-    setViewToRect(rect, worldViewRect);
+    m_window.setView(viewOfRegion(regionId, worldViewRect));
 }
 
 void WindowSpaceManager::setDefaultView()

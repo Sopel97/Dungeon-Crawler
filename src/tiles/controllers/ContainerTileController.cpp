@@ -21,7 +21,7 @@ ContainerTileController::~ContainerTileController()
 {
 }
 
-void ContainerTileController::onTileUsedByPlayer(const TileLocation& location, Player& player)
+void ContainerTileController::onTileUsedByPlayer(const TileLocation& location)
 {
     EventDispatcher::instance().broadcast<AttemptToInteractWithExternalInventory>(m_owner->model().inventory(), location.x, location.y);
 }

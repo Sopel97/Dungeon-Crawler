@@ -45,6 +45,11 @@ public:
     };
 public:
     WindowSpaceManager(sf::RenderWindow& window);
+
+    sf::View viewOfRect(const ls::RectangleI& windowViewRect, const ls::RectangleF& worldViewRect);
+    sf::View viewOfRegion(Region::Id regionId);
+    sf::View viewOfRegion(Region::Id regionId, const ls::RectangleF& worldViewRect);
+
     void setViewToRect(const ls::RectangleI& windowViewRect, const ls::RectangleF& worldViewRect);
     void setViewToRegion(Region::Id regionId);
     void setViewToRegion(Region::Id regionId, const ls::RectangleF& worldViewRect);

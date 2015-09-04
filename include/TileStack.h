@@ -13,8 +13,8 @@ public:
     TileStack();
     ~TileStack();
 
-    const Tile* top() const;
-    Tile* top();
+    const Tile& top() const;
+    Tile& top();
 
     void push(Tile* tile);
 

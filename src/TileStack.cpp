@@ -28,13 +28,13 @@ TileStack::~TileStack()
     }
 }
 
-const Tile* TileStack::top() const
+const Tile& TileStack::top() const
 {
-    return m_tiles[m_lastTile];
+    return *(m_tiles[m_lastTile]);
 }
-Tile* TileStack::top()
+Tile& TileStack::top()
 {
-    return m_tiles[m_lastTile];
+    return *(m_tiles[m_lastTile]);
 }
 
 void TileStack::push(Tile* tile)

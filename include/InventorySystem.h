@@ -4,6 +4,8 @@
 #include "InventoryView.h"
 #include "PlayerEquipmentInventory.h"
 
+#include <list>
+
 class Inventory;
 class AttemptToInteractWithExternalInventory;
 
@@ -34,7 +36,8 @@ public:
 
         TrackedInventory(Inventory* _inventory, Origin _origin, TrackedInventory* _parent, int _x, int _y) :
             inventory(_inventory),
-            inventoryView(inventory->createInventoryView()),
+            inventoryView(_inventory->createInventoryView()),
+            isOpened(true),
             origin(_origin),
             parentInventory(_parent),
             x(_x),
@@ -90,13 +93,13 @@ public:
     void onAttemptToInteractWithExternalInventory(const AttemptToInteractWithExternalInventory& event);
 
     PlayerEquipmentInventory& equipmentInventory();
-    const std::vector<TrackedInventory*>& openedInventories() const;
+    const std::list<TrackedInventory*>& openedInventories() const;
 
 protected:
     PlayerEquipmentInventory m_equipmentInventory;
 
-    std::vector<TrackedInventory> m_trackedInventories;
-    std::vector<TrackedInventory*> m_openedInventories;
+    std::list<TrackedInventory> m_trackedInventories; //not a vector because we have to avoid realocation of inventories because we store pointers to them
+    std::list<TrackedInventory*> m_openedInventories;
 private:
 };
 

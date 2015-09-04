@@ -33,7 +33,9 @@ Tile::Tile(const Tile& other) :
     m_quantity(other.m_quantity),
     m_maxQuantity(other.m_maxQuantity)
 {
-
+    m_model->setOwner(this);
+    m_view->setOwner(this);
+    m_controller->setOwner(this);
 }
 Tile::~Tile()
 {

@@ -57,11 +57,71 @@ InventoryView::InventoryView(Inventory* parent, std::vector<InventorySlotView>&&
     updateMaxHeight();
 }
 
+InventoryView::InventoryView(const InventoryView& other) :
+    m_parentInventory(other.m_parentInventory),
+    m_slotViews(other.m_slotViews),
+    m_offsetFromTop(other.m_offsetFromTop),
+    m_scroll(other.m_scroll),
+    m_height(other.m_height),
+    m_minHeight(other.m_minHeight),
+    m_maxHeight(other.m_maxHeight),
+    m_isMinimizable(other.m_isMinimizable),
+    m_isCloseable(other.m_isCloseable),
+    m_isResizeable(other.m_isResizeable)
+{
+
+}
+InventoryView::InventoryView(InventoryView&& other) :
+    m_parentInventory(std::move(other.m_parentInventory)),
+    m_slotViews(std::move(other.m_slotViews)),
+    m_offsetFromTop(std::move(other.m_offsetFromTop)),
+    m_scroll(std::move(other.m_scroll)),
+    m_height(std::move(other.m_height)),
+    m_minHeight(std::move(other.m_minHeight)),
+    m_maxHeight(std::move(other.m_maxHeight)),
+    m_isMinimizable(std::move(other.m_isMinimizable)),
+    m_isCloseable(std::move(other.m_isCloseable)),
+    m_isResizeable(std::move(other.m_isResizeable))
+{
+
+}
+
+InventoryView& InventoryView::operator =(const InventoryView& other)
+{
+    m_parentInventory = other.m_parentInventory;
+    m_slotViews = other.m_slotViews;
+    m_offsetFromTop = other.m_offsetFromTop;
+    m_scroll = other.m_scroll;
+    m_height = other.m_height;
+    m_minHeight = other.m_minHeight;
+    m_maxHeight = other.m_maxHeight;
+    m_isMinimizable = other.m_isMinimizable;
+    m_isCloseable = other.m_isCloseable;
+    m_isResizeable = other.m_isResizeable;
+
+    return *this;
+}
+InventoryView& InventoryView::operator =(InventoryView&& other)
+{
+    m_parentInventory = std::move(other.m_parentInventory);
+    m_slotViews = std::move(other.m_slotViews);
+    m_offsetFromTop = std::move(other.m_offsetFromTop);
+    m_scroll = std::move(other.m_scroll);
+    m_height = std::move(other.m_height);
+    m_minHeight = std::move(other.m_minHeight);
+    m_maxHeight = std::move(other.m_maxHeight);
+    m_isMinimizable = std::move(other.m_isMinimizable);
+    m_isCloseable = std::move(other.m_isCloseable);
+    m_isResizeable = std::move(other.m_isResizeable);
+
+    return *this;
+}
+
+
 void InventoryView::addInventorySlotView(const InventorySlotView& slot)
 {
     m_slotViews.push_back(slot);
-    int slotBottom = slot.position().y + InventorySlotView::slotSize().y;
-    m_maxHeight = std::max(m_maxHeight, slotBottom + 4 + m_bottomBarHeight + m_topBarHeight);
+    updateMaxHeight();
 }
 
 void InventoryView::setOffsetFromTop(int newOffset)
@@ -88,6 +148,11 @@ int InventoryView::minHeight() const
 int InventoryView::maxHeight() const
 {
     return m_maxHeight;
+}
+
+int InventoryView::size() const
+{
+    return m_slotViews.size();
 }
 
 bool InventoryView::isMinimizable() const

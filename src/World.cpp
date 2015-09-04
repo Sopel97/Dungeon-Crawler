@@ -36,15 +36,15 @@ using namespace ls;
 
 World::World(Root& root, Player& player) :
     m_root(root),
-    m_width(worldWidth),
-    m_height(worldHeight),
+    m_width(m_worldWidth),
+    m_height(m_worldHeight),
     m_mapLayer(std::make_unique<MapLayer>(*this, m_width, m_height)),
-    m_camera(Vec2F(m_width * GameConstants::tileSize / 2.0f, m_height * GameConstants::tileSize / 2.0f), viewWidth * GameConstants::tileSize, viewHeight * GameConstants::tileSize),
+    m_camera(Vec2F(m_width * GameConstants::tileSize / 2.0f, m_height * GameConstants::tileSize / 2.0f), m_viewWidth * GameConstants::tileSize, m_viewHeight * GameConstants::tileSize),
     m_mapGenerator(m_width, m_height)
 {
     m_mapGenerator.generate(*m_mapLayer);
     m_playerEntity = player.createPlayerEntity();
-    m_entitySystem.addEntity(m_playerEntity, m_camera.position()); 
+    m_entitySystem.addEntity(m_playerEntity, m_camera.center()); 
 }
 World::~World()
 {
@@ -199,16 +199,36 @@ const MapGenerator& World::mapGenerator() const
     return m_mapGenerator;
 }
 
-Vec2I World::worldToTile(const Vec2F& position) const
+Vec2I World::worldToTile(const Vec2F& worldPosition) const
 {
-    return Vec2I(static_cast<int>(position.x) / GameConstants::tileSize, static_cast<int>(position.y) / GameConstants::tileSize);
+    return Vec2I(Util::fastFloor(worldPosition.x / static_cast<float>(GameConstants::tileSize)), Util::fastFloor(worldPosition.y / static_cast<float>(GameConstants::tileSize)));
+}
+ls::Vec2F World::screenToWorld(const ls::Vec2I& screenPosition) const
+{
+    const sf::Vector2f worldPosition = m_root.window().mapPixelToCoords(sf::Vector2i(screenPosition.x, screenPosition.y), m_root.windowSpaceManager().viewOfRegion(WindowSpaceManager::Region::Id::World, m_camera.viewRectangle()));
+    return{worldPosition.x, worldPosition.y};
+}
+ls::Vec2I World::worldToScreen(const ls::Vec2F& worldPosition) const
+{
+    const sf::Vector2i screenPosition = m_root.window().mapCoordsToPixel(sf::Vector2f(worldPosition.x, worldPosition.y), m_root.windowSpaceManager().viewOfRegion(WindowSpaceManager::Region::Id::World, m_camera.viewRectangle()));
+    return{screenPosition.x, screenPosition.y};
+}
+ls::Vec2I World::screenToTile(const ls::Vec2I& screenPosition) const
+{
+    return worldToTile(screenToWorld(screenPosition));
+}
+
+void World::useTile(const ls::Vec2I& tilePosition)
+{
+    TileStack& tileStack = m_mapLayer->at(tilePosition.x, tilePosition.y);
+    tileStack.top().controller().onTileUsedByPlayer(TileLocation(*m_mapLayer, tilePosition.x, tilePosition.y, tileStack.topZ()));
 }
 
 void World::update(float dt)
 {
     m_entitySystem.updateEntities(this, dt);
 
-    m_camera.setPosition(m_playerEntity->model().position());
+    m_camera.setCenter(m_playerEntity->model().position());
 }
 
 float World::drag(const Vec2F& position) const
