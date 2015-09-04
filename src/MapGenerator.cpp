@@ -384,6 +384,7 @@ void MapGenerator::generate(MapLayer& map)
     ResourceHandle<Tile> floorTile2 = ResourceManager::instance().get<Tile>("Black marble floor");
     ResourceHandle<Tile> wallTile = ResourceManager::instance().get<Tile>("Stone wall");
     ResourceHandle<Tile> bagTile = ResourceManager::instance().get<Tile>("Bag");
+    ResourceHandle<Tile> backpackTile = ResourceManager::instance().get<Tile>("Backpack");
 
     prepareHelperMaps();
 
@@ -402,7 +403,9 @@ void MapGenerator::generate(MapLayer& map)
             }
             else
             {
-                if(rand() / (float)RAND_MAX < 0.05f) map.placeTile(bagTile.get().clone().release(), x, y);
+                float r = rand() / (float)RAND_MAX;
+                if(r < 0.05f) map.placeTile(bagTile.get().clone().release(), x, y);
+                else if(r < 0.10f) map.placeTile(backpackTile.get().clone().release(), x, y);
             }
         }
     }

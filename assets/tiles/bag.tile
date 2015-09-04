@@ -11,7 +11,7 @@ tile = {
         {306, 204},
     },
 	
-    inventorySize = 8,
+    inventorySize = 5,
 
 	maxQuantity = 1,
 

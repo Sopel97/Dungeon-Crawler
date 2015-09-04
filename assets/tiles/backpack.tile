@@ -1,0 +1,20 @@
+tile = {
+        
+    name = "Backpack",
+    
+    model = "ContainerTileModel",
+    view = "PlainTileView",
+    controller = "ContainerTileController",
+
+    texture = "Spritesheet",
+    sprites = {
+        {340, 204},
+    },
+	
+    inventorySize = 15,
+
+	maxQuantity = 1,
+
+    drag = 0.85
+    
+}
