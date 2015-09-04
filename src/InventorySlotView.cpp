@@ -9,21 +9,21 @@ using namespace ls;
 
 ResourceHandle<sf::Texture> InventorySlotView::m_texture {nullptr};
 Vec2I InventorySlotView::m_slotTexture {0, 19};
-Vec2I InventorySlotView::m_slotTextureSize {40, 40};
+Vec2I InventorySlotView::m_slotTextureSize {38, 38};
 Vec2I InventorySlotView::m_requirementIconSize {32, 32};
 std::map<InventorySlotView::ContentRequirement, ls::Vec2I> InventorySlotView::m_requirementIcons
 {
-    {InventorySlotView::ContentRequirement::Necklace, Vec2I(40 + 32 * 0, 19)},
-    {InventorySlotView::ContentRequirement::Helmet, Vec2I(40 + 32 * 1, 19)},
-    {InventorySlotView::ContentRequirement::Container, Vec2I(40 + 32 * 2, 19)},
-    {InventorySlotView::ContentRequirement::Sword, Vec2I(40 + 32 * 3, 19)},
-    {InventorySlotView::ContentRequirement::Shield, Vec2I(40 + 32 * 4, 19)},
+    {InventorySlotView::ContentRequirement::Necklace, Vec2I(38 + 32 * 0, 19)},
+    {InventorySlotView::ContentRequirement::Helmet, Vec2I(38 + 32 * 1, 19)},
+    {InventorySlotView::ContentRequirement::Container, Vec2I(38 + 32 * 2, 19)},
+    {InventorySlotView::ContentRequirement::Sword, Vec2I(38 + 32 * 3, 19)},
+    {InventorySlotView::ContentRequirement::Shield, Vec2I(38 + 32 * 4, 19)},
 
-    {InventorySlotView::ContentRequirement::Chestplate, Vec2I(40 + 32 * 0, 19 + 32)},
-    {InventorySlotView::ContentRequirement::Pants, Vec2I(40 + 32 * 1, 19 + 32)},
-    {InventorySlotView::ContentRequirement::Ring, Vec2I(40 + 32 * 2, 19 + 32)},
-    {InventorySlotView::ContentRequirement::Ammo, Vec2I(40 + 32 * 3, 19 + 32)},
-    {InventorySlotView::ContentRequirement::Boots, Vec2I(40 + 32 * 4, 19 + 32)}
+    {InventorySlotView::ContentRequirement::Chestplate, Vec2I(38 + 32 * 0, 19 + 32)},
+    {InventorySlotView::ContentRequirement::Pants, Vec2I(38 + 32 * 1, 19 + 32)},
+    {InventorySlotView::ContentRequirement::Ring, Vec2I(38 + 32 * 2, 19 + 32)},
+    {InventorySlotView::ContentRequirement::Ammo, Vec2I(38 + 32 * 3, 19 + 32)},
+    {InventorySlotView::ContentRequirement::Boots, Vec2I(38 + 32 * 4, 19 + 32)}
 };
 
 InventorySlotView::InventorySlotView(Tile* content, const Vec2I& position, ContentRequirement requirement) :
@@ -98,7 +98,6 @@ const Vec2I& InventorySlotView::position() const
 {
     return m_position;
 }
-
 void InventorySlotView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
 {
     sf::Sprite slotSprite;

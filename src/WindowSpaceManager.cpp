@@ -92,7 +92,7 @@ void WindowSpaceManager::setDefaultView()
 }
 void WindowSpaceManager::updateRegions()
 {
-    constexpr int playerUiWidth = 240;
+    constexpr int playerUiWidth = 230;
 
     Vec2I windowSize {(int)m_window.getSize().x, (int)m_window.getSize().y};
 

@@ -9,7 +9,7 @@
 
 using namespace ls;
 
-int InventoryView::m_minSensibleHeight = 67;
+int InventoryView::m_minSensibleHeight = 65;
 int InventoryView::m_topBarHeight = 15;
 int InventoryView::m_leftBarWidth = 4;
 int InventoryView::m_bottomBarHeight = 4;
@@ -196,15 +196,15 @@ void InventoryView::setHeightToMax()
 
 void InventoryView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
 {
-    constexpr int inventoryWindowWidth = 240;
+    constexpr int inventoryWindowWidth = 230;
     const Vec2I topBarSpritePosition {0, 0};
     const Vec2I leftBarSpritePosition {0, 0};
     const Vec2I rightBarSpritePosition {4, 0};
     const Vec2I bottomBarSpritePosition {0, 15};
     const Vec2I scrollBarSpritePosition {8, 0};
-    const Vec2I scrollBarUpButtonSpritePosition {0, 59};
-    const Vec2I scrollBarDownButtonSpritePosition {12, 59};
-    const Vec2I scrollBarSliderButtonSpritePosition {24, 59};
+    const Vec2I scrollBarUpButtonSpritePosition {0, 57};
+    const Vec2I scrollBarDownButtonSpritePosition {12, 57};
+    const Vec2I scrollBarSliderButtonSpritePosition {24, 57};
     const Vec2I scrollButtonsSizes {12, 12};
 
     ResourceHandle<sf::Texture> backgroundTexture = ResourceManager::instance().get<sf::Texture>("UiBackground");
