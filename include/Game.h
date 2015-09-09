@@ -3,8 +3,6 @@
 
 #include "InventorySystem.h"
 
-#include "UserInputHandler.h"
-
 #include <SFML/Window/Event.hpp>
 
 #include <memory>
@@ -38,7 +36,6 @@ protected:
     Root& m_root;
 
     InventorySystem m_inventorySystem;
-    UserInputHandler m_userInputHandler;
 
     std::unique_ptr<Player> m_player;
     std::unique_ptr<World> m_world;

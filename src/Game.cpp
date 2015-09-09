@@ -7,14 +7,15 @@
 
 #include "SFMLUtil.h"
 
+#include "../LibS/Geometry.h"
+
 #include <SFML/Graphics.hpp>
 
 using namespace ls;
 
 Game::Game(Root& root) :
     m_root(root),
-    m_inventorySystem(),
-    m_userInputHandler(root, *this)
+    m_inventorySystem()
 {
     m_player = std::make_unique<Player>(*this);
     m_world = std::make_unique<World>(root, *m_player);
@@ -62,13 +63,21 @@ void Game::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
 
 void Game::onMouseButtonPressed(sf::Event::MouseButtonEvent& event)
 {
-    m_userInputHandler.onMouseButtonPressed(event);
+    if(event.button == sf::Mouse::Button::Right)
+    {
+        const RectangleI& worldViewRect = m_root.windowSpaceManager().regionRect(WindowSpaceManager::Region::Id::World);
+        if(Intersections::intersection(worldViewRect, Vec2I(event.x, event.y)))
+        {
+            const Vec2I tilePosition = m_world->screenToTile(Vec2I(event.x, event.y));
+            m_world->useTile(tilePosition);
+        }
+    }
 }
 void Game::onMouseButtonReleased(sf::Event::MouseButtonEvent& event)
 {
-    m_userInputHandler.onMouseButtonReleased(event);
+
 }
 void Game::onMouseMoved(sf::Event::MouseMoveEvent& event)
 {
-    m_userInputHandler.onMouseMoved(event);
+
 }
