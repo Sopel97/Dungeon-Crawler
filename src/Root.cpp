@@ -112,6 +112,10 @@ void Root::loadAssets()
     {
         texture->setRepeated(true);
     }
+    if(ResourceHandle<sf::Texture> texture = ResourceManager::instance().load<sf::Texture>("assets\\gfx\\ui_horizontal_bars.png", "UiHorizontalBars"))
+    {
+        texture->setRepeated(true);
+    }
     ResourceManager::instance().load<sf::Texture>("assets\\gfx\\ui_non_repeating.png", "UiNonRepeating");
 
     for(const auto& tile : scanForFiles("assets\\tiles\\", "*.tile"))

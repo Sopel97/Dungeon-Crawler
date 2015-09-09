@@ -7,6 +7,7 @@
 class Root;
 class Game;
 
+//TODO: remove this class entirely and move all reactions to respective classes broadcast events and other classes react to it.
 class UserInputHandler
 {
 public:

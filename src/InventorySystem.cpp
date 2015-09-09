@@ -23,7 +23,7 @@ bool InventorySystem::tryOpenExternalInventory(Inventory* inventory, int x, int 
 
     m_openedInventories.push_back(trackedInventory);
     trackedInventory->isOpened = true;
-    trackedInventory->inventoryView.setHeightToMax();
+    trackedInventory->inventoryView.setContentHeightToMax();
 
     updatePositionsOfOpenedInventories();
 
@@ -39,7 +39,7 @@ bool InventorySystem::tryOpenInternalInventory(Inventory* inventory, TrackedInve
 
     m_openedInventories.push_back(trackedInventory);
     trackedInventory->isOpened = true;
-    trackedInventory->inventoryView.setHeightToMax();
+    trackedInventory->inventoryView.setContentHeightToMax();
 
     updatePositionsOfOpenedInventories();
 
@@ -88,7 +88,7 @@ void InventorySystem::updatePositionsOfOpenedInventories()
     {
         InventoryView& inventoryView = inventory->inventoryView;
         inventoryView.setOffsetFromTop(currentHeight);
-        currentHeight += inventoryView.height();
+        currentHeight += inventoryView.windowHeight();
     }
 }
 

@@ -3,11 +3,13 @@
 
 #include "InventorySlotView.h"
 
+#include "PlayerUi.h"
+
 #include <vector>
 
 class Inventory;
 
-class InventoryView
+class InventoryView : public PlayerUi::Window
 {
 public:
     InventoryView(Inventory* parent);
@@ -24,49 +26,46 @@ public:
     void setOffsetFromTop(int newOffset);
 
     Inventory const* parentInventory() const;
-    int offsetFromTop() const;
-    int height() const;
-    int minHeight() const;
-    int maxHeight() const;
+    virtual int offsetFromTop() const;
+    virtual int contentHeight() const;
+    virtual int minContentHeight() const;
+    virtual int maxContentHeight() const;
 
     int size() const;
 
-    bool isMinimizable() const;
-    bool isCloseable() const;
-    bool isResizeable() const;
+    virtual int scroll() const;
+
+    virtual bool isMinimizable() const;
+    virtual bool isCloseable() const;
+    virtual bool isResizeable() const;
 
     void setMinimizable(bool newValue);
     void setCloseable(bool newValue);
     void setResizeable(bool newValue);
 
-    void setHeight(int newHeight);
-    void setInnerHeight(int newInnerHeight);
-    void setHeightToMax();
+    void setContentHeight(int newHeight);
+    void setContentHeightToMax();
 
-    void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
+    virtual void draw(PlayerUi& playerUi, sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
     void update();
 
 protected:
-    static int m_minSensibleHeight;
-    static int m_topBarHeight;
-    static int m_leftBarWidth;
-    static int m_bottomBarHeight;
-    static int m_rightBarWidth;
+    static const int m_minSensibleHeight;
 
     Inventory* m_parentInventory;
     std::vector<InventorySlotView> m_slotViews;
 
     int m_offsetFromTop;
     int m_scroll;
-    int m_height;
-    int m_minHeight;
-    int m_maxHeight;
+    int m_contentHeight;
+    int m_minContentHeight;
+    int m_maxContentHeight;
 
     bool m_isMinimizable;
     bool m_isCloseable;
     bool m_isResizeable;
 
-    void updateMaxHeight();
+    void updateMaxContentHeight();
 };
 
 #endif // INVENTORYVIEW_H
