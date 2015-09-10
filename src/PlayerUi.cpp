@@ -58,9 +58,13 @@ PlayerUi::~PlayerUi()
 
 void PlayerUi::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
 {
-    for(auto& inv : m_game.inventorySystem().openedInventories())
+    for(auto& window : m_panelWindows)
     {
-        inv->inventoryView.draw(*this, renderTarget, renderStates);
+        window->draw(*this, renderTarget, renderStates);
+    }
+    for(auto& window : m_popupWindows)
+    {
+        window->draw(*this, renderTarget, renderStates);
     }
 }
 

@@ -76,7 +76,7 @@ public:
         }
     };
 
-    InventorySystem();
+    InventorySystem(PlayerUi& playerUi);
 
     bool tryOpenExternalInventory(Inventory* inventory, int x, int y);
     bool tryOpenInternalInventory(Inventory* inventory, TrackedInventory* parentInventory);
@@ -96,10 +96,14 @@ public:
     const std::list<TrackedInventory*>& openedInventories() const;
 
 protected:
+    PlayerUi& m_playerUi;
+
     PlayerEquipmentInventory m_equipmentInventory;
 
     std::list<TrackedInventory> m_trackedInventories; //not a vector because we have to avoid realocation of inventories because we store pointers to them
     std::list<TrackedInventory*> m_openedInventories;
+
+    void openInventory(TrackedInventory* inventory);
 private:
 };
 

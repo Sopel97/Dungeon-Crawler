@@ -24,12 +24,9 @@ public:
 
     void onKeyPressed(sf::Event::KeyEvent& keyEvent);
     void processAsyncKeyboardInput(World& world, float dt);
-    PlayerUi& playerUi();
 
 protected:
     Entity* m_playerEntity;
-
-    PlayerUi m_playerUi;
 };
 
 #endif // PLAYER_H

@@ -3,6 +3,10 @@
 
 #include "InventorySystem.h"
 
+#include "Player.h"
+#include "PlayerUi.h"
+#include "World.h"
+
 #include <SFML/Window/Event.hpp>
 
 #include <memory>
@@ -29,16 +33,18 @@ public:
     void onMouseMoved(sf::Event::MouseMoveEvent& event);
 
     Player& player();
+    PlayerUi& playerUi();
     World& world();
     InventorySystem& inventorySystem();
 
 protected:
     Root& m_root;
 
-    InventorySystem m_inventorySystem;
+    Player m_player;
+    PlayerUi m_playerUi;
+    World m_world;
 
-    std::unique_ptr<Player> m_player;
-    std::unique_ptr<World> m_world;
+    InventorySystem m_inventorySystem;
 };
 
 #endif // GAME_H

@@ -1,8 +1,6 @@
 #include "Game.h"
 
 #include "Root.h"
-#include "Player.h"
-#include "World.h"
 #include "WindowSpaceManager.h"
 
 #include "SFMLUtil.h"
@@ -15,19 +13,25 @@ using namespace ls;
 
 Game::Game(Root& root) :
     m_root(root),
-    m_inventorySystem()
+    m_player(*this),
+    m_playerUi(*this, m_player),
+    m_world(root, m_player),
+    m_inventorySystem(m_playerUi)
 {
-    m_player = std::make_unique<Player>(*this);
-    m_world = std::make_unique<World>(root, *m_player);
+
 }
 
 Player& Game::player()
 {
-    return *m_player;
+    return m_player;
+}
+PlayerUi& Game::playerUi()
+{
+    return m_playerUi;
 }
 World& Game::world()
 {
-    return *m_world;
+    return m_world;
 }
 InventorySystem& Game::inventorySystem()
 {
@@ -36,7 +40,7 @@ InventorySystem& Game::inventorySystem()
 
 void Game::tick(float dt)
 {
-    m_world->update(dt);
+    m_world.update(dt);
 }
 
 void Game::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
@@ -50,9 +54,9 @@ void Game::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
     windowSpaceManager.setDefaultView();
     renderTarget.draw(vertexBuffer, renderStates);
 
-    m_world->draw(renderTarget, renderStates);
+    m_world.draw(renderTarget, renderStates);
 
-    m_player->playerUi().draw(renderTarget, renderStates);
+    m_playerUi.draw(renderTarget, renderStates);
 
     windowSpaceManager.setDefaultView();
     sf::Text fpsText(sf::String(std::to_string(m_root.lastMeasuredFps())), m_root.defaultFont(), 20);
@@ -68,8 +72,8 @@ void Game::onMouseButtonPressed(sf::Event::MouseButtonEvent& event)
         const RectangleI& worldViewRect = m_root.windowSpaceManager().regionRect(WindowSpaceManager::Region::Id::World);
         if(Intersections::intersection(worldViewRect, Vec2I(event.x, event.y)))
         {
-            const Vec2I tilePosition = m_world->screenToTile(Vec2I(event.x, event.y));
-            m_world->useTile(tilePosition);
+            const Vec2I tilePosition = m_world.screenToTile(Vec2I(event.x, event.y));
+            m_world.useTile(tilePosition);
         }
     }
 }

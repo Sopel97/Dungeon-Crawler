@@ -18,8 +18,7 @@
 using namespace ls;
 
 Player::Player(Game& game) :
-    m_playerEntity(nullptr),
-    m_playerUi(game, *this)
+    m_playerEntity(nullptr)
 {
 
 }
@@ -44,8 +43,4 @@ void Player::processAsyncKeyboardInput(World& world, float dt) //TODO: make it u
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) m_playerEntity->controller().accelerate(Vec2F(acc * dt * drag, 0.0f));
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) m_playerEntity->controller().accelerate(Vec2F(0.0f, -acc * dt * drag));
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) m_playerEntity->controller().accelerate(Vec2F(0.0f, acc * dt * drag));
-}
-PlayerUi& Player::playerUi()
-{
-    return m_playerUi;
 }

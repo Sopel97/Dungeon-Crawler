@@ -5,7 +5,8 @@
 
 #include <algorithm>
 
-InventorySystem::InventorySystem() :
+InventorySystem::InventorySystem(PlayerUi& playerUi) :
+    m_playerUi(playerUi),
     m_equipmentInventory()
 {
     tryOpenInternalInventory(&m_equipmentInventory, nullptr);
@@ -21,11 +22,7 @@ bool InventorySystem::tryOpenExternalInventory(Inventory* inventory, int x, int 
         trackedInventory = &(*m_trackedInventories.emplace(m_trackedInventories.end(), TrackedInventory::createExternal(inventory, x, y)));
     }
 
-    m_openedInventories.push_back(trackedInventory);
-    trackedInventory->isOpened = true;
-    trackedInventory->inventoryView.setContentHeightToMax();
-
-    updatePositionsOfOpenedInventories();
+    openInventory(trackedInventory);
 
     return true;
 }
@@ -37,11 +34,7 @@ bool InventorySystem::tryOpenInternalInventory(Inventory* inventory, TrackedInve
         trackedInventory = &(*m_trackedInventories.emplace(m_trackedInventories.end(), TrackedInventory::createInternal(inventory, parentInventory)));
     }
 
-    m_openedInventories.push_back(trackedInventory);
-    trackedInventory->isOpened = true;
-    trackedInventory->inventoryView.setContentHeightToMax();
-
-    updatePositionsOfOpenedInventories();
+    openInventory(trackedInventory);
 
     return true;
 }
@@ -50,6 +43,7 @@ void InventorySystem::closeInventory(Inventory* inventory)
     TrackedInventory* openedInventory = findTrackedInventory(inventory);
     if(openedInventory == nullptr) return;
     m_openedInventories.remove(openedInventory);
+    m_playerUi.closeWindow(&(openedInventory->inventoryView));
 
     openedInventory->isOpened = false;
     TrackedInventory* current = openedInventory;
@@ -112,4 +106,14 @@ PlayerEquipmentInventory& InventorySystem::equipmentInventory()
 const std::list<InventorySystem::TrackedInventory*>& InventorySystem::openedInventories() const
 {
     return m_openedInventories;
+}
+
+void InventorySystem::openInventory(TrackedInventory* inventory)
+{
+    m_openedInventories.push_back(inventory);
+    m_playerUi.openPanelWindow(&(inventory->inventoryView));
+    inventory->isOpened = true;
+    inventory->inventoryView.setContentHeightToMax();
+
+    updatePositionsOfOpenedInventories();
 }
