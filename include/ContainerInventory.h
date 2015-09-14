@@ -15,6 +15,7 @@ public:
     virtual ~ContainerInventory();
 
     virtual const std::vector<Tile*>& contents() const;
+    virtual const Inventory::ContentRequirement slotContentRequirement(int slotId) const;
     virtual InventoryView createInventoryView();
 
     void setSize(int newSize);

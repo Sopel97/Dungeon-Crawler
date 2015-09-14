@@ -1,12 +1,10 @@
-#include "PlayerView.h"
+#include "entities/views/PlayerView.h"
 
-#include "Entity.h"
-#include "EntityModel.h"
+#include "entities/Entity.h"
+#include "entities/models/EntityModel.h"
 
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
-
-
 
 #include "GameConstants.h"
 

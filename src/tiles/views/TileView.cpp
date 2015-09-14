@@ -1,6 +1,4 @@
-#include "TileView.h"
-
-
+#include "tiles/views/TileView.h"
 
 TileView::TileView(Tile* owner) :
     m_owner(owner)

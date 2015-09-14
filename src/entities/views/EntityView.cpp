@@ -1,6 +1,4 @@
-#include "EntityView.h"
-
-
+#include "entities/views/EntityView.h"
 
 EntityView::EntityView(Entity* owner) :
     m_owner(owner)

@@ -35,6 +35,8 @@ public:
     const TileController& controller() const;
     TileController& controller();
 
+    bool equals(const Tile& other) const;
+
     int quantity() const;
     void setQuantity(int newQuantity);
     int maxQuantity() const;

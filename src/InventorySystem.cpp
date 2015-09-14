@@ -1,6 +1,6 @@
 #include "InventorySystem.h"
 
-#include "AttemptToInteractWithExternalInventory.h"
+#include "events/AttemptToInteractWithExternalInventory.h"
 #include "PlayerEquipmentInventory.h"
 
 #include <algorithm>

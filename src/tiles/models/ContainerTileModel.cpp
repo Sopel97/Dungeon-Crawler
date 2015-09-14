@@ -1,6 +1,4 @@
-#include "ContainerTileModel.h"
-
-
+#include "tiles/models/ContainerTileModel.h"
 
 using namespace ls;
 

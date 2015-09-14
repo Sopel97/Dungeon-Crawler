@@ -3,6 +3,8 @@
 
 #include "ResourceManager.h"
 
+#include "Inventory.h"
+
 #include "../LibS/Geometry.h"
 
 #include <map>
@@ -18,22 +20,8 @@ namespace sf
 class InventorySlotView
 {
 public:
-    enum class ContentRequirement
-    {
-        None,
-        Helmet,
-        Chestplate,
-        Pants,
-        Boots,
-        Sword,
-        Shield,
-        Necklace,
-        Ring,
-        Ammo,
-        Container
-    };
 
-    InventorySlotView(Tile* content, const ls::Vec2I& position, ContentRequirement requirement = ContentRequirement::None);
+    InventorySlotView(Tile* content, const ls::Vec2I& position);
 
     InventorySlotView(const InventorySlotView& other);
     InventorySlotView(InventorySlotView&& other);
@@ -41,14 +29,10 @@ public:
     InventorySlotView& operator=(const InventorySlotView& other);
     InventorySlotView& operator=(InventorySlotView&& other);
 
-    bool setContent(Tile* newContent);
-    bool isValidContent(Tile* tile) const;
-    bool isEmpty() const;
-    Tile*& content() const;
-    Tile* releaseContent();
+    Tile* content() const;
     const ls::Vec2I& position() const;
 
-    void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
+    void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, Inventory::ContentRequirement contentRequirement);
 
     static const ls::Vec2I& slotSize();
 
@@ -57,11 +41,10 @@ protected:
     static ls::Vec2I m_slotTexture;
     static ls::Vec2I m_slotTextureSize;
     static ls::Vec2I m_requirementIconSize;
-    static std::map<ContentRequirement, ls::Vec2I> m_requirementIcons;
+    static std::map<Inventory::ContentRequirement, ls::Vec2I> m_requirementIcons;
 
-    Tile** m_content; //pointer to pointer in inventory that owns the tile. It is to allow moving tiles through view.
+    Tile* m_content;
     ls::Vec2I m_position; //relative to inventory inner region
-    ContentRequirement m_contentRequirement;
 };
 
 #endif // INVENTORYSLOTVIEW_H

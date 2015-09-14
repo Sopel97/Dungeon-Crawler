@@ -1,6 +1,4 @@
-#include "EntityModel.h"
-
-
+#include "entities/models/EntityModel.h"
 
 using namespace ls;
 

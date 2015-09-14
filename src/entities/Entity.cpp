@@ -1,15 +1,13 @@
-#include "Entity.h"
+#include "entities/Entity.h"
 
-#include "EntityModel.h"
-#include "EntityView.h"
-#include "EntityController.h"
+#include "entities/models/EntityModel.h"
+#include "entities/views/EntityView.h"
+#include "entities/controllers/EntityController.h"
 
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 
 #include "Configuration.h"
-
-
 
 #include <memory>
 

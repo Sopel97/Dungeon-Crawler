@@ -1,6 +1,4 @@
-#include "TileModel.h"
-
-
+#include "tiles/models/TileModel.h"
 
 using namespace ls;
 
@@ -24,6 +22,10 @@ TileModel::~TileModel()
 void TileModel::loadFromConfiguration(ConfigurationNode& config)
 {
 
+}
+bool TileModel::equals(const TileModel& other) const
+{
+    return true;
 }
 
 const Tile* TileModel::owner() const

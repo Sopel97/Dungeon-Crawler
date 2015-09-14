@@ -1,6 +1,4 @@
-#include "TileController.h"
-
-
+#include "tiles/controllers/TileController.h"
 
 TileController::TileController(Tile* owner) :
     m_owner(owner)

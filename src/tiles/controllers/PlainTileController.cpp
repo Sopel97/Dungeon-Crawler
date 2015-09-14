@@ -1,6 +1,6 @@
-#include "PlainTileController.h"
+#include "tiles/controllers/PlainTileController.h"
 
-#include "Tile.h"
+#include "tiles/Tile.h"
 
 PlainTileController::PlainTileController(Tile* owner) :
     TileController(owner)

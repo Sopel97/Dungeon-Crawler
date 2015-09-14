@@ -3,7 +3,7 @@
 
 #include "../LibS/Array2.h"
 
-#include "Tile.h"
+#include "tiles/Tile.h"
 
 #include "../LibS/Geometry.h"
 

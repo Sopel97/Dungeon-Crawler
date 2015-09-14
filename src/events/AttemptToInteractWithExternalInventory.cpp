@@ -1,4 +1,4 @@
-#include "AttemptToInteractWithExternalInventory.h"
+#include "events/AttemptToInteractWithExternalInventory.h"
 
 AttemptToInteractWithExternalInventory::AttemptToInteractWithExternalInventory(Inventory* inventory, int x, int y) :
     m_inventory(inventory),

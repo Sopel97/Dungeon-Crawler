@@ -1,12 +1,10 @@
 #include "TileStack.h"
 
-#include "Tile.h"
+#include "tiles/Tile.h"
 
-#include "TileModel.h"
-#include "TileView.h"
-#include "TileController.h"
-
-
+#include "tiles/models/TileModel.h"
+#include "tiles/views/TileView.h"
+#include "tiles/controllers/TileController.h"
 
 using namespace ls;
 
@@ -54,6 +52,32 @@ Tile* TileStack::pop()
 void TileStack::deleteTop()
 {
     delete pop();
+}
+
+int TileStack::insert(Tile* tile, int count)
+{
+    if(count == -1) count = tile->quantity();
+
+    return count;
+}
+int TileStack::insert(Tile* tile, int slotId, int count)
+{
+    if(count == -1) count = tile->quantity();
+
+    return count;
+}
+
+int TileStack::erase(Tile* tile, int count)
+{
+    if(count == -1) count = tile->quantity();
+
+    return count;
+}
+int TileStack::erase(Tile* tile, int slotId, int count)
+{
+    if(count == -1) count = tile->quantity();
+
+    return count;
 }
 
 const std::vector<Tile*>& TileStack::tiles() const

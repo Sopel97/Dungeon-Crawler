@@ -1,6 +1,4 @@
-#include "EntityController.h"
-
-
+#include "entities/controllers/EntityController.h"
 
 EntityController::EntityController(Entity* owner) :
     m_owner(owner)

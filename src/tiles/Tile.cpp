@@ -1,15 +1,13 @@
-#include "Tile.h"
+#include "tiles/Tile.h"
 
-#include "TileModel.h"
-#include "TileView.h"
-#include "TileController.h"
+#include "tiles/models/TileModel.h"
+#include "tiles/views/TileView.h"
+#include "tiles/controllers/TileController.h"
 
 #include "TileLocation.h"
 
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
-
-
 
 int Tile::m_lastId = -1;
 
@@ -85,6 +83,10 @@ TileController& Tile::controller()
     return *m_controller;
 }
 
+bool Tile::equals(const Tile& other) const
+{
+    return m_id == other.m_id && m_model->equals(*(other.m_model));
+}
 
 int Tile::quantity() const
 {

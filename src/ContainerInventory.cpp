@@ -1,6 +1,6 @@
 #include "ContainerInventory.h"
 
-#include "Tile.h"
+#include "tiles/Tile.h"
 
 #include "InventorySlotView.h"
 #include "InventoryView.h"
@@ -23,6 +23,10 @@ const std::vector<Tile*>& ContainerInventory::contents() const
 {
     return m_contents;
 }
+const Inventory::ContentRequirement ContainerInventory::slotContentRequirement(int slotId) const
+{
+    return Inventory::ContentRequirement::None;
+}
 InventoryView ContainerInventory::createInventoryView()
 {
     constexpr int margins = 4;
@@ -36,7 +40,7 @@ InventoryView ContainerInventory::createInventoryView()
     int col = 0;
     for(int i = 0; i < slotCount; ++i)
     {
-        slotViews.emplace_back(m_contents[i], Vec2I(margins + (InventorySlotView::slotSize().x + spacesBetweenSlots)*col, margins + (InventorySlotView::slotSize().y + spacesBetweenSlots)*row), InventorySlotView::ContentRequirement::None);
+        slotViews.emplace_back(m_contents[i], Vec2I(margins + (InventorySlotView::slotSize().x + spacesBetweenSlots)*col, margins + (InventorySlotView::slotSize().y + spacesBetweenSlots)*row));
 
         ++col;
         if(col == 5)

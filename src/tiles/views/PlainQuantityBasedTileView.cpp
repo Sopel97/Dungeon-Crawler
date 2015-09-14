@@ -1,8 +1,8 @@
-#include "PlainQuantityBasedTileView.h"
+#include "tiles/views/PlainQuantityBasedTileView.h"
 
 #include "Root.h"
 
-#include "Tile.h"
+#include "tiles/Tile.h"
 
 #include "TileLocation.h"
 
@@ -12,8 +12,6 @@
 #include <algorithm>
 
 #include "GameConstants.h"
-
-
 
 using namespace ls;
 

@@ -1,9 +1,9 @@
-#include "PlayerController.h"
+#include "entities/controllers/PlayerController.h"
 
 #include "World.h"
 
-#include "Entity.h"
-#include "EntityModel.h"
+#include "entities/Entity.h"
+#include "entities/models/EntityModel.h"
 
 
 

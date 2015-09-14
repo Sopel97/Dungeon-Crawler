@@ -1,8 +1,8 @@
-#include "OuterBorderedTileView.h"
+#include "tiles/views/OuterBorderedTileView.h"
 
 #include "Root.h"
 
-#include "Tile.h"
+#include "tiles/Tile.h"
 
 #include "MapLayer.h"
 
@@ -14,8 +14,6 @@
 #include <algorithm>
 
 #include "GameConstants.h"
-
-
 
 using namespace ls;
 

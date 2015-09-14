@@ -1,4 +1,4 @@
-#include "PlainTileView.h"
+#include "tiles/views/PlainTileView.h"
 
 #include "Root.h"
 
@@ -10,8 +10,6 @@
 #include <algorithm>
 
 #include "GameConstants.h"
-
-
 
 using namespace ls;
 

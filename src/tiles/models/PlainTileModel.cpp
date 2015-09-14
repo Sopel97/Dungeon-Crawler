@@ -1,6 +1,4 @@
-#include "PlainTileModel.h"
-
-
+#include "tiles/models/PlainTileModel.h"
 
 using namespace ls;
 

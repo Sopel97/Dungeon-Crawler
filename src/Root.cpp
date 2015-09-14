@@ -5,7 +5,7 @@
 #include "SFMLUtil.h"
 #include "World.h"
 
-#include "Tile.h"
+#include "tiles/Tile.h"
 
 #include "ResourceLoaders.h"
 

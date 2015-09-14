@@ -199,7 +199,11 @@ void InventoryView::draw(PlayerUi& playerUi, sf::RenderTarget& renderTarget, sf:
 
     playerUi.setContentViewOfPanelWindow(*this);
 
-    for(auto& slot : m_slotViews) slot.draw(renderTarget, renderStates);
+    int numberOfSlots = m_slotViews.size();
+    for(int i = 0; i < numberOfSlots; ++i)
+    {
+        m_slotViews[i].draw(renderTarget, renderStates, m_parentInventory->slotContentRequirement(i));
+    }
 }
 void InventoryView::update()
 {

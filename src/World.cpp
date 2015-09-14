@@ -2,17 +2,17 @@
 
 #include "Root.h"
 
-#include "Tile.h"
-#include "TileView.h"
-#include "TileModel.h"
-#include "TileController.h"
+#include "tiles/Tile.h"
+#include "tiles/views/TileView.h"
+#include "tiles/models/TileModel.h"
+#include "tiles/controllers/TileController.h"
 
 #include "TileLocation.h"
 
-#include "Entity.h"
-#include "EntityModel.h"
-#include "EntityView.h"
-#include "EntityController.h"
+#include "entities/Entity.h"
+#include "entities/models/EntityModel.h"
+#include "entities/views/EntityView.h"
+#include "entities/controllers/EntityController.h"
 
 #include "TileStack.h"
 #include "MapLayer.h"
@@ -29,8 +29,6 @@
 #include "../LibS/Util.h"
 
 #include "GameConstants.h"
-
-
 
 using namespace ls;
 

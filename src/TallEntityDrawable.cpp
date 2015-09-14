@@ -1,8 +1,8 @@
 #include "TallEntityDrawable.h"
 
-#include "Entity.h"
-#include "EntityModel.h"
-#include "EntityView.h"
+#include "entities/Entity.h"
+#include "entities/models/EntityModel.h"
+#include "entities/views/EntityView.h"
 
 using namespace ls;
 

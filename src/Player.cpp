@@ -1,15 +1,13 @@
 #include "Player.h"
 
-#include "Entity.h"
-#include "PlayerModel.h"
-#include "PlayerView.h"
-#include "PlayerController.h"
+#include "entities/Entity.h"
+#include "entities/models/PlayerModel.h"
+#include "entities/views/PlayerView.h"
+#include "entities/controllers/PlayerController.h"
 
 #include "World.h"
 
 #include "EventDispatcher.h"
-
-
 
 #include "../LibS/Geometry.h"
 

@@ -1,6 +1,6 @@
-#include "InnerBorderedWallTileView.h"
+#include "tiles/views/InnerBorderedWallTileView.h"
 
-#include "Tile.h"
+#include "tiles/Tile.h"
 #include "TileStack.h"
 #include "MapLayer.h"
 
@@ -10,8 +10,6 @@
 #include <SFML/System.hpp>
 
 #include "GameConstants.h"
-
-
 
 using namespace ls;
 

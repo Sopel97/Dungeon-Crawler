@@ -1,14 +1,14 @@
 #include "ResourceLoaders.h"
 
-#include "Tile.h"
-#include "TileModel.h"
-#include "TileView.h"
-#include "TileController.h"
+#include "tiles/Tile.h"
+#include "tiles/models/TileModel.h"
+#include "tiles/views/TileView.h"
+#include "tiles/controllers/TileController.h"
 
-#include "Entity.h"
-#include "EntityModel.h"
-#include "EntityView.h"
-#include "EntityController.h"
+#include "entities/Entity.h"
+#include "entities/models/EntityModel.h"
+#include "entities/views/EntityView.h"
+#include "entities/controllers/EntityController.h"
 
 #include "Configuration.h"
 

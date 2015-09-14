@@ -1,8 +1,8 @@
 #include "TallTileStackDrawable.h"
 
-#include "Tile.h"
-#include "TileView.h"
-#include "TileModel.h"
+#include "tiles/Tile.h"
+#include "tiles/views/TileView.h"
+#include "tiles/models/TileModel.h"
 
 #include "TileLocation.h"
 

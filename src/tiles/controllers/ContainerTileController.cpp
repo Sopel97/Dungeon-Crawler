@@ -1,12 +1,12 @@
-#include "ContainerTileController.h"
+#include "tiles/controllers/ContainerTileController.h"
 
-#include "AttemptToInteractWithExternalInventory.h"
+#include "events/AttemptToInteractWithExternalInventory.h"
 #include "EventDispatcher.h"
 
 #include "TileLocation.h"
 
-#include "Tile.h"
-#include "TileModel.h"
+#include "tiles/Tile.h"
+#include "tiles/models/TileModel.h"
 
 ContainerTileController::ContainerTileController(Tile* owner) :
     TileController(owner)

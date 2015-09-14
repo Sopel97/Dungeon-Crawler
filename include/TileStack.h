@@ -22,6 +22,12 @@ public:
 
     void deleteTop(); //this one deletes the tile on top
 
+    int insert(Tile* tile, int count = -1); //returns number of inserted elements. -1 count means that it will insert all
+    int insert(Tile* tile, int slotId, int count = -1); //same as above
+
+    int erase(Tile* tile, int count = -1); //same as above
+    int erase(Tile* tile, int slotId, int count = -1); //same as above
+
     bool isValid(int z) const;
     //it is up to the user to ensure m_emptyTile is not modyfied
     const Tile& at(int z) const;

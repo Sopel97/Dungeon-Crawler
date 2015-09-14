@@ -1,7 +1,7 @@
 #include "MapGenerator.h"
 
-#include "Tile.h"
-#include "TileView.h"
+#include "tiles/Tile.h"
+#include "tiles/views/TileView.h"
 
 #include "TileStack.h"
 #include "MapLayer.h"
