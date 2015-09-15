@@ -18,15 +18,16 @@ public:
 
     void push(Tile* tile);
 
-    Tile* pop(); //also returns ownership to the tile
+    Tile* releaseTop();
 
-    void deleteTop(); //this one deletes the tile on top
+    void deleteTop();
+    void deleteAt(size_t z);
 
     int insert(Tile* tile, int count = -1); //returns number of inserted elements. -1 count means that it will insert all
-    int insert(Tile* tile, int slotId, int count = -1); //same as above
+    int insert(Tile* tile, size_t slotId, int count = -1); //same as above
 
     int erase(Tile* tile, int count = -1); //same as above
-    int erase(Tile* tile, int slotId, int count = -1); //same as above
+    int erase(Tile* tile, size_t slotId, int count = -1); //same as above
 
     bool isValid(int z) const;
     //it is up to the user to ensure m_emptyTile is not modyfied

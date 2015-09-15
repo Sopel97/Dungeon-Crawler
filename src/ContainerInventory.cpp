@@ -19,11 +19,11 @@ ContainerInventory::~ContainerInventory()
     //dtor
 }
 
-const std::vector<Tile*>& ContainerInventory::contents() const
+std::vector<Tile*>& ContainerInventory::contents()
 {
     return m_contents;
 }
-const Inventory::ContentRequirement ContainerInventory::slotContentRequirement(int slotId) const
+const Inventory::ContentRequirement ContainerInventory::slotContentRequirement(size_t slotId) const
 {
     return Inventory::ContentRequirement::None;
 }

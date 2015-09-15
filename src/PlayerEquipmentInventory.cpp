@@ -35,11 +35,11 @@ PlayerEquipmentInventory::~PlayerEquipmentInventory()
     }
 }
 
-const std::vector<Tile*>& PlayerEquipmentInventory::contents() const
+std::vector<Tile*>& PlayerEquipmentInventory::contents()
 {
     return m_contents;
 }
-const Inventory::ContentRequirement PlayerEquipmentInventory::slotContentRequirement(int slotId) const
+const Inventory::ContentRequirement PlayerEquipmentInventory::slotContentRequirement(size_t slotId) const
 {
     return m_contentRequirements[slotId];
 }

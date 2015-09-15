@@ -82,7 +82,7 @@ Tile* MapLayer::takeTile(int x, int y)
 {
     TileStack& tileStack = at(x, y);
     int z = tileStack.topZ();
-    Tile* tile = tileStack.pop();
+    Tile* tile = tileStack.releaseTop();
     tile->onTileRemoved(TileLocation(*this, x, y, z));
     return tile;
 }

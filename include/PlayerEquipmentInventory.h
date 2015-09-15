@@ -13,8 +13,8 @@ public:
     PlayerEquipmentInventory();
     virtual ~PlayerEquipmentInventory();
 
-    virtual const std::vector<Tile*>& contents() const;
-    virtual const Inventory::ContentRequirement slotContentRequirement(int slotId) const;
+    virtual std::vector<Tile*>& contents();
+    virtual const Inventory::ContentRequirement slotContentRequirement(size_t slotId) const;
     virtual InventoryView createInventoryView();
 
     virtual int numberOfSlots() const;
