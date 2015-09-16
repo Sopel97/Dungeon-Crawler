@@ -48,18 +48,18 @@ InventoryView PlayerEquipmentInventory::createInventoryView()
     std::vector<InventorySlotView> slotViews;
     slotViews.reserve(m_contents.size());
 
-    slotViews.emplace_back(m_contents[0], Vec2I(52, 17+43*0));
-    slotViews.emplace_back(m_contents[1], Vec2I(52, 17+43*1));
-    slotViews.emplace_back(m_contents[2], Vec2I(52, 17+43*2));
+    slotViews.emplace_back(this, 0, Vec2I(52, 17+43*0));
+    slotViews.emplace_back(this, 1, Vec2I(52, 17+43*1));
+    slotViews.emplace_back(this, 2, Vec2I(52, 17+43*2));
 
-    slotViews.emplace_back(m_contents[3], Vec2I(95, 4+43*0));
-    slotViews.emplace_back(m_contents[4], Vec2I(95, 4+43*1));
-    slotViews.emplace_back(m_contents[5], Vec2I(95, 4+43*2));
-    slotViews.emplace_back(m_contents[6], Vec2I(95, 4+43*3));
+    slotViews.emplace_back(this, 3, Vec2I(95, 4+43*0));
+    slotViews.emplace_back(this, 4, Vec2I(95, 4+43*1));
+    slotViews.emplace_back(this, 5, Vec2I(95, 4+43*2));
+    slotViews.emplace_back(this, 6, Vec2I(95, 4+43*3));
 
-    slotViews.emplace_back(m_contents[7], Vec2I(138, 17+43*0));
-    slotViews.emplace_back(m_contents[8], Vec2I(138, 17+43*1));
-    slotViews.emplace_back(m_contents[9], Vec2I(138, 17+43*2));
+    slotViews.emplace_back(this, 7, Vec2I(138, 17+43*0));
+    slotViews.emplace_back(this, 8, Vec2I(138, 17+43*1));
+    slotViews.emplace_back(this, 9, Vec2I(138, 17+43*2));
 
     InventoryView inventoryView(this, std::move(slotViews));
     inventoryView.setMinimizable(true);

@@ -31,16 +31,16 @@ InventoryView ContainerInventory::createInventoryView()
 {
     constexpr int margins = 4;
     constexpr int spacesBetweenSlots = 3;
-    const int slotCount = m_contents.size();
+    const size_t slotCount = m_contents.size();
 
     std::vector<InventorySlotView> slotViews;
     slotViews.reserve(slotCount);
 
     int row = 0;
     int col = 0;
-    for(int i = 0; i < slotCount; ++i)
+    for(size_t i = 0; i < slotCount; ++i)
     {
-        slotViews.emplace_back(m_contents[i], Vec2I(margins + (InventorySlotView::slotSize().x + spacesBetweenSlots)*col, margins + (InventorySlotView::slotSize().y + spacesBetweenSlots)*row));
+        slotViews.emplace_back(this, i, Vec2I(margins + (InventorySlotView::slotSize().x + spacesBetweenSlots)*col, margins + (InventorySlotView::slotSize().y + spacesBetweenSlots)*row));
 
         ++col;
         if(col == 5)

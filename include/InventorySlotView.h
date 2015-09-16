@@ -21,13 +21,13 @@ class InventorySlotView
 {
 public:
 
-    InventorySlotView(Tile* content, const ls::Vec2I& position);
+    InventorySlotView(Inventory* inventory, size_t slotId, const ls::Vec2I& position);
 
-    InventorySlotView(const InventorySlotView& other);
-    InventorySlotView(InventorySlotView&& other);
+    InventorySlotView(const InventorySlotView&) = default;
+    InventorySlotView(InventorySlotView&&) = default;
 
-    InventorySlotView& operator=(const InventorySlotView& other);
-    InventorySlotView& operator=(InventorySlotView&& other);
+    InventorySlotView& operator=(const InventorySlotView&) = default;
+    InventorySlotView& operator=(InventorySlotView&&) = default;
 
     Tile* content() const;
     const ls::Vec2I& position() const;
@@ -43,7 +43,8 @@ protected:
     static ls::Vec2I m_requirementIconSize;
     static std::map<Inventory::ContentRequirement, ls::Vec2I> m_requirementIcons;
 
-    Tile* m_content;
+    Inventory* m_inventory; //inventory will always outlive the views of its slots
+    size_t m_slotId;
     ls::Vec2I m_position; //relative to inventory inner region
 };
 

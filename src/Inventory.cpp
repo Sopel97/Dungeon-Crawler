@@ -12,8 +12,12 @@ Inventory::~Inventory()
 {
 
 }
+Tile* Inventory::at(size_t slotId)
+{
+    return contents()[slotId];
+}
 
-void Inventory::deleteAt(size_t slotId)
+void Inventory::deleteTileAt(size_t slotId)
 {
     auto& slots = this->contents();
     if(slotId >= slots.size()) return;
@@ -95,7 +99,7 @@ int Inventory::erase(Tile* tile, size_t slotId, int count)
     int newQuantity = storedTileQuantity - count;
     if(newQuantity <= 0)
     {
-        deleteAt(slotId);
+        deleteTileAt(slotId);
     }
     else
     {

@@ -26,43 +26,16 @@ std::map<Inventory::ContentRequirement, ls::Vec2I> InventorySlotView::m_requirem
     {Inventory::ContentRequirement::Boots, Vec2I(38 + 32 * 4, 19 + 32)}
 };
 
-InventorySlotView::InventorySlotView(Tile* content, const Vec2I& position) :
-    m_content(content),
+InventorySlotView::InventorySlotView(Inventory* inventory, size_t slotId, const ls::Vec2I& position) :
+    m_inventory(inventory),
+    m_slotId(slotId),
     m_position(position)
 {
     if(!m_texture) m_texture = ResourceManager::instance().get<sf::Texture>("UiNonRepeating");
 }
-
-InventorySlotView::InventorySlotView(const InventorySlotView& other) :
-    m_content(other.m_content),
-    m_position(other.m_position)
-{
-
-}
-InventorySlotView::InventorySlotView(InventorySlotView&& other) :
-    m_content(std::move(other.m_content)),
-    m_position(std::move(other.m_position))
-{
-
-}
-
-InventorySlotView& InventorySlotView::operator=(const InventorySlotView& other)
-{
-    m_content = other.m_content;
-    m_position = other.m_position;
-
-    return *this;
-}
-InventorySlotView& InventorySlotView::operator=(InventorySlotView&& other)
-{
-    m_content = std::move(other.m_content);
-    m_position = std::move(other.m_position);
-
-    return *this;
-}
 Tile* InventorySlotView::content() const
 {
-    return m_content;
+    return m_inventory->at(m_slotId);
 }
 const Vec2I& InventorySlotView::position() const
 {
