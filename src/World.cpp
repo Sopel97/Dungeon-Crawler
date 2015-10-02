@@ -14,7 +14,7 @@
 #include "entities/views/EntityView.h"
 #include "entities/controllers/EntityController.h"
 
-#include "TileStack.h"
+#include "TileColumn.h"
 #include "MapLayer.h"
 
 #include "WindowSpaceManager.h"
@@ -68,15 +68,15 @@ void World::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
     {
         for(int x = firstTileX; x <= lastTileX; ++x)
         {
-            const TileStack& tileStack = m_mapLayer->at(x, y);
+            const TileColumn& tileColumn = m_mapLayer->at(x, y);
             int z = 0;
-            for(const auto& tile : tileStack.tiles())
+            for(const auto& tile : tileColumn.tiles())
             {
                 TileLocation location(*m_mapLayer, x, y, z);
 
                 if(tile->view().isTall())
                 {
-                    tallDrawables.push_back(new TallTileStackDrawable(tileStack, location));
+                    tallDrawables.push_back(new TallTileStackDrawable(tileColumn, location));
                     break;
                 }
                 if(z == 0)
@@ -218,8 +218,8 @@ ls::Vec2I World::screenToTile(const ls::Vec2I& screenPosition) const
 
 void World::useTile(const ls::Vec2I& tilePosition)
 {
-    TileStack& tileStack = m_mapLayer->at(tilePosition.x, tilePosition.y);
-    tileStack.top().controller().onTileUsedByPlayer(TileLocation(*m_mapLayer, tilePosition.x, tilePosition.y, tileStack.topZ()));
+    TileColumn& tileColumn = m_mapLayer->at(tilePosition.x, tilePosition.y);
+    tileColumn.top().controller().onTileUsedByPlayer(TileLocation(*m_mapLayer, tilePosition.x, tilePosition.y, tileColumn.topZ()));
 }
 
 void World::update(float dt)
@@ -232,8 +232,8 @@ void World::update(float dt)
 float World::drag(const Vec2F& position) const
 {
     Vec2I tilePosition = worldToTile(position);
-    const TileStack& tileStack = m_mapLayer->at(tilePosition.x, tilePosition.y);
-    const Tile& tile = tileStack.at(0);
+    const TileColumn& tileColumn = m_mapLayer->at(tilePosition.x, tilePosition.y);
+    const Tile& tile = tileColumn.at(0);
     return tile.model().drag();
 }
 

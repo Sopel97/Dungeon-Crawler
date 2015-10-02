@@ -1,7 +1,7 @@
 #include "tiles/views/InnerBorderedWallTileView.h"
 
 #include "tiles/Tile.h"
-#include "TileStack.h"
+#include "TileColumn.h"
 #include "MapLayer.h"
 
 #include "TileLocation.h"

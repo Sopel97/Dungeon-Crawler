@@ -1,6 +1,6 @@
 #include "MapLayer.h"
 
-#include "TileStack.h"
+#include "TileColumn.h"
 #include "World.h"
 #include "tiles/models/TileModel.h"
 #include "tiles/views/TileView.h"
@@ -14,13 +14,13 @@
 
 using namespace ls;
 
-TileStack MapLayer::m_emptyTileStack {};
+TileColumn MapLayer::m_emptyTileColumn {};
 
 MapLayer::MapLayer(World& world, int width, int height) :
     m_world(world),
     m_width(width),
     m_height(height),
-    m_tileStacks(width, height)
+    m_tileColumns(width, height)
 {
 
 }
@@ -30,13 +30,13 @@ MapLayer::~MapLayer()
 
 }
 
-const Array2<TileStack>& MapLayer::tileStacks() const
+const Array2<TileColumn>& MapLayer::tileStacks() const
 {
-    return m_tileStacks;
+    return m_tileColumns;
 }
-Array2<TileStack>& MapLayer::tileStacks()
+Array2<TileColumn>& MapLayer::tileStacks()
 {
-    return m_tileStacks;
+    return m_tileColumns;
 }
 
 int MapLayer::width() const
@@ -53,15 +53,15 @@ bool MapLayer::isValid(int x, int y) const
     return x >= 0 && y >= 0 && x < m_width && y < m_height;
 }
 
-const TileStack& MapLayer::at(int x, int y) const
+const TileColumn& MapLayer::at(int x, int y) const
 {
-    if(!isValid(x, y)) return m_emptyTileStack;
-    return m_tileStacks(x, y);
+    if(!isValid(x, y)) return m_emptyTileColumn;
+    return m_tileColumns(x, y);
 }
-TileStack& MapLayer::at(int x, int y)
+TileColumn& MapLayer::at(int x, int y)
 {
-    if(!isValid(x, y)) return m_emptyTileStack;
-    return m_tileStacks(x, y);
+    if(!isValid(x, y)) return m_emptyTileColumn;
+    return m_tileColumns(x, y);
 }
 const Tile& MapLayer::at(int x, int y, int z) const
 {
@@ -74,15 +74,15 @@ Tile& MapLayer::at(int x, int y, int z)
 
 void MapLayer::placeTile(Tile* tile, int x, int y)
 {
-    TileStack& tileStack = at(x, y);
-    tileStack.push(tile);
-    tile->onTilePlaced(TileLocation(*this, x, y, tileStack.topZ()));
+    TileColumn& tileColumn = at(x, y);
+    tileColumn.push(tile);
+    tile->onTilePlaced(TileLocation(*this, x, y, tileColumn.topZ()));
 }
 Tile* MapLayer::takeTile(int x, int y)
 {
-    TileStack& tileStack = at(x, y);
-    int z = tileStack.topZ();
-    Tile* tile = tileStack.releaseTop();
+    TileColumn& tileColumn = at(x, y);
+    int z = tileColumn.topZ();
+    Tile* tile = tileColumn.releaseTop();
     tile->onTileRemoved(TileLocation(*this, x, y, z));
     return tile;
 }
@@ -105,8 +105,8 @@ std::vector<RectangleF> MapLayer::queryTileColliders(const RectangleF& queryRegi
     {
         for(int y = firstTileY; y <= lastTileY; ++y)
         {
-            const TileStack& tileStack = at(x, y);
-            for(const auto& tile : tileStack.tiles())
+            const TileColumn& tileColumn = at(x, y);
+            for(const auto& tile : tileColumn.tiles())
             {
                 if(tile->model().hasCollider())
                 {

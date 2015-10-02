@@ -1,4 +1,4 @@
-#include "TileStack.h"
+#include "TileColumn.h"
 
 #include "tiles/Tile.h"
 
@@ -8,17 +8,17 @@
 
 using namespace ls;
 
-const RectangleF TileStack::m_defaultCollider(Vec2F(0.0f, 0.0f), Vec2F(32.0f, 32.0f));
+const RectangleF TileColumn::m_defaultCollider(Vec2F(0.0f, 0.0f), Vec2F(32.0f, 32.0f));
 
-Tile TileStack::m_emptyTile {std::make_unique<TileModel>(nullptr), std::make_unique<TileView>(nullptr), std::make_unique<TileController>(nullptr)};
+Tile TileColumn::m_emptyTile {std::make_unique<TileModel>(nullptr), std::make_unique<TileView>(nullptr), std::make_unique<TileController>(nullptr)};
 
-TileStack::TileStack() :
+TileColumn::TileColumn() :
     m_lastTile(-1)
 {
 
 }
 
-TileStack::~TileStack()
+TileColumn::~TileColumn()
 {
     for(auto tile : m_tiles)
     {
@@ -26,22 +26,22 @@ TileStack::~TileStack()
     }
 }
 
-const Tile& TileStack::top() const
+const Tile& TileColumn::top() const
 {
     return *(m_tiles[m_lastTile]);
 }
-Tile& TileStack::top()
+Tile& TileColumn::top()
 {
     return *(m_tiles[m_lastTile]);
 }
 
-void TileStack::push(Tile* tile)
+void TileColumn::push(Tile* tile)
 {
     m_tiles.push_back(tile);
     ++m_lastTile;
 }
 
-Tile* TileStack::releaseTop()
+Tile* TileColumn::releaseTop()
 {
     Tile* tile = m_tiles[m_lastTile];
     m_tiles.erase(m_tiles.begin() + m_lastTile);
@@ -49,18 +49,18 @@ Tile* TileStack::releaseTop()
     return tile;
 }
 
-void TileStack::deleteTop()
+void TileColumn::deleteTop()
 {
     delete releaseTop();
 }
-void TileStack::deleteAt(size_t z)
+void TileColumn::deleteAt(size_t z)
 {
     if(z >= m_tiles.size()) return;
     delete m_tiles[z];
     m_tiles.erase(m_tiles.begin() + z);
 }
 
-int TileStack::insert(Tile* tile, int count)
+int TileColumn::insert(Tile* tile, int count)
 {
     if(count == -1) count = std::numeric_limits<int>::max();
     int numberOfInsertedTiles = 0;
@@ -73,7 +73,7 @@ int TileStack::insert(Tile* tile, int count)
 
     return numberOfInsertedTiles;
 }
-int TileStack::insert(Tile* tile, size_t slotId, int count)
+int TileColumn::insert(Tile* tile, size_t slotId, int count)
 {
     if(slotId >= m_tiles.size()) return 0;
 
@@ -102,7 +102,7 @@ int TileStack::insert(Tile* tile, size_t slotId, int count)
     return count;
 }
 
-int TileStack::erase(Tile* tile, int count)
+int TileColumn::erase(Tile* tile, int count)
 {
     if(count == -1) count = std::numeric_limits<int>::max();
     int numberOfErasedTiles = 0;
@@ -115,7 +115,7 @@ int TileStack::erase(Tile* tile, int count)
     
     return numberOfErasedTiles;
 }
-int TileStack::erase(Tile* tile, size_t slotId, int count)
+int TileColumn::erase(Tile* tile, size_t slotId, int count)
 {
     if(slotId >= m_tiles.size()) return 0;
 
@@ -138,32 +138,32 @@ int TileStack::erase(Tile* tile, size_t slotId, int count)
     return count;
 }
 
-const std::vector<Tile*>& TileStack::tiles() const
+const std::vector<Tile*>& TileColumn::tiles() const
 {
     return m_tiles;
 }
 
-bool TileStack::isValid(int z) const
+bool TileColumn::isValid(int z) const
 {
     return m_lastTile >= z;
 }
 
-const Tile& TileStack::at(int z) const
+const Tile& TileColumn::at(int z) const
 {
     if(isValid(z)) return *(m_tiles[z]);
     return m_emptyTile;
 }
-Tile& TileStack::at(int z)
+Tile& TileColumn::at(int z)
 {
     if(isValid(z)) return *(m_tiles[z]);
     return m_emptyTile;
 }
-int TileStack::size() const
+int TileColumn::size() const
 {
     return m_lastTile + 1;
 }
 
-bool TileStack::isTall() const
+bool TileColumn::isTall() const
 {
     for(const Tile* tile : m_tiles)
         if(tile->view().isTall()) return true;
@@ -171,7 +171,7 @@ bool TileStack::isTall() const
     return false;
 }
 
-bool TileStack::hasCollider() const
+bool TileColumn::hasCollider() const
 {
     for(const Tile* tile : m_tiles)
     {
@@ -180,7 +180,7 @@ bool TileStack::hasCollider() const
 
     return false;
 }
-const RectangleF& TileStack::collider() const
+const RectangleF& TileColumn::collider() const
 {
     for(const Tile* tile : m_tiles)
     {
@@ -190,7 +190,7 @@ const RectangleF& TileStack::collider() const
     return m_defaultCollider;
 }
 
-int TileStack::topZ() const
+int TileColumn::topZ() const
 {
     return m_lastTile;
 }

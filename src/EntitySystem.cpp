@@ -11,7 +11,7 @@
 #include "entities/views/EntityView.h"
 #include "entities/controllers/EntityController.h"
 
-#include "TileStack.h"
+#include "TileColumn.h"
 
 #include "Camera.h"
 
@@ -110,10 +110,10 @@ void EntitySystem::moveEntity(World* world, Entity* entity, float dt)
         {
             for(int y = ymin; y <= ymax; ++y)
             {
-                const TileStack& tileStack = world->map().at(x, y);
-                if(tileStack.hasCollider())
+                const TileColumn& tileColumn = world->map().at(x, y);
+                if(tileColumn.hasCollider())
                 {
-                    RectangleF tileCollider = tileStack.collider() + Vec2F(static_cast<float>(x), static_cast<float>(y)) * static_cast<float>(GameConstants::tileSize);
+                    RectangleF tileCollider = tileColumn.collider() + Vec2F(static_cast<float>(x), static_cast<float>(y)) * static_cast<float>(GameConstants::tileSize);
                     collidersInRange.push_back(tileCollider);
                 }
             }

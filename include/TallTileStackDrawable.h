@@ -7,13 +7,13 @@
 
 #include "../LibS/Geometry.h"
 
-class TileStack;
+class TileColumn;
 class MapLayer;
 
 class TallTileStackDrawable : public TallDrawable //requires at least one tile in tile stack to be tall
 {
 public:
-    TallTileStackDrawable(const TileStack & tileStack, const TileLocation & tileLocation);
+    TallTileStackDrawable(const TileColumn & tileColumn, const TileLocation & tileLocation);
     virtual ~TallTileStackDrawable();
 
     virtual const ls::RectangleF& boundingRectangle() const;
@@ -27,7 +27,7 @@ public:
     virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
 
 protected:
-    const TileStack& m_tileStack;
+    const TileColumn& m_tileColumn;
     int m_tileX;
     int m_tileY;
     const MapLayer& m_map;

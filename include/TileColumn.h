@@ -1,5 +1,5 @@
-#ifndef TILESTACK_H
-#define TILESTACK_H
+#ifndef TILECOLUMN_H
+#define TILECOLUMN_H
 
 #include <vector>
 
@@ -7,11 +7,11 @@
 
 class Tile;
 
-class TileStack
+class TileColumn
 {
 public:
-    TileStack();
-    ~TileStack();
+    TileColumn();
+    ~TileColumn();
 
     const Tile& top() const;
     Tile& top();
@@ -53,4 +53,4 @@ private:
     static const ls::RectangleF m_defaultCollider;
 };
 
-#endif // TILESTACK_H
+#endif // TILECOLUMN_H

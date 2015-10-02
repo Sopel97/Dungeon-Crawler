@@ -6,21 +6,21 @@
 
 #include "TileLocation.h"
 
-#include "TileStack.h"
+#include "TileColumn.h"
 #include "MapLayer.h"
 
 #include "GameConstants.h"
 
 using namespace ls;
 
-TallTileStackDrawable::TallTileStackDrawable(const TileStack& tileStack, const TileLocation& tileLocation) :
-    m_tileStack(tileStack),
+TallTileStackDrawable::TallTileStackDrawable(const TileColumn& tileColumn, const TileLocation& tileLocation) :
+    m_tileColumn(tileColumn),
     m_tileX(tileLocation.x),
     m_tileY(tileLocation.y),
     m_map(tileLocation.map)
 {
     int i = 0;
-    for(const auto& tile : m_tileStack.tiles())
+    for(const auto& tile : m_tileColumn.tiles())
     {
         if(tile->view().isTall())
         {
@@ -63,9 +63,9 @@ int TallTileStackDrawable::tileY() const
 
 void TallTileStackDrawable::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
 {
-    int tileStackSize = m_tileStack.size();
+    int tileStackSize = m_tileColumn.size();
     for(int i = m_indexOfFirstTallTile; i < tileStackSize; ++i)
     {
-        m_tileStack.at(i).draw(renderTarget, renderStates, TileLocation(m_map, m_tileX, m_tileY, i));
+        m_tileColumn.at(i).draw(renderTarget, renderStates, TileLocation(m_map, m_tileX, m_tileY, i));
     }
 }
