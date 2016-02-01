@@ -31,7 +31,6 @@ public:
     static Root& instance();
 
     void run();
-    void initResourceLoaders();
     void loadAssets();
 
     void processAsyncKeyboardInput(float dt);

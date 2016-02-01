@@ -24,7 +24,6 @@ Root::Root() :
     m_currentFpsCounter(0),
     m_game(nullptr)
 {
-    initResourceLoaders();
     loadAssets();
 
     m_defaultFont = ResourceManager::instance().get<sf::Font>("Font");
@@ -93,12 +92,6 @@ void Root::run()
 void Root::processAsyncKeyboardInput(float dt)
 {
     m_game->player().processAsyncKeyboardInput(m_game->world(), dt);
-}
-void Root::initResourceLoaders()
-{
-    ResourceManager::instance().registerLoader<TextureLoader>();
-    ResourceManager::instance().registerLoader<TileLoader>();
-    ResourceManager::instance().registerLoader<FontLoader>();
 }
 
 void Root::loadAssets()

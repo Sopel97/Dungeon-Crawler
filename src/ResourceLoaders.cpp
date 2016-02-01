@@ -1,25 +1,6 @@
 #include "ResourceLoaders.h"
 
-#include "tiles/Tile.h"
-#include "tiles/models/TileModel.h"
-#include "tiles/views/TileView.h"
-#include "tiles/controllers/TileController.h"
-
-#include "entities/Entity.h"
-#include "entities/models/EntityModel.h"
-#include "entities/views/EntityView.h"
-#include "entities/controllers/EntityController.h"
-
-#include "Configuration.h"
-
-#include <SFML/Graphics.hpp>
-#include <SFML/System.hpp>
-
-#include <string>
-#include <map>
-
-
-std::pair<std::string, void*> TextureLoader::load(const std::string& path) const
+std::pair<std::string, sf::Texture*> ResourceLoader<sf::Texture>::load(const std::string& path)
 {
     sf::Texture* texture = new sf::Texture;
     if(!texture->loadFromFile(path))
@@ -29,15 +10,8 @@ std::pair<std::string, void*> TextureLoader::load(const std::string& path) const
     }
     return std::make_pair(path, texture);
 }
-TextureLoader::~TextureLoader()
-{
 
-}
-
-TileLoader::TileLoader()
-{
-}
-std::pair<std::string, void*> TileLoader::load(const std::string& path) const
+std::pair<std::string, Tile*> ResourceLoader<Tile>::load(const std::string& path)
 {
 
     Configuration config = Configuration(path);
@@ -80,28 +54,20 @@ std::pair<std::string, void*> TileLoader::load(const std::string& path) const
     }
 
     std::unique_ptr<Tile> tile = std::make_unique<Tile>
-                                 (
-                                     std::move(model),
-                                     std::move(view),
-                                     std::move(controller)
-                                 );
+        (
+            std::move(model),
+            std::move(view),
+            std::move(controller)
+            );
 
     tile->loadFromConfiguration(tileConfig);
 
     std::cout << "\nLoaded tile: " << tileName << "\n      model: " << modelName << "\n       view: " << viewName << "\n controller: " << controllerName << '\n';
 
-    return std::make_pair(tileName, static_cast<void*>(tile.release()));
+    return std::make_pair(tileName, tile.release());
 }
 
-TileLoader::~TileLoader()
-{
-
-}
-
-EntityLoader::EntityLoader()
-{
-}
-std::pair<std::string, void*> EntityLoader::load(const std::string& path) const
+std::pair<std::string, Entity*> ResourceLoader<Entity>::load(const std::string& path)
 {
     Configuration config = Configuration(path);
     ConfigurationNode entityConfig = config["entity"];
@@ -143,35 +109,22 @@ std::pair<std::string, void*> EntityLoader::load(const std::string& path) const
     }
 
     std::unique_ptr<Entity> entity = std::make_unique<Entity>
-                                     (
-                                         std::move(model),
-                                         std::move(view),
-                                         std::move(controller)
-                                     );
+        (
+            std::move(model),
+            std::move(view),
+            std::move(controller)
+            );
 
     entity->loadFromConfiguration(entityConfig);
 
     std::cout << "\nLoaded entity: " << entityName << "\n        model: " << modelName << "\n         view: " << viewName << "\n   controller: " << controllerName << '\n';
 
-    return std::make_pair(entityName, static_cast<void*>(entity.release()));
+    return std::make_pair(entityName, entity.release());
 }
 
-EntityLoader::~EntityLoader()
-{
-
-}
-
-FontLoader::FontLoader()
-{
-
-}
-std::pair<std::string, void*> FontLoader::load(const std::string& path) const
+std::pair<std::string, sf::Font*> ResourceLoader<sf::Font>::load(const std::string& path)
 {
     sf::Font* font = new sf::Font;
     if(!font->loadFromFile(path)) return std::make_pair(path, nullptr);
     return std::make_pair(path, font);
-}
-FontLoader::~FontLoader()
-{
-
 }
