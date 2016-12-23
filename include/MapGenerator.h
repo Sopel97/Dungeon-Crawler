@@ -15,7 +15,7 @@ public:
     MapGenerator(size_t width, size_t height);
 
     void updateHelperMaps();
-    std::vector<ls::LineSegmentF> produceConnectionsBetweenDisconnectedRegions();
+    std::vector<ls::LineSegment2F> produceConnectionsBetweenDisconnectedRegions();
     void removeSmallRegionsFromTopologyMap(); //does not update
     void prepareHelperMaps();
 
@@ -47,11 +47,11 @@ protected:
         class CaveTopologyRules
         {
         public:
-            typedef TopologyState States;
+            using State = TopologyState;
 
             CaveTopologyRules();
 
-            States operator()(const ls::CellularAutomaton<CaveTopologyRules>& automaton, size_t x, size_t y);
+            State operator()(const ls::CellularAutomaton<CaveTopologyRules>& automaton, size_t x, size_t y);
         protected:
             int m_iteration; //this should be added to parameter list for operator ()
         };
@@ -74,12 +74,12 @@ protected:
 
         size_t numberOfRegions() const;
 
-        const Array2<int>& regionIds() const;
+        const ls::Array2<int>& regionIds() const;
 
         size_t regionSize(size_t regionsId) const;
 
     protected:
-        Array2<int> m_regionIds;
+        ls::Array2<int> m_regionIds;
         std::vector<int> m_regionsSizes;
         size_t m_numberOfRegions;
         size_t m_width;
@@ -126,7 +126,7 @@ protected:
         const ls::Vec2I& at(size_t x, size_t y) const;
 
     protected:
-        Array2<ls::Vec2I> m_rectangleSizes;
+        ls::Array2<ls::Vec2I> m_rectangleSizes;
         size_t m_width;
         size_t m_height;
     };
@@ -139,15 +139,15 @@ protected:
         template <class F>
         void updateFromRegionMapAndRectangleMap(const RegionMap& regionMap, const RectangleMap& rectangleMap, F rectangleSizeAdjustingFunction)
         {
-            auto intersects = [](const ls::RectangleI & a, const ls::RectangleI & b)->bool //local implementation to ensure that it checks for tangent boudaries
+            auto intersects = [](const ls::Rectangle2I & a, const ls::Rectangle2I & b)->bool //local implementation to ensure that it checks for tangent boudaries
             {
                 return a.max.x > b.min.x && a.min.x < b.max.x && a.max.y > b.min.y && a.min.y < b.max.y;
             };
-            auto isRectangleValid = [](const ls::RectangleI & r)->bool
+            auto isRectangleValid = [](const ls::Rectangle2I & r)->bool
             {
                 return r.max.x > r.min.x && r.max.y > r.min.y;
             };
-            auto isRectangleNotValid = [&isRectangleValid](const ls::RectangleI & r)->bool
+            auto isRectangleNotValid = [&isRectangleValid](const ls::Rectangle2I & r)->bool
             {
                 return !isRectangleValid(r);
             };
@@ -160,10 +160,10 @@ protected:
             };
             //auto rectangleSizeAdjustingFunction = [](Vec2I & size) {if(size.x > size.y * 2) size.x = size.y * 2; else if(size.y > size.x * 2) size.y = size.x * 2;};
 
-            std::vector<std::vector<ls::RectangleI>> rectanglesInRegion;
+            std::vector<std::vector<ls::Rectangle2I>> rectanglesInRegion;
             rectanglesInRegion.resize(regionMap.numberOfRegions());
 
-            std::vector<ls::RectangleI> sortedRectangles;
+            std::vector<ls::Rectangle2I> sortedRectangles;
 
             for(size_t x = 0; x < m_width; ++x)
             {
@@ -171,12 +171,12 @@ protected:
                 {
                     ls::Vec2I size = rectangleMap.at(x, y);
                     if(size.x <= 0 || size.y <= 0) continue;
-                    ls::RectangleI rectangle(ls::Vec2I(x, y), size.x, size.y);
+                    ls::Rectangle2I rectangle = ls::Rectangle2I::withSize(ls::Vec2I(x, y), size.x, size.y);
                     sortedRectangles.push_back(rectangle);
                 }
             }
 
-            std::sort(sortedRectangles.begin(), sortedRectangles.end(), [](const ls::RectangleI & lhs, const ls::RectangleI & rhs)->bool {return lhs.area() > rhs.area();}); //descending by area
+            std::sort(sortedRectangles.begin(), sortedRectangles.end(), [](const ls::Rectangle2I & lhs, const ls::Rectangle2I & rhs)->bool {return lhs.area() > rhs.area();}); //descending by area
 
             for(auto& rectangleToInsert : sortedRectangles)
             {
@@ -200,7 +200,7 @@ protected:
 
                     if(intersectingRectangle.area() < rectangleToInsert.area())
                     {
-                        ls::RectangleI r1, r2; //for two ways of shrinking of the rectangle. One horizontally, one vertically.
+                        ls::Rectangle2I r1, r2; //for two ways of shrinking of the rectangle. One horizontally, one vertically.
                         r1 = r2 = intersectingRectangle;
 
                         if(r1.min.x < rectangleToInsert.min.x)
@@ -242,7 +242,7 @@ protected:
                     }
                     else
                     {
-                        ls::RectangleI r1, r2;
+                        ls::Rectangle2I r1, r2;
                         r1 = r2 = rectangleToInsert;
 
                         if(r1.min.x < intersectingRectangle.min.x)
@@ -290,7 +290,7 @@ protected:
                 rectanglesInRegion[rectangleRegionId].erase(std::remove_if(rectanglesInRegion[rectangleRegionId].begin(), rectanglesInRegion[rectangleRegionId].end(), isRectangleNotValid), rectanglesInRegion[rectangleRegionId].end());
             }
 
-            Array2<FillState> rectangleFillMap(m_width, m_height);
+            ls::Array2<FillState> rectangleFillMap(m_width, m_height);
             for(size_t x = 0; x < m_width; ++x)
             {
                 for(size_t y = 0; y < m_height; ++y)
@@ -322,7 +322,7 @@ protected:
                 {
                     if(rectangleFillMap(x, y) == FillState::Unfilled)
                     {
-                        rectanglesInRegion[regionMap.at(x, y)].push_back(ls::RectangleI(ls::Vec2I(x, y), 1, 1));
+                        rectanglesInRegion[regionMap.at(x, y)].push_back(ls::Rectangle2I::withSize(ls::Vec2I(x, y), 1, 1));
                     }
                 }
             }
@@ -334,10 +334,10 @@ protected:
             }
         }
 
-        const std::vector<ls::RectangleI>& rectangles() const;
+        const std::vector<ls::Rectangle2I>& rectangles() const;
 
     protected:
-        std::vector<ls::RectangleI> m_rectangles;
+        std::vector<ls::Rectangle2I> m_rectangles;
         size_t m_width;
         size_t m_height;
     };

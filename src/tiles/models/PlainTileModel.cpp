@@ -25,7 +25,7 @@ void PlainTileModel::loadFromConfiguration(ConfigurationNode& config)
     if(colliderConfig.exists())
     {
         m_commonData->hasCollider = true;
-        m_commonData->collider = RectangleF(
+        m_commonData->collider = Rectangle2F(
                                      Vec2F(colliderConfig[1][1].get<float>(), colliderConfig[1][2].get<float>()),
                                      Vec2F(colliderConfig[2][1].get<float>(), colliderConfig[2][2].get<float>())
                                  );
@@ -42,7 +42,7 @@ bool PlainTileModel::hasCollider() const
 {
     return m_commonData->hasCollider;
 }
-const RectangleF& PlainTileModel::collider() const
+const Rectangle2F& PlainTileModel::collider() const
 {
     return m_commonData->collider;
 }

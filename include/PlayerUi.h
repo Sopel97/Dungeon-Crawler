@@ -102,7 +102,7 @@ protected:
     std::vector<Window*> m_panelWindows;
     std::vector<Window*> m_popupWindows;
 
-    void drawWindow(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, Window& window, const ls::RectangleI& rect);
+    void drawWindow(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, Window& window, const ls::Rectangle2I& rect);
 };
 
 #endif // PLAYERUI_H

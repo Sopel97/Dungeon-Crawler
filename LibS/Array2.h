@@ -1,468 +1,934 @@
-#ifndef ARRAY2_H
-#define ARRAY2_H
+#pragma once
+
 #include <iostream>
 #include <vector>
 #include <utility>
-using std::size_t;
+#include <memory>
+#include <stack>
+#include <tuple>
+#include <functional>
 
-template <class T>
-class Array2
+namespace ls
 {
-public:
-    class Col
+    class IndexRegion2
     {
     public:
-        typedef T* iterator;
-        Col() :
-            m_dataCol(nullptr),
-            m_colSize(0)
+        struct Index
         {
-        }
-
-        Col(T* dataCol, size_t size) :
-            m_dataCol(dataCol),
-            m_colSize(size)
-        {
-        }
-
-        Col(Col& col) :
-            m_dataCol(col.m_dataCol),
-            m_colSize(col.m_colSize)
-        {
-        }
-
-        Col(Col&& col) :
-            m_dataCol(col.m_dataCol),
-            m_colSize(col.m_colSize)
-        {
-        }
-
-        ~Col()
-        {
-        }
-
-        T& operator[] (size_t y) const
-        {
-            return *(m_dataCol + y);
-        }
-        T& at(size_t y) const
-        {
-            return *(m_dataCol + y);
-        }
-        Col& operator= (Col && col)
-        {
-            m_dataCol = col.m_dataCol;
-            m_colSize = col.m_colSize;
-            return *this;
-        }
-
-        Col& operator= (const Col& col)
-        {
-            return operator= (std::move(Col(col)));
-        }
-
-        Col& operator= (const std::initializer_list<T>& list)
-        {
-            int i = 0;
-            for(auto && v : list)
-            {
-                operator[](i) = v;
-                ++i;
-            }
-        }
-
-        T* data() const
-        {
-            return m_dataCol;
-        }
-
-        void fill(const T& value)
-        {
-            std::fill(begin(), end(), value);
-        }
-
-        size_t size() const
-        {
-            return m_colSize;
-        }
-
-        bool empty() const
-        {
-            return m_dataCol == nullptr;
-        }
-
-        iterator begin() const
-        {
-            return m_dataCol;
-        }
-
-        iterator end() const
-        {
-            return m_dataCol + m_colSize;
-        }
-
-        Col previousCol(int n = 1) const
-        {
-            return Col(m_dataCol - (m_colSize * n), m_colSize);
-        }
-        Col nextCol(int n = 1) const
-        {
-            return Col(m_dataCol + (m_colSize * n), m_colSize);
-        }
-        Col& moveToPreviousCol(int n = 1)
-        {
-            m_dataCol -= (m_colSize * n);
-        }
-        Col& moveToNextCol(int n = 1)
-        {
-            m_dataCol += (m_colSize * n);
-        }
-
-    private:
-        T* m_dataCol;
-        size_t m_colSize;
-    };
-
-    class Row
-    {
-    public:
-        class iterator
-        {
-        public:
-            typedef iterator self_type;
-            typedef T value_type;
-            typedef T& reference;
-            typedef T* pointer;
-            typedef std::forward_iterator_tag iterator_category;
-            typedef int difference_type;
-
-            iterator(pointer ptr, int jump) : m_start(ptr), m_ptr(ptr), m_jump(jump) {}
-
-            self_type       operator++ (int) { self_type i = *this; m_ptr += m_jump; return i; }
-            self_type       operator-- (int) { self_type i = *this; m_ptr -= m_jump; return i; }
-            self_type&      operator++ () { m_ptr += m_jump; return *this; }
-            self_type&      operator-- () { m_ptr -= m_jump; return *this; }
-
-            self_type       operator+  (int n) { self_type i = *this; i.m_ptr += m_jump * n; return i; }
-            self_type       operator-  (int n) { self_type i = *this; i.m_ptr -= m_jump * n; return i; }
-            self_type&      operator+= (int n) { m_ptr += m_jump * n; return *this; }
-            self_type&      operator-= (int n) { m_ptr -= m_jump * n; return *this; }
-
-            difference_type operator-  (const self_type& n) { return (m_ptr - n.m_ptr) / m_jump; }
-
-            reference       operator[] (int n) { return m_start[m_jump * n]; }
-            reference       operator*  () { return *m_ptr; }
-            pointer         operator-> () { return m_ptr; }
-
-            bool            operator== (const self_type& rhs) { return m_ptr == rhs.m_ptr; }
-            bool            operator<  (const self_type& rhs) { return m_ptr < rhs.m_ptr; }
-            bool            operator>  (const self_type& rhs) { return m_ptr > rhs.m_ptr; }
-            bool            operator<= (const self_type& rhs) { return m_ptr <= rhs.m_ptr; }
-            bool            operator>= (const self_type& rhs) { return m_ptr >= rhs.m_ptr; }
-            bool            operator!= (const self_type& rhs) { return m_ptr != rhs.m_ptr; }
-
-        private:
-            pointer m_start;
-            pointer m_ptr;
-            int m_jump;
+            int x, y;
         };
 
-        Row() :
-            m_dataRow(nullptr),
-            m_rowSize(0)
+    private:
+        class const_iterator;
+
+        class iterator
         {
+        private:
+        public:
+            friend class const_iterator;
+
+            using difference_type = int;
+            using value_type = Index;
+            using reference = Index&;
+            using pointer = Index*;
+            using iterator_category = std::forward_iterator_tag;
+
+            iterator() = default;
+            ~iterator() = default;
+            iterator(int minX, int minY, int maxX, int maxY) noexcept : m_minY(minY), m_maxX(maxX), m_maxY(maxY), m_index{minX, minY} {}
+            iterator(const iterator& other) = default;
+
+            iterator& operator=(const iterator& other) = default;
+
+            iterator  operator++ (int) { iterator i = *this; ++m_index.y; if(m_index.y > m_maxY) { m_index.y = m_minY; ++m_index.x; } return i; }
+            iterator& operator++ () { ++m_index.y; if(m_index.y > m_maxY) { m_index.y = m_minY; ++m_index.x; } return *this; }
+
+            reference operator*  () { return m_index; }
+            pointer   operator-> () { return &m_index; }
+
+            bool      operator== (const iterator& rhs) { return std::tie(m_index.x, m_index.y) == std::tie(rhs.m_index.x, rhs.m_index.y); }
+            bool      operator!= (const iterator& rhs) { return std::tie(m_index.x, m_index.y) != std::tie(rhs.m_index.x, rhs.m_index.y); }
+
+        private:
+            int m_minY;
+            int m_maxX;
+            int m_maxY;
+            Index m_index;
+        };
+
+        class const_iterator
+        {
+        private:
+        public:
+            using difference_type = int;
+            using value_type = Index;
+            using const_reference = const Index&;
+            using const_pointer = const Index*;
+            using iterator_category = std::forward_iterator_tag;
+
+            const_iterator() = default;
+            ~const_iterator() = default;
+            const_iterator(int minX, int minY, int maxX, int maxY) noexcept : m_minY(minY), m_maxX(maxX), m_maxY(maxY), m_index{minX, minY} {}
+            const_iterator(const iterator& other) noexcept : m_minY(other.m_minY), m_maxX(other.m_maxX), m_maxY(other.m_maxY), m_index(other.m_index) {}
+            const_iterator(const const_iterator& other) = default;
+
+            const_iterator& operator=(const const_iterator& other) = default;
+
+            const_iterator  operator++ (int) { const_iterator i = *this; ++m_index.y; if(m_index.y > m_maxY) { m_index.y = m_minY; ++m_index.x; } return i; }
+            const_iterator& operator++ () { ++m_index.y; if(m_index.y > m_maxY) { m_index.y = m_minY; ++m_index.x; } return *this; }
+
+            const_reference operator*  () { return m_index; }
+            const_pointer   operator-> () { return &m_index; }
+
+            bool      operator== (const iterator& rhs) { return std::tie(m_index.x, m_index.y) == std::tie(rhs.m_index.x, rhs.m_index.y); }
+            bool      operator!= (const iterator& rhs) { return std::tie(m_index.x, m_index.y) != std::tie(rhs.m_index.x, rhs.m_index.y); }
+
+        private:
+            int m_minY;
+            int m_maxX;
+            int m_maxY;
+            Index m_index;
+        };
+
+    public:
+
+        IndexRegion2(int minX, int minY, int maxX, int maxY) noexcept :
+            m_minX(minX),
+            m_minY(minY),
+            m_maxX(maxX),
+            m_maxY(maxY)
+        {
+
         }
 
-        Row(T* dataRow, size_t size, size_t colSize) :
-            m_dataRow(dataRow),
-            m_rowSize(size),
-            m_colSize(colSize)
+        iterator begin()
         {
+            return iterator(m_minX, m_minY, m_maxX, m_maxY);
         }
+        iterator end()
+        {
+            return iterator(m_maxX + 1, m_minY, m_maxX, m_maxY);
+        }
+        const_iterator begin() const
+        {
+            return const_iterator(m_minX, m_minY, m_maxX, m_maxY);
+        }
+        const_iterator end() const
+        {
+            return const_iterator(m_maxX + 1, m_minY, m_maxX, m_maxY);
+        }
+        const_iterator cbegin() const
+        {
+            return iterator(m_minX, m_minY, m_maxX, m_maxY);
+        }
+        const_iterator cend() const
+        {
+            return const_iterator(m_maxX + 1, m_minY, m_maxX, m_maxY);
+        }
+    private:
+        int m_minX;
+        int m_minY;
+        int m_maxX;
+        int m_maxY;
+    };
 
-        Row(Row& row) :
-            m_dataRow(row.m_dataRow),
-            m_rowSize(row.m_rowSize),
-            m_colSize(row.m_colSize)
-        {
-        }
+    template <class T>
+    class Array2
+    {
+    private:
 
-        Row(Row&& row) :
-            m_dataRow(row.m_dataRow),
-            m_rowSize(row.m_rowSize),
-            m_colSize(row.m_colSize)
-        {
-        }
+    public:
+        using ValueType = T;
 
-        ~Row()
-        {
-        }
+        class ConstCol;
 
-        T& operator[] (size_t x) const
+        class Col
         {
-            return *(m_dataRow + x * m_colSize);
-        }
-        T& at(size_t x) const
-        {
-            return *(m_dataRow + x * m_colSize);
-        }
-        Row& operator= (Row && row)
-        {
-            m_dataRow = row.m_dataRow;
-            m_rowSize = row.m_rowSize;
-            m_colSize = row.m_colSize;
-            return *this;
-        }
+        public:
+            friend class ConstCol;
 
-        Row& operator= (const Row& row)
-        {
-            return operator= (std::move(Row(row)));
-        }
+            using iterator = T*;
+            using const_iterator = const T*;
 
-        Row& operator= (const std::initializer_list<T>& list)
-        {
-            int i = 0;
-            for(auto && v : list)
+            Col() = default;
+
+            Col(T* dataCol, int size) noexcept :
+                m_dataCol(dataCol),
+                m_colSize(size)
             {
-                operator[](i) = v;
-                ++i;
+            }
+
+            Col(const Col& col) = default;
+            Col(Col&& col) = default;
+
+            T& operator[] (int y)
+            {
+                return *(m_dataCol + y);
+            }
+            const T& operator[] (int y) const
+            {
+                return *(m_dataCol + y);
+            }
+
+            Col& operator= (const Col& col) = default;
+            Col& operator= (Col && col) = default;
+
+            Col& operator= (std::initializer_list<T> list)
+            {
+                int i = 0;
+                for(const T& v : list)
+                {
+                    operator[](i) = v;
+                    ++i;
+                }
+            }
+
+            const T* data() const
+            {
+                return m_dataCol;
+            }
+
+            void fill(const T& value)
+            {
+                std::fill(begin(), end(), value);
+            }
+
+            int size() const
+            {
+                return m_colSize;
+            }
+
+            bool empty() const
+            {
+                return m_dataCol == nullptr;
+            }
+
+            iterator begin()
+            {
+                return m_dataCol;
+            }
+
+            iterator end()
+            {
+                return m_dataCol + m_colSize;
+            }
+            const_iterator begin() const
+            {
+                return m_dataCol;
+            }
+
+            const_iterator end() const
+            {
+                return m_dataCol + m_colSize;
+            }
+            const_iterator cbegin() const
+            {
+                return m_dataCol;
+            }
+
+            const_iterator cend() const
+            {
+                return m_dataCol + m_colSize;
+            }
+
+            Col previousCol(int n = 1) const
+            {
+                return Col(m_dataCol - (m_colSize * n), m_colSize);
+            }
+            Col nextCol(int n = 1) const
+            {
+                return Col(m_dataCol + (m_colSize * n), m_colSize);
+            }
+            Col& moveToPreviousCol(int n = 1)
+            {
+                m_dataCol -= (m_colSize * n);
+
+                return *this;
+            }
+            Col& moveToNextCol(int n = 1)
+            {
+                m_dataCol += (m_colSize * n);
+
+                return *this;
+            }
+
+        private:
+            T* m_dataCol;
+            int m_colSize;
+        };
+
+        class ConstCol
+        {
+        public:
+            using const_iterator = const T*;
+
+            ConstCol() = default;
+
+            ConstCol(const T* dataCol, int size) noexcept :
+                m_dataCol(dataCol),
+                m_colSize(size)
+            {
+            }
+
+            ConstCol(const Col& col) noexcept :
+            m_dataCol(col.m_dataCol),
+                m_colSize(col.m_colSize)
+            {
+
+            }
+
+            ConstCol(const ConstCol& col) = default;
+            ConstCol(ConstCol&& col) = default;
+
+            const T& operator[] (int y) const
+            {
+                return *(m_dataCol + y);
+            }
+
+            ConstCol& operator= (const Col& col)
+            {
+                m_dataCol = col.m_dataCol;
+                m_colSize = col.m_colSize;
+                return *this;
+            }
+
+            ConstCol& operator= (Col && col)
+            {
+                m_dataCol = std::move(col.m_dataCol);
+                m_colSize = std::move(col.m_colSize);
+                return *this;
+            }
+
+            const T* data() const
+            {
+                return m_dataCol;
+            }
+
+            void fill(const T& value)
+            {
+                std::fill(begin(), end(), value);
+            }
+
+            int size() const
+            {
+                return m_colSize;
+            }
+
+            bool empty() const
+            {
+                return m_dataCol == nullptr;
+            }
+
+            const_iterator begin() const
+            {
+                return m_dataCol;
+            }
+
+            const_iterator end() const
+            {
+                return m_dataCol + m_colSize;
+            }
+            const_iterator cbegin() const
+            {
+                return m_dataCol;
+            }
+
+            const_iterator cend() const
+            {
+                return m_dataCol + m_colSize;
+            }
+
+            ConstCol previousCol(int n = 1) const
+            {
+                return ConstCol(m_dataCol - (m_colSize * n), m_colSize);
+            }
+            ConstCol nextCol(int n = 1) const
+            {
+                return ConstCol(m_dataCol + (m_colSize * n), m_colSize);
+            }
+            ConstCol& moveToPreviousCol(int n = 1)
+            {
+                m_dataCol -= (m_colSize * n);
+
+                return *this;
+            }
+            ConstCol& moveToNextCol(int n = 1)
+            {
+                m_dataCol += (m_colSize * n);
+
+                return *this;
+            }
+
+        private:
+            const T* m_dataCol;
+            int m_colSize;
+        };
+
+        class ConstRow;
+
+        class Row
+        {
+        public:
+            friend class ConstRow;
+
+            class iterator
+            {
+            public:
+                using difference_type = int;
+                using value_type = T;
+                using reference = T&;
+                using pointer = T*;
+                using iterator_category = std::random_access_iterator_tag;
+
+                iterator() noexcept : m_start(nullptr), m_ptr(nullptr), m_jump(0) {}
+                iterator(const iterator& other) = default;
+                iterator(pointer ptr, difference_type jump) noexcept : m_start(ptr), m_ptr(ptr), m_jump(jump) {}
+
+                iterator&      operator=  (const iterator& other) = default;
+
+                iterator       operator++ (int) { iterator i = *this; m_ptr += m_jump; return i; }
+                iterator       operator-- (int) { iterator i = *this; m_ptr -= m_jump; return i; }
+                iterator&      operator++ () { m_ptr += m_jump; return *this; }
+                iterator&      operator-- () { m_ptr -= m_jump; return *this; }
+
+                iterator       operator+  (int n) { iterator i = *this; i.m_ptr += m_jump * n; return i; }
+                iterator       operator-  (int n) { iterator i = *this; i.m_ptr -= m_jump * n; return i; }
+                iterator&      operator+= (int n) { m_ptr += m_jump * n; return *this; }
+                iterator&      operator-= (int n) { m_ptr -= m_jump * n; return *this; }
+
+                difference_type operator-  (const iterator& n) { return (m_ptr - n.m_ptr) / m_jump; }
+
+                reference       operator[] (int n) { return m_start[m_jump * n]; }
+                reference       operator*  () { return *m_ptr; }
+                pointer         operator-> () { return m_ptr; }
+
+                bool            operator== (const iterator& rhs) { return m_ptr == rhs.m_ptr; }
+                bool            operator<  (const iterator& rhs) { return m_ptr < rhs.m_ptr; }
+                bool            operator>  (const iterator& rhs) { return m_ptr > rhs.m_ptr; }
+                bool            operator<= (const iterator& rhs) { return m_ptr <= rhs.m_ptr; }
+                bool            operator>= (const iterator& rhs) { return m_ptr >= rhs.m_ptr; }
+                bool            operator!= (const iterator& rhs) { return m_ptr != rhs.m_ptr; }
+
+            private:
+                friend class const_iterator;
+
+                pointer m_start;
+                pointer m_ptr;
+                difference_type m_jump;
+            };
+
+            class const_iterator
+            {
+            public:
+                using difference_type = int;
+                using value_type = T;
+                using const_reference = const T&;
+                using const_pointer = const T*;
+                using iterator_category = std::random_access_iterator_tag;
+
+                const_iterator() noexcept : m_start(nullptr), m_ptr(nullptr), m_jump(0) {}
+                const_iterator(const iterator& it) noexcept : m_start(it.m_start), m_ptr(it.m_ptr), m_jump(it.m_jump) {}
+                const_iterator(const const_iterator& other) = default;
+                const_iterator(const_pointer ptr, difference_type jump) noexcept : m_start(ptr), m_ptr(ptr), m_jump(jump) {}
+
+                const_iterator& operator=  (const const_iterator& other) = default;
+
+                const_iterator  operator++ (int) { const_iterator i = *this; m_ptr += m_jump; return i; }
+                const_iterator  operator-- (int) { const_iterator i = *this; m_ptr -= m_jump; return i; }
+                const_iterator& operator++ () { m_ptr += m_jump; return *this; }
+                const_iterator& operator-- () { m_ptr -= m_jump; return *this; }
+
+                const_iterator  operator+  (int n) { const_iterator i = *this; i.m_ptr += m_jump * n; return i; }
+                const_iterator  operator-  (int n) { const_iterator i = *this; i.m_ptr -= m_jump * n; return i; }
+                const_iterator& operator+= (int n) { m_ptr += m_jump * n; return *this; }
+                const_iterator& operator-= (int n) { m_ptr -= m_jump * n; return *this; }
+
+                difference_type operator-  (const const_iterator& n) { return (m_ptr - n.m_ptr) / m_jump; }
+
+                const_reference operator[] (int n) { return m_start[m_jump * n]; }
+                const_reference operator*  () { return *m_ptr; }
+                const_pointer   operator-> () { return m_ptr; }
+
+                bool            operator== (const const_iterator& rhs) { return m_ptr == rhs.m_ptr; }
+                bool            operator<  (const const_iterator& rhs) { return m_ptr < rhs.m_ptr; }
+                bool            operator>  (const const_iterator& rhs) { return m_ptr > rhs.m_ptr; }
+                bool            operator<= (const const_iterator& rhs) { return m_ptr <= rhs.m_ptr; }
+                bool            operator>= (const const_iterator& rhs) { return m_ptr >= rhs.m_ptr; }
+                bool            operator!= (const const_iterator& rhs) { return m_ptr != rhs.m_ptr; }
+
+            private:
+                const_pointer m_start;
+                const_pointer m_ptr;
+                difference_type m_jump;
+            };
+
+            Row() = default;
+
+            Row(T* dataRow, int size, int colSize) noexcept :
+                m_dataRow(dataRow),
+                m_rowSize(size),
+                m_colSize(colSize)
+            {
+            }
+
+            Row(const Row& row) = default;
+            Row(Row&& row) = default;
+
+            T& operator[] (int x)
+            {
+                return *(m_dataRow + x * m_colSize);
+            }
+            const T& operator[] (int x) const
+            {
+                return *(m_dataRow + x * m_colSize);
+            }
+            Row& operator= (const Row& row) noexcept
+            {
+                m_dataRow = row.m_dataRow;
+                m_rowSize = row.m_rowSize;
+                m_colSize = row.m_colSize;
+
+                return *this;
+            }
+            Row& operator= (Row && row) noexcept
+            {
+                m_dataRow = std::move(row.m_dataRow);
+                m_rowSize = std::move(row.m_rowSize);
+                m_colSize = std::move(row.m_colSize);
+
+                return *this;
+            }
+
+
+            Row& operator= (std::initializer_list<T> list)
+            {
+                int i = 0;
+                for(const T& v : list)
+                {
+                    operator[](i) = v;
+                    ++i;
+                }
+            }
+
+            void fill(const T& value)
+            {
+                std::fill(begin(), end(), value);
+            }
+
+            int size() const
+            {
+                return m_rowSize;
+            }
+
+            bool empty() const
+            {
+                return m_dataRow == nullptr;
+            }
+
+            iterator begin()
+            {
+                return iterator(m_dataRow, m_colSize);
+            }
+
+            iterator end()
+            {
+                return iterator(m_dataRow + m_rowSize * m_colSize, m_colSize);
+            }
+            const_iterator begin() const
+            {
+                return const_iterator(m_dataRow, m_colSize);
+            }
+
+            const_iterator end() const
+            {
+                return const_iterator(m_dataRow + m_rowSize * m_colSize, m_colSize);
+            }
+            const_iterator cbegin() const
+            {
+                return const_iterator(m_dataRow, m_colSize);
+            }
+
+            const_iterator cend() const
+            {
+                return const_iterator(m_dataRow + m_rowSize * m_colSize, m_colSize);
+            }
+            Row previousRow(int n = 1) const
+            {
+                return Row(m_dataRow - n, m_rowSize, m_colSize);
+            }
+            Row nextRow(int n = 1) const
+            {
+                return Row(m_dataRow + n, m_rowSize, m_colSize);
+            }
+            Row& moveToPreviousRow(int n = 1)
+            {
+                m_dataRow -= n;
+
+                return *this;
+            }
+            Row& moveToNextRow(int n = 1)
+            {
+                m_dataRow += n;
+
+                return *this;
+            }
+        private:
+            T* m_dataRow;
+            int m_rowSize;
+            int m_colSize;
+        };
+
+        class ConstRow
+        {
+        public:
+            ConstRow() = default;
+
+            ConstRow(T* dataRow, int size, int colSize) noexcept :
+                m_dataRow(dataRow),
+                m_rowSize(size),
+                m_colSize(colSize)
+            {
+            }
+
+            ConstRow(const Row& row) noexcept :
+            m_dataRow(row.m_dataRow),
+                m_rowSize(row.m_rowSize),
+                m_colSize(row.m_colSize)
+            {
+            }
+
+            ConstRow(const ConstRow& row) = default;
+            ConstRow(ConstRow&& row) = default;
+
+            const T& operator[] (int x) const
+            {
+                return *(m_dataRow + x * m_colSize);
+            }
+            ConstRow& operator= (const ConstRow& row) noexcept
+            {
+                m_dataRow = row.m_dataRow;
+                m_rowSize = row.m_rowSize;
+                m_colSize = row.m_colSize;
+
+                return *this;
+            }
+            ConstRow& operator= (ConstRow && row)
+            {
+                m_dataRow = std::move(row.m_dataRow);
+                m_rowSize = std::move(row.m_rowSize);
+                m_colSize = std::move(row.m_colSize);
+
+                return *this;
+            }
+
+            int size() const
+            {
+                return m_rowSize;
+            }
+
+            bool empty() const
+            {
+                return m_dataRow == nullptr;
+            }
+
+            typename Row::const_iterator begin() const
+            {
+                return Row::const_iterator(m_dataRow, m_colSize);
+            }
+
+            typename Row::const_iterator end() const
+            {
+                return Row::const_iterator(m_dataRow + m_rowSize * m_colSize, m_colSize);
+            }
+            typename Row::const_iterator cbegin() const
+            {
+                return Row::const_iterator(m_dataRow, m_colSize);
+            }
+
+            typename Row::const_iterator cend() const
+            {
+                return Row::const_iterator(m_dataRow + m_rowSize * m_colSize, m_colSize);
+            }
+            ConstRow previousRow(int n = 1) const
+            {
+                return ConstRow(m_dataRow - n, m_rowSize, m_colSize);
+            }
+            ConstRow nextRow(int n = 1) const
+            {
+                return ConstRow(m_dataRow + n, m_rowSize, m_colSize);
+            }
+            ConstRow& moveToPreviousRow(int n = 1)
+            {
+                m_dataRow -= n;
+
+                return *this;
+            }
+            ConstRow& moveToNextRow(int n = 1)
+            {
+                m_dataRow += n;
+
+                return *this;
+            }
+        private:
+            const T* m_dataRow;
+            int m_rowSize;
+            int m_colSize;
+        };
+
+        using iterator = T*;
+        using const_iterator = const T*;
+
+        Array2() :
+            m_data(nullptr),
+            m_width(0),
+            m_height(0)
+        {
+
+        }
+
+        Array2(int width, int height) :
+            m_width(width),
+            m_height(height)
+        {
+            const int totalSize = width * height;
+            m_data = std::make_unique<T[]>(totalSize);
+        }
+
+        Array2(int width, int height, const T& initValue) :
+            m_width(width),
+            m_height(height)
+        {
+            const int totalSize = width * height;
+            m_data = std::make_unique<T[]>(totalSize);
+            for(int i = 0; i < totalSize; ++i)
+            {
+                m_data[i] = initValue;
             }
         }
 
-        T* data() const //data is not continguous
+        Array2(const Array2<T>& other) :
+            m_width(other.m_width),
+            m_height(other.m_height)
         {
-            return m_dataRow;
+            const int totalSize = m_width * m_height;
+            m_data = std::make_unique<T[]>(totalSize);
+            for(int i = 0; i < totalSize; ++i)
+            {
+                m_data[i] = other.m_data[i];
+            }
         }
 
+        Array2(Array2<T>&& other) noexcept :
+        m_data(std::move(other.m_data)),
+            m_width(std::move(other.m_width)),
+            m_height(std::move(other.m_height))
+        {
+            other.m_data = nullptr;
+        }
+
+        Array2(const std::initializer_list<std::initializer_list<T>>& list)
+        {
+            m_height = list.size();
+            m_width = (*(list.begin())).size();
+            const int totalSize = m_width * m_height;
+            m_data = std::make_unique<T[]>(totalSize);
+            int y = 0;
+            for(const auto& row : list)
+            {
+                int x = 0;
+                for(const auto& v : row)
+                {
+                    at(x, y) = v;
+                    ++x;
+                }
+                ++y;
+            }
+        }
+
+        ConstCol operator[] (int x) const
+        {
+            return ConstCol(m_data.get() + x * m_height, m_height);
+        }
+
+        Col operator[] (int x)
+        {
+            return Col(m_data.get() + x * m_height, m_height);
+        }
+
+        const T& operator() (int x, int y) const
+        {
+            return m_data[x * m_height + y];
+        }
+        T& operator() (int x, int y)
+        {
+            return m_data[x * m_height + y];
+        }
+        const T& at(int x, int y) const
+        {
+            return m_data[x * m_height + y];
+        }
+        T& at(int x, int y)
+        {
+            return m_data[x * m_height + y];
+        }
+
+        Array2& operator= (Array2<T> && other) noexcept
+        {
+            m_data = std::move(other.m_data);
+            m_width = other.m_width;
+            m_height = other.m_height;
+
+            other.m_data = nullptr;
+
+            return *this;
+        }
+
+        Array2& operator= (const Array2<T>& other)
+        {
+            return operator=(std::move(Array2(other)));
+        }
+
+        Array2& operator= (const std::initializer_list<std::initializer_list<T>>& list)
+        {
+            return operator=(std::move(Array2(list)));
+        }
         void fill(const T& value)
         {
             std::fill(begin(), end(), value);
         }
-
-        size_t size() const
+        template <class Comp = std::equal_to<T>>
+        void floodFill(int x, int y, const T& value, Comp comp = std::equal_to<T>())
         {
-            return m_rowSize;
+            int width = m_width;
+            int height = m_height;
+
+            std::stack<IndexRegion2::Index> coordsStack;
+            coordsStack.push(IndexRegion2::Index{x, y});
+            const T initialCell = at(x, y);
+
+            while(!coordsStack.empty())
+            {
+                const IndexRegion2::Index ind = coordsStack.top();
+                coordsStack.pop();
+                T& thisCell = at(ind.x, ind.y);
+
+                if(comp(value, thisCell)) continue;
+
+                thisCell = value;
+                if(ind.x > 0 && comp(at(ind.x - 1, ind.y), initialCell)) coordsStack.push(IndexRegion2::Index{ind.x - 1, ind.y});
+                if(ind.y > 0 && comp(at(ind.x, ind.y - 1), initialCell)) coordsStack.push(IndexRegion2::Index{ind.x, ind.y - 1});
+                if(ind.x < width - 1 && comp(at(ind.x + 1, ind.y), initialCell)) coordsStack.push(IndexRegion2::Index{ind.x + 1, ind.y});
+                if(ind.y < height - 1 && comp(at(ind.x, ind.y + 1), initialCell)) coordsStack.push(IndexRegion2::Index{ind.x, ind.y + 1});
+            }
+        }
+
+        void swap(Array2<T>& other)
+        {
+            Array2<T> temp(std::move(*this));
+            *this = std::move(other);
+            other = std::move(temp);
+        }
+
+        const T* data() const
+        {
+            return m_data.get();
+        }
+
+        int width() const
+        {
+            return m_width;
+        }
+
+        int height() const
+        {
+            return m_height;
+        }
+
+        std::pair<int, int> size() const
+        {
+            return std::pair<int, int>(m_width, m_height);
         }
 
         bool empty() const
         {
-            return m_dataRow == nullptr;
+            return m_data == nullptr;
         }
 
-        iterator begin() const
+        iterator begin()
         {
-            return iterator(m_dataRow, m_colSize);
+            return m_data.get();
         }
 
-        iterator end() const
+        iterator end()
         {
-            return iterator(m_dataRow + m_rowSize * m_colSize, m_colSize);
+            const int totalSize = m_width * m_height;
+            return m_data.get() + totalSize;
         }
-        Row previousRow(int n = 1) const
+        const_iterator begin() const
         {
-            return Row(m_dataRow - n, m_rowSize, m_colSize);
+            return m_data.get();
         }
-        Row nextRow(int n = 1) const
+
+        const_iterator end() const
         {
-            return Row(m_dataRow + n, m_rowSize, m_colSize);
+            const int totalSize = m_width * m_height;
+            return m_data.get() + totalSize;
         }
-        Row& moveToPreviousRow(int n = 1)
+        const_iterator cbegin() const
         {
-            m_dataRow -= n;
+            return m_data.get();
         }
-        Row& moveToNextRow(int n = 1)
+
+        const_iterator cend() const
         {
-            m_dataRow += n;
+            const int totalSize = m_width * m_height;
+            return m_data.get() + totalSize;
         }
+
+        Row row(int n)
+        {
+            return Row(m_data.get() + n, m_width, m_height);
+        }
+
+        ConstRow row(int n) const
+        {
+            return ConstRow(m_data.get() + n, m_width, m_height);
+        }
+
+        ConstRow crow(int n) const
+        {
+            return ConstRow(m_data.get() + n, m_width, m_height);
+        }
+
+        Col col(int n)
+        {
+            return operator[](n);
+        }
+
+        ConstCol col(int n) const
+        {
+            return operator[](n);
+        }
+
+        ConstCol ccol(int n) const
+        {
+            return operator[](n);
+        }
+
+        IndexRegion2 possibleIndices() const
+        {
+            return IndexRegion2(0, 0, m_width - 1, m_height - 1);
+        }
+
     private:
-        T* m_dataRow;
-        size_t m_rowSize;
-        size_t m_colSize;
+        std::unique_ptr<T[]> m_data;
+        int m_width;
+        int m_height;
     };
 
-    typedef T* iterator;
-
-    Array2() :
-        m_data(nullptr),
-        m_sizeX(0),
-        m_sizeY(0)
+    template <class T>
+    void swap(Array2<T>& lhs, Array2<T>& rhs) noexcept
     {
+        lhs.swap(rhs);
     }
-
-    Array2(size_t sizeX, size_t sizeY) :
-        m_sizeX(sizeX),
-        m_sizeY(sizeY)
-    {
-        m_data = new T[m_sizeX * m_sizeY];
-    }
-
-    Array2(size_t sizeX, size_t sizeY, const T& initValue) :
-        m_sizeX(sizeX),
-        m_sizeY(sizeY)
-    {
-        size_t totalSize = m_sizeX * m_sizeY;
-        m_data = new T[totalSize];
-        for(size_t i = 0; i < totalSize; ++i)
-        {
-            m_data[i] = initValue;
-        }
-    }
-
-    Array2(const Array2<T>& arrayCopy) :
-        m_sizeX(arrayCopy.m_sizeX),
-        m_sizeY(arrayCopy.m_sizeY)
-    {
-        size_t totalSize = m_sizeX * m_sizeY;
-        m_data = new T[totalSize];
-        std::copy(arrayCopy.begin(), arrayCopy.end(), m_data);
-    }
-
-    Array2(Array2<T>&& array) :
-        m_data(std::move(array.m_data)),
-        m_sizeX(array.m_sizeX),
-        m_sizeY(array.m_sizeY)
-    {
-        array.m_data = nullptr;
-    }
-
-    Array2(const std::initializer_list<std::initializer_list<T>>& list)
-    {
-        m_sizeY = list.size();
-        m_sizeX = (*(list.begin())).size();
-        size_t totalSize = m_sizeX * m_sizeY;
-        m_data = new T[totalSize];
-        int y = 0;
-        for(auto& row : list)
-        {
-            int x = 0;
-            for(auto && v : row)
-            {
-                at(x, y) = v;
-                ++x;
-            }
-            ++y;
-        }
-    }
-
-    ~Array2()
-    {
-        if(m_data) delete m_data;
-    }
-
-    Col operator[] (size_t x) const
-    {
-        return Col(m_data + x * m_sizeY, m_sizeY);
-    }
-
-    T& operator() (size_t x, size_t y) const
-    {
-        return m_data[x * m_sizeY + y];
-    }
-    T& at(size_t x, size_t y) const
-    {
-        return m_data[x * m_sizeY + y];
-    }
-    Array2& operator= (Array2<T> && array)
-    {
-        if(m_data) delete m_data;
-
-        m_data = std::move(array.m_data);
-        m_sizeX = array.m_sizeX;
-        m_sizeY = array.m_sizeY;
-
-        array.m_data = nullptr;
-
-        return *this;
-    }
-
-    Array2& operator= (const Array2<T>& arrayCopy)
-    {
-        return operator=(std::move(Array2(arrayCopy)));
-    }
-
-    Array2& operator= (const std::initializer_list<std::initializer_list<T>>& list)
-    {
-        return operator=(std::move(Array2(list)));
-    }
-    void fill(const T& value)
-    {
-        std::fill(begin(), end(), value);
-    }
-    void floodFill(int x, int y, const T& value)
-    {
-        int width = m_sizeX;
-        int height = m_sizeY;
-
-        int thisCell = at(x, y);
-
-        if(value == thisCell) return;
-
-        at(x, y) = value;
-        if(x > 0 && at(x - 1, y) == thisCell) floodFill(x - 1, y, value);
-        if(y > 0 && at(x, y - 1) == thisCell) floodFill(x, y - 1, value);
-        if(x < width - 1 && at(x + 1, y) == thisCell) floodFill(x + 1, y, value);
-        if(y < height - 1 && at(x, y + 1) == thisCell) floodFill(x, y + 1, value);
-    }
-
-    T* data() const
-    {
-        return m_data;
-    }
-
-    size_t sizeX() const
-    {
-        return m_sizeX;
-    }
-
-    size_t sizeY() const
-    {
-        return m_sizeY;
-    }
-
-    size_t cols() const
-    {
-        return m_sizeX;
-    }
-
-    size_t rows() const
-    {
-        return m_sizeY;
-    }
-
-    std::pair<size_t, size_t> size() const
-    {
-        return std::pair<size_t, size_t>(m_sizeX, m_sizeY);
-    }
-
-    bool empty() const
-    {
-        return m_data == nullptr;
-    }
-
-    iterator begin() const
-    {
-        return m_data;
-    }
-
-    iterator end() const
-    {
-        size_t totalSize = m_sizeX * m_sizeY;
-        return m_data + totalSize;
-    }
-
-    Row row(size_t n) const
-    {
-        return Row(m_data + n, m_sizeX, m_sizeY);
-    }
-
-    Col col(size_t n) const
-    {
-        return operator[](n);
-    }
-
-private:
-    T* m_data;
-    size_t m_sizeX;
-    size_t m_sizeY;
-};
-#endif // ARRAY2_H
+}

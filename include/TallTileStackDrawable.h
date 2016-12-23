@@ -16,7 +16,7 @@ public:
     TallTileStackDrawable(const TileColumn & tileColumn, const TileLocation & tileLocation);
     virtual ~TallTileStackDrawable();
 
-    virtual const ls::RectangleF& boundingRectangle() const;
+    virtual const ls::Rectangle2F& boundingRectangle() const;
     virtual const ls::Vec2F& center() const;
 
     virtual TallDrawable::DrawableType type() const;
@@ -32,7 +32,7 @@ protected:
     int m_tileY;
     const MapLayer& m_map;
 
-    ls::RectangleF m_boundingRectangle;
+    ls::Rectangle2F m_boundingRectangle;
     ls::Vec2F m_center;
     int m_indexOfFirstTallTile;
 };

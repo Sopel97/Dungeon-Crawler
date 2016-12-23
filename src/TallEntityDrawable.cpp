@@ -12,7 +12,7 @@ TallEntityDrawable::TallEntityDrawable(Entity* entity) :
     float radius = m_entity->model().colliderRadius();
     Vec2F halfSize {radius / 2.0f, radius / 2.0f};
     m_center = m_entity->model().position();
-    m_boundingRectangle = RectangleF(m_center - halfSize, m_center + halfSize);
+    m_boundingRectangle = Rectangle2F(m_center - halfSize, m_center + halfSize);
 }
 
 TallEntityDrawable::~TallEntityDrawable()
@@ -20,7 +20,7 @@ TallEntityDrawable::~TallEntityDrawable()
 
 }
 
-const RectangleF& TallEntityDrawable::boundingRectangle() const
+const Rectangle2F& TallEntityDrawable::boundingRectangle() const
 {
     return m_boundingRectangle;
 }

@@ -18,7 +18,7 @@ public:
     float width() const;
     float height() const;
 
-    ls::RectangleF viewRectangle() const;
+    ls::Rectangle2F viewRectangle() const;
 protected:
     ls::Vec2F m_center; //center
     float m_width;

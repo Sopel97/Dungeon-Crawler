@@ -53,7 +53,7 @@ void World::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
 {
     m_root.windowSpaceManager().setViewToRegion(WindowSpaceManager::Region::World, m_camera.viewRectangle());
 
-    const RectangleF cameraRect = m_camera.viewRectangle();
+    const Rectangle2F cameraRect = m_camera.viewRectangle();
     const Vec2F& cameraTopLeft     = cameraRect.min;
     const Vec2F& cameraBottomRight = cameraRect.max;
     int firstTileX = std::max(Util::fastFloor(cameraTopLeft.x / GameConstants::tileSize), 0);
@@ -237,7 +237,7 @@ float World::drag(const Vec2F& position) const
     return tile.model().drag();
 }
 
-std::vector<RectangleF> World::queryTileColliders(const RectangleF& queryRegion) const
+std::vector<Rectangle2F> World::queryTileColliders(const Rectangle2F& queryRegion) const
 {
     return m_mapLayer->queryTileColliders(queryRegion);
 }

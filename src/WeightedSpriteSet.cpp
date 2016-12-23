@@ -39,7 +39,8 @@ Vec2I WeightedSpriteSet::chooseRandomSprite() const
 
     float sumOfWeights = m_cumulativeWeights.back();
 
-    int spriteIndex = std::lower_bound(m_cumulativeWeights.begin(), m_cumulativeWeights.end(), Root::instance().rng().nextFloat(0.0f, sumOfWeights)) - m_cumulativeWeights.begin();
+    std::uniform_real_distribution<float> distr(0.0f, sumOfWeights);
+    int spriteIndex = std::lower_bound(m_cumulativeWeights.begin(), m_cumulativeWeights.end(), distr(Root::instance().rng())) - m_cumulativeWeights.begin();
 
     return m_sprites[spriteIndex];
 }

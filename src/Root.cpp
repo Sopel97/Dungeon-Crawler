@@ -153,7 +153,7 @@ const sf::Font& Root::defaultFont() const
     return m_defaultFont.get();
 }
 
-StandardRandomNumberGeneratorWrapper<std::minstd_rand>& Root::rng()
+std::mt19937& Root::rng()
 {
     return m_rng;
 }

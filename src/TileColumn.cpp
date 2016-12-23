@@ -8,7 +8,7 @@
 
 using namespace ls;
 
-const RectangleF TileColumn::m_defaultCollider(Vec2F(0.0f, 0.0f), Vec2F(32.0f, 32.0f));
+const Rectangle2F TileColumn::m_defaultCollider(Vec2F(0.0f, 0.0f), Vec2F(32.0f, 32.0f));
 
 Tile TileColumn::m_emptyTile {std::make_unique<TileModel>(nullptr), std::make_unique<TileView>(nullptr), std::make_unique<TileController>(nullptr)};
 
@@ -180,7 +180,7 @@ bool TileColumn::hasCollider() const
 
     return false;
 }
-const RectangleF& TileColumn::collider() const
+const Rectangle2F& TileColumn::collider() const
 {
     for(const Tile* tile : m_tiles)
     {

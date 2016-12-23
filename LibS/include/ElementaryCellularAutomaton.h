@@ -1,22 +1,40 @@
-#ifndef ELEMENTARYCELLULARAUTOMATON_H
-#define ELEMENTARYCELLULARAUTOMATON_H
+#pragma once
 
-template <int I> //just to make it a template
-class ElementaryCellularAutomatonT
+#include "..\Fwd.h"
+
+#include <vector>
+#include <array>
+
+namespace ls
 {
-public:
-    ElementaryCellularAutomatonT(size_t rule, size_t width, size_t origin = 0u);
-    ElementaryCellularAutomatonT(size_t rule, const std::vector<uint8_t>& initialState);
-    ElementaryCellularAutomatonT(size_t rule, std::vector<uint8_t>&& initialState);
+    //TODO: circular, finite 
 
-    void iterate(size_t times = 1u);
-protected:
-    std::vector<uint8_t> m_tape;
-    std::array<uint8_t, 8u> m_outputs;
-};
+    template <class T>
+    class ElementaryCellularAutomatonTemplate
+    {
+    public:
+        enum class TapeTopology
+        {
+            Finite,
+            Circular
+        };
 
-typedef ElementaryCellularAutomatonT<> ElementaryCellularAutomaton;
+        ElementaryCellularAutomatonTemplate(uint8_t rule, int width, int origin = 0, TapeTopology topology = TapeTopology::Finite);
+        ElementaryCellularAutomatonTemplate(uint8_t rule, const std::vector<uint8_t>& initialState, TapeTopology topology = TapeTopology::Finite);
+        ElementaryCellularAutomatonTemplate(uint8_t rule, std::vector<uint8_t>&& initialState, TapeTopology topology = TapeTopology::Finite);
+
+        void setRule(uint8_t rule) &;
+
+        void iterate(int iterations = 1) &;
+
+        const std::vector<uint8_t>& tape() const &;
+        std::vector<uint8_t> tape() &&;
+    protected:
+        TapeTopology m_topology;
+        std::vector<uint8_t> m_tape; //TODO: consider using bool
+        std::array<uint8_t, 8u> m_outputs;
+    };
+
+}
 
 #include "../src/ElementaryCellularAutomaton.cpp"
-
-#endif // ELEMENTARYCELLULARAUTOMATON_H

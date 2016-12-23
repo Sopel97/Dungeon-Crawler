@@ -1,300 +1,336 @@
-template <class T, size_t C, size_t R>
-Matrix<T, C, R>::Matrix(T value)
-{
-    for(size_t c = 0; c < C; ++c)
-    {
-        m_columns[c].fill(value);
-    }
-}
-template <class T, size_t C, size_t R>
-Matrix<T, C, R>::Matrix(std::initializer_list<typename Matrix<T, C, R>::VecTypeCol> cols)
-{
-    for(size_t c = 0; c < C; ++c)
-    {
-        m_columns[c] = *(cols.begin() + c);
-    }
-}
-template <class T, size_t C, size_t R>
-const typename Matrix<T, C, R>::VecTypeCol& Matrix<T, C, R>::operator[](size_t c) const
-{
-    return m_columns[c];
-}
-template <class T, size_t C, size_t R>
-typename Matrix<T, C, R>::VecTypeCol& Matrix<T, C, R>::operator[](size_t c)
-{
-    return m_columns[c];
-}
+#include "..\include\Matrix.h"
 
-template <class T, size_t C, size_t R>
-bool Matrix<T, C, R>::operator ==(const Matrix<T, C, R>& other) const
+namespace ls
 {
-    for(size_t c = 0; c < C; ++c)
+    template <class T, int R, int C>
+    Matrix<T, R, C> Matrix<T, R, C>::zero()
     {
-        for(size_t r = 0; r < R; ++r)
-        {
-            if(m_columns[c][r] != other.m_columns[c][r]) return false;
-        }
+        return Matrix<T, R, C>(T(0));
     }
-    return true;
-}
-template <class T, size_t C, size_t R>
-bool Matrix<T, C, R>::operator !=(const Matrix<T, C, R>& other) const
-{
-    for(size_t c = 0; c < C; ++c)
+    template <class T, int R, int C>
+    template <int Rows, int Cols, class SFINAE>
+    Matrix<T, R, C> Matrix<T, R, C>::identity()
     {
-        for(size_t r = 0; r < R; ++r)
-        {
-            if(m_columns[c][r] == other.m_columns[c][r]) return false;
-        }
-    }
-    return true;
-}
+        Matrix<T, R, C> matrix(T(0));
 
-template <class T, size_t C, size_t R>
-Matrix<T, C, R> Matrix<T, C, R>::operator+(const Matrix<T, C, R>& other) const
-{
-    Matrix<T, C, R> result(*this);
-    return (result += other);
-}
-template <class T, size_t C, size_t R>
-Matrix<T, C, R> Matrix<T, C, R>::operator+(T scalar) const
-{
-    Matrix<T, C, R> result(*this);
-    return (result += scalar);
-}
-template <class T, size_t C, size_t R>
-Matrix<T, C, R> Matrix<T, C, R>::operator-(const Matrix<T, C, R>& other) const
-{
-    Matrix<T, C, R> result(*this);
-    return (result -= other);
-}
-template <class T, size_t C, size_t R>
-Matrix<T, C, R> Matrix<T, C, R>::operator-(T scalar) const
-{
-    Matrix<T, C, R> result(*this);
-    return (result -= scalar);
-}
-template <class T, size_t C, size_t R>
-Matrix<T, C, R> Matrix<T, C, R>::operator-() const
-{
-    Matrix<T, C, R> result(*this);
-    for(size_t c = 0; c < C; ++c)
-    {
-        for(size_t r = 0; r < R; ++r)
-        {
-            result.m_columns[c][r] = -result.m_columns[c][r];
-        }
+        for(int i = 0; i < R; ++i)
+            matrix.m_values[i][i] = T(1);
+
+        return matrix;
     }
-    return result;
-}
-template <class T, size_t C, size_t R>
-template <size_t X>
-Matrix<T, X, R> Matrix<T, C, R>::operator*(const Matrix<T, X, C>& other) const
-{
-    Matrix<T, X, R> result;
-    for(size_t c = 0; c < C; ++c)
+
+
+    template <class T, int R, int C>
+    Matrix<T, R, C>::Matrix(const T& value) noexcept(std::is_nothrow_copy_constructible<T>::value)
     {
-        for(size_t r = 0; r < X; ++r)
+        fill(value);
+    }
+    template <class T, int R, int C>
+    constexpr Matrix<T, R, C>::Matrix(const std::array<std::array<T, C>, R>& values) noexcept(std::is_nothrow_copy_constructible<std::array<std::array<T, C>, R>>::value) :
+        m_values(values)
+    {
+
+    }
+    template <class T, int R, int C>
+    constexpr Matrix<T, R, C>::Matrix(std::array<std::array<T, C>, R>&& values) noexcept(std::is_nothrow_move_constructible<std::array<std::array<T, C>, R>>::value) :
+        m_values(std::move(values))
+    {
+
+    }
+
+    template <class T, int R, int C>
+    constexpr const T& Matrix<T, R, C>::operator()(int row, int col) const
+    {
+        return m_values[row][col];
+    }
+    template <class T, int R, int C>
+    T& Matrix<T, R, C>::operator()(int row, int col)
+    {
+        return m_values[row][col];
+    }
+
+    template <class T, int R, int C>
+    bool Matrix<T, R, C>::operator ==(const Matrix<T, R, C>& rhs) const
+    {
+        for(int r = 0; r < R; ++r)
+        {
+            for(int c = 0; c < C; ++c)
+            {
+                if(m_values[r][c] != rhs.m_values[r][c]) return false;
+            }
+        }
+        return true;
+    }
+
+    template <class T, int R, int C>
+    bool Matrix<T, R, C>::operator !=(const Matrix<T, R, C>& rhs) const
+    {
+        return !(*this == rhs);
+    }
+
+    template <class T, int R, int C>
+    Matrix<T, R, C> Matrix<T, R, C>::operator+(const Matrix<T, R, C>& rhs) const
+    {
+        Matrix<T, R, C> result(*this);
+        return (result += rhs);
+    }
+    template <class T, int R, int C>
+    Matrix<T, R, C> Matrix<T, R, C>::operator+(const T& rhs) const
+    {
+        Matrix<T, R, C> result(*this);
+        return (result += rhs);
+    }
+    template <class T, int R, int C>
+    Matrix<T, R, C> Matrix<T, R, C>::operator-(const Matrix<T, R, C>& rhs) const
+    {
+        Matrix<T, R, C> result(*this);
+        return (result -= rhs);
+    }
+    template <class T, int R, int C>
+    Matrix<T, R, C> Matrix<T, R, C>::operator-(const T& rhs) const
+    {
+        Matrix<T, R, C> result(*this);
+        return (result -= rhs);
+    }
+    template <class T, int R, int C>
+    Matrix<T, R, C> Matrix<T, R, C>::operator-() const
+    {
+        Matrix<T, R, C> result(*this);
+        for(int r = 0; r < R; ++r)
+        {
+            for(int c = 0; c < C; ++c)
+            {
+                result.m_values[r][c] = -result.m_values[r][c];
+            }
+        }
+        return result;
+    }
+    template <class T, int R, int C>
+    template <int C2>
+    Matrix<T, R, C2> Matrix<T, R, C>::operator*(const Matrix<T, C, C2>& rhs) const
+    {
+        Matrix<T, R, C2> result;
+        for(int r = 0; r < R; ++r)
+        {
+            for(int c = 0; c < C2; ++c)
+            {
+                T resultElement = T(0);
+                for(int i = 0; i < C; ++i)
+                {
+                    resultElement += m_values[r][i] * rhs.m_values[i][c];
+                }
+                result[r][c] = resultElement;
+            }
+        }
+        return result;
+    }
+    template <class T, int R, int C>
+    typename Matrix<T, R, C>::ColVecType Matrix<T, R, C>::operator*(const typename Matrix<T, R, C>::RowVecType& rhs) const
+    {
+        Matrix<T, R, C>::ColVecType result;
+        for(int r = 0; r < R; ++r)
         {
             T resultElement = 0;
-            for(size_t i = 0; i < C; ++i)
+            for(int i = 0; i < C; ++i)
             {
-                resultElement += m_columns[i][r] * other.m_columns[c][i];
+                resultElement += m_values[r][i] * rhs[i];
             }
-            result[c][r] = resultElement;
+            result[r] = resultElement;
         }
-    }
-    return result;
-}
-template <class T, size_t C, size_t R>
-typename Matrix<T, C, R>::VecTypeCol Matrix<T, C, R>::operator*(const typename Matrix<T, C, R>::VecTypeRow& vec) const
-{
-    Matrix<T, C, R>::VecTypeCol result;
-    for(size_t r = 0; r < R; ++r)
-    {
-        T resultElement = 0;
-        for(size_t i = 0; i < C; ++i)
-        {
-            resultElement += m_columns[i][r] * vec[i];
-        }
-        result[r] = resultElement;
-    }
-    return result;
-}
-template <class T, size_t C, size_t R>
-Matrix<T, C, R> Matrix<T, C, R>::operator*(T scalar) const
-{
-    Matrix<T, C, R> result(*this);
-    return (result *= scalar);
-}
-template <class T, size_t C, size_t R>
-Matrix<T, C, R> Matrix<T, C, R>::operator/(T scalar) const
-{
-    Matrix<T, C, R> result(*this);
-    return (result /= scalar);
-}
+        return result;
 
+    }
+    template <class T, int R, int C>
+    Matrix<T, R, C> Matrix<T, R, C>::operator*(const T& rhs) const
+    {
+        Matrix<T, R, C> result(*this);
+        return (result *= rhs);
+    }
+    template <class T, int R, int C>
+    Matrix<T, R, C> Matrix<T, R, C>::operator/(const T& rhs) const
+    {
+        Matrix<T, R, C> result(*this);
+        return (result /= rhs);
+    }
 
-template <class T, size_t C, size_t R>
-Matrix<T, C, R>& Matrix<T, C, R>::operator+=(const Matrix<T, C, R>& other)
-{
-    for(size_t c = 0; c < C; ++c)
+    template <class T, int R, int C>
+    Matrix<T, R, C>& Matrix<T, R, C>::operator+=(const Matrix<T, R, C>& rhs) &
     {
-        for(size_t r = 0; r < R; ++r)
+        for(int r = 0; r < R; ++r)
         {
-            m_columns[c][r] += other.m_columns[c][r];
+            for(int c = 0; c < C; ++c)
+            {
+                m_values[r][c] += rhs.m_values[r][c];
+            }
         }
+        return *this;
     }
-    return *this;
-}
-template <class T, size_t C, size_t R>
-Matrix<T, C, R>& Matrix<T, C, R>::operator+=(T scalar)
-{
-    for(size_t c = 0; c < C; ++c)
+    template <class T, int R, int C>
+    Matrix<T, R, C>& Matrix<T, R, C>::operator+=(const T& rhs) &
     {
-        for(size_t r = 0; r < R; ++r)
+        for(int r = 0; r < R; ++r)
         {
-            m_columns[c][r] += scalar;
+            for(int c = 0; c < C; ++c)
+            {
+                m_values[r][c] += rhs;
+            }
         }
+        return *this;
     }
-    return *this;
-}
-template <class T, size_t C, size_t R>
-Matrix<T, C, R>& Matrix<T, C, R>::operator-=(const Matrix<T, C, R>& other)
-{
-    for(size_t c = 0; c < C; ++c)
+    template <class T, int R, int C>
+    Matrix<T, R, C>& Matrix<T, R, C>::operator-=(const Matrix<T, R, C>& rhs) &
     {
-        for(size_t r = 0; r < R; ++r)
+        for(int r = 0; r < R; ++r)
         {
-            m_columns[c][r] -= other.m_columns[c][r];
+            for(int c = 0; c < C; ++c)
+            {
+                m_values[r][c] -= rhs.m_values[r][c];
+            }
         }
+        return *this;
     }
-    return *this;
-}
-template <class T, size_t C, size_t R>
-Matrix<T, C, R>& Matrix<T, C, R>::operator-=(T scalar)
-{
-    for(size_t c = 0; c < C; ++c)
+    template <class T, int R, int C>
+    Matrix<T, R, C>& Matrix<T, R, C>::operator-=(const T& rhs) &
     {
-        for(size_t r = 0; r < R; ++r)
+        for(int r = 0; r < R; ++r)
         {
-            m_columns[c][r] -= scalar;
+            for(int c = 0; c < C; ++c)
+            {
+                m_values[r][c] -= rhs;
+            }
         }
+        return *this;
     }
-    return *this;
-}
-template <class T, size_t C, size_t R>
-Matrix<T, C, R>& Matrix<T, C, R>::operator*=(T scalar)
-{
-    for(size_t c = 0; c < C; ++c)
+    template <class T, int R, int C>
+    Matrix<T, R, C>& Matrix<T, R, C>::operator*=(const T& rhs) &
     {
-        for(size_t r = 0; r < R; ++r)
+        for(int r = 0; r < R; ++r)
         {
-            m_columns[c][r] *= scalar;
+            for(int c = 0; c < C; ++c)
+            {
+                m_values[r][c] *= rhs;
+            }
         }
-    }
-    return *this;
-}
-template <class T, size_t C, size_t R>
-Matrix<T, C, R>& Matrix<T, C, R>::operator/=(T scalar)
-{
-    for(size_t c = 0; c < C; ++c)
-    {
-        for(size_t r = 0; r < R; ++r)
-        {
-            m_columns[c][r] /= scalar;
-        }
-    }
-    return *this;
-}
+        return *this;
 
-template <class T, size_t C, size_t R>
-T Matrix<T, C, R>::sum() const
-{
-    T sumOfElements = 0;
-    for(size_t c = 0; c < C; ++c)
-    {
-        for(size_t r = 0; r < R; ++r)
-        {
-            sumOfElements += m_columns[c][r];
-        }
     }
-    return sumOfElements;
-}
-template <class T, size_t C, size_t R>
-T Matrix<T, C, R>::product() const
-{
-    T productOfElements = 1;
-    for(size_t c = 0; c < C; ++c)
+    template <class T, int R, int C>
+    Matrix<T, R, C>& Matrix<T, R, C>::operator/=(const T& rhs) &
     {
-        for(size_t r = 0; r < R; ++r)
+        for(int r = 0; r < R; ++r)
         {
-            productOfElements *= m_columns[c][r];
+            for(int c = 0; c < C; ++c)
+            {
+                m_values[r][c] /= rhs;
+            }
         }
+        return *this;
     }
-    return productOfElements;
-}
-template <class T, size_t C, size_t R>
-T Matrix<T, C, R>::mean() const
-{
-    return sum() / C * R;
-}
-template <class T, size_t C, size_t R>
-T Matrix<T, C, R>::min() const
-{
-    T minElement = m_columns[0][0];
-    for(size_t c = 0; c < C; ++c)
-    {
-        for(size_t r = 0; r < R; ++r)
-        {
-            if(m_columns[c][r] < minElement) minElement = m_columns[c][r];
-        }
-    }
-    return minElement;
-}
-template <class T, size_t C, size_t R>
-T Matrix<T, C, R>::max() const
-{
-    T maxElement = m_columns[0][0];
-    for(size_t c = 0; c < C; ++c)
-    {
-        for(size_t r = 0; r < R; ++r)
-        {
-            if(m_columns[c][r] > maxElement) maxElement = m_columns[c][r];
-        }
-    }
-    return maxElement;
-}
-template <class T, size_t C, size_t R>
-T Matrix<T, C, R>::trace() const
-{
-    static_assert(C == R, "A square matrix is required to perform this operation.");
-    T sumOfDiagonal = 0;
-    for(size_t i = 0; i < C; ++i) sumOfDiagonal += m_columns[i][i];
-    return sumOfDiagonal;
-}
-template <class T, size_t C, size_t R>
-T Matrix<T, C, R>::determinant() const
-{
-    static_assert(C == R, "A square matrix is required to perform this operation.");
-    return 0; //TODO: determinant calculation
-}
-template <class T, size_t C, size_t R>
-typename Matrix<T, C, R>::VecTypeCol Matrix<T, C, R>::diagonal() const
-{
-    static_assert(C == R, "A square matrix is required to perform this operation.");
-    Matrix<T, C, R>::VecTypeCol diagonalVector;
-    for(size_t i = 0; i < C; ++i) diagonalVector[i] = m_columns[i][i];
-    return diagonalVector;
-}
 
-template <class T, size_t C, size_t R>
-void Matrix<T, C, R>::fill(T value)
-{
-    for(size_t c = 0; c < C; ++c)
+    template <class T, int R, int C>
+    T Matrix<T, R, C>::sum() const
     {
-        m_columns[c].fill(value);
+        T sumOfElements = 0;
+        for(int r = 0; r < R; ++r)
+        {
+            for(int c = 0; c < C; ++c)
+            {
+                sumOfElements += m_values[r][c];
+            }
+        }
+        return sumOfElements;
+    }
+    template <class T, int R, int C>
+    T Matrix<T, R, C>::product() const
+    {
+        T productOfElements = 1;
+        for(int r = 0; r < R; ++r)
+        {
+            for(int c = 0; c < C; ++c)
+            {
+                productOfElements *= m_values[r][c];
+            }
+        }
+        return productOfElements;
+    }
+    template <class T, int R, int C>
+    T Matrix<T, R, C>::mean() const
+    {
+        return sum() / (R * C);
+    }
+    template <class T, int R, int C>
+    T Matrix<T, R, C>::min() const
+    {
+        T minElement = m_values[0][0];
+        for(int r = 0; r < R; ++r)
+        {
+            for(int c = 0; c < C; ++c)
+            {
+                if(m_values[r][c] < minElement) minElement = m_values[r][c];
+            }
+        }
+        return minElement;
+    }
+    template <class T, int R, int C>
+    T Matrix<T, R, C>::max() const
+    {
+        T maxElement = m_values[0][0];
+        for(int r = 0; r < R; ++r)
+        {
+            for(int c = 0; c < C; ++c)
+            {
+                if(m_values[r][c] > maxElement) maxElement = m_values[r][c];
+            }
+        }
+        return maxElement;
+    }
+
+    template <class T, int R, int C>
+    template <int Rows, int Cols, class SFINAE>
+    T Matrix<T, R, C>::trace() const
+    {
+        T sumOfDiagonal = 0;
+        for(int i = 0; i < R; ++i) sumOfDiagonal += m_values[i][i];
+        return sumOfDiagonal;
+    }
+
+    template <class T, int R, int C>
+    template <int Rows, int Cols, class SFINAE>
+    T Matrix<T, R, C>::determinant() const
+    {
+        if(R == 2)
+        {
+            return m_values[0][0] * m_values[1][1] - m_values[0][1] * m_values[1][0];
+        }
+        else if(R == 3)
+        {
+            return 0;
+        }
+        else if(R == 4)
+        {
+            return 0;
+        }
+    }
+
+    template <class T, int R, int C>
+    template <class E>
+    typename E::type Matrix<T, R, C>::diagonal() const
+    {
+        Matrix<T, R, C>::RowVecType diagonalVector;
+        for(int i = 0; i < R; ++i) diagonalVector[i] = m_values[i][i];
+        return diagonalVector;
+    }
+
+    template <class T, int R, int C>
+    void Matrix<T, R, C>::fill(const T& value) &
+    {
+        for(int r = 0; r < R; ++r)
+        {
+            for(int c = 0; c < C; ++c)
+            {
+                m_values[r][c] = value;
+            }
+        }
     }
 }
-
 

@@ -18,7 +18,7 @@ public:
     TallEntityDrawable(Entity* entity);
     virtual ~TallEntityDrawable();
 
-    virtual const ls::RectangleF& boundingRectangle() const;
+    virtual const ls::Rectangle2F& boundingRectangle() const;
     virtual const ls::Vec2F& center() const;
 
     virtual TallDrawable::DrawableType type() const;
@@ -27,7 +27,7 @@ public:
 
 protected:
     Entity* m_entity;
-    ls::RectangleF m_boundingRectangle;
+    ls::Rectangle2F m_boundingRectangle;
     ls::Vec2F m_center;
 };
 

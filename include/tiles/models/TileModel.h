@@ -11,7 +11,7 @@ class Tile;
 class TileLocation;
 class Inventory;
 
-class TileModel //must be functions (ie. all methods return resonable values and there is not pure virtual member functions)
+class TileModel //must be functions (ie. all methods return resonable values and there is no pure virtual member functions)
 {
 public:
     TileModel(Tile* owner);
@@ -27,7 +27,7 @@ public:
     void setOwner(Tile* newOwner);
 
     virtual bool hasCollider() const;
-    virtual const ls::RectangleF& collider() const;
+    virtual const ls::Rectangle2F& collider() const;
 
     virtual Inventory* inventory();
 
@@ -43,7 +43,7 @@ protected:
     Tile* m_owner;
 
 private:
-    static const ls::RectangleF m_emptyCollider;
+    static const ls::Rectangle2F m_emptyCollider;
 };
 
 #endif // TILEMODEL_H

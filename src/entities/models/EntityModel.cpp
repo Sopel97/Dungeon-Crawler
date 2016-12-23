@@ -69,7 +69,7 @@ void EntityModel::setDistanceTravelled(float newDistanceTravelled)
 
 Vec2F EntityModel::displacementWhenMoved(float dt)
 {
-    return 0.0f;
+    return Vec2F(0.0f, 0.0f);
 }
 
 float EntityModel::maxSpeed() const

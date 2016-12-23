@@ -70,20 +70,20 @@ void PlayerUi::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStat
 
 void PlayerUi::drawWindowOnPanel(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, Window& window)
 {
-    RectangleI playerUiPanelRect = Root::instance().windowSpaceManager().regionRect(WindowSpaceManager::Region::Id::PlayerUi);
+    Rectangle2I playerUiPanelRect = Root::instance().windowSpaceManager().regionRect(WindowSpaceManager::Region::Id::PlayerUi);
     const int& topBarHeight = window.hasHeader() ? m_windowHeaderHeight : m_windowTopBarHeight;
-    RectangleI windowRect(playerUiPanelRect.min + Vec2I(0, window.offsetFromTop()), m_playerUiPanelWidth, window.contentHeight() + m_windowBottomBarHeight + topBarHeight);
+    Rectangle2I windowRect = Rectangle2I::withSize(playerUiPanelRect.min + Vec2I(0, window.offsetFromTop()), m_playerUiPanelWidth, window.contentHeight() + m_windowBottomBarHeight + topBarHeight);
 
     drawWindow(renderTarget, renderStates, window, windowRect);
 }
 void PlayerUi::drawPopupWindow(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, Window& window)
 {
     const int& topBarHeight = window.hasHeader() ? m_windowHeaderHeight : m_windowTopBarHeight;
-    RectangleI windowRect(window.position(), window.contentWidth() + m_windowLeftBarWidth + m_windowRightBarWidth, window.contentHeight() + m_windowBottomBarHeight + topBarHeight);
+    Rectangle2I windowRect = Rectangle2I::withSize(window.position(), window.contentWidth() + m_windowLeftBarWidth + m_windowRightBarWidth, window.contentHeight() + m_windowBottomBarHeight + topBarHeight);
 
     drawWindow(renderTarget, renderStates, window, windowRect);
 }
-void PlayerUi::drawWindow(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, Window& window, const RectangleI& rect)
+void PlayerUi::drawWindow(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, Window& window, const Rectangle2I& rect)
 {
     ResourceHandle<sf::Texture> backgroundTexture = ResourceManager::instance().get<sf::Texture>("UiBackground");
     ResourceHandle<sf::Texture> verticalBarsSprites = ResourceManager::instance().get<sf::Texture>("UiVerticalBars");
@@ -97,7 +97,7 @@ void PlayerUi::drawWindow(sf::RenderTarget& renderTarget, sf::RenderStates& rend
     const Vec2I& topLeftCornerSpritePosition = window.hasHeader() ? m_windowHighTopLeftCornerSpritePosition : m_windowLowTopLeftCornerSpritePosition;
     const Vec2I& topRightCornerSpritePosition = window.hasHeader() ? m_windowHighTopRightCornerSpritePosition : m_windowLowTopRightCornerSpritePosition;
 
-    RectangleI windowInteriorRect(rect.min + Vec2I(m_windowLeftBarWidth, topBarHeight), rect.max - Vec2I(m_windowRightBarWidth, m_windowBottomBarHeight));
+    Rectangle2I windowInteriorRect(rect.min + Vec2I(m_windowLeftBarWidth, topBarHeight), rect.max - Vec2I(m_windowRightBarWidth, m_windowBottomBarHeight));
 
     const Vec2I& windowTopLeft(rect.min);
     const Vec2I& windowBottomRight(rect.max);
@@ -209,23 +209,23 @@ void PlayerUi::setContentViewOfPanelWindow(Window& window)
 {
     const int& topBarHeight = window.hasHeader() ? m_windowHeaderHeight : m_windowTopBarHeight;
 
-    RectangleI playerUiPanelRect = Root::instance().windowSpaceManager().regionRect(WindowSpaceManager::Region::Id::PlayerUi);
-    RectangleI rect(playerUiPanelRect.min + Vec2I(0, window.offsetFromTop()), m_playerUiPanelWidth, window.windowHeight());
+    Rectangle2I playerUiPanelRect = Root::instance().windowSpaceManager().regionRect(WindowSpaceManager::Region::Id::PlayerUi);
+    Rectangle2I rect = Rectangle2I::withSize(playerUiPanelRect.min + Vec2I(0, window.offsetFromTop()), m_playerUiPanelWidth, window.windowHeight());
 
-    RectangleI windowInteriorRect(rect.min + Vec2I(m_windowLeftBarWidth, topBarHeight), rect.max - Vec2I(m_windowRightBarWidth, m_windowBottomBarHeight));
+    Rectangle2I windowInteriorRect(rect.min + Vec2I(m_windowLeftBarWidth, topBarHeight), rect.max - Vec2I(m_windowRightBarWidth, m_windowBottomBarHeight));
 
-    Root::instance().windowSpaceManager().setViewToRect(windowInteriorRect, RectangleF(Vec2F(0.0f, static_cast<float>(window.scroll())), static_cast<float>(window.contentWidth()), static_cast<float>(window.contentHeight())));
+    Root::instance().windowSpaceManager().setViewToRect(windowInteriorRect, Rectangle2F::withSize(Vec2F(0.0f, static_cast<float>(window.scroll())), static_cast<float>(window.contentWidth()), static_cast<float>(window.contentHeight())));
 }
 
 void PlayerUi::setContentViewOfPopupWindow(Window& window)
 {
     const int& topBarHeight = window.hasHeader() ? m_windowHeaderHeight : m_windowTopBarHeight;
 
-    RectangleI rect(window.position(), window.windowWidth(), window.windowHeight());
+    Rectangle2I rect = Rectangle2I::withSize(window.position(), window.windowWidth(), window.windowHeight());
 
-    RectangleI windowInteriorRect(rect.min + Vec2I(m_windowLeftBarWidth, topBarHeight), rect.max - Vec2I(m_windowRightBarWidth, m_windowBottomBarHeight));
+    Rectangle2I windowInteriorRect(rect.min + Vec2I(m_windowLeftBarWidth, topBarHeight), rect.max - Vec2I(m_windowRightBarWidth, m_windowBottomBarHeight));
 
-    Root::instance().windowSpaceManager().setViewToRect(windowInteriorRect, RectangleF(Vec2F(0.0f, static_cast<float>(window.scroll())), static_cast<float>(window.contentWidth()), static_cast<float>(window.contentHeight())));
+    Root::instance().windowSpaceManager().setViewToRect(windowInteriorRect, Rectangle2F::withSize(Vec2F(0.0f, static_cast<float>(window.scroll())), static_cast<float>(window.contentWidth()), static_cast<float>(window.contentHeight())));
 }
 
 void PlayerUi::closeWindow(Window* window)

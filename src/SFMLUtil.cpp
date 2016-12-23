@@ -18,7 +18,7 @@ void SFMLUtil::appendQuadAsTriangleList(sf::VertexArray& vertexArray, const sf::
     vertexArray.append(sf::Vertex(position + sf::Vector2f(size.x, 0.0f), color, spritePosition + sf::Vector2f(spriteSize.x, 0.0f)));
 }
 
-void SFMLUtil::appendAsTriangleList(sf::VertexArray& vertexArray, const ls::RectangleF& rect, sf::Color color)
+void SFMLUtil::appendAsTriangleList(sf::VertexArray& vertexArray, const ls::Rectangle2F& rect, sf::Color color)
 {
     appendQuadAsTriangleList(vertexArray, rect.min, Vec2F(rect.width(), rect.height()), Vec2F(0.0f, 0.0f), Vec2F(0.0f, 0.0f), color);
 }

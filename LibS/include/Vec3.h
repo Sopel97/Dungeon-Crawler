@@ -1,73 +1,102 @@
-#ifndef Vec3_H_INCLUDED
-#define Vec3_H_INCLUDED
+#pragma once
 
-template <class T>
-class Vec3 : public Shape3<T>
+#include "..\Fwd.h"
+
+#include "Shape3.h"
+
+#include <initializer_list>
+
+namespace ls
 {
-public:
-    T x, y, z;
+    template <class T>
+    class Vec3 : public Shape3<T>
+    {
+        static_assert(std::is_arithmetic<T>::value, "T must be an arithmetic type");
+    public:
+        using ValueType = T;
 
-    static const Vec3<T> unitX;
-    static const Vec3<T> unitY;
-    static const Vec3<T> unitZ;
+        T x, y, z;
 
-    Vec3() {}
-    Vec3(T _x, T _y, T _z);
-    Vec3(const std::initializer_list<T>& list);
+        constexpr Vec3() = default;
+        constexpr explicit Vec3(const T& _xyz) noexcept(std::is_nothrow_copy_constructible<T>::value);
+        constexpr Vec3(const T& _x, const T& _y, const T& _z) noexcept(std::is_nothrow_copy_constructible<T>::value);
 
-    Vec3(const Vec3<T>& v) { x = v.x; y = v.y; z = v.z; }
-    Vec3(Vec3<T>&& v) { x = std::move(v.x); y = std::move(v.y); z = std::move(v.z); }
+        constexpr static Vec3<T> zero() noexcept(std::is_nothrow_constructible<Vec3<T>, const T&>::value);
 
-    virtual ~Vec3() {}
+        constexpr Vec3(const Vec3<T>& other) = default;
+        constexpr Vec3(Vec3<T>&& other) = default;
 
-    Vec3<T>& operator=(const Vec3<T>& v1) { x = v1.x; y = v1.y; z = v1.z; return *this; }
-    Vec3<T>& operator=(Vec3<T> && v1) { x = std::move(v1.x); y = std::move(v1.y); z = std::move(v1.z); return *this; }
+        Vec3<T>& operator=(const Vec3<T>& other) & = default;
+        Vec3<T>& operator=(Vec3<T> && other) & = default;
 
-    Vec3<T> operator+(const Vec3<T>& v1) const;
-    Vec3<T> operator-(const Vec3<T>& v1) const;
-    Vec3<T> operator*(const T scalar) const;
-    Vec3<T> operator*(const Vec3<T>& v1) const;
-    Vec3<T> operator/(const T scalar) const;
+        Vec3<T>& operator+=(const Vec3<T>& rhs) &;
+        Vec3<T>& operator-=(const Vec3<T>& rhs) &;
+        Vec3<T>& operator*=(const T& rhs) &;
+        Vec3<T>& operator*=(const Vec3<T>& rhs) &;
+        Vec3<T>& operator/=(const T& rhs) &;
 
-    Vec3<T> operator-() const;
+        const T& operator[](int i) const;
+        T& operator[](int i);
 
-    Vec3<T>& operator+=(const Vec3<T>& v1);
-    Vec3<T>& operator-=(const Vec3<T>& v1);
-    Vec3<T>& operator*=(const T scalar);
-    Vec3<T>& operator*=(const Vec3<T>& v1);
-    Vec3<T>& operator/=(const T scalar);
+        template <class T2>
+        explicit operator Vec3<T2>() const;
 
-    template <class T2>
-    explicit operator Vec3<T2>() const;
+        constexpr T magnitude() const;
+        constexpr T magnitudeSquared() const;
+        constexpr T distance(const Vec3<T>& other) const;
+        void normalize() &;
+        Vec3<T> normalized() const;
+        T dot(const Vec3<T>& rhs) const;
+        Vec3<T> cross(const Vec3<T>& rhs) const;
 
-    T magnitude();
-    T distance(const Vec3<T>& v);
-    void normalize();
-    Vec3<T> normalized();
+        static constexpr Vec3<T> unitX() noexcept;
+        static constexpr Vec3<T> unitY() noexcept;
+        static constexpr Vec3<T> unitZ() noexcept;
+    };
 
-    void fill(T value);
+    template <class T>
+    constexpr bool operator==(const Vec3<T>& lhs, const Vec3<T>& rhs);
+    template <class T>
+    constexpr bool operator!=(const Vec3<T>& lhs, const Vec3<T>& rhs);
+    template <class T>
+    constexpr bool operator<(const Vec3<T>& lhs, const Vec3<T>& rhs);
+    template <class T>
+    constexpr bool operator>(const Vec3<T>& lhs, const Vec3<T>& rhs);
+    template <class T>
+    constexpr bool operator<=(const Vec3<T>& lhs, const Vec3<T>& rhs);
+    template <class T>
+    constexpr bool operator>=(const Vec3<T>& lhs, const Vec3<T>& rhs);
 
-    template <class Transformation>
-    void transform(Transformation&& func);
+    template <class T>
+    constexpr Vec3<T> operator-(const Vec3<T>& vector);
 
-    template<class S>
-    bool intersects(const S& b) const;
-};
+    template <class T1, class T2, class R = decltype(std::declval<T1>() + std::declval<T2>())>
+    constexpr Vec3<R> operator+(const Vec3<T1>& lhs, const Vec3<T2>& rhs);
 
-template <class T>
-const Vec3<T> Vec3<T>::unitX = Vec3<T>{1, 0, 0};
-template <class T>
-const Vec3<T> Vec3<T>::unitY = Vec3<T>{0, 1, 0};
-template <class T>
-const Vec3<T> Vec3<T>::unitZ = Vec3<T>{0, 0, 1};
+    template <class T1, class T2, class R = decltype(std::declval<T1>() - std::declval<T2>())>
+    constexpr Vec3<R> operator-(const Vec3<T1>& lhs, const Vec3<T2>& rhs);
 
-typedef Vec3<double> Vec3D;
-typedef Vec3<float> Vec3F;
-typedef Vec3<int> Vec3I;
+    template <class T1, class T2, class R = decltype(std::declval<T1>() * std::declval<T2>())>
+    constexpr Vec3<R> operator*(const Vec3<T1>& lhs, const T2& rhs);
+    template <class T1, class T2, class R = decltype(std::declval<T1>() / std::declval<T2>())>
+    constexpr Vec3<R> operator/(const Vec3<T1>& lhs, const T2& rhs);
 
-extern template class Vec3<double>;
-extern template class Vec3<float>;
-extern template class Vec3<int>;
+    template <class T1, class T2, class R = decltype(std::declval<T1>() * std::declval<T2>())>
+    constexpr Vec3<R> operator*(const T1& lhs, const Vec3<T2>& rhs);
+    template <class T1, class T2, class R = decltype(std::declval<T1>() / std::declval<T2>())>
+    constexpr Vec3<R> operator/(const T1& lhs, const Vec3<T2>& rhs);
 
+    template <class T1, class T2, class R = decltype(std::declval<T1>() * std::declval<T2>())>
+    constexpr Vec3<R> operator*(const Vec3<T1>& lhs, const Vec3<T2>& rhs);
+    template <class T1, class T2, class R = decltype(std::declval<T1>() / std::declval<T2>())>
+    constexpr Vec3<R> operator/(const Vec3<T1>& lhs, const Vec3<T2>& rhs);
+
+    using Vec3D = Vec3<double>;
+    using Vec3F = Vec3<float>;
+    using Vec3I = Vec3<int>;
+
+    extern template class Vec3<double>;
+    extern template class Vec3<float>;
+    extern template class Vec3<int>;
+}
 #include "../src/Vec3.cpp"
-#endif // Vec3_H_INCLUDED

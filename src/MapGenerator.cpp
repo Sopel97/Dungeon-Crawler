@@ -20,8 +20,8 @@ using namespace ls;
     Helper classes
 */
 MapGenerator::TopologyMap::TopologyMap(size_t width, size_t height) :
-    m_automaton(CaveTopologyRules(), width, height, ls::CellularAutomatonGridTopology::Toroidal),
-    m_initialAutomatonState(CaveTopologyRules(), width, height, ls::CellularAutomatonGridTopology::Toroidal),
+    m_automaton(CaveTopologyRules(), width, height, ls::CellularAutomaton<CaveTopologyRules>::GridTopology::Toroidal),
+    m_initialAutomatonState(CaveTopologyRules(), width, height, ls::CellularAutomaton<CaveTopologyRules>::GridTopology::Toroidal),
     m_width(width),
     m_height(height)
 {
@@ -35,12 +35,12 @@ MapGenerator::TopologyMap::TopologyMap(size_t width, size_t height) :
 
 MapGenerator::TopologyMap::TopologyState MapGenerator::TopologyMap::at(size_t x, size_t y) const
 {
-    return m_automaton.cellAt(x, y);
+    return m_automaton.at(x, y);
 }
 
 void MapGenerator::TopologyMap::setState(size_t x, size_t y, MapGenerator::TopologyMap::TopologyState newState)
 {
-    m_automaton.setCell(x, y, newState);
+    m_automaton.setState(x, y, newState);
 }
 
 void MapGenerator::TopologyMap::iterate(size_t times)
@@ -55,7 +55,7 @@ size_t MapGenerator::TopologyMap::countStates(MapGenerator::TopologyMap::Topolog
     {
         for(size_t y = 0; y < m_height; ++y)
         {
-            if(m_automaton.cellAt(x, y) == state) ++count;
+            if(m_automaton.at(x, y) == state) ++count;
         }
     }
     return count;
@@ -71,18 +71,18 @@ MapGenerator::TopologyMap::CaveTopologyRules::CaveTopologyRules() : m_iteration(
 
 }
 
-MapGenerator::TopologyMap::CaveTopologyRules::States MapGenerator::TopologyMap::CaveTopologyRules::operator()(const ls::CellularAutomaton<MapGenerator::TopologyMap::CaveTopologyRules>& automaton, size_t x, size_t y)
+MapGenerator::TopologyMap::CaveTopologyRules::State MapGenerator::TopologyMap::CaveTopologyRules::operator()(const ls::CellularAutomaton<MapGenerator::TopologyMap::CaveTopologyRules>& automaton, size_t x, size_t y)
 {
     ++m_iteration;
     if(m_iteration < 5)
     {
-        if(automaton.quantityOfStateIn3x3(States::Wall, x, y) >= 5 || automaton.quantityOfStateIn5x5(States::Wall, x, y) <= 2) return States::Wall;
-        else return States::Passage;
+        if(automaton.occurencesIn3x3(State::Wall, x, y) >= 5 || automaton.occurencesIn5x5(State::Wall, x, y) <= 2) return State::Wall;
+        else return State::Passage;
     }
     else
     {
-        if(automaton.quantityOfStateIn3x3(States::Wall, x, y) >= 5) return States::Wall;
-        else return States::Passage;
+        if(automaton.occurencesIn3x3(State::Wall, x, y) >= 5) return State::Wall;
+        else return State::Passage;
     }
 }
 
@@ -175,7 +175,7 @@ MapGenerator::MapFillingRectangles::MapFillingRectangles(size_t width, size_t he
 }
 
 
-const std::vector<ls::RectangleI>& MapGenerator::MapFillingRectangles::rectangles() const
+const std::vector<ls::Rectangle2I>& MapGenerator::MapFillingRectangles::rectangles() const
 {
     return m_rectangles;
 }
@@ -209,8 +209,11 @@ void MapGenerator::updateHelperMaps()
     m_rectangles.updateFromRegionMapAndRectangleMap(m_regionMap, m_rectangleMap, rectangleSizeAdjustingFunction);
 }
 
-std::vector<LineSegmentF> MapGenerator::produceConnectionsBetweenDisconnectedRegions()
+//TODO: No triangulation currently
+std::vector<LineSegment2F> MapGenerator::produceConnectionsBetweenDisconnectedRegions()
 {
+    return std::vector<LineSegment2F>();
+    /*
     constexpr int minRectSize = 4; //will reduce the number of rectangles being triangulated
 
     size_t numberOfRegions = m_regionMap.numberOfRegions();
@@ -226,7 +229,7 @@ std::vector<LineSegmentF> MapGenerator::produceConnectionsBetweenDisconnectedReg
 
     PointSetDelaunayTriangulationF triangulation(centersOfRectangles);
 
-    std::vector<LineSegmentF> connections;
+    std::vector<LineSegment2F> connections;
     std::vector<std::pair<size_t, size_t>> edges;
     std::vector<std::pair<size_t, size_t>> finalEdges;
 
@@ -298,7 +301,10 @@ std::vector<LineSegmentF> MapGenerator::produceConnectionsBetweenDisconnectedReg
     }
 
     return connections;
+*/
 }
+
+
 void MapGenerator::removeSmallRegionsFromTopologyMap()
 {
     constexpr int minRegionSize = 100;

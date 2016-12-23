@@ -2,7 +2,7 @@
 
 using namespace ls;
 
-const RectangleF TileModel::m_emptyCollider(Vec2F(0.0f, 0.0f), Vec2F(32.0f, 32.0f));
+const Rectangle2F TileModel::m_emptyCollider(Vec2F(0.0f, 0.0f), Vec2F(32.0f, 32.0f));
 
 TileModel::TileModel(Tile* owner) :
     m_owner(owner)
@@ -42,7 +42,7 @@ bool TileModel::hasCollider() const
 {
     return false;
 }
-const RectangleF& TileModel::collider() const
+const Rectangle2F& TileModel::collider() const
 {
     return m_emptyCollider;
 }

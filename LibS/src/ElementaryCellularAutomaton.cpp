@@ -1,46 +1,83 @@
-template <int I>
-ElementaryCellularAutomatonT<I>::ElementaryCellularAutomatonT(size_t rule, size_t width, size_t origin) :
-    m_tape(width, 0u)
+#include "..\include\ElementaryCellularAutomaton.h"
+
+namespace ls
 {
-    m_tape[origin] = 1u;
-    for(size_t i = 0; i < 8u; ++i)
+
+    template <class T>
+    ElementaryCellularAutomatonTemplate<T>::ElementaryCellularAutomatonTemplate(uint8_t rule, int width, int origin, TapeTopology topology) :
+        m_topology(topology),
+        m_tape(width, 0)
     {
-        m_outputs[i] = rule % 2u;
-        rule /= 2u;
+        m_tape[origin] = 1u;
+        setRule(rule);
     }
-}
-template <int I>
-ElementaryCellularAutomatonT<I>::ElementaryCellularAutomatonT(size_t rule, const std::vector<uint8_t>& initialState) :
-    m_tape(initialState)
-{
-
-}
-template <int I>
-ElementaryCellularAutomatonT<I>::ElementaryCellularAutomatonT(size_t rule, std::vector<uint8_t>&& initialState) :
-    m_tape(std::move(initialState))
-{
-
-}
-
-template <int I>
-void ElementaryCellularAutomatonT<I>::iterate(size_t times)
-{
-    size_t size = m_tape.size();
-
-    std::vector<uint8_t> newTape;
-    newTape.reserve(size);
-
-    for(size_t i = 1; i < size - 1; ++i)
+    template <class T>
+    ElementaryCellularAutomatonTemplate<T>::ElementaryCellularAutomatonTemplate(uint8_t rule, const std::vector<uint8_t>& initialState, TapeTopology topology) :
+        m_topology(topology),
+        m_tape(initialState)
     {
-        size_t value = 0u;
-        value += m_tape[i - 1] << 2;
-        value += m_tape[i] << 1;
-        value += m_tape[i + 1];
-
-        newTape[i] = m_outputs[value];
+        setRule(rule);
     }
-    newTape[0] = m_outputs[(m_tape[0] << 1) + m_tape[1]];
-    newTape[size - 1] = m_outputs[(m_tape[size - 2] << 1) + m_tape[size - 1]];
+    template <class T>
+    ElementaryCellularAutomatonTemplate<T>::ElementaryCellularAutomatonTemplate(uint8_t rule, std::vector<uint8_t>&& initialState, TapeTopology topology) :
+        m_topology(topology),
+        m_tape(std::move(initialState))
+    {
+        setRule(rule);
+    }
+    template <class T>
+    void ElementaryCellularAutomatonTemplate<T>::setRule(uint8_t rule) &
+    {
+        for(int i = 0; i < 8; ++i)
+        {
+            m_outputs[i] = rule & 1u;
+            rule >>= 1u;
+        }
+    }
 
-    m_tape = std::move(newTape);
+    template <class T>
+    void ElementaryCellularAutomatonTemplate<T>::iterate(int iterations) &
+    {
+        const int size = m_tape.size();
+
+        std::vector<uint8_t> newTape;
+        for(int i = 0; i < iterations; ++i)
+        {
+            newTape.reserve(size);
+
+            for(int j = 1; j < size - 1; ++j)
+            {
+                uint8_t outputIndex = 0u;
+                outputIndex += m_tape[j - 1] << 2u;
+                outputIndex += m_tape[j] << 1u;
+                outputIndex += m_tape[j + 1];
+
+                newTape[j] = m_outputs[outputIndex];
+            }
+            if(m_topology == TapeTopology::Finite)
+            {
+                newTape[0] = m_outputs[(m_tape[0] << 1u) + m_tape[1]];
+                newTape[size - 1] = m_outputs[(m_tape[size - 2] << 1u) + m_tape[size - 1]];
+            }
+            else
+            {
+                newTape[0] = m_outputs[(m_tape.back() << 2u) + (m_tape[0] << 1u) + m_tape[1]];
+                newTape[size - 1] = m_outputs[(m_tape[size - 2] << 2u) + (m_tape[size - 1] << 1u) + m_tape.front()];
+            }
+
+            m_tape.swap(newTape);
+        }
+    }
+
+    template <class T>
+    const std::vector<uint8_t>& ElementaryCellularAutomatonTemplate<T>::tape() const &
+    {
+        return m_tape;
+    }
+    template <class T>
+    std::vector<uint8_t> ElementaryCellularAutomatonTemplate<T>::tape() &&
+    {
+        return std::move(m_tape);
+    }
+
 }

@@ -25,7 +25,7 @@ TallTileStackDrawable::TallTileStackDrawable(const TileColumn& tileColumn, const
         if(tile->view().isTall())
         {
             m_indexOfFirstTallTile = i;
-            m_boundingRectangle = tile->model().collider() + Vec2F(static_cast<float>(tileLocation.x), static_cast<float>(tileLocation.y)) * static_cast<float>(GameConstants::tileSize);
+            m_boundingRectangle = tile->model().collider().translated(Vec2F(static_cast<float>(tileLocation.x), static_cast<float>(tileLocation.y)) * static_cast<float>(GameConstants::tileSize));
             m_center = m_boundingRectangle.centerOfMass();
 
             break;
@@ -38,7 +38,7 @@ TallTileStackDrawable::~TallTileStackDrawable()
 
 }
 
-const RectangleF& TallTileStackDrawable::boundingRectangle() const
+const Rectangle2F& TallTileStackDrawable::boundingRectangle() const
 {
     return m_boundingRectangle;
 }

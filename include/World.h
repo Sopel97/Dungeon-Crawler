@@ -51,7 +51,7 @@ public:
 
     float drag(const ls::Vec2F& position) const;
 
-    std::vector<ls::RectangleF> queryTileColliders(const ls::RectangleF& queryRegion) const;
+    std::vector<ls::Rectangle2F> queryTileColliders(const ls::Rectangle2F& queryRegion) const;
 protected:
     Root& m_root;
     int m_width;

@@ -53,10 +53,10 @@ bool TallDrawable::compare(const TallDrawable& lhs, const TallDrawable& rhs)
 
         bool result = false;
 
-        const RectangleF& entityCollider = rhsEntity.boundingRectangle();
+        const Rectangle2F& entityCollider = rhsEntity.boundingRectangle();
         Vec2F entityTopRight(entityCollider.max.x, entityCollider.min.y);
         Vec2F entityBottomLeft(entityCollider.min.x, entityCollider.max.y);
-        const RectangleF& tileCollider = lhsTile.boundingRectangle();
+        const Rectangle2F& tileCollider = lhsTile.boundingRectangle();
         Vec2F tileTopRight(tileCollider.max.x, tileCollider.min.y);
         Vec2F tileBottomLeft(tileCollider.min.x, tileCollider.max.y);
 

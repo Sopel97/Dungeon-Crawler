@@ -1,74 +1,101 @@
-#ifndef VEC4_H
-#define VEC4_H
+#pragma once
 
-template <class T>
-class Vec4 : public Shape4<T>
+#include "..\Fwd.h"
+
+#include "Shape4.h"
+
+#include <initializer_list>
+
+namespace ls
 {
-public:
-    T x, y, z, w;
+    template <class T>
+    class Vec4 : public Shape4<T>
+    {
+        static_assert(std::is_arithmetic<T>::value, "T must be an arithmetic type");
+    public:
+        using ValueType = T;
 
-    static const Vec4<T> unitX;
-    static const Vec4<T> unitY;
-    static const Vec4<T> unitZ;
-    static const Vec4<T> unitW;
+        T x, y, z, w;
 
-    Vec4() {}
-    Vec4(T _x, T _y, T _z, T _w);
-    Vec4(const std::initializer_list<T>& list);
+        constexpr Vec4() = default;
+        constexpr explicit Vec4(const T& _xyzw) noexcept(std::is_nothrow_copy_constructible<T>::value);
+        constexpr Vec4(const T& _x, const T& _y, const T& _z, const T& _w) noexcept(std::is_nothrow_copy_constructible<T>::value);
 
-    virtual ~Vec4() {}
+        constexpr static Vec4<T> zero() noexcept(std::is_nothrow_constructible<Vec4<T>, const T&>::value);
 
-    Vec4(const Vec4<T>& v) { x = v.x; y = v.y; z = v.z; w = v.w; }
-    Vec4(Vec4<T>&& v) { x = std::move(v.x); y = std::move(v.y); z = std::move(v.z); w = std::move(v.w); }
+        constexpr Vec4(const Vec4<T>& other) = default;
+        constexpr Vec4(Vec4<T>&& other) = default;
 
-    Vec4<T>& operator=(const Vec4<T>& v1) { x = v1.x; y = v1.y; z = v1.z; w = v1.w; return *this; }
-    Vec4<T>& operator=(Vec4<T> && v1) { x = std::move(v1.x); y = std::move(v1.y); z = std::move(v1.z); w = std::move(v1.w); return *this; }
+        Vec4<T>& operator=(const Vec4<T>& other) & = default;
+        Vec4<T>& operator=(Vec4<T> && other) & = default;
 
-    Vec4<T> operator+(const Vec4<T>& v1) const;
-    Vec4<T> operator-(const Vec4<T>& v1) const;
-    Vec4<T> operator*(const T scalar) const;
-    Vec4<T> operator*(const Vec4<T>& v1) const;
-    Vec4<T> operator/(const T scalar) const;
+        Vec4<T>& operator+=(const Vec4<T>& rhs) &;
+        Vec4<T>& operator-=(const Vec4<T>& rhs) &;
+        Vec4<T>& operator*=(const T& rhs) &;
+        Vec4<T>& operator*=(const Vec4<T>& rhs) &;
+        Vec4<T>& operator/=(const T& rhs) &;
 
-    Vec4<T> operator-() const;
+        const T& operator[](int i) const;
+        T& operator[](int i);
 
-    Vec4<T>& operator+=(const Vec4<T>& v1);
-    Vec4<T>& operator-=(const Vec4<T>& v1);
-    Vec4<T>& operator*=(const T scalar);
-    Vec4<T>& operator*=(const Vec4<T>& v1);
-    Vec4<T>& operator/=(const T scalar);
+        template <class T2>
+        explicit operator Vec4<T2>() const;
 
-    template <class T2>
-    explicit operator Vec4<T2>() const;
+        constexpr T magnitude() const;
+        constexpr T magnitudeSquared() const;
+        constexpr T distance(const Vec4<T>& other) const;
+        void normalize() &;
+        Vec4<T> normalized() const;
 
-    T magnitude();
-    T distance(const Vec4<T>& v);
-    void normalize();
-    Vec4<T> normalized();
+        static constexpr Vec4<T> unitX() noexcept;
+        static constexpr Vec4<T> unitY() noexcept;
+        static constexpr Vec4<T> unitZ() noexcept;
+        static constexpr Vec4<T> unitW() noexcept;
+    };
 
-    void fill(T value);
+    template <class T>
+    constexpr bool operator==(const Vec4<T>& lhs, const Vec4<T>& rhs);
+    template <class T>
+    constexpr bool operator!=(const Vec4<T>& lhs, const Vec4<T>& rhs);
+    template <class T>
+    constexpr bool operator<(const Vec4<T>& lhs, const Vec4<T>& rhs);
+    template <class T>
+    constexpr bool operator>(const Vec4<T>& lhs, const Vec4<T>& rhs);
+    template <class T>
+    constexpr bool operator<=(const Vec4<T>& lhs, const Vec4<T>& rhs);
+    template <class T>
+    constexpr bool operator>=(const Vec4<T>& lhs, const Vec4<T>& rhs);
 
-    template <class Transformation>
-    void transform(Transformation&& func);
-};
+    template <class T>
+    constexpr Vec4<T> operator-(const Vec4<T>& vector);
 
-template <class T>
-const Vec4<T> Vec4<T>::unitX = Vec4<T>{1, 0, 0, 0};
-template <class T>
-const Vec4<T> Vec4<T>::unitY = Vec4<T>{0, 1, 0, 0};
-template <class T>
-const Vec4<T> Vec4<T>::unitZ = Vec4<T>{0, 0, 1, 0};
-template <class T>
-const Vec4<T> Vec4<T>::unitW = Vec4<T>{0, 0, 1, 1};
+    template <class T1, class T2, class R = decltype(std::declval<T1>() + std::declval<T2>())>
+    constexpr Vec4<R> operator+(const Vec4<T1>& lhs, const Vec4<T2>& rhs);
 
-typedef Vec4<double> Vec4D;
-typedef Vec4<float> Vec4F;
-typedef Vec4<int> Vec4I;
+    template <class T1, class T2, class R = decltype(std::declval<T1>() - std::declval<T2>())>
+    constexpr Vec4<R> operator-(const Vec4<T1>& lhs, const Vec4<T2>& rhs);
 
-extern template class Vec4<double>;
-extern template class Vec4<float>;
-extern template class Vec4<int>;
+    template <class T1, class T2, class R = decltype(std::declval<T1>() * std::declval<T2>())>
+    constexpr Vec4<R> operator*(const Vec4<T1>& lhs, const T2& rhs);
+    template <class T1, class T2, class R = decltype(std::declval<T1>() / std::declval<T2>())>
+    constexpr Vec4<R> operator/(const Vec4<T1>& lhs, const T2& rhs);
 
+    template <class T1, class T2, class R = decltype(std::declval<T1>() * std::declval<T2>())>
+    constexpr Vec4<R> operator*(const T1& lhs, const Vec4<T2>& rhs);
+    template <class T1, class T2, class R = decltype(std::declval<T1>() / std::declval<T2>())>
+    constexpr Vec4<R> operator/(const T1& lhs, const Vec4<T2>& rhs);
+
+    template <class T1, class T2, class R = decltype(std::declval<T1>() * std::declval<T2>())>
+    constexpr Vec4<R> operator*(const Vec4<T1>& lhs, const Vec4<T2>& rhs);
+    template <class T1, class T2, class R = decltype(std::declval<T1>() / std::declval<T2>())>
+    constexpr Vec4<R> operator/(const Vec4<T1>& lhs, const Vec4<T2>& rhs);
+
+    using Vec4D = Vec4<double>;
+    using Vec4F = Vec4<float>;
+    using Vec4I = Vec4<int>;
+
+    extern template class Vec4<double>;
+    extern template class Vec4<float>;
+    extern template class Vec4<int>;
+}
 #include "../src/Vec4.cpp"
-
-#endif // VEC4_H

@@ -35,7 +35,7 @@ EntitySystem::~EntitySystem()
     }
 }
 
-std::vector<Entity*> EntitySystem::queryRegion(const RectangleF& rect)
+std::vector<Entity*> EntitySystem::queryRegion(const Rectangle2F& rect)
 {
     std::vector<Entity*> entitiesInRegion;
 
@@ -98,13 +98,13 @@ void EntitySystem::moveEntity(World* world, Entity* entity, float dt)
     if(model.hasCollider())
     {
         float entityColliderRadius = model.colliderRadius();
-        RectangleF entityCollider(idealPositionAfterMove - Vec2F(entityColliderRadius, entityColliderRadius), idealPositionAfterMove + Vec2F(entityColliderRadius, entityColliderRadius));
+        Rectangle2F entityCollider(idealPositionAfterMove - Vec2F(entityColliderRadius, entityColliderRadius), idealPositionAfterMove + Vec2F(entityColliderRadius, entityColliderRadius));
         int xmin = static_cast<int>(entityCollider.min.x / static_cast<float>(GameConstants::tileSize));
         int ymin = static_cast<int>(entityCollider.min.y / static_cast<float>(GameConstants::tileSize));
         int xmax = static_cast<int>(entityCollider.max.x / static_cast<float>(GameConstants::tileSize));
         int ymax = static_cast<int>(entityCollider.max.y / static_cast<float>(GameConstants::tileSize));
 
-        std::vector<RectangleF> collidersInRange;
+        std::vector<Rectangle2F> collidersInRange;
 
         for(int x = xmin; x <= xmax; ++x)
         {
@@ -113,31 +113,31 @@ void EntitySystem::moveEntity(World* world, Entity* entity, float dt)
                 const TileColumn& tileColumn = world->map().at(x, y);
                 if(tileColumn.hasCollider())
                 {
-                    RectangleF tileCollider = tileColumn.collider() + Vec2F(static_cast<float>(x), static_cast<float>(y)) * static_cast<float>(GameConstants::tileSize);
+                    Rectangle2F tileCollider = tileColumn.collider().translated(Vec2F(static_cast<float>(x), static_cast<float>(y)) * static_cast<float>(GameConstants::tileSize));
                     collidersInRange.push_back(tileCollider);
                 }
             }
         }
 
-        entityCollider -= displacementWhenMoved; //back to initial position
-        entityCollider += Vec2F(displacementWhenMoved.x, 0.0f); //as it moved only in x direction
+        entityCollider.translate(-displacementWhenMoved); //back to initial position
+        entityCollider.translate(Vec2F(displacementWhenMoved.x, 0.0f)); //as it moved only in x direction
 
         for(const auto& rect : collidersInRange)
         {
-            if(Intersections::intersection(entityCollider, rect))
+            if(ls::intersect(entityCollider, rect))
             {
                 moveFactor.x = 0.0f;
-                entityCollider -= Vec2F(displacementWhenMoved.x, 0.0f); //if it can't move there go back
+                entityCollider.translate(-Vec2F(displacementWhenMoved.x, 0.0f)); //if it can't move there go back
                 velocity.x = 0.0f;
                 break;
             }
         }
 
-        entityCollider += Vec2F(0.0f, displacementWhenMoved.y); //as it moved in y direction
+        entityCollider.translate(Vec2F(0.0f, displacementWhenMoved.y)); //as it moved in y direction
 
         for(const auto& rect : collidersInRange)
         {
-            if(Intersections::intersection(entityCollider, rect))
+            if(ls::intersect(entityCollider, rect))
             {
                 moveFactor.y = 0.0f;
                 velocity.y = 0.0f;

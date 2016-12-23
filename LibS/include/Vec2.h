@@ -1,78 +1,120 @@
-#ifndef Vec2_H_INCLUDED
-#define Vec2_H_INCLUDED
+#pragma once
 
-template <class T>
-class Vec2 : public Shape2<T>
+#include "..\Fwd.h"
+
+#include "Shape2.h"
+
+#include <initializer_list>
+#include <type_traits>
+
+namespace ls
 {
-public:
-    T x, y;
+    template <class T>
+    class Vec2 : public Shape2<T>
+    {
+        static_assert(std::is_arithmetic<T>::value, "T must be an arithmetic type");
+    public:
+        using ValueType = T;
 
-    static const Vec2<T> unitX;
-    static const Vec2<T> unitY;
+        T x, y;
 
-    Vec2();
-    Vec2(T _xy);
-    Vec2(T _x, T _y);
-    Vec2(const std::initializer_list<T>& list);
+        constexpr Vec2() = default;
+        constexpr explicit Vec2(const T& _xy) noexcept(std::is_nothrow_copy_constructible<T>::value);
+        constexpr Vec2(const T& _x, const T& _y) noexcept(std::is_nothrow_copy_constructible<T>::value);
+        
+        constexpr static Vec2<T> direction(const Angle2<T>& angle) noexcept(std::is_nothrow_constructible<Vec2<T>, const T&, const T&>::value);
+        constexpr static Vec2<T> zero() noexcept(std::is_nothrow_constructible<Vec2<T>, const T&>::value);
 
-    static Vec2<T> direction(const Angle<T>& angle);
+        constexpr Vec2(const Vec2<T>& other) = default;
+        constexpr Vec2(Vec2<T>&& other) = default;
 
-    Vec2(const Vec2<T>& v);
-    Vec2(Vec2<T>&& v);
+        Vec2<T>& operator=(const Vec2<T>& other) & = default;
+        Vec2<T>& operator=(Vec2<T> && other) & = default;
 
-    Vec2<T>& operator=(const Vec2<T>& v1);
-    Vec2<T>& operator=(Vec2<T> && v1);
+        Vec2<T>& operator+=(const Vec2<T>& rhs) &;
+        Vec2<T>& operator-=(const Vec2<T>& rhs) &;
+        Vec2<T>& operator*=(const T& rhs) &;
+        Vec2<T>& operator*=(const Vec2<T>& rhs) &;
+        Vec2<T>& operator/=(const T& rhs) &;
+        Vec2<T>& operator/=(const Vec2<T>& rhs) &;
 
-    virtual ~Vec2() {}
+        const T& operator[](int i) const;
+        T& operator[](int i);
 
-    Vec2<T> operator+(const Vec2<T>& v1) const;
-    Vec2<T> operator-(const Vec2<T>& v1) const;
-    Vec2<T> operator*(const Vec2<T>& v1) const;
-    Vec2<T> operator/(const Vec2<T>& v1) const;
-    Vec2<T> operator*(const T scalar) const;
-    Vec2<T> operator/(const T scalar) const;
+        template <class T2>
+        explicit operator Vec2<T2>() const;
 
-    Vec2<T> operator-() const;
+        constexpr T magnitude() const;
+        constexpr T magnitudeSquared() const;
+        void normalize() &;
+        Vec2<T> normalized() const;
+        Vec2<T> normalLeft() const;
+        Vec2<T> normalRight() const;
+        Vec2<T> normal() const; //one of above two. Should be used only when it makes no difference which one is used.
+        constexpr T dot(const Vec2<T>& rhs) const;
+        constexpr T cross(const Vec2<T>& rhs) const;
+        Vec2<T> projected(const Vec2<T>& axis) const;
+        void mirror(const Vec2<T>& mirror);
+        Vec2<T> mirrored(const Vec2<T>& mirror) const;
+        void rotate(const Angle2<T>& angle);
+        Vec2<T> rotated(const Angle2<T>& angle) const;
+        void rotate(const Vec2<T>& vector);
+        Vec2<T> rotated(const Vec2<T>& vector) const;
+        constexpr Angle2<T> angle() const;
+        constexpr Angle2<T> angle(const Vec2<T>& other) const;
 
-    Vec2<T>& operator+=(const Vec2<T>& v1);
-    Vec2<T>& operator-=(const Vec2<T>& v1);
-    Vec2<T>& operator*=(const T scalar);
-    Vec2<T>& operator*=(const Vec2<T>& v1);
-    Vec2<T>& operator/=(const T scalar);
-    Vec2<T>& operator/=(const Vec2<T>& v1);
+        constexpr T distance(const Vec2<T>& other) const;
 
-    template <class T2>
-    explicit operator Vec2<T2>() const;
+        static constexpr Vec2<T> unitX() noexcept;
+        static constexpr Vec2<T> unitY() noexcept;
 
-    T magnitude() const;
-    T quadrance() const;
-    T distanceTo(const LineSegment<T>& lineSegment) const;
-    void normalize();
-    Vec2<T> normalized() const;
-    Vec2<T> normalLeft() const;
-    Vec2<T> normalRight() const;
-    Vec2<T> normal() const; //one of above two. Should be used only when it makes no difference which one is used.
-    T dot(const Vec2<T>& b) const;
-    T cross(const Vec2<T>& b) const;
-    Vec2<T> project(const Vec2<T>& b) const;
-    Angle<T> angle() const;
-    Angle<T> angle(const Vec2<T>& other) const;
+    };
 
-    T distanceTo(const Vec2<T>&) const;
-    virtual Vec2<T> nearestPointTo(const Vec2<T>& point) const;
-};
-template <class T>
-const Vec2<T> Vec2<T>::unitX = Vec2<T>{1, 0};
-template <class T>
-const Vec2<T> Vec2<T>::unitY = Vec2<T>{0, 1};
+    template <class T>
+    constexpr bool operator==(const Vec2<T>& lhs, const Vec2<T>& rhs);
+    template <class T>
+    constexpr bool operator!=(const Vec2<T>& lhs, const Vec2<T>& rhs);
+    template <class T>
+    constexpr bool operator<(const Vec2<T>& lhs, const Vec2<T>& rhs);
+    template <class T>
+    constexpr bool operator>(const Vec2<T>& lhs, const Vec2<T>& rhs);
+    template <class T>
+    constexpr bool operator<=(const Vec2<T>& lhs, const Vec2<T>& rhs);
+    template <class T>
+    constexpr bool operator>=(const Vec2<T>& lhs, const Vec2<T>& rhs);
 
-typedef Vec2<double> Vec2D;
-typedef Vec2<float> Vec2F;
-typedef Vec2<int> Vec2I;
+    template <class T>
+    constexpr Vec2<T> operator-(const Vec2<T>& vector);
+    
 
-extern template class Vec2<double>;
-extern template class Vec2<float>;
-extern template class Vec2<int>;
+    template <class T1, class T2, class R = decltype(std::declval<T1>() + std::declval<T2>())>
+    constexpr Vec2<R> operator+(const Vec2<T1>& lhs, const Vec2<T2>& rhs);
+
+    template <class T1, class T2, class R = decltype(std::declval<T1>() - std::declval<T2>())>
+    constexpr Vec2<R> operator-(const Vec2<T1>& lhs, const Vec2<T2>& rhs);
+
+    template <class T1, class T2, class R = decltype(std::declval<T1>() * std::declval<T2>())>
+    constexpr Vec2<R> operator*(const Vec2<T1>& lhs, const T2& rhs);
+    template <class T1, class T2, class R = decltype(std::declval<T1>() / std::declval<T2>())>
+    constexpr Vec2<R> operator/(const Vec2<T1>& lhs, const T2& rhs);
+
+    template <class T1, class T2, class R = decltype(std::declval<T1>() * std::declval<T2>())>
+    constexpr Vec2<R> operator*(const T1& lhs, const Vec2<T2>& rhs);
+    template <class T1, class T2, class R = decltype(std::declval<T1>() / std::declval<T2>())>
+    constexpr Vec2<R> operator/(const T1& lhs, const Vec2<T2>& rhs);
+
+    template <class T1, class T2, class R = decltype(std::declval<T1>() * std::declval<T2>())>
+    constexpr Vec2<R> operator*(const Vec2<T1>& lhs, const Vec2<T2>& rhs);
+    template <class T1, class T2, class R = decltype(std::declval<T1>() / std::declval<T2>())>
+    constexpr Vec2<R> operator/(const Vec2<T1>& lhs, const Vec2<T2>& rhs);
+
+    using Vec2D = Vec2<double>;
+    using Vec2F = Vec2<float>;
+    using Vec2I = Vec2<int>;
+
+    extern template class Vec2<double>;
+    extern template class Vec2<float>;
+    extern template class Vec2<int>;
+}
 
 #include "../src/Vec2.cpp"
-#endif // Vec2_H_INCLUDED

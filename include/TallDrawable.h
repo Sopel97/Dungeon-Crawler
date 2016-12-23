@@ -21,7 +21,7 @@ public:
     TallDrawable();
     virtual ~TallDrawable();
 
-    virtual const ls::RectangleF& boundingRectangle() const = 0;
+    virtual const ls::Rectangle2F& boundingRectangle() const = 0;
     virtual const ls::Vec2F& center() const = 0;
 
     virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) = 0;

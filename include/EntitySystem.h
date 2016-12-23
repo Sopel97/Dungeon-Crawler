@@ -18,7 +18,7 @@ public:
     EntitySystem();
     ~EntitySystem();
 
-    std::vector<Entity*> queryRegion(const ls::RectangleF& rect);
+    std::vector<Entity*> queryRegion(const ls::Rectangle2F& rect);
     const std::vector<Entity*>& entities() const;
 
     void addEntity(Entity* newEntity, const ls::Vec2F& position);

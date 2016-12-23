@@ -48,8 +48,8 @@ void Game::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
     WindowSpaceManager windowSpaceManager = m_root.windowSpaceManager();
 
     sf::VertexArray vertexBuffer(sf::PrimitiveType::Triangles);
-    SFMLUtil::appendAsTriangleList(vertexBuffer, RectangleF(windowSpaceManager.regionRect(WindowSpaceManager::Region::World)), sf::Color::Red);
-    SFMLUtil::appendAsTriangleList(vertexBuffer, RectangleF(windowSpaceManager.regionRect(WindowSpaceManager::Region::PlayerUi)), sf::Color::Green);
+    SFMLUtil::appendAsTriangleList(vertexBuffer, Rectangle2F(windowSpaceManager.regionRect(WindowSpaceManager::Region::World)), sf::Color::Red);
+    SFMLUtil::appendAsTriangleList(vertexBuffer, Rectangle2F(windowSpaceManager.regionRect(WindowSpaceManager::Region::PlayerUi)), sf::Color::Green);
 
     windowSpaceManager.setDefaultView();
     renderTarget.draw(vertexBuffer, renderStates);
@@ -69,8 +69,8 @@ void Game::onMouseButtonPressed(sf::Event::MouseButtonEvent& event)
 {
     if(event.button == sf::Mouse::Button::Right)
     {
-        const RectangleI& worldViewRect = m_root.windowSpaceManager().regionRect(WindowSpaceManager::Region::Id::World);
-        if(Intersections::intersection(worldViewRect, Vec2I(event.x, event.y)))
+        const Rectangle2I& worldViewRect = m_root.windowSpaceManager().regionRect(WindowSpaceManager::Region::Id::World);
+        if(ls::intersect(worldViewRect, Vec2I(event.x, event.y)))
         {
             const Vec2I tilePosition = m_world.screenToTile(Vec2I(event.x, event.y));
             m_world.useTile(tilePosition);

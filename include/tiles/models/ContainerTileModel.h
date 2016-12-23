@@ -26,7 +26,7 @@ public:
     virtual void loadFromConfiguration(ConfigurationNode& config);
 
     virtual bool hasCollider() const;
-    virtual const ls::RectangleF& collider() const;
+    virtual const ls::Rectangle2F& collider() const;
 
     virtual Inventory* inventory();
 
@@ -38,7 +38,7 @@ protected:
     struct CommonData
     {
         bool hasCollider;
-        ls::RectangleF collider;
+        ls::Rectangle2F collider;
         float drag;
     };
     std::shared_ptr<CommonData> m_commonData;

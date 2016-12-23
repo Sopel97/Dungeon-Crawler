@@ -14,8 +14,6 @@
 
 #include <SFML/Window/Event.hpp>
 
-#include "../LibS/Random.h"
-
 #include <memory>
 #include <vector>
 #include <random>
@@ -44,7 +42,7 @@ public:
     int lastMeasuredFps() const;
     const sf::Font& defaultFont() const;
 
-    ls::StandardRandomNumberGeneratorWrapper<std::minstd_rand>& rng();
+    std::mt19937& rng();
 
     std::vector<std::string> scanForFiles(const std::string& path, const std::string& query) const;
 
@@ -52,7 +50,7 @@ protected:
     sf::RenderWindow m_window;
     sf::RenderStates m_renderStates;
     std::unique_ptr<WindowSpaceManager> m_windowSpaceManager;
-    ls::StandardRandomNumberGeneratorWrapper<std::minstd_rand> m_rng;
+    std::mt19937 m_rng;
     float m_lastFrameTime;
     int m_lastMeasuredFps;
     int m_currentFpsCounter;

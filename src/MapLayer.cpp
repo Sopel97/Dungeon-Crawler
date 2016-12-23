@@ -30,11 +30,11 @@ MapLayer::~MapLayer()
 
 }
 
-const Array2<TileColumn>& MapLayer::tileStacks() const
+const Array2<TileColumn>& MapLayer::tileColumns() const
 {
     return m_tileColumns;
 }
-Array2<TileColumn>& MapLayer::tileStacks()
+Array2<TileColumn>& MapLayer::tileColumns()
 {
     return m_tileColumns;
 }
@@ -91,7 +91,7 @@ void MapLayer::deleteTile(int x, int y)
     delete takeTile(x, y);
 }
 
-std::vector<RectangleF> MapLayer::queryTileColliders(const RectangleF& queryRegion) const
+std::vector<Rectangle2F> MapLayer::queryTileColliders(const Rectangle2F& queryRegion) const
 {
     const Vec2F& queryRegionTopLeft     = queryRegion.min;
     const Vec2F& queryRegionBottomRight = queryRegion.max;
@@ -100,7 +100,7 @@ std::vector<RectangleF> MapLayer::queryTileColliders(const RectangleF& queryRegi
     int lastTileX = std::min(Util::fastFloor(queryRegionBottomRight.x / GameConstants::tileSize), m_width - 1);
     int lastTileY = std::min(Util::fastFloor(queryRegionBottomRight.y / GameConstants::tileSize), m_height - 1);
 
-    std::vector<RectangleF> colliders;
+    std::vector<Rectangle2F> colliders;
     for(int x = firstTileX; x <= lastTileX; ++x)
     {
         for(int y = firstTileY; y <= lastTileY; ++y)

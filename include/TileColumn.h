@@ -38,7 +38,7 @@ public:
     bool isTall() const;
 
     bool hasCollider() const;
-    const ls::RectangleF& collider() const;
+    const ls::Rectangle2F& collider() const;
 
     const std::vector<Tile*>& tiles() const;
 
@@ -50,7 +50,7 @@ protected:
 
     static Tile m_emptyTile;
 private:
-    static const ls::RectangleF m_defaultCollider;
+    static const ls::Rectangle2F m_defaultCollider;
 };
 
 #endif // TILECOLUMN_H

@@ -1,30 +1,24 @@
-#ifndef SHAPE4_H
-#define SHAPE4_H
+#pragma once
 
-template <class T>
-class Shape4 : public Shape<T>
+#include "..\Fwd.h"
+
+namespace ls
 {
-public:
-    using RespectiveVectorType = Vec4<T>;
+    template <class T>
+    class Shape4 : public Shape<T>
+    {
+    public:
+        using ValueType = T;
 
-    Shape4() {}
+        using VectorType = Vec4<T>;
+    };
 
-    Shape4(const Shape4&) {}
-    Shape4(Shape4&&) {}
+    using Shape4D = Shape4<double>;
+    using Shape4F = Shape4<float>;
+    using Shape4I = Shape4<int>;
 
-    virtual ~Shape4() {}
-
-    Shape4& operator = (const Shape4&) { return *this; }
-    Shape4& operator = (Shape4 &&) { return *this; }
-};
-
-typedef Shape4<double> Shape4D;
-typedef Shape4<float> Shape4F;
-typedef Shape4<int> Shape4I;
-
-extern template class Shape4<double>;
-extern template class Shape4<float>;
-extern template class Shape4<int>;
-
+    extern template class Shape4<double>;
+    extern template class Shape4<float>;
+    extern template class Shape4<int>;
+}
 #include "../src/Shape4.cpp"
-#endif // SHAPE4_H

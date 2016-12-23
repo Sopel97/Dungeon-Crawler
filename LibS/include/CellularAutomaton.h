@@ -1,140 +1,144 @@
-#ifndef CELLULARAUTOMATON_H
-#define CELLULARAUTOMATON_H
+#pragma once
 
-enum class OriginalCellularAutomatonStates
+#include "..\Fwd.h"
+
+#include "..\Array2.h"
+#include "Rectangle2.h"
+
+namespace ls
 {
-    White,
-    Black
-};
-
-enum class CellularAutomatonGridTopology
-{
-    Finite,
-    Toroidal //for toroidal space it is still required that passed coordinates are valid finite coordinates
-};
-
-template <class Rules> //class representing a rule
-class CellularAutomaton
-{
-public:
-    typedef typename Rules::States States;
-
-    CellularAutomaton(const Rules& rule, size_t width, size_t height, CellularAutomatonGridTopology topology = CellularAutomatonGridTopology::Finite);
-    CellularAutomaton(const Rules& rule, size_t width, size_t height, States fillState, CellularAutomatonGridTopology topology = CellularAutomatonGridTopology::Finite);
-
-    States cellAt(size_t x, size_t y) const;
-
-    void setCell(size_t x, size_t y, States state);
-
-    void fill(States fillState);
-    template <class FillFunction>
-    void fill(FillFunction fillFuntion); //fill function must take x, y as coordinates and output value from States
-
-    void iterate(size_t times = 1u); //can be QuantityRules or any other with proper () operator
-
-    size_t quantityOfStateIn3x3(States state, int x, int y) const; //x,y determine center of the 3x3 region
-    size_t quantityOfStateIn5x5(States state, int x, int y) const; //x,y determine center of the 5x5 region
-    size_t quantityOfStateInRadius(States state, int x, int y, size_t radius) const; //x,y determine center of the region
-    size_t quantityOfStateInRect(States state, const RectangleI& rect) const;
-    size_t quantityOfStateInMooreNeighbourhood(States state, int x, int y) const; //only sides
-    size_t quantityOfStateInNeighbourhood(States state, int x, int y) const; //sides and diagonals
-    size_t quantityOfStateInRegion(States state, int x, int y, size_t w, size_t h) const; //x,y determine top left of the region. w,h determine size. Does NOT check bounds
-
-protected:
-    Rules m_rules;
-    Array2<States> m_grid;
-    CellularAutomatonGridTopology m_topology;
-};
-
-template <class PossibleStates> //enum representing all possible states
-class QuantityRules
-{
-public:
-    typedef PossibleStates States;
-
-    QuantityRules(States state, const std::array<States, 10u>& outputs) :
-        m_state(state),
-        m_outputs(outputs)
+    template <class Rule> //class representing a rule
+    class CellularAutomaton
     {
+    public:
+        using RuleType = Rule;
+        using State = typename Rule::State;
 
-    }
+        enum class DefaultState
+        {
+            White,
+            Black
+        };
+        enum class GridTopology
+        {
+            Finite,
+            Toroidal //for toroidal space it is still required that passed coordinates are inside the bounds
+        };
 
-    States operator()(const CellularAutomaton<QuantityRules>& automaton, size_t x, size_t y)
-    {
-        return m_outputs[automaton.quantityOfStateIn3x3(m_state, x, y)];
-    }
 
-    void setOutputForQuantity(States outputState, size_t quantity)
-    {
-        m_outputs[quantity] = outputState;
-    }
+        CellularAutomaton(const Rule& rule, int width, int height, GridTopology topology = GridTopology::Finite);
+        CellularAutomaton(const Rule& rule, int width, int height, State fillState, GridTopology topology = GridTopology::Finite);
 
-protected:
-    States m_state;
-    std::array<States, 10u> m_outputs; //the quantity of state in 3x3 region is the index
-};
+        State at(int x, int y) const;
 
-class ConwaysGameOfLifeRules
-{
-public:
-    enum class States
-    {
-        Dead,
-        Live
+        void setState(int x, int y, State state) &;
+
+        void fill(State state) &;
+        template <class FillFunction>
+        void fill(FillFunction fillingFunction) &; //fill function must take x, y as coordinates and output valid State
+
+        void iterate(int numberOfIterations = 1) &;
+
+        int occurencesIn3x3(State state, int x, int y) const; //x,y determine center of the 3x3 region
+        int occurencesIn5x5(State state, int x, int y) const; //x,y determine center of the 5x5 region
+        int occurencesInRadius(State state, int x, int y, int radius) const; //x,y determine center of the region, radius is a maximal chessboard distance
+        int occurencesInRect(State state, const Rectangle2I& rect) const;
+        int occurencesInMooreNeighbourhood(State state, int x, int y) const; //only sides
+        int occurencesInNeighbourhood(State state, int x, int y) const; //sides and diagonals
+
+    protected:
+        Rule m_rule;
+        GridTopology m_topology;
+        Array2<State> m_grid;
     };
 
-    ConwaysGameOfLifeRules() {}
-
-    States operator()(const CellularAutomaton<ConwaysGameOfLifeRules>& automaton, size_t x, size_t y)
+    template <class SetOfStates> //enum representing all possible states
+    class QuantityRule3x3
     {
-        size_t numberOfLiveNeighbours = automaton.quantityOfStateInNeighbourhood(States::Live, x, y);
-        const auto& thisCell = automaton.cellAt(x, y);
+    public:
+        using State = SetOfStates;
 
-        if(thisCell == States::Live)
+        QuantityRule3x3(State countedState, const std::array<State, 10u>& outputs) :
+            m_countedState(countedState),
+            m_outputs(outputs)
         {
-            if(numberOfLiveNeighbours < 2u) return States::Dead;
-            if(numberOfLiveNeighbours > 3u) return States::Dead;
 
-            return States::Live;
         }
-        else //Dead
+
+        State operator()(const CellularAutomaton<QuantityRule3x3>& automaton, int x, int y)
         {
-            if(numberOfLiveNeighbours == 3u) return States::Live;
-
-            return States::Dead;
+            return m_outputs[automaton.occurencesIn3x3(m_countedState, x, y)];
         }
-    }
-};
-class WireworldRules
-{
-public:
-    enum class States
-    {
-        Empty,
-        ElectronHead,
-        ElectronTail,
-        Conductor
+
+        void setOutputForQuantity(State outputState, int quantity)
+        {
+            m_outputs[quantity] = outputState;
+        }
+
+    protected:
+        State m_countedState;
+        std::array<State, 10u> m_outputs; //the quantity of state in 3x3 region is the index
     };
 
-    WireworldRules() {}
-
-    States operator()(const CellularAutomaton<WireworldRules>& automaton, size_t x, size_t y)
+    class ConwaysGameOfLifeRule
     {
-        const auto& thisCell = automaton.cellAt(x, y);
-
-        if(thisCell == States::Empty) return States::Empty;
-        else if(thisCell == States::ElectronHead) return States::ElectronTail;
-        else if(thisCell == States::ElectronTail) return States::Conductor;
-        else if(thisCell == States::Conductor)
+    public:
+        enum class State
         {
-            size_t numberOfElectronHeadsInNeighbourhood = automaton.quantityOfStateInMooreNeighbourhood(States::ElectronHead, x, y);
-            if(numberOfElectronHeadsInNeighbourhood == 1u || numberOfElectronHeadsInNeighbourhood == 2u) return States::ElectronHead;
+            Dead,
+            Live
+        };
 
-            return States::Conductor;
+        ConwaysGameOfLifeRule() {}
+
+        State operator()(const CellularAutomaton<ConwaysGameOfLifeRule>& automaton, int x, int y)
+        {
+            const int numberOfLivingNeighbours = automaton.occurencesInNeighbourhood(State::Live, x, y);
+            const auto& currentState = automaton.at(x, y);
+
+            if(currentState == State::Live)
+            {
+                if(numberOfLivingNeighbours < 2) return State::Dead;
+                else if(numberOfLivingNeighbours > 3) return State::Dead;
+            }
+            else //Dead
+            {
+                if(numberOfLivingNeighbours == 3) return State::Live;
+            }
+
+            return currentState;
         }
-    }
-};
+    };
+    class WireworldRule
+    {
+    public:
+        enum class State
+        {
+            Empty,
+            ElectronHead,
+            ElectronTail,
+            Conductor
+        };
+
+        WireworldRule() {}
+
+        State operator()(const CellularAutomaton<WireworldRule>& automaton, int x, int y)
+        {
+            State currentState = automaton.at(x, y);
+
+            if(currentState == State::Empty) return State::Empty;
+            else if(currentState == State::ElectronHead) return State::ElectronTail;
+            else if(currentState == State::ElectronTail) return State::Conductor;
+            else //(currentState == State::Conductor)
+            {
+                const int numberOfElectronHeadsInNeighbourhood = automaton.occurencesInMooreNeighbourhood(State::ElectronHead, x, y);
+                if(numberOfElectronHeadsInNeighbourhood == 1 || numberOfElectronHeadsInNeighbourhood == 2) 
+                    return State::ElectronHead;
+            }
+
+            return currentState;
+        }
+    };
+}
 
 #include "../src/CellularAutomaton.cpp"
-
-#endif // CELLULARAUTOMATON_H

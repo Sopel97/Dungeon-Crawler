@@ -1,25 +1,28 @@
-#ifndef TRANSFORMATION2_H
-#define TRANSFORMATION2_H
+#pragma once
 
-template <class T>
-class Transformation2
+#include "..\Fwd.h"
+
+#include "Vec2.h"
+
+namespace ls
 {
-public:
-    Transformation2() {}
+    template <class T>
+    class Transformation2
+    {
+    public:
+        using ValueType = T;
 
-    virtual void transform(Vec2<T>& point) const = 0;
-    virtual Vec2<T> transformed(const Vec2<T>& point) const = 0;
-protected:
-};
+        Transformation2() noexcept = default;
 
-typedef Transformation2<double> Transformation2D;
-typedef Transformation2<float> Transformation2F;
-typedef Transformation2<int> Transformation2I;
+        virtual void transform(Vec2<T>& vector) const = 0;
+        virtual Vec2<T> transformed(const Vec2<T>& vector) const = 0;
+    protected:
+    };
 
-extern template class Transformation2<double>;
-extern template class Transformation2<float>;
-extern template class Transformation2<int>;
+    using Transformation2F = Transformation2<float>;
+    using Transformation2D = Transformation2<double>;
 
+    extern template class Transformation2<double>;
+    extern template class Transformation2<float>;
+}
 #include "../src/Transformation2.cpp"
-
-#endif // TRANSFORMATION2_H

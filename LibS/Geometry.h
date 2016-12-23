@@ -1,16 +1,13 @@
-#ifndef GEOMETRY_H_INCLUDED
-#define GEOMETRY_H_INCLUDED
+#pragma once
 
-#include "Shapes.h"
-#include "Triangulation.h"
-#include "Graph.h"
-#include "Voronoi.h"
-#include "ConvexHull.h"
-#include "Transformations.h"
+#include "Array2.h"
 #include "Bezier.h"
-#include "Nodes.h"
 #include "CellularAutomata.h"
-#include "Raycasting.h"
+#include "Constants.h"
+#include "Graphs.h"
 #include "RandomPoint.h"
-
-#endif // GEOMETRY_H_INCLUDED
+#include "Raycasting.h"
+#include "Shapes.h"
+#include "Transformations.h"
+#include "Util.h"
+#include "Printers.h"

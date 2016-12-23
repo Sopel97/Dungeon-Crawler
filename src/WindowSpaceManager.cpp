@@ -2,7 +2,7 @@
 
 using namespace ls;
 
-WindowSpaceManager::Region::Region(const RectangleI& rect, WindowSpaceManager::Region::Id id, const std::vector<WindowSpaceManager::Scene>& parentScenes, int zIndex) :
+WindowSpaceManager::Region::Region(const Rectangle2I& rect, WindowSpaceManager::Region::Id id, const std::vector<WindowSpaceManager::Scene>& parentScenes, int zIndex) :
     m_rect(rect),
     m_id(id),
     m_parentScenes(parentScenes),
@@ -16,7 +16,7 @@ Vec2I WindowSpaceManager::Region::localCoords(const Vec2I& windowCoords) const
 {
     return windowCoords - m_rect.min;
 }
-const RectangleI& WindowSpaceManager::Region::rect() const
+const Rectangle2I& WindowSpaceManager::Region::rect() const
 {
     return m_rect;
 }
@@ -44,7 +44,7 @@ WindowSpaceManager::WindowSpaceManager(sf::RenderWindow& window) :
     updateRegions();
 }
 
-sf::View WindowSpaceManager::viewOfRect(const ls::RectangleI& windowViewRect, const ls::RectangleF& worldViewRect)
+sf::View WindowSpaceManager::viewOfRect(const ls::Rectangle2I& windowViewRect, const ls::Rectangle2F& worldViewRect)
 {
     Vec2F windowSize{(float)m_window.getSize().x, (float)m_window.getSize().y};
     Vec2F windowViewTopLeft = Vec2F(windowViewRect.min);
@@ -60,15 +60,15 @@ sf::View WindowSpaceManager::viewOfRect(const ls::RectangleI& windowViewRect, co
 }
 sf::View WindowSpaceManager::viewOfRegion(Region::Id regionId)
 {
-    const RectangleI& rect = regionRect(regionId);
-    return viewOfRect(rect, RectangleF(Vec2F(0.0f, 0.0f), static_cast<float>(rect.width()), static_cast<float>(rect.height())));
+    const Rectangle2I& rect = regionRect(regionId);
+    return viewOfRect(rect, Rectangle2F::withSize(Vec2F(0.0f, 0.0f), static_cast<float>(rect.width()), static_cast<float>(rect.height())));
 }
-sf::View WindowSpaceManager::viewOfRegion(Region::Id regionId, const ls::RectangleF& worldViewRect)
+sf::View WindowSpaceManager::viewOfRegion(Region::Id regionId, const ls::Rectangle2F& worldViewRect)
 {
-    const RectangleI& rect = regionRect(regionId);
+    const Rectangle2I& rect = regionRect(regionId);
     return viewOfRect(rect, worldViewRect);
 }
-void WindowSpaceManager::setViewToRect(const RectangleI& windowViewRect, const RectangleF& worldViewRect)
+void WindowSpaceManager::setViewToRect(const Rectangle2I& windowViewRect, const Rectangle2F& worldViewRect)
 {
     m_window.setView(viewOfRect(windowViewRect, worldViewRect));
 }
@@ -76,7 +76,7 @@ void WindowSpaceManager::setViewToRegion(WindowSpaceManager::Region::Id regionId
 {
     m_window.setView(viewOfRegion(regionId));
 }
-void WindowSpaceManager::setViewToRegion(WindowSpaceManager::Region::Id regionId, const RectangleF& worldViewRect)
+void WindowSpaceManager::setViewToRegion(WindowSpaceManager::Region::Id regionId, const Rectangle2F& worldViewRect)
 {
     m_window.setView(viewOfRegion(regionId, worldViewRect));
 }
@@ -100,7 +100,7 @@ void WindowSpaceManager::updateRegions()
 
     m_regions[Region::PlayerUi] = Region
     {
-        RectangleI
+        Rectangle2I::withSize
         (
             Vec2I
             (
@@ -119,7 +119,7 @@ void WindowSpaceManager::updateRegions()
     };
     m_regions[Region::World] = Region
     {
-        RectangleI
+        Rectangle2I::withSize
         (
             Vec2I
             (
@@ -164,7 +164,7 @@ const WindowSpaceManager::Region* WindowSpaceManager::pointedRegion(const Vec2I&
         const Region& candidate = region.second;
         if(!candidate.isPresentOnScene(m_currentScene)) continue;
         if(candidate.zIndex() < highestZ) continue;
-        if(Intersections::intersection(candidate.rect(), windowCoords))
+        if(ls::intersect(candidate.rect(), windowCoords))
         {
             bestCandidate = &candidate;
             highestZ = candidate.zIndex();
@@ -172,7 +172,7 @@ const WindowSpaceManager::Region* WindowSpaceManager::pointedRegion(const Vec2I&
     }
     return bestCandidate;
 }
-const RectangleI& WindowSpaceManager::regionRect(WindowSpaceManager::Region::Id regionId) const
+const Rectangle2I& WindowSpaceManager::regionRect(WindowSpaceManager::Region::Id regionId) const
 {
     return region(regionId).rect();
 }
