@@ -1,5 +1,4 @@
-1. rename TallTileStackDrawable -> TallTileColumnDrawable
-2. Make TileStack which stores a tile and quantity (currently all stored in Tile)
+
 3??? Optimisation for stateless Tiles. Would not be copied during cloning (tile's clone method STILL clones, user would have to handle it manually). The only instance would be in resource manager.
 3.1??? Optimisation for stateless components. Similar, but Tiles would have to handle it. Only instances would be in component registrars. Would require tiles to use raw pointers and manage components manually.
 3.2 USE DynamicPtr from LibS - factory would return an owning or nonowning pointer depending on statefullness

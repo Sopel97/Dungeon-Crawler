@@ -4,6 +4,7 @@
 #include "InventoryView.h"
 
 #include "tiles/Tile.h"
+#include "tiles/TileStack.h"
 
 #include "../LibS/Geometry.h"
 
@@ -28,14 +29,14 @@ PlayerEquipmentInventory::PlayerEquipmentInventory()
 }
 PlayerEquipmentInventory::~PlayerEquipmentInventory()
 {
-    for(Tile* tile : m_contents)
+    for(TileStack* tileStack : m_contents)
     {
-        if(tile != nullptr)
-            delete tile;
+        if(tileStack != nullptr)
+            delete tileStack;
     }
 }
 
-std::vector<Tile*>& PlayerEquipmentInventory::contents()
+std::vector<TileStack*>& PlayerEquipmentInventory::contents()
 {
     return m_contents;
 }

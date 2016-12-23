@@ -37,8 +37,6 @@ public:
 
     bool equals(const Tile& other) const;
 
-    int quantity() const;
-    void setQuantity(int newQuantity);
     int maxQuantity() const;
 
     void onTilePlaced(const TileLocation& location);
@@ -47,12 +45,13 @@ public:
     int id() const;
 
     std::unique_ptr<Tile> clone() const;
+
+    void onTileQuantityChanged(int oldQuantity, int newQuantity);
 protected:
     std::unique_ptr<TileModel> m_model;
     std::unique_ptr<TileView> m_view;
     std::unique_ptr<TileController> m_controller;
     int m_id; //NOTE: if memory is an issue these 3 can be changed to other types
-    int m_quantity;
     int m_maxQuantity;
 
     static int m_lastId;

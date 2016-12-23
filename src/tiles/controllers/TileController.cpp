@@ -38,7 +38,7 @@ void TileController::onTileRemoved(const TileLocation& location)
 {
 
 }
-void TileController::onTileQuantityChanged(int newQuantity)
+void TileController::onTileQuantityChanged(int oldQuantity, int newQuantity)
 {
 
 }

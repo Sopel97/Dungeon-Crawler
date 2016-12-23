@@ -1,6 +1,8 @@
 #include "tiles/views/InnerBorderedWallTileView.h"
 
 #include "tiles/Tile.h"
+#include "tiles/TileStack.h"
+
 #include "TileColumn.h"
 #include "MapLayer.h"
 
@@ -82,17 +84,17 @@ void InnerBorderedWallTileView::draw(sf::RenderTarget& renderTarget, sf::RenderS
     int z = location.z;
     const MapLayer& map = location.map;
 
-    isGroupSame[TopLeft]     = (map.at(x - 1, y - 1, z).view().innerBorderGroup() == group);
-    isGroupSame[Top]         = (map.at(x + 0, y - 1, z).view().innerBorderGroup() == group);
-    isGroupSame[TopRight]    = (map.at(x + 1, y - 1, z).view().innerBorderGroup() == group);
+    isGroupSame[TopLeft]     = (map.at(x - 1, y - 1, z).tile()->view().innerBorderGroup() == group);
+    isGroupSame[Top]         = (map.at(x + 0, y - 1, z).tile()->view().innerBorderGroup() == group);
+    isGroupSame[TopRight]    = (map.at(x + 1, y - 1, z).tile()->view().innerBorderGroup() == group);
 
-    isGroupSame[Left]        = (map.at(x - 1, y + 0, z).view().innerBorderGroup() == group);
-    isGroupSame[Center]      = (map.at(x + 0, y + 0, z).view().innerBorderGroup() == group);
-    isGroupSame[Right]       = (map.at(x + 1, y + 0, z).view().innerBorderGroup() == group);
+    isGroupSame[Left]        = (map.at(x - 1, y + 0, z).tile()->view().innerBorderGroup() == group);
+    isGroupSame[Center]      = (map.at(x + 0, y + 0, z).tile()->view().innerBorderGroup() == group);
+    isGroupSame[Right]       = (map.at(x + 1, y + 0, z).tile()->view().innerBorderGroup() == group);
 
-    isGroupSame[BottomLeft]  = (map.at(x - 1, y + 1, z).view().innerBorderGroup() == group);
-    isGroupSame[Bottom]      = (map.at(x + 0, y + 1, z).view().innerBorderGroup() == group);
-    isGroupSame[BottomRight] = (map.at(x + 1, y + 1, z).view().innerBorderGroup() == group);
+    isGroupSame[BottomLeft]  = (map.at(x - 1, y + 1, z).tile()->view().innerBorderGroup() == group);
+    isGroupSame[Bottom]      = (map.at(x + 0, y + 1, z).tile()->view().innerBorderGroup() == group);
+    isGroupSame[BottomRight] = (map.at(x + 1, y + 1, z).tile()->view().innerBorderGroup() == group);
 
     {
         //on x, y

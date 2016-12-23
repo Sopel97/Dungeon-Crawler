@@ -1,6 +1,7 @@
 #include "MapGenerator.h"
 
 #include "tiles/Tile.h"
+#include "tiles/TileStack.h"
 #include "tiles/views/TileView.h"
 
 #include "TileColumn.h"
@@ -401,17 +402,17 @@ void MapGenerator::generate(MapLayer& map)
             auto& floorTileToPlace = m_topologyMap.at(x, y) == TopologyMap::TopologyState::Wall || rand() / (float)RAND_MAX < 0.4f ? floorTile : floorTile2;
             //auto& floorTileToPlace = floorTile;
 
-            map.placeTile(floorTileToPlace.get().clone().release(), x, y);
+            map.placeTile(new TileStack(floorTileToPlace.get().clone(), 1), x, y);
 
             if(m_topologyMap.at(x, y) == TopologyMap::TopologyState::Wall)
             {
-                map.placeTile(wallTile.get().clone().release(), x, y);
+                map.placeTile(new TileStack(wallTile.get().clone(), 1), x, y);
             }
             else
             {
                 float r = rand() / (float)RAND_MAX;
-                if(r < 0.05f) map.placeTile(bagTile.get().clone().release(), x, y);
-                else if(r < 0.10f) map.placeTile(backpackTile.get().clone().release(), x, y);
+                if(r < 0.05f) map.placeTile(new TileStack(bagTile.get().clone(), 1), x, y);
+                else if(r < 0.10f) map.placeTile(new TileStack(backpackTile.get().clone(), 1), x, y);
             }
         }
     }

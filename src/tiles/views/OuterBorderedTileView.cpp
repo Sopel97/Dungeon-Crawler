@@ -3,6 +3,7 @@
 #include "Root.h"
 
 #include "tiles/Tile.h"
+#include "tiles/TileStack.h"
 
 #include "MapLayer.h"
 
@@ -29,6 +30,7 @@ OuterBorderedTileView::OuterBorderedTileView(const OuterBorderedTileView& other)
     m_commonData(other.m_commonData),
     m_sprite(other.m_sprite)
 {
+    m_sprite = m_commonData->spriteSet.chooseRandomSprite();
 }
 OuterBorderedTileView::~OuterBorderedTileView()
 {
@@ -81,17 +83,17 @@ void OuterBorderedTileView::drawOutside(sf::RenderTarget& renderTarget, sf::Rend
     int z = location.z;
     const MapLayer& map = location.map;
 
-    isIdSame[TopLeft]     = (map.at(x - 1, y - 1, z).id() == id);
-    isIdSame[Top]         = (map.at(x + 0, y - 1, z).id() == id);
-    isIdSame[TopRight]    = (map.at(x + 1, y - 1, z).id() == id);
+    isIdSame[TopLeft]     = (map.at(x - 1, y - 1, z).tile()->id() == id);
+    isIdSame[Top]         = (map.at(x + 0, y - 1, z).tile()->id() == id);
+    isIdSame[TopRight]    = (map.at(x + 1, y - 1, z).tile()->id() == id);
 
-    isIdSame[Left]        = (map.at(x - 1, y + 0, z).id() == id);
-    isIdSame[Center]      = (map.at(x + 0, y + 0, z).id() == id);
-    isIdSame[Right]       = (map.at(x + 1, y + 0, z).id() == id);
+    isIdSame[Left]        = (map.at(x - 1, y + 0, z).tile()->id() == id);
+    isIdSame[Center]      = (map.at(x + 0, y + 0, z).tile()->id() == id);
+    isIdSame[Right]       = (map.at(x + 1, y + 0, z).tile()->id() == id);
 
-    isIdSame[BottomLeft]  = (map.at(x - 1, y + 1, z).id() == id);
-    isIdSame[Bottom]      = (map.at(x + 0, y + 1, z).id() == id);
-    isIdSame[BottomRight] = (map.at(x + 1, y + 1, z).id() == id);
+    isIdSame[BottomLeft]  = (map.at(x - 1, y + 1, z).tile()->id() == id);
+    isIdSame[Bottom]      = (map.at(x + 0, y + 1, z).tile()->id() == id);
+    isIdSame[BottomRight] = (map.at(x + 1, y + 1, z).tile()->id() == id);
 
     int sideBorderSpriteIndex = -1;
 
@@ -152,7 +154,7 @@ bool OuterBorderedTileView::coversOuterBorders() const
 
 void OuterBorderedTileView::onTilePlaced(const TileLocation& location)
 {
-    m_sprite = m_commonData->spriteSet.chooseRandomSprite();
+    //previously sprite was being set here
 }
 
 std::unique_ptr<TileView> OuterBorderedTileView::clone() const

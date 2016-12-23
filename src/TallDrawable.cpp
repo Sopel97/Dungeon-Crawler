@@ -1,7 +1,7 @@
 #include "TallDrawable.h"
 
 #include "TallEntityDrawable.h"
-#include "TallTileStackDrawable.h"
+#include "TallTileColumnDrawable.h"
 
 #include "GameConstants.h"
 
@@ -25,8 +25,8 @@ bool TallDrawable::compare(const TallDrawable& lhs, const TallDrawable& rhs)
 
     if(isLhsTile && isRhsTile) //tile, tile
     {
-        const TallTileStackDrawable& lhsTile = static_cast<const TallTileStackDrawable&>(lhs);
-        const TallTileStackDrawable& rhsTile = static_cast<const TallTileStackDrawable&>(rhs);
+        const TallTileColumnDrawable& lhsTile = static_cast<const TallTileColumnDrawable&>(lhs);
+        const TallTileColumnDrawable& rhsTile = static_cast<const TallTileColumnDrawable&>(rhs);
 
         int lhsY = lhsTile.tileY();
         int lhsX = lhsTile.tileX();
@@ -48,7 +48,7 @@ bool TallDrawable::compare(const TallDrawable& lhs, const TallDrawable& rhs)
         const TallDrawable& tile = isLhsTile ? lhs : rhs;
         const TallDrawable& entity = isLhsTile ? rhs : lhs;
 
-        const TallTileStackDrawable& lhsTile = static_cast<const TallTileStackDrawable&>(tile);
+        const TallTileColumnDrawable& lhsTile = static_cast<const TallTileColumnDrawable&>(tile);
         const TallEntityDrawable& rhsEntity = static_cast<const TallEntityDrawable&>(entity);
 
         bool result = false;

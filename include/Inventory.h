@@ -3,7 +3,7 @@
 
 #include <vector>
 
-class Tile;
+class TileStack;
 class InventoryView;
 
 class Inventory
@@ -27,19 +27,19 @@ public:
     Inventory();
     virtual ~Inventory();
 
-    virtual std::vector<Tile*>& contents() = 0;
+    virtual std::vector<TileStack*>& contents() = 0;
     virtual const ContentRequirement slotContentRequirement(size_t slotId) const = 0;
     virtual InventoryView createInventoryView() = 0;
 
-    virtual Tile* at(size_t slotId);
+    virtual TileStack* at(size_t slotId);
 
     virtual void deleteTileAt(size_t slotId);
 
-    virtual int insert(Tile* tile, int count = -1); //returns number of inserted elements. -1 count means that it will insert all
-    virtual int insert(Tile* tile, size_t slotId, int count = -1); //same as above
+    virtual int insert(TileStack* tile, int count = -1); //returns number of inserted elements. -1 count means that it will insert all
+    virtual int insert(TileStack* tile, size_t slotId, int count = -1); //same as above
 
-    virtual int erase(Tile* tile, int count = -1); //same as above
-    virtual int erase(Tile* tile, size_t slotId, int count = -1); //same as above
+    virtual int erase(TileStack* tile, int count = -1); //same as above
+    virtual int erase(TileStack* tile, size_t slotId, int count = -1); //same as above
 
     virtual int numberOfSlots() const = 0;
 

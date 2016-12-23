@@ -65,7 +65,7 @@ void TileModel::onTileRemoved(const TileLocation& location)
 {
 
 }
-void TileModel::onTileQuantityChanged(int newQuantity)
+void TileModel::onTileQuantityChanged(int oldQuantity, int newQuantity)
 {
 
 }

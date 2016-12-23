@@ -1,6 +1,6 @@
 #include "ContainerInventory.h"
 
-#include "tiles/Tile.h"
+#include "tiles/TileStack.h"
 
 #include "InventorySlotView.h"
 #include "InventoryView.h"
@@ -19,7 +19,7 @@ ContainerInventory::~ContainerInventory()
     //dtor
 }
 
-std::vector<Tile*>& ContainerInventory::contents()
+std::vector<TileStack*>& ContainerInventory::contents()
 {
     return m_contents;
 }

@@ -70,7 +70,7 @@ void TileView::onTileRemoved(const TileLocation& location)
 {
 
 }
-void TileView::onTileQuantityChanged(int newQuantity)
+void TileView::onTileQuantityChanged(int oldQuantity, int newQuantity)
 {
 
 }

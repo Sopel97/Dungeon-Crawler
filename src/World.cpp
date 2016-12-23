@@ -3,6 +3,7 @@
 #include "Root.h"
 
 #include "tiles/Tile.h"
+#include "tiles/TileStack.h"
 #include "tiles/views/TileView.h"
 #include "tiles/models/TileModel.h"
 #include "tiles/controllers/TileController.h"
@@ -21,7 +22,7 @@
 
 #include "TallDrawable.h"
 #include "TallEntityDrawable.h"
-#include "TallTileStackDrawable.h"
+#include "TallTileColumnDrawable.h"
 
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
@@ -70,31 +71,31 @@ void World::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
         {
             const TileColumn& tileColumn = m_mapLayer->at(x, y);
             int z = 0;
-            for(const auto& tile : tileColumn.tiles())
+            for(const TileStack* tileStack : tileColumn.tiles())
             {
                 TileLocation location(*m_mapLayer, x, y, z);
 
-                if(tile->view().isTall())
+                if(tileStack->tile()->view().isTall())
                 {
-                    tallDrawables.push_back(new TallTileStackDrawable(tileColumn, location));
+                    tallDrawables.push_back(new TallTileColumnDrawable(tileColumn, location));
                     break;
                 }
                 if(z == 0)
                 {
-                    if(tile->view().coversOuterBorders())
+                    if(tileStack->tile()->view().coversOuterBorders())
                     {
                         drawOuterBorder(renderTarget, renderStates, location);
-                        tile->draw(renderTarget, renderStates, location);
+                        tileStack->tile()->draw(renderTarget, renderStates, location);
                     }
                     else
                     {
-                        tile->draw(renderTarget, renderStates, location);
+                        tileStack->tile()->draw(renderTarget, renderStates, location);
                         drawOuterBorder(renderTarget, renderStates, location);
                     }
                 }
                 else
                 {
-                    tile->draw(renderTarget, renderStates, location);
+                    tileStack->tile()->draw(renderTarget, renderStates, location);
                 }
 
                 ++z;
@@ -124,15 +125,15 @@ void World::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
 
 void World::drawOuterBorder(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& tileLocation)
 {
-    auto areTilesEqual = [](const Tile * lhs, const Tile * rhs)->bool {return lhs->id() == rhs->id();};
-    auto borderPriorityCompare = [](const Tile * lhs, const Tile * rhs)->bool {return lhs->view().outerBorderPriority() < rhs->view().outerBorderPriority();};
+    auto areTilesEqual = [](const TileStack * lhs, const TileStack * rhs)->bool {return lhs->tile()->id() == rhs->tile()->id();};
+    auto borderPriorityCompare = [](const TileStack * lhs, const TileStack * rhs)->bool {return lhs->tile()->view().outerBorderPriority() < rhs->tile()->view().outerBorderPriority();};
 
     int x = tileLocation.x;
     int y = tileLocation.y;
     const MapLayer& map = tileLocation.map;
 
-    std::vector<const Tile*> differentNeigbourTiles;
-    int thisTileOuterBorderPriority = map.at(x, y, 0).view().outerBorderPriority();
+    std::vector<const TileStack*> differentNeigbourTiles;
+    int thisTileOuterBorderPriority = map.at(x, y, 0).tile()->view().outerBorderPriority();
     for(int xoffset = -1; xoffset <= 1; ++xoffset)
     {
         for(int yoffset = -1; yoffset <= 1; ++yoffset)
@@ -140,13 +141,13 @@ void World::drawOuterBorder(sf::RenderTarget& renderTarget, sf::RenderStates& re
             if(xoffset == 0 && yoffset == 0) continue;
             int xx = x + xoffset;
             int yy = y + yoffset;
-            const Tile& tile = map.at(xx, yy, 0);
-            if(!tile.view().hasOuterBorder() || tile.view().outerBorderPriority() <= thisTileOuterBorderPriority) continue;
+            const TileStack& tileStack = map.at(xx, yy, 0);
+            if(!tileStack.tile()->view().hasOuterBorder() || tileStack.tile()->view().outerBorderPriority() <= thisTileOuterBorderPriority) continue;
 
             bool firstSuchNeighbour = true;
             for(const auto& neighbour : differentNeigbourTiles)
             {
-                if(areTilesEqual(&tile, neighbour))
+                if(areTilesEqual(&tileStack, neighbour))
                 {
                     firstSuchNeighbour = false;
                     break;
@@ -154,7 +155,7 @@ void World::drawOuterBorder(sf::RenderTarget& renderTarget, sf::RenderStates& re
             }
             if(firstSuchNeighbour)
             {
-                differentNeigbourTiles.push_back(&tile);
+                differentNeigbourTiles.push_back(&tileStack);
             }
         }
     }
@@ -162,7 +163,7 @@ void World::drawOuterBorder(sf::RenderTarget& renderTarget, sf::RenderStates& re
 
     for(const auto& neighbour : differentNeigbourTiles)
     {
-        neighbour->drawOutside(renderTarget, renderStates, tileLocation);
+        neighbour->tile()->drawOutside(renderTarget, renderStates, tileLocation);
     }
 }
 
@@ -219,7 +220,7 @@ ls::Vec2I World::screenToTile(const ls::Vec2I& screenPosition) const
 void World::useTile(const ls::Vec2I& tilePosition)
 {
     TileColumn& tileColumn = m_mapLayer->at(tilePosition.x, tilePosition.y);
-    tileColumn.top().controller().onTileUsedByPlayer(TileLocation(*m_mapLayer, tilePosition.x, tilePosition.y, tileColumn.topZ()));
+    tileColumn.top().tile()->controller().onTileUsedByPlayer(TileLocation(*m_mapLayer, tilePosition.x, tilePosition.y, tileColumn.topZ()));
 }
 
 void World::update(float dt)
@@ -233,8 +234,8 @@ float World::drag(const Vec2F& position) const
 {
     Vec2I tilePosition = worldToTile(position);
     const TileColumn& tileColumn = m_mapLayer->at(tilePosition.x, tilePosition.y);
-    const Tile& tile = tileColumn.at(0);
-    return tile.model().drag();
+    const TileStack& tileStack = tileColumn.at(0);
+    return tileStack.tile()->model().drag();
 }
 
 std::vector<Rectangle2F> World::queryTileColliders(const Rectangle2F& queryRegion) const

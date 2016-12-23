@@ -10,11 +10,11 @@
 class TileColumn;
 class MapLayer;
 
-class TallTileStackDrawable : public TallDrawable //requires at least one tile in tile stack to be tall
+class TallTileColumnDrawable : public TallDrawable //requires at least one tile in tile stack to be tall
 {
 public:
-    TallTileStackDrawable(const TileColumn & tileColumn, const TileLocation & tileLocation);
-    virtual ~TallTileStackDrawable();
+    TallTileColumnDrawable(const TileColumn & tileColumn, const TileLocation & tileLocation);
+    virtual ~TallTileColumnDrawable();
 
     virtual const ls::Rectangle2F& boundingRectangle() const;
     virtual const ls::Vec2F& center() const;

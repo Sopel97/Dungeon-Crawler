@@ -16,7 +16,6 @@ Tile::Tile(std::unique_ptr<TileModel>&& model, std::unique_ptr<TileView>&& view,
     m_view(std::move(view)),
     m_controller(std::move(controller)),
     m_id(++m_lastId),
-    m_quantity(1),
     m_maxQuantity(1)
 {
     m_model->setOwner(this);
@@ -28,7 +27,6 @@ Tile::Tile(const Tile& other) :
     m_view(other.m_view->clone()),
     m_controller(other.m_controller->clone()),
     m_id(other.m_id),
-    m_quantity(other.m_quantity),
     m_maxQuantity(other.m_maxQuantity)
 {
     m_model->setOwner(this);
@@ -88,24 +86,6 @@ bool Tile::equals(const Tile& other) const
     return m_id == other.m_id && m_model->equals(*(other.m_model));
 }
 
-int Tile::quantity() const
-{
-    return m_quantity;
-}
-void Tile::setQuantity(int newQuantity)
-{
-    if(newQuantity < 1) newQuantity = 1;
-    if(newQuantity > m_maxQuantity) newQuantity = m_maxQuantity;
-
-    if(m_quantity != newQuantity)
-    {
-        m_quantity = newQuantity;
-
-        m_model->onTileQuantityChanged(m_quantity);
-        m_view->onTileQuantityChanged(m_quantity);
-        m_controller->onTileQuantityChanged(m_quantity);
-    }
-}
 int Tile::maxQuantity() const
 {
     return m_maxQuantity;
@@ -132,4 +112,11 @@ int Tile::id() const
 std::unique_ptr<Tile> Tile::clone() const
 {
     return std::make_unique<Tile>(*this);
+}
+
+void Tile::onTileQuantityChanged(int oldQuantity, int newQuantity)
+{
+    m_model->onTileQuantityChanged(oldQuantity, newQuantity);
+    m_view->onTileQuantityChanged(oldQuantity, newQuantity);
+    m_controller->onTileQuantityChanged(oldQuantity, newQuantity);
 }

@@ -6,6 +6,9 @@
 #include "tiles/views/TileView.h"
 #include "tiles/controllers/TileController.h"
 
+#include "tiles/TileStack.h"
+#include "tiles/Tile.h"
+
 #include "TileLocation.h"
 
 #include "../LibS/Util.h"
@@ -63,28 +66,28 @@ TileColumn& MapLayer::at(int x, int y)
     if(!isValid(x, y)) return m_emptyTileColumn;
     return m_tileColumns(x, y);
 }
-const Tile& MapLayer::at(int x, int y, int z) const
+const TileStack& MapLayer::at(int x, int y, int z) const
 {
     return at(x, y).at(z);
 }
-Tile& MapLayer::at(int x, int y, int z)
+TileStack& MapLayer::at(int x, int y, int z)
 {
     return at(x, y).at(z);
 }
 
-void MapLayer::placeTile(Tile* tile, int x, int y)
+void MapLayer::placeTile(TileStack* tileStack, int x, int y)
 {
     TileColumn& tileColumn = at(x, y);
-    tileColumn.push(tile);
-    tile->onTilePlaced(TileLocation(*this, x, y, tileColumn.topZ()));
+    tileColumn.push(tileStack);
+    tileStack->tile()->onTilePlaced(TileLocation(*this, x, y, tileColumn.topZ()));
 }
-Tile* MapLayer::takeTile(int x, int y)
+TileStack* MapLayer::takeTile(int x, int y)
 {
     TileColumn& tileColumn = at(x, y);
     int z = tileColumn.topZ();
-    Tile* tile = tileColumn.releaseTop();
-    tile->onTileRemoved(TileLocation(*this, x, y, z));
-    return tile;
+    TileStack* tileStack = tileColumn.releaseTop();
+    tileStack->tile()->onTileRemoved(TileLocation(*this, x, y, z));
+    return tileStack;
 }
 void MapLayer::deleteTile(int x, int y)
 {
@@ -106,11 +109,11 @@ std::vector<Rectangle2F> MapLayer::queryTileColliders(const Rectangle2F& queryRe
         for(int y = firstTileY; y <= lastTileY; ++y)
         {
             const TileColumn& tileColumn = at(x, y);
-            for(const auto& tile : tileColumn.tiles())
+            for(const TileStack* tileStack : tileColumn.tiles())
             {
-                if(tile->model().hasCollider())
+                if(tileStack->tile()->model().hasCollider())
                 {
-                    colliders.emplace_back(tile->model().collider());
+                    colliders.emplace_back(tileStack->tile()->model().collider());
                 }
             }
         }

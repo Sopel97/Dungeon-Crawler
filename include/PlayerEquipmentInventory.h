@@ -5,7 +5,7 @@
 
 #include <vector>
 
-class Tile;
+class TileStack;
 
 class PlayerEquipmentInventory : public Inventory
 {
@@ -13,7 +13,7 @@ public:
     PlayerEquipmentInventory();
     virtual ~PlayerEquipmentInventory();
 
-    virtual std::vector<Tile*>& contents();
+    virtual std::vector<TileStack*>& contents();
     virtual const Inventory::ContentRequirement slotContentRequirement(size_t slotId) const;
     virtual InventoryView createInventoryView();
 
@@ -21,7 +21,7 @@ public:
 
 protected:
 private:
-    std::vector<Tile*> m_contents;
+    std::vector<TileStack*> m_contents;
     std::vector<Inventory::ContentRequirement> m_contentRequirements;
 };
 

@@ -26,6 +26,7 @@ PlainQuantityBasedTileView::PlainQuantityBasedTileView(const PlainQuantityBasedT
     m_commonData(other.m_commonData),
     m_sprite(other.m_sprite)
 {
+    m_sprite = m_commonData->spriteSet.getSprite(1);
 }
 PlainQuantityBasedTileView::~PlainQuantityBasedTileView()
 {
@@ -72,9 +73,9 @@ int PlainQuantityBasedTileView::outerBorderPriority() const
 
 void PlainQuantityBasedTileView::onTilePlaced(const TileLocation& location)
 {
-    m_sprite = m_commonData->spriteSet.getSprite(m_owner->quantity());
+    //previously sprite was being set here
 }
-void PlainQuantityBasedTileView::onTileQuantityChanged(int newQuantity)
+void PlainQuantityBasedTileView::onTileQuantityChanged(int oldQuantity, int newQuantity)
 {
     m_sprite = m_commonData->spriteSet.getSprite(newQuantity);
 }

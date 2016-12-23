@@ -24,7 +24,7 @@ public:
 
     virtual void onTilePlaced(const TileLocation& location);
     virtual void onTileRemoved(const TileLocation& location);
-    virtual void onTileQuantityChanged(int newQuantity);
+    virtual void onTileQuantityChanged(int oldQuantity, int newQuantity);
     virtual void onTileUsedByPlayer(const TileLocation& location);
 
     virtual std::unique_ptr<TileController> clone() const;

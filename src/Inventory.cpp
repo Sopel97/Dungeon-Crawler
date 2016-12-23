@@ -1,6 +1,7 @@
 #include "Inventory.h"
 
 #include "tiles/Tile.h"
+#include "tiles/TileStack.h"
 
 #include <algorithm>
 
@@ -12,7 +13,7 @@ Inventory::~Inventory()
 {
 
 }
-Tile* Inventory::at(size_t slotId)
+TileStack* Inventory::at(size_t slotId)
 {
     return contents()[slotId];
 }
@@ -27,7 +28,7 @@ void Inventory::deleteTileAt(size_t slotId)
         slots[slotId] = nullptr;
     }
 }
-int Inventory::insert(Tile* tile, int count)
+int Inventory::insert(TileStack* tileStack, int count)
 {
     if(count == -1) count = std::numeric_limits<int>::max();
     int numberOfInsertedTiles = 0;
@@ -36,12 +37,12 @@ int Inventory::insert(Tile* tile, int count)
     size_t slotId = 0;
     while(slotId < slots.size() && numberOfInsertedTiles < count)
     {
-        numberOfInsertedTiles += insert(tile, slotId, count - numberOfInsertedTiles);
+        numberOfInsertedTiles += insert(tileStack, slotId, count - numberOfInsertedTiles);
     }
 
     return numberOfInsertedTiles;
 }
-int Inventory::insert(Tile* tile, size_t slotId, int count)
+int Inventory::insert(TileStack* tileStack, size_t slotId, int count)
 {
     auto& slots = this->contents();
     if(slotId >= slots.size()) return 0;
@@ -49,13 +50,13 @@ int Inventory::insert(Tile* tile, size_t slotId, int count)
     if(count == -1) count = std::numeric_limits<int>::max();
     if(count <= 0) return 0;
 
-    Tile* storedTile = slots[slotId];
+    TileStack* storedTile = slots[slotId];
     if(storedTile == nullptr)
     {
-        storedTile = tile->clone().release();
+        storedTile = tileStack->clone().release();
         storedTile->setQuantity(0); //after inserting it won't be 0
     }
-    else if(!storedTile->equals(*tile))
+    else if(!storedTile->tile()->equals(*(tileStack->tile())))
     {
         return 0;
     }
@@ -71,7 +72,7 @@ int Inventory::insert(Tile* tile, size_t slotId, int count)
     return count;
 }
 
-int Inventory::erase(Tile* tile, int count)
+int Inventory::erase(TileStack* tileStack, int count)
 {
     if(count == -1) count = std::numeric_limits<int>::max();
     int numberOfErasedTiles = 0;
@@ -80,19 +81,19 @@ int Inventory::erase(Tile* tile, int count)
     size_t slotId = 0;
     while(slotId < slots.size() && numberOfErasedTiles < count)
     {
-        numberOfErasedTiles += erase(tile, slotId, count - numberOfErasedTiles);
+        numberOfErasedTiles += erase(tileStack, slotId, count - numberOfErasedTiles);
     }
 
     return numberOfErasedTiles;
 }
-int Inventory::erase(Tile* tile, size_t slotId, int count)
+int Inventory::erase(TileStack* tileStack, size_t slotId, int count)
 {
     auto& slots = this->contents();
     if(slotId >= slots.size()) return 0;
 
-    Tile* storedTile = slots[slotId];
+    TileStack* storedTile = slots[slotId];
     if(storedTile == nullptr) return 0;
-    if(!storedTile->equals(*tile)) return 0;
+    if(!storedTile->tile()->equals(*(tileStack->tile()))) return 0;
     int storedTileQuantity = storedTile->quantity();
 
     if(count == -1) count = storedTileQuantity;

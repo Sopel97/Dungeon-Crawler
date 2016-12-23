@@ -9,7 +9,8 @@
 
 #include <map>
 
-class Tile;
+class TileStack;
+
 namespace sf
 {
     class RenderStates;
@@ -29,7 +30,7 @@ public:
     InventorySlotView& operator=(const InventorySlotView&) = default;
     InventorySlotView& operator=(InventorySlotView&&) = default;
 
-    Tile* content() const;
+    TileStack* content() const;
     const ls::Vec2I& position() const;
 
     void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, Inventory::ContentRequirement contentRequirement);

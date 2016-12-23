@@ -1,6 +1,7 @@
 #include "InventorySlotView.h"
 
 #include "tiles/Tile.h"
+#include "tiles/TileStack.h"
 
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
@@ -33,7 +34,7 @@ InventorySlotView::InventorySlotView(Inventory* inventory, size_t slotId, const 
 {
     if(!m_texture) m_texture = ResourceManager::instance().get<sf::Texture>("UiNonRepeating");
 }
-Tile* InventorySlotView::content() const
+TileStack* InventorySlotView::content() const
 {
     return m_inventory->at(m_slotId);
 }

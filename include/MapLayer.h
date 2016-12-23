@@ -3,12 +3,11 @@
 
 #include "../LibS/Array2.h"
 
-#include "tiles/Tile.h"
-
 #include "../LibS/Geometry.h"
 
 class World;
 class TileColumn;
+class TileStack;
 
 class MapLayer
 {
@@ -26,11 +25,11 @@ public:
     //it is up to the user to ensure m_emptyTileStack is not modified
     const TileColumn& at(int x, int y) const;
     TileColumn& at(int x, int y);
-    const Tile& at(int x, int y, int z) const;
-    Tile& at(int x, int y, int z);
+    const TileStack& at(int x, int y, int z) const;
+    TileStack& at(int x, int y, int z);
 
-    void placeTile(Tile* tile, int x, int y);
-    Tile* takeTile(int x, int y);
+    void placeTile(TileStack* tile, int x, int y);
+    TileStack* takeTile(int x, int y);
     void deleteTile(int x, int y);
 
 

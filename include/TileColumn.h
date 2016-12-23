@@ -5,7 +5,7 @@
 
 #include "../LibS/Geometry.h"
 
-class Tile;
+class TileStack;
 
 class TileColumn
 {
@@ -13,26 +13,27 @@ public:
     TileColumn();
     ~TileColumn();
 
-    const Tile& top() const;
-    Tile& top();
+    const TileStack& top() const;
+    TileStack& top();
 
-    void push(Tile* tile);
+    void push(TileStack* tile);
 
-    Tile* releaseTop();
+    TileStack* releaseTop();
 
     void deleteTop();
     void deleteAt(size_t z);
 
-    int insert(Tile* tile, int count = -1); //returns number of inserted elements. -1 count means that it will insert all
-    int insert(Tile* tile, size_t slotId, int count = -1); //same as above
+    //TODO: remove, this should be handled internally by TileStack
+    int insert(TileStack* tile, int count = -1); //returns number of inserted elements. -1 count means that it will insert all
+    int insert(TileStack* tile, size_t slotId, int count = -1); //same as above
 
-    int erase(Tile* tile, int count = -1); //same as above
-    int erase(Tile* tile, size_t slotId, int count = -1); //same as above
+    int erase(TileStack* tile, int count = -1); //same as above
+    int erase(TileStack* tile, size_t slotId, int count = -1); //same as above
 
     bool isValid(int z) const;
-    //it is up to the user to ensure m_emptyTile is not modyfied
-    const Tile& at(int z) const;
-    Tile& at(int z);
+    //it is up to the user to ensure m_emptyTile is not modified
+    const TileStack& at(int z) const;
+    TileStack& at(int z);
     int size() const;
 
     bool isTall() const;
@@ -40,15 +41,15 @@ public:
     bool hasCollider() const;
     const ls::Rectangle2F& collider() const;
 
-    const std::vector<Tile*>& tiles() const;
+    const std::vector<TileStack*>& tiles() const;
 
     int topZ() const;
 
 protected:
-    std::vector<Tile*> m_tiles;
+    std::vector<TileStack*> m_tiles;
     int m_lastTile;
 
-    static Tile m_emptyTile;
+    static TileStack m_emptyTile;
 private:
     static const ls::Rectangle2F m_defaultCollider;
 };
