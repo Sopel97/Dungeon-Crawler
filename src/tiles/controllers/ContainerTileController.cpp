@@ -8,8 +8,8 @@
 #include "tiles/Tile.h"
 #include "tiles/models/TileModel.h"
 
-ContainerTileController::ContainerTileController(Tile* owner) :
-    TileController(owner)
+ContainerTileController::ContainerTileController() :
+    TileController()
 {
 
 }
@@ -29,8 +29,4 @@ void ContainerTileController::onTileUsedByPlayer(const TileLocation& location)
 std::unique_ptr<TileController> ContainerTileController::clone() const
 {
     return std::make_unique<ContainerTileController>(*this);
-}
-std::unique_ptr<TileController> ContainerTileController::create(Tile* owner) const
-{
-    return std::make_unique<ContainerTileController>(owner);
 }

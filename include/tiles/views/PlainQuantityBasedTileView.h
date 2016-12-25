@@ -11,6 +11,8 @@
 
 #include "../LibS/Geometry.h"
 
+#include "../../ComponentCommonData.h"
+
 #include <vector>
 
 namespace sf
@@ -26,7 +28,7 @@ class TileLocation;
 class PlainQuantityBasedTileView : public TileView
 {
 public:
-    PlainQuantityBasedTileView(Tile* owner);
+    PlainQuantityBasedTileView();
     PlainQuantityBasedTileView(const PlainQuantityBasedTileView& other);
     virtual ~PlainQuantityBasedTileView();
 
@@ -39,13 +41,15 @@ public:
     virtual bool coversOuterBorders() const;
     virtual int outerBorderPriority() const;
 
-    virtual void onTilePlaced(const TileLocation& location);
     virtual void onTileQuantityChanged(int oldQuantity, int newQuantity);
+    virtual void onTileInstantiated();
+
+    virtual std::unique_ptr<ComponentCommonData> createCommonDataStorage() const;
+    virtual void setCommonDataStorage(ComponentCommonData& commonData);
 
     virtual std::unique_ptr<TileView> clone() const;
-    virtual std::unique_ptr<TileView> create(Tile* owner) const;
 protected:
-    struct CommonData
+    struct CommonData : public ComponentCommonData
     {
         ResourceHandle<sf::Texture> texture;
         QuantityBasedSpriteSet spriteSet;
@@ -53,7 +57,7 @@ protected:
         int outerBorderPriority;
         bool coversOuterBorders;
     };
-    std::shared_ptr<CommonData> m_commonData;
+    CommonData* m_commonData;
     ls::Vec2I m_sprite;
 };
 

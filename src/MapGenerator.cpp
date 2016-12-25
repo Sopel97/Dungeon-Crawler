@@ -1,6 +1,7 @@
 #include "MapGenerator.h"
 
 #include "tiles/Tile.h"
+#include "tiles/TilePrefab.h"
 #include "tiles/TileStack.h"
 #include "tiles/views/TileView.h"
 
@@ -387,11 +388,11 @@ void MapGenerator::prepareHelperMaps()
 }
 void MapGenerator::generate(MapLayer& map)
 {
-    ResourceHandle<Tile> floorTile = ResourceManager::instance().get<Tile>("Dirt");
-    ResourceHandle<Tile> floorTile2 = ResourceManager::instance().get<Tile>("Black marble floor");
-    ResourceHandle<Tile> wallTile = ResourceManager::instance().get<Tile>("Stone wall");
-    ResourceHandle<Tile> bagTile = ResourceManager::instance().get<Tile>("Bag");
-    ResourceHandle<Tile> backpackTile = ResourceManager::instance().get<Tile>("Backpack");
+    ResourceHandle<TilePrefab> floorTile = ResourceManager::instance().get<TilePrefab>("Dirt");
+    ResourceHandle<TilePrefab> floorTile2 = ResourceManager::instance().get<TilePrefab>("Black marble floor");
+    ResourceHandle<TilePrefab> wallTile = ResourceManager::instance().get<TilePrefab>("Stone wall");
+    ResourceHandle<TilePrefab> bagTile = ResourceManager::instance().get<TilePrefab>("Bag");
+    ResourceHandle<TilePrefab> backpackTile = ResourceManager::instance().get<TilePrefab>("Backpack");
 
     prepareHelperMaps();
 
@@ -402,17 +403,17 @@ void MapGenerator::generate(MapLayer& map)
             auto& floorTileToPlace = m_topologyMap.at(x, y) == TopologyMap::TopologyState::Wall || rand() / (float)RAND_MAX < 0.4f ? floorTile : floorTile2;
             //auto& floorTileToPlace = floorTile;
 
-            map.placeTile(new TileStack(floorTileToPlace.get().clone(), 1), x, y);
+            map.placeTile(new TileStack(floorTileToPlace.get().instantiate(), 1), x, y);
 
             if(m_topologyMap.at(x, y) == TopologyMap::TopologyState::Wall)
             {
-                map.placeTile(new TileStack(wallTile.get().clone(), 1), x, y);
+                map.placeTile(new TileStack(wallTile.get().instantiate(), 1), x, y);
             }
             else
             {
                 float r = rand() / (float)RAND_MAX;
-                if(r < 0.05f) map.placeTile(new TileStack(bagTile.get().clone(), 1), x, y);
-                else if(r < 0.10f) map.placeTile(new TileStack(backpackTile.get().clone(), 1), x, y);
+                if(r < 0.05f) map.placeTile(new TileStack(bagTile.get().instantiate(), 1), x, y);
+                else if(r < 0.10f) map.placeTile(new TileStack(backpackTile.get().instantiate(), 1), x, y);
             }
         }
     }

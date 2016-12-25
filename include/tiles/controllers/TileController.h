@@ -3,6 +3,8 @@
 
 #include "Configuration.h"
 
+#include "../../ComponentCommonData.h"
+
 #include <memory>
 
 class Tile;
@@ -12,7 +14,7 @@ class Player;
 class TileController //must not be abstract (ie. all methods return resonable values and there is not pure virtual member functions)
 {
 public:
-    TileController(Tile* owner);
+    TileController();
     TileController(const TileController& other);
     virtual ~TileController();
 
@@ -24,9 +26,12 @@ public:
     virtual void onTileRemoved(const TileLocation& location);
     virtual void onTileQuantityChanged(int oldQuantity, int newQuantity);
     virtual void onTileUsedByPlayer(const TileLocation& location);
+    virtual void onTileInstantiated();
+
+    virtual std::unique_ptr<ComponentCommonData> createCommonDataStorage() const;
+    virtual void setCommonDataStorage(ComponentCommonData& commonData);
 
     virtual std::unique_ptr<TileController> clone() const;
-    virtual std::unique_ptr<TileController> create(Tile* owner) const;
 protected:
     Tile* m_owner;
 };

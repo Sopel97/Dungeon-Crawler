@@ -1,7 +1,7 @@
 #include "tiles/controllers/TileController.h"
 
-TileController::TileController(Tile* owner) :
-    m_owner(owner)
+TileController::TileController() :
+    m_owner(nullptr)
 {
 
 }
@@ -41,13 +41,21 @@ void TileController::onTileUsedByPlayer(const TileLocation& location)
 {
 
 }
+void TileController::onTileInstantiated()
+{
+
+}
+
+std::unique_ptr<ComponentCommonData> TileController::createCommonDataStorage() const
+{
+    return nullptr;
+}
+void TileController::setCommonDataStorage(ComponentCommonData& commonData)
+{
+
+}
 
 std::unique_ptr<TileController> TileController::clone() const
 {
     return std::make_unique<TileController>(*this);
-}
-
-std::unique_ptr<TileController> TileController::create(Tile* owner) const
-{
-    return std::make_unique<TileController>(owner);
 }

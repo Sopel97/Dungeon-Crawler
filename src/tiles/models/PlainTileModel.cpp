@@ -2,9 +2,9 @@
 
 using namespace ls;
 
-PlainTileModel::PlainTileModel(Tile* owner) :
-    TileModel(owner),
-    m_commonData(std::make_shared<CommonData>())
+PlainTileModel::PlainTileModel() :
+    TileModel(),
+    m_commonData(nullptr)
 {
 
 }
@@ -51,6 +51,15 @@ float PlainTileModel::drag() const
 {
     return  m_commonData->drag;
 }
+std::unique_ptr<ComponentCommonData> PlainTileModel::createCommonDataStorage() const
+{
+    return std::make_unique<CommonData>();
+}
+
+void PlainTileModel::setCommonDataStorage(ComponentCommonData& commonData)
+{
+    m_commonData = static_cast<CommonData*>(&commonData);
+}
 
 
 std::unique_ptr<TileModel> PlainTileModel::clone() const
@@ -58,7 +67,3 @@ std::unique_ptr<TileModel> PlainTileModel::clone() const
     return std::make_unique<PlainTileModel>(*this);
 }
 
-std::unique_ptr<TileModel> PlainTileModel::create(Tile* owner) const
-{
-    return std::make_unique<PlainTileModel>(owner);
-}

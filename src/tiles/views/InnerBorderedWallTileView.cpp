@@ -15,9 +15,9 @@
 
 using namespace ls;
 
-InnerBorderedWallTileView::InnerBorderedWallTileView(Tile* owner) :
-    TileView(owner),
-    m_commonData(std::make_shared<CommonData>())
+InnerBorderedWallTileView::InnerBorderedWallTileView() :
+    TileView(),
+    m_commonData(nullptr)
 
 {
 
@@ -198,12 +198,16 @@ bool InnerBorderedWallTileView::isTall() const
     return true;
 }
 
+std::unique_ptr<ComponentCommonData> InnerBorderedWallTileView::createCommonDataStorage() const
+{
+    return std::make_unique<CommonData>();
+}
 
+void InnerBorderedWallTileView::setCommonDataStorage(ComponentCommonData& commonData)
+{
+    m_commonData = static_cast<CommonData*>(&commonData);
+}
 std::unique_ptr<TileView> InnerBorderedWallTileView::clone() const
 {
     return std::make_unique<InnerBorderedWallTileView>(*this);
-}
-std::unique_ptr<TileView> InnerBorderedWallTileView::create(Tile* owner) const
-{
-    return std::make_unique<InnerBorderedWallTileView>(owner);
 }

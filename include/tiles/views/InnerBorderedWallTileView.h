@@ -10,6 +10,8 @@
 
 #include "../LibS/Geometry.h"
 
+#include "../../ComponentCommonData.h"
+
 namespace sf
 {
     class RenderTarget;
@@ -23,7 +25,7 @@ class TileLocation;
 class InnerBorderedWallTileView : public TileView
 {
 public:
-    InnerBorderedWallTileView(Tile* owner);
+    InnerBorderedWallTileView();
     InnerBorderedWallTileView(const InnerBorderedWallTileView& other);
     virtual ~InnerBorderedWallTileView();
 
@@ -37,10 +39,12 @@ public:
 
     virtual bool isTall() const;
 
+    virtual std::unique_ptr<ComponentCommonData> createCommonDataStorage() const;
+    virtual void setCommonDataStorage(ComponentCommonData& commonData);
+
     virtual std::unique_ptr<TileView> clone() const;
-    virtual std::unique_ptr<TileView> create(Tile* owner) const;
 protected:
-    struct CommonData
+    struct CommonData : public ComponentCommonData
     {
         ResourceHandle<sf::Texture> texture;
 
@@ -64,7 +68,7 @@ protected:
 
         int innerBorderGroup;
     };
-    std::shared_ptr<CommonData> m_commonData;
+    CommonData* m_commonData;
 };
 
 REGISTER_TILE_VIEW_TYPE(InnerBorderedWallTileView)

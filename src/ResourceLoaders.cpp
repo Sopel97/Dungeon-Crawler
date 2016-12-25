@@ -11,7 +11,7 @@ std::pair<std::string, std::unique_ptr<sf::Texture>> ResourceLoader<sf::Texture>
     return std::make_pair(path, std::move(texture));
 }
 
-std::pair<std::string, std::unique_ptr<Tile>> ResourceLoader<Tile>::load(const std::string& path)
+std::pair<std::string, std::unique_ptr<TilePrefab>> ResourceLoader<TilePrefab>::load(const std::string& path)
 {
     Configuration config = Configuration(path);
     ConfigurationNode tileConfig = config["tile"];
@@ -25,7 +25,7 @@ std::pair<std::string, std::unique_ptr<Tile>> ResourceLoader<Tile>::load(const s
     std::string modelName = tileConfig["model"].get<std::string>();
     try
     {
-        model = tileModels().at(modelName)->create(nullptr);
+        model = tileModels().at(modelName)->clone();
     }
     catch(std::out_of_range&)
     {
@@ -35,7 +35,7 @@ std::pair<std::string, std::unique_ptr<Tile>> ResourceLoader<Tile>::load(const s
     std::string viewName = tileConfig["view"].get<std::string>();
     try
     {
-        view = tileViews().at(viewName)->create(nullptr);
+        view = tileViews().at(viewName)->clone();
     }
     catch(std::out_of_range&)
     {
@@ -45,14 +45,14 @@ std::pair<std::string, std::unique_ptr<Tile>> ResourceLoader<Tile>::load(const s
     std::string controllerName = tileConfig["controller"].get<std::string>();
     try
     {
-        controller = tileControllers().at(controllerName)->create(nullptr);
+        controller = tileControllers().at(controllerName)->clone();
     }
     catch(std::out_of_range&)
     {
         throw std::runtime_error("No tile controller with name " + controllerName);
     }
 
-    std::unique_ptr<Tile> tile = std::make_unique<Tile>
+    std::unique_ptr<TilePrefab> tile = std::make_unique<TilePrefab>
         (
             std::move(model),
             std::move(view),

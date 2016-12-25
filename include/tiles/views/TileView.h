@@ -3,6 +3,8 @@
 
 #include "Configuration.h"
 
+#include "../../ComponentCommonData.h"
+
 #include <memory>
 
 namespace sf
@@ -17,7 +19,7 @@ class TileLocation;
 class TileView //must be functions (ie. all methods must return resonable values and there is no pure virtual member functions)
 {
 public:
-    TileView(Tile* owner);
+    TileView();
     TileView(const TileView& other);
     virtual ~TileView();
 
@@ -38,9 +40,12 @@ public:
     virtual void onTilePlaced(const TileLocation& location);
     virtual void onTileRemoved(const TileLocation& location);
     virtual void onTileQuantityChanged(int oldQuantity, int newQuantity);
+    virtual void onTileInstantiated();
+
+    virtual std::unique_ptr<ComponentCommonData> createCommonDataStorage() const;
+    virtual void setCommonDataStorage(ComponentCommonData& commonData);
 
     virtual std::unique_ptr<TileView> clone() const;
-    virtual std::unique_ptr<TileView> create(Tile* owner) const;
 protected:
     Tile* m_owner;
 };

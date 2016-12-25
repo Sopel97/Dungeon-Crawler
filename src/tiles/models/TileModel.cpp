@@ -3,9 +3,8 @@
 using namespace ls;
 
 const Rectangle2F TileModel::m_emptyCollider(Vec2F(0.0f, 0.0f), Vec2F(32.0f, 32.0f));
-
-TileModel::TileModel(Tile* owner) :
-    m_owner(owner)
+TileModel::TileModel() :
+    m_owner(nullptr)
 {
 
 }
@@ -64,13 +63,21 @@ void TileModel::onTileQuantityChanged(int oldQuantity, int newQuantity)
 {
 
 }
+void TileModel::onTileInstantiated()
+{
+
+}
+
+std::unique_ptr<ComponentCommonData> TileModel::createCommonDataStorage() const
+{
+    return nullptr;
+}
+void TileModel::setCommonDataStorage(ComponentCommonData& commonData)
+{
+
+}
 
 std::unique_ptr<TileModel> TileModel::clone() const
 {
     return std::make_unique<TileModel>(*this);
-}
-
-std::unique_ptr<TileModel> TileModel::create(Tile* owner) const
-{
-    return std::make_unique<TileModel>(owner);
 }

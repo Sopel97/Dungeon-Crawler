@@ -1,7 +1,7 @@
 #include "tiles/views/TileView.h"
 
-TileView::TileView(Tile* owner) :
-    m_owner(owner)
+TileView::TileView() :
+    m_owner(nullptr)
 {
 
 }
@@ -69,12 +69,21 @@ void TileView::onTileQuantityChanged(int oldQuantity, int newQuantity)
 {
 
 }
+void TileView::onTileInstantiated()
+{
+
+}
+
+std::unique_ptr<ComponentCommonData> TileView::createCommonDataStorage() const
+{
+    return nullptr;
+}
+void TileView::setCommonDataStorage(ComponentCommonData& commonData)
+{
+
+}
 
 std::unique_ptr<TileView> TileView::clone() const
 {
     return std::make_unique<TileView>(*this);
-}
-std::unique_ptr<TileView> TileView::create(Tile* owner) const
-{
-    return std::make_unique<TileView>(owner);
 }

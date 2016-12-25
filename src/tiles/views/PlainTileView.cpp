@@ -9,13 +9,15 @@
 
 #include <algorithm>
 
+#include <memory>
+
 #include "GameConstants.h"
 
 using namespace ls;
 
-PlainTileView::PlainTileView(Tile* owner) :
-    TileView(owner),
-    m_commonData(std::make_shared<CommonData>()),
+PlainTileView::PlainTileView() :
+    TileView(),
+    m_commonData(nullptr),
     m_sprite(0, 0)
 {
 }
@@ -42,8 +44,6 @@ void PlainTileView::loadFromConfiguration(ConfigurationNode& config)
 
     bool defaultForBorderCovering = m_commonData->outerBorderPriority == -1 ? true : false;
     m_commonData->coversOuterBorders = config["coversOuterBorders"].getDefault<bool>(defaultForBorderCovering);
-
-    m_sprite = m_commonData->spriteSet.defaultSprite();
 }
 
 void PlainTileView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const
@@ -68,16 +68,22 @@ int PlainTileView::outerBorderPriority() const
     return m_commonData->outerBorderPriority;
 }
 
-void PlainTileView::onTilePlaced(const TileLocation& location)
+void PlainTileView::onTileInstantiated()
 {
     m_sprite = m_commonData->spriteSet.chooseRandomSprite();
+}
+
+
+std::unique_ptr<ComponentCommonData> PlainTileView::createCommonDataStorage() const
+{
+    return std::make_unique<CommonData>();
+}
+void PlainTileView::setCommonDataStorage(ComponentCommonData& commonData)
+{
+    m_commonData = static_cast<CommonData*>(&commonData);
 }
 
 std::unique_ptr<TileView> PlainTileView::clone() const
 {
     return std::make_unique<PlainTileView>(*this);
-}
-std::unique_ptr<TileView> PlainTileView::create(Tile* owner) const
-{
-    return std::make_unique<PlainTileView>(owner);
 }

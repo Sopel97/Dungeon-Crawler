@@ -111,9 +111,9 @@ void Root::loadAssets()
     }
     ResourceManager::instance().load<sf::Texture>("assets\\gfx\\ui_non_repeating.png", "UiNonRepeating");
 
-    for(const auto& tile : scanForFiles("assets\\tiles\\", "*.tile"))
+    for(const auto& tilePath : scanForFiles("assets\\tiles\\", "*.tile"))
     {
-        ResourceManager::instance().load<Tile>(tile);
+        ResourceManager::instance().load<TilePrefab>(tilePath);
     }
 
     ResourceManager::instance().load<sf::Font>("assets\\fonts\\standard_font.ttf", "Font");

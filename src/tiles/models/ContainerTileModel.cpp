@@ -2,10 +2,10 @@
 
 using namespace ls;
 
-ContainerTileModel::ContainerTileModel(Tile* owner) :
-    TileModel(owner),
-    m_commonData(std::make_shared<CommonData>()),
-    m_inventory(0)
+ContainerTileModel::ContainerTileModel() :
+    TileModel(),
+    m_commonData(nullptr),
+    m_inventory(1)
 {
 
 }
@@ -60,14 +60,18 @@ float ContainerTileModel::drag() const
 {
     return  m_commonData->drag;
 }
+std::unique_ptr<ComponentCommonData> ContainerTileModel::createCommonDataStorage() const
+{
+    return std::make_unique<CommonData>();
+}
+
+void ContainerTileModel::setCommonDataStorage(ComponentCommonData& commonData)
+{
+    m_commonData = static_cast<CommonData*>(&commonData);
+}
 
 
 std::unique_ptr<TileModel> ContainerTileModel::clone() const
 {
     return std::make_unique<ContainerTileModel>(*this);
-}
-
-std::unique_ptr<TileModel> ContainerTileModel::create(Tile* owner) const
-{
-    return std::make_unique<ContainerTileModel>(owner);
 }

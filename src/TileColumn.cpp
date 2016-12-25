@@ -11,7 +11,7 @@ using namespace ls;
 
 const Rectangle2F TileColumn::m_defaultCollider(Vec2F(0.0f, 0.0f), Vec2F(32.0f, 32.0f));
 
-TileStack TileColumn::m_emptyTile(std::make_unique<Tile>(std::make_unique<TileModel>(nullptr), std::make_unique<TileView>(nullptr), std::make_unique<TileController>(nullptr)), 1);
+TileStack TileColumn::m_emptyTile(std::make_unique<Tile>(-1, std::make_unique<TileModel>(), std::make_unique<TileView>(), std::make_unique<TileController>()), 1);
 
 TileColumn::TileColumn() :
     m_lastTile(-1)

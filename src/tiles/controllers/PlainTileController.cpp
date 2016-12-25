@@ -2,8 +2,8 @@
 
 #include "tiles/Tile.h"
 
-PlainTileController::PlainTileController(Tile* owner) :
-    TileController(owner)
+PlainTileController::PlainTileController() :
+    TileController()
 {
 
 }
@@ -25,8 +25,3 @@ std::unique_ptr<TileController> PlainTileController::clone() const
     return std::make_unique<PlainTileController>(*this);
 }
 
-
-std::unique_ptr<TileController> PlainTileController::create(Tile* owner) const
-{
-    return std::make_unique<PlainTileController>(owner);
-}

@@ -18,9 +18,9 @@
 
 using namespace ls;
 
-OuterBorderedTileView::OuterBorderedTileView(Tile* owner) :
-    TileView(owner),
-    m_commonData(std::make_shared<CommonData>()),
+OuterBorderedTileView::OuterBorderedTileView() :
+    TileView(),
+    m_commonData(nullptr),
     m_sprite(0, 0)
 {
 
@@ -30,7 +30,6 @@ OuterBorderedTileView::OuterBorderedTileView(const OuterBorderedTileView& other)
     m_commonData(other.m_commonData),
     m_sprite(other.m_sprite)
 {
-    m_sprite = m_commonData->spriteSet.chooseRandomSprite();
 }
 OuterBorderedTileView::~OuterBorderedTileView()
 {
@@ -45,8 +44,6 @@ void OuterBorderedTileView::loadFromConfiguration(ConfigurationNode& config)
 
     m_commonData->borderSprites = Vec2I {config["borderSprites"][1].get<int>(), config["borderSprites"][2].get<int>()};
     m_commonData->outerBorderPriority = config["outerBorderPriority"].get<int>();
-
-    m_sprite = m_commonData->spriteSet.defaultSprite();
 }
 
 void OuterBorderedTileView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const
@@ -152,16 +149,21 @@ bool OuterBorderedTileView::coversOuterBorders() const
     return false;
 }
 
-void OuterBorderedTileView::onTilePlaced(const TileLocation& location)
+void OuterBorderedTileView::onTileInstantiated()
 {
-    //previously sprite was being set here
+    m_sprite = m_commonData->spriteSet.chooseRandomSprite();
+}
+
+std::unique_ptr<ComponentCommonData> OuterBorderedTileView::createCommonDataStorage() const
+{
+    return std::make_unique<CommonData>();
+}
+void OuterBorderedTileView::setCommonDataStorage(ComponentCommonData& commonData)
+{
+    m_commonData = static_cast<CommonData*>(&commonData);
 }
 
 std::unique_ptr<TileView> OuterBorderedTileView::clone() const
 {
     return std::make_unique<OuterBorderedTileView>(*this);
-}
-std::unique_ptr<TileView> OuterBorderedTileView::create(Tile* owner) const
-{
-    return std::make_unique<OuterBorderedTileView>(owner);
 }

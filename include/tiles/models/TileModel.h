@@ -5,16 +5,18 @@
 
 #include "../LibS/Geometry.h"
 
+#include "../../ComponentCommonData.h"
+
 #include <memory>
 
 class Tile;
 class TileLocation;
 class Inventory;
 
-class TileModel //must be functions (ie. all methods return resonable values and there is no pure virtual member functions)
+class TileModel //must be functional (ie. all methods return resonable values and there is no pure virtual member functions)
 {
 public:
-    TileModel(Tile* owner);
+    TileModel();
     TileModel(const TileModel& other);
     virtual ~TileModel();
 
@@ -34,9 +36,12 @@ public:
     virtual void onTilePlaced(const TileLocation& location);
     virtual void onTileRemoved(const TileLocation& location);
     virtual void onTileQuantityChanged(int oldQuantity, int newQuantity);
+    virtual void onTileInstantiated();
+
+    virtual std::unique_ptr<ComponentCommonData> createCommonDataStorage() const;
+    virtual void setCommonDataStorage(ComponentCommonData& commonData);
 
     virtual std::unique_ptr<TileModel> clone() const;
-    virtual std::unique_ptr<TileModel> create(Tile* owner) const;
 protected:
     Tile* m_owner;
 

@@ -1,5 +1,6 @@
-1. Rewrite creation of tile prefabs. (remove 'create' function for tiles and components, make a separe function for creation of common data struct, store them in the loader, tile should store an ovserver pointer)
-
+1. consider moving maxQuantity to model
+2. Mimic tile classes for entities
+2.5. rename commondata to shareddata
 3. Do optimisation for stateless tiles ONLY when necessary. Would involve a lot of work for little gain
 3??? Optimisation for stateless Tiles. Would not be copied during cloning (tile's clone method STILL clones, user would have to handle it manually). The only instance would be in resource manager.
 3.1??? Optimisation for stateless components. Similar, but Tiles would have to handle it. Only instances would be in component registrars. Would require tiles to use raw pointers and manage components manually.

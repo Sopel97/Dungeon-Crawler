@@ -7,6 +7,8 @@
 
 #include "../LibS/Geometry.h"
 
+#include "../../ComponentCommonData.h"
+
 #include <memory>
 
 class Tile;
@@ -14,7 +16,7 @@ class Tile;
 class PlainTileModel : public TileModel
 {
 public:
-    PlainTileModel(Tile* owner);
+    PlainTileModel();
     PlainTileModel(const PlainTileModel& other);
     virtual ~PlainTileModel();
 
@@ -25,16 +27,18 @@ public:
 
     virtual float drag() const;
 
+    virtual std::unique_ptr<ComponentCommonData> createCommonDataStorage() const;
+    virtual void setCommonDataStorage(ComponentCommonData& commonData);
+
     virtual std::unique_ptr<TileModel> clone() const;
-    virtual std::unique_ptr<TileModel> create(Tile* owner) const;
 protected:
-    struct CommonData
+    struct CommonData : public ComponentCommonData
     {
         bool hasCollider;
         ls::Rectangle2F collider;
         float drag;
     };
-    std::shared_ptr<CommonData> m_commonData;
+    CommonData* m_commonData;
 };
 
 REGISTER_TILE_MODEL_TYPE(PlainTileModel)

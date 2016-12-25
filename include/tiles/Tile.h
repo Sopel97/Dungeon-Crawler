@@ -19,7 +19,7 @@ class TileLocation;
 class Tile
 {
 public:
-    Tile(std::unique_ptr<TileModel>&& model, std::unique_ptr<TileView>&& view, std::unique_ptr<TileController>&& controller);
+    Tile(int id, std::unique_ptr<TileModel>&& model, std::unique_ptr<TileView>&& view, std::unique_ptr<TileController>&& controller);
     Tile(const Tile& other);
     ~Tile();
 
@@ -41,6 +41,7 @@ public:
 
     void onTilePlaced(const TileLocation& location);
     void onTileRemoved(const TileLocation& location);
+    void onTileInstantiated();
 
     int id() const;
 
@@ -53,8 +54,6 @@ protected:
     std::unique_ptr<TileController> m_controller;
     int m_id; //NOTE: if memory is an issue these 3 can be changed to other types
     int m_maxQuantity;
-
-    static int m_lastId;
 };
 
 #endif // TILE_H

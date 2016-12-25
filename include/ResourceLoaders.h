@@ -4,6 +4,7 @@
 #include "ResourceManager.h"
 
 #include "tiles/Tile.h"
+#include "tiles/TilePrefab.h"
 #include "tiles/models/TileModel.h"
 #include "tiles/views/TileView.h"
 #include "tiles/controllers/TileController.h"
@@ -48,23 +49,23 @@ public:
 #define REGISTER_TILE_MODEL_TYPE(TYPE) \
     namespace ___TypeRegistering \
     { \
-        const ResourceLoader<Tile>::TileModelTypeRegistrar<TYPE> TYPE ## _model_var (#TYPE); \
+        const ResourceLoader<TilePrefab>::TileModelTypeRegistrar<TYPE> TYPE ## _model_var (#TYPE); \
     }
 
 #define REGISTER_TILE_VIEW_TYPE(TYPE)  \
     namespace ___TypeRegistering \
     { \
-        const ResourceLoader<Tile>::TileViewTypeRegistrar<TYPE> TYPE ## _view_var (#TYPE); \
+        const ResourceLoader<TilePrefab>::TileViewTypeRegistrar<TYPE> TYPE ## _view_var (#TYPE); \
     }
 
 #define REGISTER_TILE_CONTROLLER_TYPE(TYPE)  \
     namespace ___TypeRegistering \
     { \
-        const ResourceLoader<Tile>::TileControllerTypeRegistrar<TYPE> TYPE ## _controller_var (#TYPE); \
+        const ResourceLoader<TilePrefab>::TileControllerTypeRegistrar<TYPE> TYPE ## _controller_var (#TYPE); \
     }
 
 template <>
-class ResourceLoader<Tile>
+class ResourceLoader<TilePrefab>
 {
 public:
 
@@ -74,7 +75,7 @@ public:
         TileModelTypeRegistrar(const std::string& name)
         {
             std::cout << "Registered tile model type: " << name << '\n';
-            ResourceLoader<Tile>::tileModels().insert(std::make_pair(name, std::make_unique<T>(nullptr)));
+            ResourceLoader<TilePrefab>::tileModels().insert(std::make_pair(name, std::make_unique<T>()));
         }
     };
 
@@ -84,7 +85,7 @@ public:
         TileViewTypeRegistrar(const std::string& name)
         {
             std::cout << "Registered tile view type: " << name << '\n';
-            ResourceLoader<Tile>::tileViews().insert(std::make_pair(name, std::make_unique<T>(nullptr)));
+            ResourceLoader<TilePrefab>::tileViews().insert(std::make_pair(name, std::make_unique<T>()));
         }
     };
 
@@ -94,11 +95,11 @@ public:
         TileControllerTypeRegistrar(const std::string& name)
         {
             std::cout << "Registered tile controller type: " << name << '\n';
-            ResourceLoader<Tile>::tileControllers().insert(std::make_pair(name, std::make_unique<T>(nullptr)));
+            ResourceLoader<TilePrefab>::tileControllers().insert(std::make_pair(name, std::make_unique<T>()));
         }
     };
 
-    static std::pair<std::string, std::unique_ptr<Tile>> load(const std::string& path); //should return nullptr when resource was not loaded
+    static std::pair<std::string, std::unique_ptr<TilePrefab>> load(const std::string& path); //should return nullptr when resource was not loaded
 protected:
 
     static std::map<std::string, std::unique_ptr<TileModel>>& tileModels() //to ensure that they are created during registation process. (When they are static members they get defined too late)

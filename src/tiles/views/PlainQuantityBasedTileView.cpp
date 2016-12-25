@@ -15,9 +15,9 @@
 
 using namespace ls;
 
-PlainQuantityBasedTileView::PlainQuantityBasedTileView(Tile* owner) :
-    TileView(owner),
-    m_commonData(std::make_shared<CommonData>()),
+PlainQuantityBasedTileView::PlainQuantityBasedTileView() :
+    TileView(),
+    m_commonData(nullptr),
     m_sprite(0, 0)
 {
 }
@@ -26,7 +26,6 @@ PlainQuantityBasedTileView::PlainQuantityBasedTileView(const PlainQuantityBasedT
     m_commonData(other.m_commonData),
     m_sprite(other.m_sprite)
 {
-    m_sprite = m_commonData->spriteSet.getSprite(1);
 }
 PlainQuantityBasedTileView::~PlainQuantityBasedTileView()
 {
@@ -45,8 +44,6 @@ void PlainQuantityBasedTileView::loadFromConfiguration(ConfigurationNode& config
 
     bool defaultForBorderCovering = m_commonData->outerBorderPriority == -1 ? true : false;
     m_commonData->coversOuterBorders = config["coversOuterBorders"].getDefault<bool>(defaultForBorderCovering);
-
-    m_sprite = m_commonData->spriteSet.defaultSprite();
 }
 
 void PlainQuantityBasedTileView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const
@@ -71,20 +68,25 @@ int PlainQuantityBasedTileView::outerBorderPriority() const
     return m_commonData->outerBorderPriority;
 }
 
-void PlainQuantityBasedTileView::onTilePlaced(const TileLocation& location)
+void PlainQuantityBasedTileView::onTileInstantiated()
 {
-    //previously sprite was being set here
+    m_sprite = m_commonData->spriteSet.getSprite(1);
 }
 void PlainQuantityBasedTileView::onTileQuantityChanged(int oldQuantity, int newQuantity)
 {
     m_sprite = m_commonData->spriteSet.getSprite(newQuantity);
 }
 
+std::unique_ptr<ComponentCommonData> PlainQuantityBasedTileView::createCommonDataStorage() const
+{
+    return std::make_unique<CommonData>();
+}
+void PlainQuantityBasedTileView::setCommonDataStorage(ComponentCommonData& commonData)
+{
+    m_commonData = static_cast<CommonData*>(&commonData);
+}
+
 std::unique_ptr<TileView> PlainQuantityBasedTileView::clone() const
 {
     return std::make_unique<PlainQuantityBasedTileView>(*this);
-}
-std::unique_ptr<TileView> PlainQuantityBasedTileView::create(Tile* owner) const
-{
-    return std::make_unique<PlainQuantityBasedTileView>(owner);
 }

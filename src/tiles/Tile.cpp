@@ -9,13 +9,11 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 
-int Tile::m_lastId = -1;
-
-Tile::Tile(std::unique_ptr<TileModel>&& model, std::unique_ptr<TileView>&& view, std::unique_ptr<TileController>&& controller) :
+Tile::Tile(int id, std::unique_ptr<TileModel>&& model, std::unique_ptr<TileView>&& view, std::unique_ptr<TileController>&& controller) :
     m_model(std::move(model)),
     m_view(std::move(view)),
     m_controller(std::move(controller)),
-    m_id(++m_lastId),
+    m_id(id),
     m_maxQuantity(1)
 {
     m_model->setOwner(this);
@@ -90,7 +88,6 @@ int Tile::maxQuantity() const
 {
     return m_maxQuantity;
 }
-
 void Tile::onTilePlaced(const TileLocation& location)
 {
     m_model->onTilePlaced(location);
@@ -103,6 +100,13 @@ void Tile::onTileRemoved(const TileLocation& location)
     m_view->onTileRemoved(location);
     m_controller->onTileRemoved(location);
 }
+void Tile::onTileInstantiated()
+{
+    m_model->onTileInstantiated();
+    m_view->onTileInstantiated();
+    m_controller->onTileInstantiated();
+}
+
 
 int Tile::id() const
 {
@@ -111,7 +115,11 @@ int Tile::id() const
 
 std::unique_ptr<Tile> Tile::clone() const
 {
-    return std::make_unique<Tile>(*this);
+    std::unique_ptr<Tile> tileClone = std::make_unique<Tile>(*this);
+
+    tileClone->onTileInstantiated();
+
+    return tileClone;
 }
 
 void Tile::onTileQuantityChanged(int oldQuantity, int newQuantity)
