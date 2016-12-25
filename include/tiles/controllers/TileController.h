@@ -18,8 +18,6 @@ public:
 
     virtual void loadFromConfiguration(ConfigurationNode& config);
 
-    const Tile* owner() const;
-
     void setOwner(Tile* newOwner);
 
     virtual void onTilePlaced(const TileLocation& location);

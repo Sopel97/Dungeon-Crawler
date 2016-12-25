@@ -22,8 +22,6 @@ public:
 
     virtual bool equals(const TileModel& other) const; //NOTE: it is guaranteed that the type of other is the same as the type of *this
 
-    const Tile* owner() const;
-
     void setOwner(Tile* newOwner);
 
     virtual bool hasCollider() const;

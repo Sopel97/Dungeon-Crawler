@@ -29,11 +29,6 @@ void TileView::loadFromConfiguration(ConfigurationNode& config)
 
 }
 
-const Tile* TileView::owner() const
-{
-    return m_owner;
-}
-
 void TileView::setOwner(Tile* newOwner)
 {
     m_owner = newOwner;

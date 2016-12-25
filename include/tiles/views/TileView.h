@@ -26,8 +26,6 @@ public:
     virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const;
     virtual void drawOutside(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const;
 
-    const Tile* owner() const;
-
     void setOwner(Tile* newOwner);
 
     virtual int innerBorderGroup() const;

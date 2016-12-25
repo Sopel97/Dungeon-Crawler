@@ -20,11 +20,6 @@ void TileController::loadFromConfiguration(ConfigurationNode& config)
 
 }
 
-const Tile* TileController::owner() const
-{
-    return m_owner;
-}
-
 void TileController::setOwner(Tile* newOwner)
 {
     m_owner = newOwner;

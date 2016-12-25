@@ -1,12 +1,13 @@
+1. Rewrite creation of tile prefabs. (remove 'create' function for tiles and components, make a separe function for creation of common data struct, store them in the loader, tile should store an ovserver pointer)
 
+3. Do optimisation for stateless tiles ONLY when necessary. Would involve a lot of work for little gain
 3??? Optimisation for stateless Tiles. Would not be copied during cloning (tile's clone method STILL clones, user would have to handle it manually). The only instance would be in resource manager.
 3.1??? Optimisation for stateless components. Similar, but Tiles would have to handle it. Only instances would be in component registrars. Would require tiles to use raw pointers and manage components manually.
 3.2 USE DynamicPtr from LibS - factory would return an owning or nonowning pointer depending on statefullness
+
 5. Decouple WindowSpaceManager with sf::Window (As done in carcassone). Make it automatic instead of unique_ptr
-6. Update LibS
 7. Clear world generation code
 9. in entity manager pass world by reference
-10. Store components in registrars with unique_ptr instead of shared_ptr
 11. Do proper logging.
 12. Clean some files - make more classes (for example scanForFiles from Root should not be there)
 13. Clean member ordering and use automatic objects wherever possible.
@@ -17,6 +18,7 @@
 18. Look around for names that can be made more meaningful because the project evolved and some names should mean different things than earlier
 19. Make camera like the one in Carcassone. Move there everything involving camera (for example conversion between coordinates)
 20. Direction class similar to one in Carcassone
+
 
 21. WINDOW SYSTEM
     - WindowSpaceManager allows for dynamic creation (registration) of regions and scenes (by subdividing vertically or horizontally (like a tree)), classes that are part of the background regions derive from a special class that makes it possible to callback sfml events
@@ -32,3 +34,5 @@
     - AnimatedSprite class that holds instances of Sprite (x, y, width, height, later also spritesheet id if needed) and table of frame time sums (for binary search)
     - returns a sprite when given time
     - all sprites in game are to be represented with this class
+
+23. Convert from pixel units to tile units. (1 tile is 32 pixels)

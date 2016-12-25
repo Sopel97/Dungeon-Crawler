@@ -5,6 +5,7 @@
 #include <vector>
 #include <typeindex>
 #include <stdexcept>
+#include <memory>
 
 template <class T>
 class ResourceLoader
@@ -55,9 +56,9 @@ protected:
     {
     public:
         static ResourceType* get(const std::string& name);
-        static void add(const std::string& name, ResourceType* resource);
+        static void add(const std::string& name, std::unique_ptr<ResourceType> resource);
     private:
-        static std::map<std::string, ResourceType*>& resources();
+        static std::map<std::string, std::unique_ptr<ResourceType>>& resources();
     };
 };
 
@@ -120,12 +121,12 @@ ResourceType* ResourceManager::SpecificResources<ResourceType>::get(const std::s
 {
     auto iter = resources().find(name);
     if(iter == resources().end()) return nullptr;
-    else return iter->second;
+    else return iter->second.get();
 }
 template <class ResourceType>
-void ResourceManager::SpecificResources<ResourceType>::add(const std::string& name, ResourceType* resource)
+void ResourceManager::SpecificResources<ResourceType>::add(const std::string& name, std::unique_ptr<ResourceType> resource)
 {
-    resources().insert(std::make_pair(name, resource));
+    resources().insert(std::make_pair(name, std::move(resource)));
 }
 
 template <class T>
@@ -139,25 +140,27 @@ ResourceHandle<T> ResourceManager::get(const std::string& name)
 template <class T>
 ResourceHandle<T> ResourceManager::load(const std::string& path, const std::string& name)
 {
-    std::pair<std::string, T*> resource = ResourceLoader<T>::load(path);
-    if(resource.second == nullptr) throw std::runtime_error(std::string("Could not load resource from path ") + path);
-    SpecificResources<T>::add(name, resource.second);
-    return ResourceHandle<T>(resource.second);
+    std::pair<std::string, std::unique_ptr<T>> resource = ResourceLoader<T>::load(path);
+    T* ptr = resource.second.get();
+    if(ptr == nullptr) throw std::runtime_error(std::string("Could not load resource from path ") + path);
+    SpecificResources<T>::add(name, std::move(resource.second));
+    return ResourceHandle<T>(ptr);
 }
 
 template <class T>
 ResourceHandle<T> ResourceManager::load(const std::string& path)
 {
-    std::pair<std::string, T*> resource = ResourceLoader<T>::load(path);
-    if(resource.second == nullptr) throw std::runtime_error(std::string("Could not load resource from path ") + path);
-    SpecificResources<T>::add(resource.first, resource.second);
-    return ResourceHandle<T>(resource.second);
+    std::pair<std::string, std::unique_ptr<T>> resource = ResourceLoader<T>::load(path);
+    T* ptr = resource.second.get();
+    if(ptr == nullptr) throw std::runtime_error(std::string("Could not load resource from path ") + path);
+    SpecificResources<T>::add(resource.first, std::move(resource.second));
+    return ResourceHandle<T>(ptr);
 }
 
 template <class ResourceType>
-std::map<std::string, ResourceType*>& ResourceManager::SpecificResources<ResourceType>::resources()
+std::map<std::string, std::unique_ptr<ResourceType>>& ResourceManager::SpecificResources<ResourceType>::resources()
 {
-    static std::map<std::string, ResourceType*> res;
+    static std::map<std::string, std::unique_ptr<ResourceType>> res;
     return res;
 }
 

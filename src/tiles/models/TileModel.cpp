@@ -28,11 +28,6 @@ bool TileModel::equals(const TileModel& other) const
     return true;
 }
 
-const Tile* TileModel::owner() const
-{
-    return m_owner;
-}
-
 void TileModel::setOwner(Tile* newOwner)
 {
     m_owner = newOwner;

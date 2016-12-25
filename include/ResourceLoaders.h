@@ -42,7 +42,7 @@ template <>
 class ResourceLoader<sf::Texture>
 {
 public:
-    static std::pair<std::string, sf::Texture*> load(const std::string& path); //should return nullptr when resource was not loaded
+    static std::pair<std::string, std::unique_ptr<sf::Texture>> load(const std::string& path); //should return nullptr when resource was not loaded
 };
 
 #define REGISTER_TILE_MODEL_TYPE(TYPE) \
@@ -74,7 +74,7 @@ public:
         TileModelTypeRegistrar(const std::string& name)
         {
             std::cout << "Registered tile model type: " << name << '\n';
-            ResourceLoader<Tile>::tileModels().insert(std::make_pair(name, std::make_shared<T>(nullptr)));
+            ResourceLoader<Tile>::tileModels().insert(std::make_pair(name, std::make_unique<T>(nullptr)));
         }
     };
 
@@ -84,7 +84,7 @@ public:
         TileViewTypeRegistrar(const std::string& name)
         {
             std::cout << "Registered tile view type: " << name << '\n';
-            ResourceLoader<Tile>::tileViews().insert(std::make_pair(name, std::make_shared<T>(nullptr)));
+            ResourceLoader<Tile>::tileViews().insert(std::make_pair(name, std::make_unique<T>(nullptr)));
         }
     };
 
@@ -94,26 +94,26 @@ public:
         TileControllerTypeRegistrar(const std::string& name)
         {
             std::cout << "Registered tile controller type: " << name << '\n';
-            ResourceLoader<Tile>::tileControllers().insert(std::make_pair(name, std::make_shared<T>(nullptr)));
+            ResourceLoader<Tile>::tileControllers().insert(std::make_pair(name, std::make_unique<T>(nullptr)));
         }
     };
 
-    static std::pair<std::string, Tile*> load(const std::string& path); //should return nullptr when resource was not loaded
+    static std::pair<std::string, std::unique_ptr<Tile>> load(const std::string& path); //should return nullptr when resource was not loaded
 protected:
 
-    static std::map<std::string, std::shared_ptr<TileModel>>& tileModels() //to ensure that they are created during registation process. (When they are static members they get defined too late)
+    static std::map<std::string, std::unique_ptr<TileModel>>& tileModels() //to ensure that they are created during registation process. (When they are static members they get defined too late)
     {
-        static std::map<std::string, std::shared_ptr<TileModel>> _tileModels;
+        static std::map<std::string, std::unique_ptr<TileModel>> _tileModels;
         return _tileModels;
     }
-    static std::map<std::string, std::shared_ptr<TileView>>& tileViews()
+    static std::map<std::string, std::unique_ptr<TileView>>& tileViews()
     {
-        static std::map<std::string, std::shared_ptr<TileView>> _tileViews;
+        static std::map<std::string, std::unique_ptr<TileView>> _tileViews;
         return _tileViews;
     }
-    static std::map<std::string, std::shared_ptr<TileController>>& tileControllers()
+    static std::map<std::string, std::unique_ptr<TileController>>& tileControllers()
     {
-        static std::map<std::string, std::shared_ptr<TileController>> _tileControllers;
+        static std::map<std::string, std::unique_ptr<TileController>> _tileControllers;
         return _tileControllers;
     }
 
@@ -150,7 +150,7 @@ public:
         EntityModelTypeRegistrar(const std::string& name)
         {
             std::cout << "Registered entity model type: " << name << '\n';
-            ResourceLoader<Entity>::entityModels().insert(std::make_pair(name, std::make_shared<T>(nullptr)));
+            ResourceLoader<Entity>::entityModels().insert(std::make_pair(name, std::make_unique<T>(nullptr)));
         }
     };
 
@@ -160,7 +160,7 @@ public:
         EntityViewTypeRegistrar(const std::string& name)
         {
             std::cout << "Registered entity view type: " << name << '\n';
-            ResourceLoader<Entity>::entityViews().insert(std::make_pair(name, std::make_shared<T>(nullptr)));
+            ResourceLoader<Entity>::entityViews().insert(std::make_pair(name, std::make_unique<T>(nullptr)));
         }
     };
 
@@ -170,27 +170,27 @@ public:
         EntityControllerTypeRegistrar(const std::string& name)
         {
             std::cout << "Registered entity controller type: " << name << '\n';
-            ResourceLoader<Entity>::entityControllers().insert(std::make_pair(name, std::make_shared<T>(nullptr)));
+            ResourceLoader<Entity>::entityControllers().insert(std::make_pair(name, std::make_unique<T>(nullptr)));
         }
     };
 
-    static std::pair<std::string, Entity*> load(const std::string& path); //should return nullptr when resource was not loaded
+    static std::pair<std::string, std::unique_ptr<Entity>> load(const std::string& path); //should return nullptr when resource was not loaded
 
 protected:
 
-    static std::map<std::string, std::shared_ptr<EntityModel>>& entityModels() //to ensure that they are created during registation process. (When they are static members they get defined too late)
+    static std::map<std::string, std::unique_ptr<EntityModel>>& entityModels() //to ensure that they are created during registation process. (When they are static members they get defined too late)
     {
-        static std::map<std::string, std::shared_ptr<EntityModel>> _entityModels;
+        static std::map<std::string, std::unique_ptr<EntityModel>> _entityModels;
         return _entityModels;
     }
-    static std::map<std::string, std::shared_ptr<EntityView>>& entityViews()
+    static std::map<std::string, std::unique_ptr<EntityView>>& entityViews()
     {
-        static std::map<std::string, std::shared_ptr<EntityView>> _entityViews;
+        static std::map<std::string, std::unique_ptr<EntityView>> _entityViews;
         return _entityViews;
     }
-    static std::map<std::string, std::shared_ptr<EntityController>>& entityControllers()
+    static std::map<std::string, std::unique_ptr<EntityController>>& entityControllers()
     {
-        static std::map<std::string, std::shared_ptr<EntityController>> _entityControllers;
+        static std::map<std::string, std::unique_ptr<EntityController>> _entityControllers;
         return _entityControllers;
     }
 };
@@ -199,7 +199,7 @@ template <>
 class ResourceLoader<sf::Font>
 {
 public:
-    static std::pair<std::string, sf::Font*> load(const std::string& path); //should return nullptr when resource was not loaded
+    static std::pair<std::string, std::unique_ptr<sf::Font>> load(const std::string& path); //should return nullptr when resource was not loaded
 };
 
 
