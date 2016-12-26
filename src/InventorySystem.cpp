@@ -1,17 +1,18 @@
 #include "InventorySystem.h"
 
-#include "events/AttemptToInteractWithExternalInventory.h"
 #include "PlayerEquipmentInventory.h"
+
+#include "Player.h"
+#include "TileLocation.h"
 
 #include <algorithm>
 
-InventorySystem::InventorySystem(PlayerUi& playerUi) :
-    m_playerUi(playerUi),
+InventorySystem::InventorySystem(Player& player) :
+    m_player(player),
+    m_playerUi(player.playerUi()),
     m_equipmentInventory()
 {
     tryOpenInternalInventory(&m_equipmentInventory, nullptr);
-
-    EventDispatcher::instance().subscribe<AttemptToInteractWithExternalInventory>(std::bind(&InventorySystem::onAttemptToInteractWithExternalInventory, this, std::placeholders::_1));
 }
 
 bool InventorySystem::tryOpenExternalInventory(Inventory* inventory, int x, int y)
@@ -86,11 +87,19 @@ void InventorySystem::updatePositionsOfOpenedInventories()
     }
 }
 
-void InventorySystem::onAttemptToInteractWithExternalInventory(const AttemptToInteractWithExternalInventory& event)
+bool InventorySystem::tryInteractWithExternalInventory(Inventory* inventory, const TileLocation& location)
 {
-    if(isInventoryOpened(event.inventory())) closeInventory(event.inventory());
-    else tryOpenExternalInventory(event.inventory(), event.x(), event.y());
+    if (isInventoryOpened(inventory))
+    {
+        closeInventory(inventory);
+        return true;
+    }
+    else
+    {
+        return tryOpenExternalInventory(inventory, location.x, location.y);
+    }
 }
+
 InventorySystem::TrackedInventory* InventorySystem::findTrackedInventory(Inventory* inventory)
 {
     auto iter = std::find(m_trackedInventories.begin(), m_trackedInventories.end(), inventory);

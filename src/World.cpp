@@ -1,6 +1,7 @@
 #include "World.h"
 
 #include "Root.h"
+#include "Game.h"
 
 #include "tiles/Tile.h"
 #include "tiles/TileStack.h"
@@ -220,7 +221,7 @@ ls::Vec2I World::screenToTile(const ls::Vec2I& screenPosition) const
 void World::useTile(const ls::Vec2I& tilePosition)
 {
     TileColumn& tileColumn = m_mapLayer->at(tilePosition.x, tilePosition.y);
-    tileColumn.top().tile()->controller().onTileUsedByPlayer(TileLocation(*m_mapLayer, tilePosition.x, tilePosition.y, tileColumn.topZ()));
+    tileColumn.top().tile()->controller().onTileInteracted(m_root.game().player(), TileLocation(*m_mapLayer, tilePosition.x, tilePosition.y, tileColumn.topZ()));
 }
 
 void World::update(float dt)

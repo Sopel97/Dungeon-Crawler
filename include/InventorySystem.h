@@ -8,6 +8,7 @@
 
 class Inventory;
 class AttemptToInteractWithExternalInventory;
+class TileLocation;
 
 class InventorySystem
 {
@@ -76,7 +77,7 @@ public:
         }
     };
 
-    InventorySystem(PlayerUi& playerUi);
+    InventorySystem(Player& player);
 
     bool tryOpenExternalInventory(Inventory* inventory, int x, int y);
     bool tryOpenInternalInventory(Inventory* inventory, TrackedInventory* parentInventory);
@@ -90,12 +91,13 @@ public:
 
     void updatePositionsOfOpenedInventories();
 
-    void onAttemptToInteractWithExternalInventory(const AttemptToInteractWithExternalInventory& event);
+    bool tryInteractWithExternalInventory(Inventory* inventory, const TileLocation& location);
 
     PlayerEquipmentInventory& equipmentInventory();
     const std::list<TrackedInventory*>& openedInventories() const;
 
 protected:
+    Player& m_player;
     PlayerUi& m_playerUi;
 
     PlayerEquipmentInventory m_equipmentInventory;

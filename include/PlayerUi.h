@@ -47,7 +47,7 @@ public:
         virtual void draw(PlayerUi& playerUi, sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) = 0;
     };
 
-    PlayerUi(Game& game, Player& player);
+    PlayerUi(Player& player);
     ~PlayerUi();
 
     void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
@@ -95,7 +95,6 @@ protected:
     static const ls::Vec2I m_windowScrollBarDownButtonSpritePosition;
     static const ls::Vec2I m_windowScrollBarSliderSpritePosition;
 
-    Game& m_game;
     Player& m_player;
 
     std::vector<Window*> m_ownedWindows;

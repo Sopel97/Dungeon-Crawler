@@ -33,18 +33,15 @@ public:
     void onMouseMoved(sf::Event::MouseMoveEvent& event);
 
     Player& player();
-    PlayerUi& playerUi();
+
     World& world();
-    InventorySystem& inventorySystem();
 
 protected:
     Root& m_root;
 
     Player m_player;
-    PlayerUi m_playerUi;
     World m_world;
 
-    InventorySystem m_inventorySystem;
 };
 
 #endif // GAME_H

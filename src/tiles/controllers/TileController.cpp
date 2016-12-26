@@ -37,7 +37,7 @@ void TileController::onTileQuantityChanged(int oldQuantity, int newQuantity)
 {
 
 }
-void TileController::onTileUsedByPlayer(const TileLocation& location)
+void TileController::onTileInteracted(Player& player, const TileLocation& location)
 {
 
 }

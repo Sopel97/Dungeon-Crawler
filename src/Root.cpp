@@ -152,6 +152,10 @@ const sf::Font& Root::defaultFont() const
 {
     return m_defaultFont.get();
 }
+Game& Root::game()
+{
+    return *m_game;
+}
 
 std::mt19937& Root::rng()
 {

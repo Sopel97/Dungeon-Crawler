@@ -14,9 +14,7 @@ using namespace ls;
 Game::Game(Root& root) :
     m_root(root),
     m_player(*this),
-    m_playerUi(*this, m_player),
-    m_world(root, m_player),
-    m_inventorySystem(m_playerUi)
+    m_world(root, m_player)
 {
 
 }
@@ -25,17 +23,9 @@ Player& Game::player()
 {
     return m_player;
 }
-PlayerUi& Game::playerUi()
-{
-    return m_playerUi;
-}
 World& Game::world()
 {
     return m_world;
-}
-InventorySystem& Game::inventorySystem()
-{
-    return m_inventorySystem;
 }
 
 void Game::tick(float dt)
@@ -56,7 +46,7 @@ void Game::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
 
     m_world.draw(renderTarget, renderStates);
 
-    m_playerUi.draw(renderTarget, renderStates);
+    m_player.playerUi().draw(renderTarget, renderStates);
 
     windowSpaceManager.setDefaultView();
     sf::Text fpsText(sf::String(std::to_string(m_root.lastMeasuredFps())), m_root.defaultFont(), 20);

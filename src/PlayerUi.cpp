@@ -3,7 +3,6 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 
-#include "Game.h"
 #include "Player.h"
 #include "Root.h"
 #include "WindowSpaceManager.h"
@@ -44,8 +43,7 @@ const Vec2I PlayerUi::m_windowScrollBarUpButtonSpritePosition = {0, 57};
 const Vec2I PlayerUi::m_windowScrollBarDownButtonSpritePosition = {12, 57};
 const Vec2I PlayerUi::m_windowScrollBarSliderSpritePosition = {24, 57};
 
-PlayerUi::PlayerUi(Game& game, Player& player) :
-    m_game(game),
+PlayerUi::PlayerUi(Player& player) :
     m_player(player)
 {
 

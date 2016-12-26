@@ -41,6 +41,7 @@ public:
     sf::RenderWindow& window();
     int lastMeasuredFps() const;
     const sf::Font& defaultFont() const;
+    Game& game();
 
     std::mt19937& rng();
 

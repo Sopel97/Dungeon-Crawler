@@ -1,12 +1,13 @@
 #include "tiles/controllers/ContainerTileController.h"
 
-#include "events/AttemptToInteractWithExternalInventory.h"
 #include "EventDispatcher.h"
 
 #include "TileLocation.h"
 
 #include "tiles/Tile.h"
 #include "tiles/models/TileModel.h"
+
+#include "Player.h"
 
 ContainerTileController::ContainerTileController() :
     TileController()
@@ -21,9 +22,9 @@ ContainerTileController::~ContainerTileController()
 {
 }
 
-void ContainerTileController::onTileUsedByPlayer(const TileLocation& location)
+void ContainerTileController::onTileInteracted(Player& player, const TileLocation& location)
 {
-    EventDispatcher::instance().broadcast<AttemptToInteractWithExternalInventory>(m_owner->model().inventory(), location.x, location.y);
+    player.tryInteractWithExternalInventory(m_owner->model().inventory(), location);
 }
 
 std::unique_ptr<TileController> ContainerTileController::clone() const
