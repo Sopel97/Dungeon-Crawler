@@ -71,3 +71,11 @@ void TallTileColumnDrawable::draw(sf::RenderTarget& renderTarget, sf::RenderStat
         m_tileColumn.at(i).tile()->draw(renderTarget, renderStates, TileLocation(m_map, m_tileX, m_tileY, i));
     }
 }
+void TallTileColumnDrawable::drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
+{
+    int tileStackSize = m_tileColumn.size();
+    for (int i = m_indexOfFirstTallTile; i < tileStackSize; ++i)
+    {
+        m_tileColumn.at(i).tile()->drawMeta(renderTarget, renderStates, TileLocation(m_map, m_tileX, m_tileY, i));
+    }
+}

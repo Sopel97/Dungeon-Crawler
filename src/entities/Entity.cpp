@@ -49,6 +49,10 @@ void Entity::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates
 {
     m_view->draw(renderTarget, renderStates);
 }
+void Entity::drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) const
+{
+    m_view->drawMeta(renderTarget, renderStates);
+}
 
 const EntityModel& Entity::model() const
 {

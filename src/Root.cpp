@@ -110,6 +110,7 @@ void Root::loadAssets()
         texture->setRepeated(true);
     }
     ResourceManager::instance().load<sf::Texture>("assets\\gfx\\ui_non_repeating.png", "UiNonRepeating");
+    ResourceManager::instance().load<sf::Texture>("assets\\gfx\\light_disc.png", "LightDisc");
 
     for(const auto& tilePath : scanForFiles("assets\\tiles\\", "*.tile"))
     {

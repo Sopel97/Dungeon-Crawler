@@ -25,6 +25,7 @@ public:
     void loadFromConfiguration(ConfigurationNode& config);
 
     virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) const;
+    virtual void drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) const;
 
     const EntityModel& model() const;
     EntityModel& model();

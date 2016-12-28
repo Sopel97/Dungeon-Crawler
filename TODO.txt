@@ -1,3 +1,7 @@
+0. make draw and drawmeta without code duplication
+0.5. make meta sprites specifieable in config files
+0.6. world draw funtion got messy, clean it up
+
 1. consider moving maxQuantity to model
 2. Mimic tile classes for entities
 2.5. rename commondata to shareddata

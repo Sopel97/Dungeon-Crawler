@@ -9,6 +9,8 @@
 
 #include "EntitySystem.h"
 
+#include "ResourceManager.h"
+
 #include "../LibS/Geometry.h"
 
 #include <SFML/Graphics.hpp>
@@ -60,7 +62,12 @@ protected:
     Entity* m_playerEntity;
 
     sf::RenderTexture m_intermidiateRenderTarget;
+    sf::RenderTexture m_lightMap;
+    sf::RenderTexture m_metaTexture;
     sf::Shader m_prettyStretchShader;
+    sf::Shader m_lightShader;
+
+    ResourceHandle<sf::Texture> m_lightTexture;
 
     static constexpr int m_viewWidth = 15;
     static constexpr int m_viewHeight = 15;

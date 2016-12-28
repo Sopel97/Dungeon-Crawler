@@ -38,3 +38,7 @@ void TallEntityDrawable::draw(sf::RenderTarget& renderTarget, sf::RenderStates& 
 {
     m_entity->view().draw(renderTarget, renderStates);
 }
+void TallEntityDrawable::drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
+{
+    m_entity->view().drawMeta(renderTarget, renderStates);
+}

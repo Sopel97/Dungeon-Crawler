@@ -53,6 +53,10 @@ void Tile::drawOutside(sf::RenderTarget& renderTarget, sf::RenderStates& renderS
 {
     m_view->drawOutside(renderTarget, renderStates, location);
 }
+void Tile::drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const
+{
+    m_view->drawMeta(renderTarget, renderStates, location);
+}
 
 const TileModel& Tile::model() const
 {

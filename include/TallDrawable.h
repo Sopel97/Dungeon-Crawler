@@ -25,6 +25,7 @@ public:
     virtual const ls::Vec2F& center() const = 0;
 
     virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) = 0;
+    virtual void drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) = 0;
 
     virtual DrawableType type() const = 0;
 

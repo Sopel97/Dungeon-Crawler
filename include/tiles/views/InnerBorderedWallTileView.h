@@ -32,6 +32,7 @@ public:
     virtual void loadFromConfiguration(ConfigurationNode& config);
 
     virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const;
+    virtual void drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const;
 
     const sf::Texture& texture() const;
     const ls::Vec2I& spriteSet() const;

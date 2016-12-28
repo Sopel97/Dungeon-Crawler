@@ -24,6 +24,10 @@ void EntityView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderSt
 {
 
 }
+void EntityView::drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) const
+{
+
+}
 
 const Entity* EntityView::owner() const
 {

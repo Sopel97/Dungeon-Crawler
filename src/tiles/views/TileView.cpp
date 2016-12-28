@@ -1,5 +1,9 @@
 #include "tiles/views/TileView.h"
 
+#include "SFML/Graphics.hpp"
+#include "TileLocation.h"
+#include "GameConstants.h"
+
 TileView::TileView() :
     m_owner(nullptr)
 {
@@ -22,6 +26,13 @@ void TileView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStat
 void TileView::drawOutside(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const
 {
 
+}
+void TileView::drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const
+{
+    sf::RectangleShape spr;
+    spr.setPosition(sf::Vector2f(static_cast<float>(location.x) * GameConstants::tileSize, static_cast<float>(location.y) * GameConstants::tileSize));
+    spr.setFillColor(sf::Color::Black);
+    renderTarget.draw(spr, renderStates);
 }
 
 void TileView::loadFromConfiguration(ConfigurationNode& config)

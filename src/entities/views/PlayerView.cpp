@@ -64,6 +64,37 @@ void PlayerView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderSt
     renderTarget.draw(spr, renderStates);
 }
 
+void PlayerView::drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) const
+{
+    const Vec2I spriteOffset = Vec2I(-25, -26);
+    const Vec2I offset(-44, 204);
+    constexpr float steppingSpeedThreshold = 16.0f;
+
+    const auto& model = m_owner->model();
+    const int direction = model.directionOfMove();
+    const float speed = model.velocity().magnitude();
+    int steppingSpriteVariant = 0;
+
+    if (speed > steppingSpeedThreshold)
+    {
+        constexpr float distanceTravelledPerStep = 16.0f;
+        constexpr int numberOfSteppingSprites = 2;
+        const float distanceTravelled = model.distanceTravelled();
+
+        steppingSpriteVariant = static_cast<int>(distanceTravelled / distanceTravelledPerStep) % numberOfSteppingSprites + 1;
+    }
+
+    Vec2F position = m_owner->model().position();
+    position.x = std::floor(position.x);
+    position.y = std::floor(position.y);
+    const Vec2I spriteSize(GameConstants::tileSize, GameConstants::tileSize);
+    sf::Sprite spr;
+    spr.setPosition(sf::Vector2f(position.x + spriteOffset.x, position.y + spriteOffset.y));
+    spr.setTexture(texture());
+    spr.setTextureRect(sf::IntRect(sf::Vector2i(m_sprites.x + offset.x + steppingSpriteVariant * GameConstants::tileFullSpriteSize, m_sprites.y + offset.y + direction * GameConstants::tileFullSpriteSize), sf::Vector2i(spriteSize.x, spriteSize.y)));
+    renderTarget.draw(spr, renderStates);
+}
+
 const sf::Texture& PlayerView::texture() const
 {
     return m_texture.get();

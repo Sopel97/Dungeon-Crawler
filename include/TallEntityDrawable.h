@@ -24,6 +24,7 @@ public:
     virtual TallDrawable::DrawableType type() const;
 
     virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
+    virtual void drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
 
 protected:
     Entity* m_entity;

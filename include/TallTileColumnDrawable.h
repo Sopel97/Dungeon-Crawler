@@ -25,6 +25,7 @@ public:
     int tileY() const;
 
     virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
+    virtual void drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
 
 protected:
     const TileColumn& m_tileColumn;
