@@ -11,11 +11,8 @@
 
 #include "../LibS/Geometry.h"
 
-namespace sf
-{
-    class RenderTarget;
-    class RenderStates;
-}
+#include <SFML/Graphics.hpp>
+
 class Root;
 class MapLayer;
 class TileLocation;
@@ -61,6 +58,9 @@ protected:
     Camera m_camera;
     MapGenerator m_mapGenerator;
     Entity* m_playerEntity;
+
+    sf::RenderTexture m_intermidiateRenderTarget;
+    sf::Shader m_prettyStretchShader;
 
     static constexpr int m_viewWidth = 15;
     static constexpr int m_viewHeight = 15;

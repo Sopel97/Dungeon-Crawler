@@ -53,7 +53,9 @@ void PlayerView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderSt
         steppingSpriteVariant = static_cast<int>(distanceTravelled / distanceTravelledPerStep) % numberOfSteppingSprites + 1;
     }
 
-    const Vec2F position = m_owner->model().position();
+    Vec2F position = m_owner->model().position();
+    position.x = std::floor(position.x);
+    position.y = std::floor(position.y);
     const Vec2I spriteSize(GameConstants::tileSize, GameConstants::tileSize);
     sf::Sprite spr;
     spr.setPosition(sf::Vector2f(position.x + spriteOffset.x, position.y + spriteOffset.y));

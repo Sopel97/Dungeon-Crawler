@@ -25,7 +25,6 @@
 #include "TallEntityDrawable.h"
 #include "TallTileColumnDrawable.h"
 
-#include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 
 #include "../LibS/Util.h"
@@ -40,11 +39,18 @@ World::World(Root& root, Player& player) :
     m_height(m_worldHeight),
     m_mapLayer(std::make_unique<MapLayer>(*this, m_width, m_height)),
     m_camera(Vec2F(m_width * GameConstants::tileSize / 2.0f, m_height * GameConstants::tileSize / 2.0f), m_viewWidth * GameConstants::tileSize, m_viewHeight * GameConstants::tileSize),
-    m_mapGenerator(m_width, m_height)
+    m_mapGenerator(m_width, m_height),
+    m_intermidiateRenderTarget()
 {
     m_mapGenerator.generate(*m_mapLayer);
     m_playerEntity = player.createPlayerEntity();
     m_entitySystem.addEntity(m_playerEntity, m_camera.center()); 
+
+    m_intermidiateRenderTarget.create(m_viewWidth * GameConstants::tileSize, m_viewHeight * GameConstants::tileSize);
+    
+    //TODO: maybe as a resource
+    m_prettyStretchShader.loadFromFile("assets/shaders/pretty_stretch.vert", "assets/shaders/pretty_stretch.frag");
+    m_prettyStretchShader.setParameter("sourceTextureSize", sf::Vector2f(m_intermidiateRenderTarget.getSize().x, m_intermidiateRenderTarget.getSize().y));
 }
 World::~World()
 {
@@ -53,9 +59,16 @@ World::~World()
 
 void World::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
 {
-    m_root.windowSpaceManager().setViewToRegion(WindowSpaceManager::Region::World, m_camera.viewRectangle());
+    m_root.windowSpaceManager().setViewToRegion(WindowSpaceManager::Region::World, Rectangle2F::withSize(Vec2F(0, 0), m_intermidiateRenderTarget.getSize().x, m_intermidiateRenderTarget.getSize().y));
 
     const Rectangle2F cameraRect = m_camera.viewRectangle();
+
+    const auto& cameraCenter = cameraRect.centerOfMass();
+    sf::View intermidiateView = m_intermidiateRenderTarget.getDefaultView();
+    intermidiateView.setCenter(cameraCenter.x, cameraCenter.y);
+    intermidiateView.setSize(cameraRect.width(), cameraRect.height());
+    m_intermidiateRenderTarget.setView(intermidiateView);
+
     const Vec2F& cameraTopLeft     = cameraRect.min;
     const Vec2F& cameraBottomRight = cameraRect.max;
     int firstTileX = std::max(Util::fastFloor(cameraTopLeft.x / GameConstants::tileSize), 0);
@@ -85,18 +98,18 @@ void World::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
                 {
                     if(tileStack->tile()->view().coversOuterBorders())
                     {
-                        drawOuterBorder(renderTarget, renderStates, location);
-                        tileStack->tile()->draw(renderTarget, renderStates, location);
+                        drawOuterBorder(m_intermidiateRenderTarget, renderStates, location);
+                        tileStack->tile()->draw(m_intermidiateRenderTarget, renderStates, location);
                     }
                     else
                     {
-                        tileStack->tile()->draw(renderTarget, renderStates, location);
-                        drawOuterBorder(renderTarget, renderStates, location);
+                        tileStack->tile()->draw(m_intermidiateRenderTarget, renderStates, location);
+                        drawOuterBorder(m_intermidiateRenderTarget, renderStates, location);
                     }
                 }
                 else
                 {
-                    tileStack->tile()->draw(renderTarget, renderStates, location);
+                    tileStack->tile()->draw(m_intermidiateRenderTarget, renderStates, location);
                 }
 
                 ++z;
@@ -115,13 +128,24 @@ void World::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
 
     for(auto& tallDrawable : tallDrawables)
     {
-        tallDrawable->draw(renderTarget, renderStates);
+        tallDrawable->draw(m_intermidiateRenderTarget, renderStates);
     }
 
     for(auto& tallDrawable : tallDrawables)
     {
         delete tallDrawable;
     }
+
+    m_intermidiateRenderTarget.display();
+    sf::Sprite intermidiateFinal(m_intermidiateRenderTarget.getTexture());
+    sf::RenderStates intermidiateRenderStates = renderStates;
+    intermidiateRenderStates.shader = &m_prettyStretchShader;
+    m_prettyStretchShader.setParameter("worldOffset", sf::Vector2f(cameraRect.min.x, cameraRect.min.y));
+    const auto& viewRect = m_root.windowSpaceManager().regionRect(WindowSpaceManager::Region::World);
+    m_prettyStretchShader.setParameter("viewOffset", sf::Vector2f(viewRect.min.x, viewRect.min.y)); //NOTE: probably should be windowheight - miny
+    m_prettyStretchShader.setParameter("destinationTextureSize", sf::Vector2f(viewRect.width(), viewRect.height()));
+
+    renderTarget.draw(intermidiateFinal, intermidiateRenderStates);
 }
 
 void World::drawOuterBorder(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& tileLocation)

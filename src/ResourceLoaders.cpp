@@ -5,7 +5,6 @@ std::pair<std::string, std::unique_ptr<sf::Texture>> ResourceLoader<sf::Texture>
     std::unique_ptr<sf::Texture> texture = std::make_unique<sf::Texture>();
     if(!texture->loadFromFile(path))
     {
-        texture->setSmooth(true); //not sure
         return std::make_pair(path, nullptr);
     }
     return std::make_pair(path, std::move(texture));

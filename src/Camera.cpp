@@ -51,5 +51,6 @@ float Camera::height() const
 Rectangle2F Camera::viewRectangle() const
 {
     Vec2F halfSize = Vec2F(m_width, m_height) / 2.0f;
-    return Rectangle2F(m_center - halfSize, m_center + halfSize);
+    Vec2F center(std::floor(m_center.x), std::floor(m_center.y));
+    return Rectangle2F(center - halfSize, center + halfSize);
 }

@@ -6,6 +6,8 @@
 3.1??? Optimisation for stateless components. Similar, but Tiles would have to handle it. Only instances would be in component registrars. Would require tiles to use raw pointers and manage components manually.
 3.2 USE DynamicPtr from LibS - factory would return an owning or nonowning pointer depending on statefullness
 
+4. Try making world rendering into a texture and then stretch it onto the window with a custom shader that makes 'stretch lines' depending on world coords, not window coords
+
 5. Decouple WindowSpaceManager with sf::Window (As done in carcassone). Make it automatic instead of unique_ptr
 7. Clear world generation code
 9. in entity manager pass world by reference
@@ -37,3 +39,7 @@
     - all sprites in game are to be represented with this class
 
 23. Convert from pixel units to tile units. (1 tile is 32 pixels)
+
+30. do simple lighting similar to tibia, because fast lighting with a lot of sources is required. raycasting would give cool effects but is too slow for this project
+
+later it could be expanded to produce lightmap fast with the described method and then second pass for player's line of sight using raycasting
