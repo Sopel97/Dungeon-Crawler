@@ -19,6 +19,7 @@ class Root;
 class MapLayer;
 class TileLocation;
 class Player;
+class TallDrawable;
 
 class World
 {
@@ -73,6 +74,16 @@ protected:
     static constexpr int m_viewHeight = 15;
     static constexpr int m_worldWidth = 128;
     static constexpr int m_worldHeight = 128;
+
+protected:
+    void prepareIntermidiateRenderTarget();
+    void prepareLightMap();
+    void prepareMetaTexture();
+    void updateShaderUniforms();
+    void drawMeta(sf::RenderStates& renderStates, const std::vector<TallDrawable*>& tallDrawables);
+    void drawIntermidiate(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
+    void drawLightMap(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
+    void drawLightsToLightMap();
 };
 
 #endif // WORLD_H

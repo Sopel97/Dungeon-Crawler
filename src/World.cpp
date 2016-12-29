@@ -71,20 +71,13 @@ World::~World()
 void World::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
 {
     m_root.windowSpaceManager().setViewToRegion(WindowSpaceManager::Region::World, Rectangle2F::withSize(Vec2F(0, 0), m_intermidiateRenderTarget.getSize().x, m_intermidiateRenderTarget.getSize().y));
+    
+    prepareIntermidiateRenderTarget();
+    prepareLightMap();
+    prepareMetaTexture();
+    updateShaderUniforms();
 
     const Rectangle2F cameraRect = m_camera.viewRectangle();
-
-    const auto& cameraCenter = cameraRect.centerOfMass();
-    sf::View intermidiateView = m_intermidiateRenderTarget.getDefaultView();
-    intermidiateView.setCenter(cameraCenter.x, cameraCenter.y);
-    intermidiateView.setSize(cameraRect.width(), cameraRect.height());
-    m_intermidiateRenderTarget.setView(intermidiateView);
-
-    sf::View lightMapView = m_lightMap.getDefaultView();
-    lightMapView.setCenter(cameraCenter.x, cameraCenter.y);
-    lightMapView.setSize(cameraRect.width() + 2*GameConstants::tileSize, cameraRect.height() + 2*GameConstants::tileSize);
-    m_lightMap.setView(lightMapView);
-    m_metaTexture.setView(lightMapView);
 
     const Vec2F& cameraTopLeft     = cameraRect.min;
     const Vec2F& cameraBottomRight = cameraRect.max;
@@ -94,8 +87,6 @@ void World::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
     int lastTileY = std::min(Util::fastFloor(cameraBottomRight.y / GameConstants::tileSize) + 1, m_height - 1);
 
     std::vector<TallDrawable*> tallDrawables;
-
-    m_metaTexture.clear(sf::Color::Black);
 
     //x,y are inverted here because we want to draw top down
     for(int y = firstTileY; y <= lastTileY; ++y)
@@ -149,28 +140,98 @@ void World::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
     {
         tallDrawable->draw(m_intermidiateRenderTarget, renderStates);
     }
+    m_intermidiateRenderTarget.display();
 
-    for (auto& tallDrawable : tallDrawables)
-    {
-        tallDrawable->drawMeta(m_metaTexture, renderStates);
-    }
+    drawMeta(renderStates, tallDrawables);
+    drawLightsToLightMap();
 
     for(auto& tallDrawable : tallDrawables)
     {
         delete tallDrawable;
     }
 
-    m_intermidiateRenderTarget.display();
-    sf::Sprite intermidiateFinal(m_intermidiateRenderTarget.getTexture());
-    sf::RenderStates intermidiateRenderStates = renderStates;
-    intermidiateRenderStates.shader = &m_prettyStretchShader;
+    drawIntermidiate(renderTarget, renderStates);
+    drawLightMap(renderTarget, renderStates);
+}
+
+void World::prepareIntermidiateRenderTarget()
+{
+    const Rectangle2F cameraRect = m_camera.viewRectangle();
+
+    const auto& cameraCenter = cameraRect.centerOfMass();
+    sf::View intermidiateView = m_intermidiateRenderTarget.getDefaultView();
+    intermidiateView.setCenter(cameraCenter.x, cameraCenter.y);
+    intermidiateView.setSize(cameraRect.width(), cameraRect.height());
+    m_intermidiateRenderTarget.setView(intermidiateView);
+}
+void World::prepareLightMap()
+{
+    const Rectangle2F cameraRect = m_camera.viewRectangle();
+    const Vec2F cameraCenter = cameraRect.centerOfMass();
+
+    sf::View lightMapView = m_lightMap.getDefaultView();
+    lightMapView.setCenter(cameraCenter.x, cameraCenter.y);
+    lightMapView.setSize(cameraRect.width() + 2 * GameConstants::tileSize, cameraRect.height() + 2 * GameConstants::tileSize);
+    m_lightMap.setView(lightMapView);
+
+    m_lightMap.clear(sf::Color::Transparent);
+}
+void World::prepareMetaTexture()
+{
+    const Rectangle2F cameraRect = m_camera.viewRectangle();
+    const Vec2F cameraCenter = cameraRect.centerOfMass();
+
+    sf::View metaTextureView = m_lightMap.getDefaultView();
+    metaTextureView.setCenter(cameraCenter.x, cameraCenter.y);
+    metaTextureView.setSize(cameraRect.width() + 2 * GameConstants::tileSize, cameraRect.height() + 2 * GameConstants::tileSize);
+    m_metaTexture.setView(metaTextureView);
+
+    m_metaTexture.clear(sf::Color::Black);
+}
+void World::updateShaderUniforms()
+{
+    const Rectangle2F cameraRect = m_camera.viewRectangle();
+
     m_prettyStretchShader.setParameter("worldOffset", sf::Vector2f(cameraRect.min.x, cameraRect.min.y));
     const auto& viewRect = m_root.windowSpaceManager().regionRect(WindowSpaceManager::Region::World);
     m_prettyStretchShader.setParameter("viewOffset", sf::Vector2f(viewRect.min.x, viewRect.min.y)); //NOTE: probably should be windowheight - miny
     m_prettyStretchShader.setParameter("destinationTextureSize", sf::Vector2f(viewRect.width(), viewRect.height()));
+}
+void World::drawMeta(sf::RenderStates& renderStates, const std::vector<TallDrawable*>& tallDrawables)
+{
+    for (auto& tallDrawable : tallDrawables)
+    {
+        tallDrawable->drawMeta(m_metaTexture, renderStates);
+    }
 
-    m_lightMap.clear(sf::Color::Transparent);
+    m_metaTexture.display();
+}
+void World::drawIntermidiate(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
+{
+    sf::Sprite intermidiateFinal(m_intermidiateRenderTarget.getTexture());
+    sf::RenderStates intermidiateRenderStates = renderStates;
+    intermidiateRenderStates.shader = &m_prettyStretchShader;
 
+    renderTarget.draw(intermidiateFinal, intermidiateRenderStates);
+}
+void World::drawLightMap(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
+{
+    const Rectangle2F cameraRect = m_camera.viewRectangle();
+
+    sf::RectangleShape lightMapSprite;
+    lightMapSprite.setTexture(&(m_lightMap.getTexture()));
+    lightMapSprite.setSize(sf::Vector2f(cameraRect.width(), cameraRect.height()));
+    lightMapSprite.setPosition(sf::Vector2f(0.0f, 0.0f));
+    lightMapSprite.setTextureRect(sf::IntRect(GameConstants::tileSize, GameConstants::tileSize, cameraRect.width(), cameraRect.height()));
+
+    sf::RenderStates lightMapRenderStates = renderStates;
+    lightMapRenderStates.shader = &m_lightShader;
+
+    renderTarget.draw(lightMapSprite, lightMapRenderStates);
+}
+
+void World::drawLightsToLightMap()
+{
     float lightScale = 0.7f;
     sf::Vector2u textureSize = m_lightTexture.get().getSize();
     Vec2F center = m_playerEntity->model().position();
@@ -185,17 +246,7 @@ void World::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
 
     m_lightMap.draw(playerLight);
 
-    sf::RectangleShape lightMapSprite;
-    lightMapSprite.setTexture(&(m_lightMap.getTexture()));
-    lightMapSprite.setSize(sf::Vector2f(cameraRect.width(), cameraRect.height()));
-    lightMapSprite.setPosition(sf::Vector2f(0.0f, 0.0f));
-    lightMapSprite.setTextureRect(sf::IntRect(GameConstants::tileSize, GameConstants::tileSize, cameraRect.width(), cameraRect.height()));
-
-    sf::RenderStates lightMapRenderStates = renderStates;
-    lightMapRenderStates.shader = &m_lightShader;
-
-    renderTarget.draw(intermidiateFinal, intermidiateRenderStates);
-    renderTarget.draw(lightMapSprite, lightMapRenderStates);
+    m_lightMap.display();
 }
 
 void World::drawOuterBorder(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& tileLocation)
