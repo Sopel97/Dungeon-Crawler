@@ -33,19 +33,23 @@ void WeightedSpriteSet::loadFromConfiguration(ConfigurationNode& config)
 }
 
 
-Vec2I WeightedSpriteSet::chooseRandomSprite() const
+int WeightedSpriteSet::chooseRandomSprite() const
 {
-    if(m_cumulativeWeights.size() == 0) return {0, 0};
+    if(m_cumulativeWeights.size() == 0) return 0;
 
     float sumOfWeights = m_cumulativeWeights.back();
 
     std::uniform_real_distribution<float> distr(0.0f, sumOfWeights);
     int spriteIndex = std::lower_bound(m_cumulativeWeights.begin(), m_cumulativeWeights.end(), distr(Root::instance().rng())) - m_cumulativeWeights.begin();
 
-    return m_sprites[spriteIndex];
+    return spriteIndex;
 }
 
-ls::Vec2I WeightedSpriteSet::defaultSprite() const
+int WeightedSpriteSet::defaultSprite() const
 {
-    return m_sprites[0];
+    return 0;
+}
+const ls::Vec2I& WeightedSpriteSet::at(int i) const
+{
+    return m_sprites[i];
 }

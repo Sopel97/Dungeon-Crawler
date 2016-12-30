@@ -29,10 +29,7 @@ void TileView::drawOutside(sf::RenderTarget& renderTarget, sf::RenderStates& ren
 }
 void TileView::drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const
 {
-    sf::RectangleShape spr;
-    spr.setPosition(sf::Vector2f(static_cast<float>(location.x) * GameConstants::tileSize, static_cast<float>(location.y) * GameConstants::tileSize));
-    spr.setFillColor(sf::Color::Black);
-    renderTarget.draw(spr, renderStates);
+
 }
 
 void TileView::loadFromConfiguration(ConfigurationNode& config)

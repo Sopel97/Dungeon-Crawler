@@ -35,6 +35,7 @@ public:
     virtual void loadFromConfiguration(ConfigurationNode& config);
 
     virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const;
+    virtual void drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const;
 
     const sf::Texture& texture() const;
 
@@ -53,12 +54,15 @@ protected:
     {
         ResourceHandle<sf::Texture> texture;
         QuantityBasedSpriteSet spriteSet;
+        std::vector<ls::Vec2I> respectiveMetaSprites;
 
         int outerBorderPriority;
         bool coversOuterBorders;
     };
     CommonData* m_commonData;
-    ls::Vec2I m_sprite;
+    int m_spriteId;
+
+    void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location, const ls::Vec2I& sprite) const;
 };
 
 REGISTER_TILE_VIEW_TYPE(PlainQuantityBasedTileView)

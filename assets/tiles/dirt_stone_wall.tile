@@ -7,7 +7,8 @@ tile = {
     controller = "PlainTileController",
 
     texture = "Spritesheet",
-    spriteSet = {34, 0},
+    mainSpriteSet = {34, 0},
+    metaSpriteSet = {0, 272},
 
     innerBorderGroup = 1,
 	

@@ -14,9 +14,10 @@ public:
 
     void loadFromConfiguration(ConfigurationNode& config);
 
-    ls::Vec2I chooseRandomSprite() const;
-    ls::Vec2I defaultSprite() const;
+    int chooseRandomSprite() const;
+    int defaultSprite() const;
 
+    const ls::Vec2I& at(int i) const;
 
 protected:
     std::vector<ls::Vec2I> m_sprites;

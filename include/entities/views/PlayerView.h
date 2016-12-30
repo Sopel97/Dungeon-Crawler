@@ -40,6 +40,9 @@ protected:
     Player* m_playerOwner;
     ResourceHandle<sf::Texture> m_texture;
     ls::Vec2I m_sprites;
+    ls::Vec2I m_metaSprites;
+
+    void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const ls::Vec2I& sprites) const;
 };
 
 #endif // PLAYERVIEW_H

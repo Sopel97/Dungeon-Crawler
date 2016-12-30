@@ -6,9 +6,7 @@ uniform sampler2D metaTexture;
 
 void main()
 {
-    //offset is applied to reduce artifacts from using different interpolation than in main rendering shader
-    //TODO: make sampling based on world coordinates
-    vec2 metaTexCoords = (gl_TexCoord[0].xy*lightTextureSize+vec2(-0.6, 0.6))/metaTextureSize;
+    vec2 metaTexCoords = (gl_TexCoord[0].xy*lightTextureSize)/metaTextureSize;
 
     vec2 offset = texture2D(metaTexture, metaTexCoords).rg;
 

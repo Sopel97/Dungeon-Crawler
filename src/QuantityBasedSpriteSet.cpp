@@ -31,15 +31,20 @@ void QuantityBasedSpriteSet::loadFromConfiguration(ConfigurationNode& config)
     }
 }
 
-Vec2I QuantityBasedSpriteSet::getSprite(int quantity) const
+int QuantityBasedSpriteSet::getSprite(int quantity) const
 {
     auto iter = std::lower_bound(m_thresholdQuantities.begin(), m_thresholdQuantities.end(), quantity + 1); //+1 is to prevent it from choosing the element we need in the end
     --iter; //should always be possible
     int index = iter-m_thresholdQuantities.begin();
-    return m_sprites[index];
+    return index;
 }
 
-ls::Vec2I QuantityBasedSpriteSet::defaultSprite() const
+int QuantityBasedSpriteSet::defaultSprite() const
 {
-    return m_sprites[0];
+    return 0;
+}
+
+const ls::Vec2I& QuantityBasedSpriteSet::at(int i) const
+{
+    return m_sprites[i];
 }

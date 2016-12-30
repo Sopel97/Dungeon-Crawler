@@ -150,8 +150,8 @@ void World::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
         delete tallDrawable;
     }
 
+    drawLightMapToIntermidiate(renderStates);
     drawIntermidiate(renderTarget, renderStates);
-    drawLightMap(renderTarget, renderStates);
 }
 
 void World::prepareIntermidiateRenderTarget()
@@ -199,6 +199,32 @@ void World::updateShaderUniforms()
 }
 void World::drawMeta(sf::RenderStates& renderStates, const std::vector<TallDrawable*>& tallDrawables)
 {
+    const Rectangle2F cameraRect = m_camera.viewRectangle();
+
+    const Vec2F& cameraTopLeft = cameraRect.min;
+    const Vec2F& cameraBottomRight = cameraRect.max;
+    int firstTileX = std::max(Util::fastFloor(cameraTopLeft.x / GameConstants::tileSize), 0);
+    int firstTileY = std::max(Util::fastFloor(cameraTopLeft.y / GameConstants::tileSize), 0);
+    int lastTileX = std::min(Util::fastFloor(cameraBottomRight.x / GameConstants::tileSize) + 1, m_width - 1);
+    int lastTileY = std::min(Util::fastFloor(cameraBottomRight.y / GameConstants::tileSize) + 1, m_height - 1);
+
+    for (int y = firstTileY; y <= lastTileY; ++y)
+    {
+        for (int x = firstTileX; x <= lastTileX; ++x)
+        {
+            const TileColumn& tileColumn = m_mapLayer->at(x, y);
+            int z = 0;
+            for (const TileStack* tileStack : tileColumn.tiles())
+            {
+                TileLocation location(*m_mapLayer, x, y, z);
+
+                tileStack->tile()->drawMeta(m_metaTexture, renderStates, location);
+
+                ++z;
+            }
+        }
+    }
+
     for (auto& tallDrawable : tallDrawables)
     {
         tallDrawable->drawMeta(m_metaTexture, renderStates);
@@ -214,20 +240,22 @@ void World::drawIntermidiate(sf::RenderTarget& renderTarget, sf::RenderStates& r
 
     renderTarget.draw(intermidiateFinal, intermidiateRenderStates);
 }
-void World::drawLightMap(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
+void World::drawLightMapToIntermidiate(sf::RenderStates& renderStates)
 {
     const Rectangle2F cameraRect = m_camera.viewRectangle();
+    const Vec2F cameraCenter = cameraRect.centerOfMass();
 
     sf::RectangleShape lightMapSprite;
     lightMapSprite.setTexture(&(m_lightMap.getTexture()));
     lightMapSprite.setSize(sf::Vector2f(cameraRect.width(), cameraRect.height()));
-    lightMapSprite.setPosition(sf::Vector2f(0.0f, 0.0f));
+    //converts to world coordinates
+    lightMapSprite.setPosition(sf::Vector2f(cameraCenter.x - cameraRect.width()/2, cameraCenter.y - cameraRect.height() / 2));
     lightMapSprite.setTextureRect(sf::IntRect(GameConstants::tileSize, GameConstants::tileSize, cameraRect.width(), cameraRect.height()));
 
     sf::RenderStates lightMapRenderStates = renderStates;
     lightMapRenderStates.shader = &m_lightShader;
 
-    renderTarget.draw(lightMapSprite, lightMapRenderStates);
+    m_intermidiateRenderTarget.draw(lightMapSprite, lightMapRenderStates);
 }
 
 void World::drawLightsToLightMap()

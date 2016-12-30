@@ -21,14 +21,14 @@ using namespace ls;
 OuterBorderedTileView::OuterBorderedTileView() :
     TileView(),
     m_commonData(nullptr),
-    m_sprite(0, 0)
+    m_spriteId(0)
 {
 
 }
 OuterBorderedTileView::OuterBorderedTileView(const OuterBorderedTileView& other) :
     TileView(other),
     m_commonData(other.m_commonData),
-    m_sprite(other.m_sprite)
+    m_spriteId(other.m_spriteId)
 {
 }
 OuterBorderedTileView::~OuterBorderedTileView()
@@ -48,10 +48,12 @@ void OuterBorderedTileView::loadFromConfiguration(ConfigurationNode& config)
 
 void OuterBorderedTileView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const
 {
+    const Vec2I& spritePos = m_commonData->spriteSet.at(m_spriteId);
+
     sf::Sprite spr;
     spr.setPosition(sf::Vector2f(static_cast<float>(location.x * GameConstants::tileSize), static_cast<float>(location.y * GameConstants::tileSize)));
     spr.setTexture(texture());
-    spr.setTextureRect(sf::IntRect(sf::Vector2i(m_sprite.x, m_sprite.y), sf::Vector2i(GameConstants::tileSize, GameConstants::tileSize)));
+    spr.setTextureRect(sf::IntRect(sf::Vector2i(spritePos.x, spritePos.y), sf::Vector2i(GameConstants::tileSize, GameConstants::tileSize)));
     renderTarget.draw(spr, renderStates);
 }
 
@@ -151,7 +153,7 @@ bool OuterBorderedTileView::coversOuterBorders() const
 
 void OuterBorderedTileView::onTileInstantiated()
 {
-    m_sprite = m_commonData->spriteSet.chooseRandomSprite();
+    m_spriteId = m_commonData->spriteSet.chooseRandomSprite();
 }
 
 std::unique_ptr<ComponentCommonData> OuterBorderedTileView::createCommonDataStorage() const

@@ -35,7 +35,6 @@ public:
     virtual void drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const;
 
     const sf::Texture& texture() const;
-    const ls::Vec2I& spriteSet() const;
     virtual int innerBorderGroup() const;
 
     virtual bool isTall() const;
@@ -47,29 +46,32 @@ public:
 protected:
     struct CommonData : public ComponentCommonData
     {
+        struct SpriteSet
+        {
+            //specific names are based on appearance in file "inner_bordered_wall_sprites_preview.png"
+            ls::Vec2I full;
+            ls::Vec2I top;
+            ls::Vec2I left;
+            ls::Vec2I topLeft;
+            ls::Vec2I bottomRight;
+
+            ls::Vec2I outerLeft;
+            ls::Vec2I innerTopRight;
+            ls::Vec2I innerBottomLeft;
+            ls::Vec2I outerTopRight;
+            ls::Vec2I outerBottomLeft;
+            ls::Vec2I outerTop;
+            ls::Vec2I outerTopLeft;
+            ls::Vec2I innerBottomRight;
+
+        }mainSprites, metaSprites;
         ResourceHandle<sf::Texture> texture;
-
-        ls::Vec2I spriteSet;
-
-        //specific names are based on appearance in file "inner_bordered_wall_sprites_preview.png"
-        ls::Vec2I full;
-        ls::Vec2I top;
-        ls::Vec2I left;
-        ls::Vec2I topLeft;
-        ls::Vec2I bottomRight;
-
-        ls::Vec2I outerLeft;
-        ls::Vec2I innerTopRight;
-        ls::Vec2I innerBottomLeft;
-        ls::Vec2I outerTopRight;
-        ls::Vec2I outerBottomLeft;
-        ls::Vec2I outerTop;
-        ls::Vec2I outerTopLeft;
-        ls::Vec2I innerBottomRight;
 
         int innerBorderGroup;
     };
     CommonData* m_commonData;
+
+    virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location, const CommonData::SpriteSet& spriteSet) const;
 };
 
 REGISTER_TILE_VIEW_TYPE(InnerBorderedWallTileView)

@@ -59,7 +59,7 @@ protected:
         int outerBorderPriority;
     };
     CommonData* m_commonData;
-    ls::Vec2I m_sprite;
+    int m_spriteId;
 };
 
 REGISTER_TILE_VIEW_TYPE(OuterBorderedTileView)

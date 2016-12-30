@@ -82,7 +82,7 @@ protected:
     void updateShaderUniforms();
     void drawMeta(sf::RenderStates& renderStates, const std::vector<TallDrawable*>& tallDrawables);
     void drawIntermidiate(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
-    void drawLightMap(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
+    void drawLightMapToIntermidiate(sf::RenderStates& renderStates);
     void drawLightsToLightMap();
 };
 

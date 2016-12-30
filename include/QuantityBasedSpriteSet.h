@@ -14,8 +14,10 @@ public:
 
     void loadFromConfiguration(ConfigurationNode& config);
 
-    ls::Vec2I getSprite(int quantity) const;
-    ls::Vec2I defaultSprite() const;
+    int getSprite(int quantity) const;
+    int defaultSprite() const;
+
+    const ls::Vec2I& at(int i) const;
 protected:
     std::vector<ls::Vec2I> m_sprites;
     std::vector<int> m_thresholdQuantities;
