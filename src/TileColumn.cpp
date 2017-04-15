@@ -4,14 +4,14 @@
 #include "tiles/Tile.h"
 
 #include "tiles/models/TileModel.h"
-#include "tiles/views/TileView.h"
+#include "tiles/renderers/TileRenderer.h"
 #include "tiles/controllers/TileController.h"
 
 using namespace ls;
 
 const Rectangle2F TileColumn::m_defaultCollider(Vec2F(0.0f, 0.0f), Vec2F(32.0f, 32.0f));
 
-TileStack TileColumn::m_emptyTile(std::make_unique<Tile>(-1, std::make_unique<TileModel>(), std::make_unique<TileView>(), std::make_unique<TileController>()), 1);
+TileStack TileColumn::m_emptyTile(std::make_unique<Tile>(-1, std::make_unique<TileModel>(), std::make_unique<TileRenderer>(), std::make_unique<TileController>()), 1);
 
 TileColumn::TileColumn() :
     m_lastTile(-1)
@@ -167,7 +167,7 @@ int TileColumn::size() const
 bool TileColumn::isTall() const
 {
     for(const TileStack* tileStack : m_tiles)
-        if(tileStack->tile()->view().isTall()) return true;
+        if(tileStack->tile()->renderer().isTall()) return true;
 
     return false;
 }

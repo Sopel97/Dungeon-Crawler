@@ -11,7 +11,7 @@ namespace sf
 }
 class MapLayer;
 class TileModel;
-class TileView;
+class TileRenderer;
 class TileController;
 class TileLocation;
 class Tile;
@@ -20,7 +20,7 @@ class ComponentCommonData;
 class TilePrefab
 {
 public:
-    TilePrefab(std::unique_ptr<TileModel> model, std::unique_ptr<TileView> view, std::unique_ptr<TileController> controller);
+    TilePrefab(std::unique_ptr<TileModel> model, std::unique_ptr<TileRenderer> renderer, std::unique_ptr<TileController> controller);
     ~TilePrefab();
 
     void loadFromConfiguration(ConfigurationNode& config);
@@ -28,7 +28,7 @@ public:
     std::unique_ptr<Tile> instantiate() const;
 protected:
     std::unique_ptr<ComponentCommonData> m_modelCommonData;
-    std::unique_ptr<ComponentCommonData> m_viewCommonData;
+    std::unique_ptr<ComponentCommonData> m_rendererCommonData;
     std::unique_ptr<ComponentCommonData> m_controllerCommonData;
 
     std::unique_ptr<Tile> m_tile;

@@ -1,7 +1,6 @@
-#ifndef OUTERBORDEREDTILEVIEW_H
-#define OUTERBORDEREDTILEVIEW_H
+#pragma once
 
-#include "TileView.h"
+#include "TileRenderer.h"
 
 #include "ResourceManager.h"
 
@@ -25,12 +24,12 @@ class MapLayer;
 class Tile;
 class TileLocation;
 
-class OuterBorderedTileView : public TileView
+class OuterBorderedTileRenderer : public TileRenderer
 {
 public:
-    OuterBorderedTileView();
-    OuterBorderedTileView(const OuterBorderedTileView& other);
-    virtual ~OuterBorderedTileView();
+    OuterBorderedTileRenderer();
+    OuterBorderedTileRenderer(const OuterBorderedTileRenderer& other);
+    virtual ~OuterBorderedTileRenderer();
 
     virtual void loadFromConfiguration(ConfigurationNode& config);
 
@@ -48,7 +47,7 @@ public:
     virtual std::unique_ptr<ComponentCommonData> createCommonDataStorage() const;
     virtual void setCommonDataStorage(ComponentCommonData& commonData);
 
-    virtual std::unique_ptr<TileView> clone() const;
+    virtual std::unique_ptr<TileRenderer> clone() const;
 protected:
     struct CommonData : public ComponentCommonData
     {
@@ -62,6 +61,4 @@ protected:
     int m_spriteId;
 };
 
-REGISTER_TILE_VIEW_TYPE(OuterBorderedTileView)
-
-#endif // OUTERBORDEREDTILEVIEW_H
+REGISTER_TILE_RENDERER_TYPE(OuterBorderedTileRenderer)

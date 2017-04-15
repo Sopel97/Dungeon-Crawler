@@ -1,4 +1,4 @@
-#include "tiles/views/InnerBorderedWallTileView.h"
+#include "tiles/renderers/InnerBorderedWallTileRenderer.h"
 
 #include "tiles/Tile.h"
 #include "tiles/TileStack.h"
@@ -15,25 +15,25 @@
 
 using namespace ls;
 
-InnerBorderedWallTileView::InnerBorderedWallTileView() :
-    TileView(),
+InnerBorderedWallTileRenderer::InnerBorderedWallTileRenderer() :
+    TileRenderer(),
     m_commonData(nullptr)
 
 {
 
 }
-InnerBorderedWallTileView::InnerBorderedWallTileView(const InnerBorderedWallTileView& other) :
-    TileView(other),
+InnerBorderedWallTileRenderer::InnerBorderedWallTileRenderer(const InnerBorderedWallTileRenderer& other) :
+    TileRenderer(other),
     m_commonData(other.m_commonData)
 {
 
 }
-InnerBorderedWallTileView::~InnerBorderedWallTileView()
+InnerBorderedWallTileRenderer::~InnerBorderedWallTileRenderer()
 {
 
 }
 
-void InnerBorderedWallTileView::loadFromConfiguration(ConfigurationNode& config)
+void InnerBorderedWallTileRenderer::loadFromConfiguration(ConfigurationNode& config)
 {
     std::string texturePath = config["texture"].get<std::string>();
     m_commonData->texture = ResourceManager::instance().get<sf::Texture>(texturePath);
@@ -76,16 +76,16 @@ void InnerBorderedWallTileView::loadFromConfiguration(ConfigurationNode& config)
     m_commonData->innerBorderGroup = config["innerBorderGroup"].get<int>();
 }
 
-void InnerBorderedWallTileView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const
+void InnerBorderedWallTileRenderer::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const
 {
     draw(renderTarget, renderStates, location, m_commonData->mainSprites);
 }
 
-void InnerBorderedWallTileView::drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const
+void InnerBorderedWallTileRenderer::drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const
 {
     draw(renderTarget, renderStates, location, m_commonData->metaSprites);
 }
-void InnerBorderedWallTileView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location, const CommonData::SpriteSet& spriteSet) const
+void InnerBorderedWallTileRenderer::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location, const CommonData::SpriteSet& spriteSet) const
 {
     enum Indices
     {
@@ -110,17 +110,17 @@ void InnerBorderedWallTileView::draw(sf::RenderTarget& renderTarget, sf::RenderS
     int z = location.z;
     const MapLayer& map = location.map;
 
-    isGroupSame[TopLeft] = (map.at(x - 1, y - 1, z).tile()->view().innerBorderGroup() == group);
-    isGroupSame[Top] = (map.at(x + 0, y - 1, z).tile()->view().innerBorderGroup() == group);
-    isGroupSame[TopRight] = (map.at(x + 1, y - 1, z).tile()->view().innerBorderGroup() == group);
+    isGroupSame[TopLeft] = (map.at(x - 1, y - 1, z).tile()->renderer().innerBorderGroup() == group);
+    isGroupSame[Top] = (map.at(x + 0, y - 1, z).tile()->renderer().innerBorderGroup() == group);
+    isGroupSame[TopRight] = (map.at(x + 1, y - 1, z).tile()->renderer().innerBorderGroup() == group);
 
-    isGroupSame[Left] = (map.at(x - 1, y + 0, z).tile()->view().innerBorderGroup() == group);
-    isGroupSame[Center] = (map.at(x + 0, y + 0, z).tile()->view().innerBorderGroup() == group);
-    isGroupSame[Right] = (map.at(x + 1, y + 0, z).tile()->view().innerBorderGroup() == group);
+    isGroupSame[Left] = (map.at(x - 1, y + 0, z).tile()->renderer().innerBorderGroup() == group);
+    isGroupSame[Center] = (map.at(x + 0, y + 0, z).tile()->renderer().innerBorderGroup() == group);
+    isGroupSame[Right] = (map.at(x + 1, y + 0, z).tile()->renderer().innerBorderGroup() == group);
 
-    isGroupSame[BottomLeft] = (map.at(x - 1, y + 1, z).tile()->view().innerBorderGroup() == group);
-    isGroupSame[Bottom] = (map.at(x + 0, y + 1, z).tile()->view().innerBorderGroup() == group);
-    isGroupSame[BottomRight] = (map.at(x + 1, y + 1, z).tile()->view().innerBorderGroup() == group);
+    isGroupSame[BottomLeft] = (map.at(x - 1, y + 1, z).tile()->renderer().innerBorderGroup() == group);
+    isGroupSame[Bottom] = (map.at(x + 0, y + 1, z).tile()->renderer().innerBorderGroup() == group);
+    isGroupSame[BottomRight] = (map.at(x + 1, y + 1, z).tile()->renderer().innerBorderGroup() == group);
 
     {
         //on x, y
@@ -205,30 +205,30 @@ void InnerBorderedWallTileView::draw(sf::RenderTarget& renderTarget, sf::RenderS
     }
 
 }
-const sf::Texture& InnerBorderedWallTileView::texture() const
+const sf::Texture& InnerBorderedWallTileRenderer::texture() const
 {
     return m_commonData->texture.get();
 }
-int InnerBorderedWallTileView::innerBorderGroup() const
+int InnerBorderedWallTileRenderer::innerBorderGroup() const
 {
     return m_commonData->innerBorderGroup;
 }
 
-bool InnerBorderedWallTileView::isTall() const
+bool InnerBorderedWallTileRenderer::isTall() const
 {
     return true;
 }
 
-std::unique_ptr<ComponentCommonData> InnerBorderedWallTileView::createCommonDataStorage() const
+std::unique_ptr<ComponentCommonData> InnerBorderedWallTileRenderer::createCommonDataStorage() const
 {
     return std::make_unique<CommonData>();
 }
 
-void InnerBorderedWallTileView::setCommonDataStorage(ComponentCommonData& commonData)
+void InnerBorderedWallTileRenderer::setCommonDataStorage(ComponentCommonData& commonData)
 {
     m_commonData = static_cast<CommonData*>(&commonData);
 }
-std::unique_ptr<TileView> InnerBorderedWallTileView::clone() const
+std::unique_ptr<TileRenderer> InnerBorderedWallTileRenderer::clone() const
 {
-    return std::make_unique<InnerBorderedWallTileView>(*this);
+    return std::make_unique<InnerBorderedWallTileRenderer>(*this);
 }

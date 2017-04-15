@@ -3,7 +3,7 @@
 #include "tiles/TileStack.h"
 #include "tiles/Tile.h"
 
-#include "tiles/views/TileView.h"
+#include "tiles/renderers/TileRenderer.h"
 #include "tiles/models/TileModel.h"
 
 #include "TileLocation.h"
@@ -24,7 +24,7 @@ TallTileColumnDrawable::TallTileColumnDrawable(const TileColumn& tileColumn, con
     int i = 0;
     for(const TileStack* tileStack : m_tileColumn.tiles())
     {
-        if (tileStack->tile()->view().isTall())
+        if (tileStack->tile()->renderer().isTall())
         {
             m_indexOfFirstTallTile = i;
             m_boundingRectangle = tileStack->tile()->model().collider().translated(Vec2F(static_cast<float>(tileLocation.x), static_cast<float>(tileLocation.y)) * static_cast<float>(GameConstants::tileSize));

@@ -1,5 +1,4 @@
-#ifndef INVENTORYSLOTVIEW_H
-#define INVENTORYSLOTVIEW_H
+#pragma once
 
 #include "ResourceManager.h"
 
@@ -48,5 +47,3 @@ protected:
     size_t m_slotId;
     ls::Vec2I m_position; //relative to inventory inner region
 };
-
-#endif // INVENTORYSLOTVIEW_H

@@ -2,7 +2,7 @@
 
 #include "entities/Entity.h"
 #include "entities/models/PlayerModel.h"
-#include "entities/views/PlayerView.h"
+#include "entities/renderers/PlayerRenderer.h"
 #include "entities/controllers/PlayerController.h"
 
 
@@ -26,7 +26,7 @@ Player::Player(Game& game) :
 
 Entity* Player::createPlayerEntity()
 {
-    return m_playerEntity = new Entity(std::make_unique<PlayerModel>(nullptr, this), std::make_unique<PlayerView>(nullptr, this), std::make_unique<PlayerController>(nullptr, this));
+    return m_playerEntity = new Entity(std::make_unique<PlayerModel>(nullptr, this), std::make_unique<PlayerRenderer>(nullptr, this), std::make_unique<PlayerController>(nullptr, this));
 }
 
 void Player::onKeyPressed(sf::Event::KeyEvent& keyEvent)

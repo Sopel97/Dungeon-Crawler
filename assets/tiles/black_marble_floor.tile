@@ -3,7 +3,7 @@ tile = {
     name = "Black marble floor",
     
     model = "PlainTileModel",
-    view = "PlainTileView",
+    renderer = "PlainTileRenderer",
     controller = "PlainTileController",
 
     texture = "Spritesheet",

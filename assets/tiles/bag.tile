@@ -3,7 +3,7 @@ tile = {
     name = "Bag",
     
     model = "ContainerTileModel",
-    view = "PlainTileView",
+    renderer = "PlainTileRenderer",
     controller = "ContainerTileController",
 
     texture = "Spritesheet",

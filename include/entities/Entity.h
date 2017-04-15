@@ -12,13 +12,13 @@ namespace sf
 }
 class MapLayer;
 class EntityModel;
-class EntityView;
+class EntityRenderer;
 class EntityController;
 
 class Entity
 {
 public:
-    Entity(std::unique_ptr<EntityModel>&& model, std::unique_ptr<EntityView>&& view, std::unique_ptr<EntityController>&& controller);
+    Entity(std::unique_ptr<EntityModel>&& model, std::unique_ptr<EntityRenderer>&& renderer, std::unique_ptr<EntityController>&& controller);
     Entity(const Entity& other);
     virtual ~Entity();
 
@@ -29,8 +29,8 @@ public:
 
     const EntityModel& model() const;
     EntityModel& model();
-    const EntityView& view() const;
-    EntityView& view();
+    const EntityRenderer& renderer() const;
+    EntityRenderer& renderer();
     const EntityController& controller() const;
     EntityController& controller();
 
@@ -39,7 +39,7 @@ public:
     virtual std::unique_ptr<Entity> clone() const;
 protected:
     std::unique_ptr<EntityModel> m_model;
-    std::unique_ptr<EntityView> m_view;
+    std::unique_ptr<EntityRenderer> m_renderer;
     std::unique_ptr<EntityController> m_controller;
     int m_id;
 

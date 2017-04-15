@@ -1,7 +1,6 @@
-#ifndef PLAYERVIEW_H
-#define PLAYERVIEW_H
+#pragma once
 
-#include "EntityView.h"
+#include "EntityRenderer.h"
 
 #include "Configuration.h"
 
@@ -20,12 +19,12 @@ namespace sf
 class Entity;
 class Player;
 
-class PlayerView : public EntityView
+class PlayerRenderer : public EntityRenderer
 {
 public:
-    PlayerView(Entity* owner, Player* player);
-    PlayerView(const PlayerView& other);
-    virtual ~PlayerView();
+    PlayerRenderer(Entity* owner, Player* player);
+    PlayerRenderer(const PlayerRenderer& other);
+    virtual ~PlayerRenderer();
 
     virtual void loadFromConfiguration(ConfigurationNode& config);
 
@@ -34,8 +33,8 @@ public:
 
     const sf::Texture& texture() const;
 
-    virtual std::unique_ptr<EntityView> clone() const;
-    virtual std::unique_ptr<EntityView> create(Entity* owner) const;
+    virtual std::unique_ptr<EntityRenderer> clone() const;
+    virtual std::unique_ptr<EntityRenderer> create(Entity* owner) const;
 protected:
     Player* m_playerOwner;
     ResourceHandle<sf::Texture> m_texture;
@@ -44,5 +43,3 @@ protected:
 
     void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const ls::Vec2I& sprites) const;
 };
-
-#endif // PLAYERVIEW_H

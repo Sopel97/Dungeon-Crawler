@@ -1,9 +1,8 @@
-#ifndef PLAINTILEVIEW_H
-#define PLAINTILEVIEW_H
+#pragma once
 
-#include "TileView.h"
+#include "TileRenderer.h"
 
-#include "WeightedSpriteSet.h"
+#include "QuantityBasedSpriteSet.h"
 
 #include "ResourceManager.h"
 
@@ -25,12 +24,12 @@ class MapLayer;
 class Tile;
 class TileLocation;
 
-class PlainTileView : public TileView
+class PlainQuantityBasedTileRenderer : public TileRenderer
 {
 public:
-    PlainTileView();
-    PlainTileView(const PlainTileView& other);
-    virtual ~PlainTileView();
+	PlainQuantityBasedTileRenderer();
+	PlainQuantityBasedTileRenderer(const PlainQuantityBasedTileRenderer& other);
+    virtual ~PlainQuantityBasedTileRenderer();
 
     virtual void loadFromConfiguration(ConfigurationNode& config);
 
@@ -42,17 +41,18 @@ public:
     virtual bool coversOuterBorders() const;
     virtual int outerBorderPriority() const;
 
+    virtual void onTileQuantityChanged(int oldQuantity, int newQuantity);
     virtual void onTileInstantiated();
 
     virtual std::unique_ptr<ComponentCommonData> createCommonDataStorage() const;
     virtual void setCommonDataStorage(ComponentCommonData& commonData);
 
-    virtual std::unique_ptr<TileView> clone() const;
+    virtual std::unique_ptr<TileRenderer> clone() const;
 protected:
     struct CommonData : public ComponentCommonData
     {
         ResourceHandle<sf::Texture> texture;
-        WeightedSpriteSet spriteSet;
+        QuantityBasedSpriteSet spriteSet;
         std::vector<ls::Vec2I> respectiveMetaSprites;
 
         int outerBorderPriority;
@@ -64,6 +64,4 @@ protected:
     void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location, const ls::Vec2I& sprite) const;
 };
 
-REGISTER_TILE_VIEW_TYPE(PlainTileView)
-
-#endif // PLAINTILEVIEW_H
+REGISTER_TILE_RENDERER_TYPE(PlainQuantityBasedTileRenderer)

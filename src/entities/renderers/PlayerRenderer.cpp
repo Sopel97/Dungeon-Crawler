@@ -1,4 +1,4 @@
-#include "entities/views/PlayerView.h"
+#include "entities/renderers/PlayerRenderer.h"
 
 #include "entities/Entity.h"
 #include "entities/models/EntityModel.h"
@@ -10,8 +10,8 @@
 
 using namespace ls;
 
-PlayerView::PlayerView(Entity* owner, Player* player) :
-    EntityView(owner),
+PlayerRenderer::PlayerRenderer(Entity* owner, Player* player) :
+    EntityRenderer(owner),
     m_playerOwner(player),
     m_texture(ResourceManager::instance().get<sf::Texture>("Spritesheet")),
     m_sprites(GameConstants::tileFullSpriteSize * 5, GameConstants::tileFullSpriteSize * 2),
@@ -19,32 +19,32 @@ PlayerView::PlayerView(Entity* owner, Player* player) :
 {
 
 }
-PlayerView::PlayerView(const PlayerView& other) :
-    EntityView(other.m_owner),
+PlayerRenderer::PlayerRenderer(const PlayerRenderer& other) :
+    EntityRenderer(other.m_owner),
     m_playerOwner(other.m_playerOwner),
     m_sprites(other.m_sprites)
 {
 
 }
-PlayerView::~PlayerView()
+PlayerRenderer::~PlayerRenderer()
 {
 
 }
 
-void PlayerView::loadFromConfiguration(ConfigurationNode& config)
+void PlayerRenderer::loadFromConfiguration(ConfigurationNode& config)
 {
 }
 
-void PlayerView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) const
+void PlayerRenderer::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) const
 {
     draw(renderTarget, renderStates, m_sprites);
 }
 
-void PlayerView::drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) const
+void PlayerRenderer::drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) const
 {
     draw(renderTarget, renderStates, m_metaSprites);
 }
-void PlayerView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const ls::Vec2I& sprites) const
+void PlayerRenderer::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const ls::Vec2I& sprites) const
 {
     const Vec2I offsetToOrigin = Vec2I(-25, -26);
     constexpr float steppingSpeedThreshold = 16.0f;
@@ -74,16 +74,16 @@ void PlayerView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderSt
     renderTarget.draw(spr, renderStates);
 }
 
-const sf::Texture& PlayerView::texture() const
+const sf::Texture& PlayerRenderer::texture() const
 {
     return m_texture.get();
 }
 
-std::unique_ptr<EntityView> PlayerView::clone() const
+std::unique_ptr<EntityRenderer> PlayerRenderer::clone() const
 {
-    return std::make_unique<PlayerView>(*this);
+    return std::make_unique<PlayerRenderer>(*this);
 }
-std::unique_ptr<EntityView> PlayerView::create(Entity* owner) const
+std::unique_ptr<EntityRenderer> PlayerRenderer::create(Entity* owner) const
 {
-    return std::make_unique<PlayerView>(owner, nullptr);
+    return std::make_unique<PlayerRenderer>(owner, nullptr);
 }

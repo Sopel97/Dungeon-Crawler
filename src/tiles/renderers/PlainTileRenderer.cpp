@@ -1,8 +1,6 @@
-#include "tiles/views/PlainQuantityBasedTileView.h"
+#include "tiles/renderers/PlainTileRenderer.h"
 
 #include "Root.h"
-
-#include "tiles/Tile.h"
 
 #include "TileLocation.h"
 
@@ -11,28 +9,30 @@
 
 #include <algorithm>
 
+#include <memory>
+
 #include "GameConstants.h"
 
 using namespace ls;
 
-PlainQuantityBasedTileView::PlainQuantityBasedTileView() :
-    TileView(),
+PlainTileRenderer::PlainTileRenderer() :
+    TileRenderer(),
     m_commonData(nullptr),
     m_spriteId(0)
 {
 }
-PlainQuantityBasedTileView::PlainQuantityBasedTileView(const PlainQuantityBasedTileView& other) :
-    TileView(other),
+PlainTileRenderer::PlainTileRenderer(const PlainTileRenderer& other) :
+    TileRenderer(other),
     m_commonData(other.m_commonData),
     m_spriteId(other.m_spriteId)
 {
 }
-PlainQuantityBasedTileView::~PlainQuantityBasedTileView()
+PlainTileRenderer::~PlainTileRenderer()
 {
 
 }
 
-void PlainQuantityBasedTileView::loadFromConfiguration(ConfigurationNode& config)
+void PlainTileRenderer::loadFromConfiguration(ConfigurationNode& config)
 {
     std::string texturePath = config["texture"].get<std::string>();
     m_commonData->texture = ResourceManager::instance().get<sf::Texture>(texturePath);
@@ -57,19 +57,20 @@ void PlainQuantityBasedTileView::loadFromConfiguration(ConfigurationNode& config
     m_commonData->coversOuterBorders = config["coversOuterBorders"].getDefault<bool>(defaultForBorderCovering);
 }
 
-void PlainQuantityBasedTileView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const
+void PlainTileRenderer::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const
 {
     const Vec2I& spritePos = m_commonData->spriteSet.at(m_spriteId);
     draw(renderTarget, renderStates, location, spritePos);
+
 }
-void PlainQuantityBasedTileView::drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const
+void PlainTileRenderer::drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const
 {
     if (m_commonData->respectiveMetaSprites.size() <= m_spriteId) return;
 
     const Vec2I& spritePos = m_commonData->respectiveMetaSprites[m_spriteId];
     draw(renderTarget, renderStates, location, spritePos);
 }
-void PlainQuantityBasedTileView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location, const ls::Vec2I& sprite) const
+void PlainTileRenderer::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location, const ls::Vec2I& sprite) const
 {
     sf::Sprite spr;
     spr.setPosition(sf::Vector2f(static_cast<float>(location.x) * GameConstants::tileSize, static_cast<float>(location.y) * GameConstants::tileSize));
@@ -78,38 +79,35 @@ void PlainQuantityBasedTileView::draw(sf::RenderTarget& renderTarget, sf::Render
     renderTarget.draw(spr, renderStates);
 }
 
-const sf::Texture& PlainQuantityBasedTileView::texture() const
+const sf::Texture& PlainTileRenderer::texture() const
 {
     return m_commonData->texture.get();
 }
-bool PlainQuantityBasedTileView::coversOuterBorders() const
+bool PlainTileRenderer::coversOuterBorders() const
 {
     return m_commonData->coversOuterBorders;
 }
-int PlainQuantityBasedTileView::outerBorderPriority() const
+int PlainTileRenderer::outerBorderPriority() const
 {
     return m_commonData->outerBorderPriority;
 }
 
-void PlainQuantityBasedTileView::onTileInstantiated()
+void PlainTileRenderer::onTileInstantiated()
 {
-    m_spriteId = m_commonData->spriteSet.getSprite(1);
-}
-void PlainQuantityBasedTileView::onTileQuantityChanged(int oldQuantity, int newQuantity)
-{
-    m_spriteId = m_commonData->spriteSet.getSprite(newQuantity);
+    m_spriteId = m_commonData->spriteSet.chooseRandomSprite();
 }
 
-std::unique_ptr<ComponentCommonData> PlainQuantityBasedTileView::createCommonDataStorage() const
+
+std::unique_ptr<ComponentCommonData> PlainTileRenderer::createCommonDataStorage() const
 {
     return std::make_unique<CommonData>();
 }
-void PlainQuantityBasedTileView::setCommonDataStorage(ComponentCommonData& commonData)
+void PlainTileRenderer::setCommonDataStorage(ComponentCommonData& commonData)
 {
     m_commonData = static_cast<CommonData*>(&commonData);
 }
 
-std::unique_ptr<TileView> PlainQuantityBasedTileView::clone() const
+std::unique_ptr<TileRenderer> PlainTileRenderer::clone() const
 {
-    return std::make_unique<PlainQuantityBasedTileView>(*this);
+    return std::make_unique<PlainTileRenderer>(*this);
 }

@@ -3,7 +3,7 @@ tile = {
     name = "Stone wall",
     
     model = "PlainTileModel",
-    view = "InnerBorderedWallTileView",
+    renderer = "InnerBorderedWallTileRenderer",
     controller = "PlainTileController",
 
     texture = "Spritesheet",

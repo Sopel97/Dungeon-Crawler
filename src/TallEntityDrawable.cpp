@@ -2,7 +2,7 @@
 
 #include "entities/Entity.h"
 #include "entities/models/EntityModel.h"
-#include "entities/views/EntityView.h"
+#include "entities/renderers/EntityRenderer.h"
 
 using namespace ls;
 
@@ -36,9 +36,9 @@ TallDrawable::DrawableType TallEntityDrawable::type() const
 
 void TallEntityDrawable::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
 {
-    m_entity->view().draw(renderTarget, renderStates);
+    m_entity->renderer().draw(renderTarget, renderStates);
 }
 void TallEntityDrawable::drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
 {
-    m_entity->view().drawMeta(renderTarget, renderStates);
+    m_entity->renderer().drawMeta(renderTarget, renderStates);
 }

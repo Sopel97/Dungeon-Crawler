@@ -1,5 +1,4 @@
-#ifndef ENTITYVIEW_H
-#define ENTITYVIEW_H
+#pragma once 
 
 #include "Configuration.h"
 
@@ -12,12 +11,12 @@ namespace sf
 }
 class Entity;
 
-class EntityView //must be functions (ie. all methods return resonable values and there is not pure virtual member functions)
+class EntityRenderer //must be functions (ie. all methods return resonable values and there is not pure virtual member functions)
 {
 public:
-    EntityView(Entity* owner);
-    EntityView(const EntityView& other);
-    virtual ~EntityView();
+    EntityRenderer(Entity* owner);
+    EntityRenderer(const EntityRenderer& other);
+    virtual ~EntityRenderer();
 
     virtual void loadFromConfiguration(ConfigurationNode& config);
 
@@ -28,10 +27,8 @@ public:
 
     void setOwner(Entity* newOwner);
 
-    virtual std::unique_ptr<EntityView> clone() const;
-    virtual std::unique_ptr<EntityView> create(Entity* owner) const;
+    virtual std::unique_ptr<EntityRenderer> clone() const;
+    virtual std::unique_ptr<EntityRenderer> create(Entity* owner) const;
 protected:
     Entity* m_owner;
 };
-
-#endif // ENTITYVIEW_H

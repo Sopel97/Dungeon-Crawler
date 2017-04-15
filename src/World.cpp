@@ -5,7 +5,7 @@
 
 #include "tiles/Tile.h"
 #include "tiles/TileStack.h"
-#include "tiles/views/TileView.h"
+#include "tiles/renderers/TileRenderer.h"
 #include "tiles/models/TileModel.h"
 #include "tiles/controllers/TileController.h"
 
@@ -13,7 +13,7 @@
 
 #include "entities/Entity.h"
 #include "entities/models/EntityModel.h"
-#include "entities/views/EntityView.h"
+#include "entities/renderers/EntityRenderer.h"
 #include "entities/controllers/EntityController.h"
 
 #include "TileColumn.h"
@@ -99,14 +99,14 @@ void World::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
             {
                 TileLocation location(*m_mapLayer, x, y, z);
 
-                if(tileStack->tile()->view().isTall())
+                if(tileStack->tile()->renderer().isTall())
                 {
                     tallDrawables.push_back(new TallTileColumnDrawable(tileColumn, location));
                     break;
                 }
                 if(z == 0)
                 {
-                    if(tileStack->tile()->view().coversOuterBorders())
+                    if(tileStack->tile()->renderer().coversOuterBorders())
                     {
                         drawOuterBorder(m_intermidiateRenderTarget, renderStates, location);
                         tileStack->tile()->draw(m_intermidiateRenderTarget, renderStates, location);
@@ -280,14 +280,14 @@ void World::drawLightsToLightMap()
 void World::drawOuterBorder(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& tileLocation)
 {
     auto areTilesEqual = [](const TileStack * lhs, const TileStack * rhs)->bool {return lhs->tile()->id() == rhs->tile()->id();};
-    auto borderPriorityCompare = [](const TileStack * lhs, const TileStack * rhs)->bool {return lhs->tile()->view().outerBorderPriority() < rhs->tile()->view().outerBorderPriority();};
+    auto borderPriorityCompare = [](const TileStack * lhs, const TileStack * rhs)->bool {return lhs->tile()->renderer().outerBorderPriority() < rhs->tile()->renderer().outerBorderPriority();};
 
     int x = tileLocation.x;
     int y = tileLocation.y;
     const MapLayer& map = tileLocation.map;
 
     std::vector<const TileStack*> differentNeigbourTiles;
-    int thisTileOuterBorderPriority = map.at(x, y, 0).tile()->view().outerBorderPriority();
+    int thisTileOuterBorderPriority = map.at(x, y, 0).tile()->renderer().outerBorderPriority();
     for(int xoffset = -1; xoffset <= 1; ++xoffset)
     {
         for(int yoffset = -1; yoffset <= 1; ++yoffset)
@@ -296,7 +296,7 @@ void World::drawOuterBorder(sf::RenderTarget& renderTarget, sf::RenderStates& re
             int xx = x + xoffset;
             int yy = y + yoffset;
             const TileStack& tileStack = map.at(xx, yy, 0);
-            if(!tileStack.tile()->view().hasOuterBorder() || tileStack.tile()->view().outerBorderPriority() <= thisTileOuterBorderPriority) continue;
+            if(!tileStack.tile()->renderer().hasOuterBorder() || tileStack.tile()->renderer().outerBorderPriority() <= thisTileOuterBorderPriority) continue;
 
             bool firstSuchNeighbour = true;
             for(const auto& neighbour : differentNeigbourTiles)

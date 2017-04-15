@@ -1,5 +1,4 @@
-#ifndef INVENTORYVIEW_H
-#define INVENTORYVIEW_H
+#pragma once
 
 #include "InventorySlotView.h"
 
@@ -67,5 +66,3 @@ protected:
 
     void updateMaxContentHeight();
 };
-
-#endif // INVENTORYVIEW_H

@@ -12,14 +12,14 @@ namespace sf
 }
 class MapLayer;
 class TileModel;
-class TileView;
+class TileRenderer;
 class TileController;
 class TileLocation;
 
 class Tile
 {
 public:
-    Tile(int id, std::unique_ptr<TileModel>&& model, std::unique_ptr<TileView>&& view, std::unique_ptr<TileController>&& controller);
+    Tile(int id, std::unique_ptr<TileModel>&& model, std::unique_ptr<TileRenderer>&& renderer, std::unique_ptr<TileController>&& controller);
     Tile(const Tile& other);
     ~Tile();
 
@@ -31,8 +31,8 @@ public:
 
     const TileModel& model() const;
     TileModel& model();
-    const TileView& view() const;
-    TileView& view();
+    const TileRenderer& renderer() const;
+    TileRenderer& renderer();
     const TileController& controller() const;
     TileController& controller();
 
@@ -51,7 +51,7 @@ public:
     void onTileQuantityChanged(int oldQuantity, int newQuantity);
 protected:
     std::unique_ptr<TileModel> m_model;
-    std::unique_ptr<TileView> m_view;
+    std::unique_ptr<TileRenderer> m_renderer;
     std::unique_ptr<TileController> m_controller;
     int m_id; //NOTE: if memory is an issue these 3 can be changed to other types
     int m_maxQuantity;

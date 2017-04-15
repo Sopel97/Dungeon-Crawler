@@ -1,17 +1,16 @@
-#ifndef RESOURCELOADERS_H_INCLUDED
-#define RESOURCELOADERS_H_INCLUDED
+#pragma once
 
 #include "ResourceManager.h"
 
 #include "tiles/Tile.h"
 #include "tiles/TilePrefab.h"
 #include "tiles/models/TileModel.h"
-#include "tiles/views/TileView.h"
+#include "tiles/renderers/TileRenderer.h"
 #include "tiles/controllers/TileController.h"
 
 #include "entities/Entity.h"
 #include "entities/models/EntityModel.h"
-#include "entities/views/EntityView.h"
+#include "entities/renderers/EntityRenderer.h"
 #include "entities/controllers/EntityController.h"
 
 #include "Configuration.h"
@@ -31,12 +30,12 @@ namespace sf
 }
 class Tile;
 class TileModel;
-class TileView;
+class TileRenderer;
 class TileController;
 
 class Entity;
 class EntityModel;
-class EntityView;
+class EntityRenderer;
 class EntityController;
 
 template <>
@@ -52,10 +51,10 @@ public:
         const ResourceLoader<TilePrefab>::TileModelTypeRegistrar<TYPE> TYPE ## _model_var (#TYPE); \
     }
 
-#define REGISTER_TILE_VIEW_TYPE(TYPE)  \
+#define REGISTER_TILE_RENDERER_TYPE(TYPE)  \
     namespace ___TypeRegistering \
     { \
-        const ResourceLoader<TilePrefab>::TileViewTypeRegistrar<TYPE> TYPE ## _view_var (#TYPE); \
+        const ResourceLoader<TilePrefab>::TileRendererTypeRegistrar<TYPE> TYPE ## _renderer_var (#TYPE); \
     }
 
 #define REGISTER_TILE_CONTROLLER_TYPE(TYPE)  \
@@ -80,12 +79,12 @@ public:
     };
 
     template<class T>
-    struct TileViewTypeRegistrar
+    struct TileRendererTypeRegistrar
     {
-        TileViewTypeRegistrar(const std::string& name)
+        TileRendererTypeRegistrar(const std::string& name)
         {
-            std::cout << "Registered tile view type: " << name << '\n';
-            ResourceLoader<TilePrefab>::tileViews().insert(std::make_pair(name, std::make_unique<T>()));
+            std::cout << "Registered tile renderer type: " << name << '\n';
+            ResourceLoader<TilePrefab>::tileRenderers().insert(std::make_pair(name, std::make_unique<T>()));
         }
     };
 
@@ -107,10 +106,10 @@ protected:
         static std::map<std::string, std::unique_ptr<TileModel>> _tileModels;
         return _tileModels;
     }
-    static std::map<std::string, std::unique_ptr<TileView>>& tileViews()
+    static std::map<std::string, std::unique_ptr<TileRenderer>>& tileRenderers()
     {
-        static std::map<std::string, std::unique_ptr<TileView>> _tileViews;
-        return _tileViews;
+        static std::map<std::string, std::unique_ptr<TileRenderer>> _tileRenderers;
+        return _tileRenderers;
     }
     static std::map<std::string, std::unique_ptr<TileController>>& tileControllers()
     {
@@ -128,10 +127,10 @@ protected:
         const ResourceLoader<Entity>::EntityModelTypeRegistrar<TYPE> TYPE ## _model_var (#TYPE); \
     }
 
-#define REGISTER_ENTITY_VIEW_TYPE(TYPE)  \
+#define REGISTER_ENTITY_RENDERER_TYPE(TYPE)  \
     namespace ___TypeRegistering \
     { \
-        const ResourceLoader<Entity>::EntityViewTypeRegistrar<TYPE> TYPE ## _view_var (#TYPE); \
+        const ResourceLoader<Entity>::EntityRendererTypeRegistrar<TYPE> TYPE ## _renderer_var (#TYPE); \
     }
 
 #define REGISTER_ENTITY_CONTROLLER_TYPE(TYPE)  \
@@ -156,12 +155,12 @@ public:
     };
 
     template<class T>
-    struct EntityViewTypeRegistrar
+    struct EntityRendererTypeRegistrar
     {
-        EntityViewTypeRegistrar(const std::string& name)
+        EntityRendererTypeRegistrar(const std::string& name)
         {
-            std::cout << "Registered entity view type: " << name << '\n';
-            ResourceLoader<Entity>::entityViews().insert(std::make_pair(name, std::make_unique<T>(nullptr)));
+            std::cout << "Registered entity renderer type: " << name << '\n';
+            ResourceLoader<Entity>::entityRenderers().insert(std::make_pair(name, std::make_unique<T>(nullptr)));
         }
     };
 
@@ -184,10 +183,10 @@ protected:
         static std::map<std::string, std::unique_ptr<EntityModel>> _entityModels;
         return _entityModels;
     }
-    static std::map<std::string, std::unique_ptr<EntityView>>& entityViews()
+    static std::map<std::string, std::unique_ptr<EntityRenderer>>& entityRenderers()
     {
-        static std::map<std::string, std::unique_ptr<EntityView>> _entityViews;
-        return _entityViews;
+        static std::map<std::string, std::unique_ptr<EntityRenderer>> _entityRenderers;
+        return _entityRenderers;
     }
     static std::map<std::string, std::unique_ptr<EntityController>>& entityControllers()
     {
@@ -202,6 +201,3 @@ class ResourceLoader<sf::Font>
 public:
     static std::pair<std::string, std::unique_ptr<sf::Font>> load(const std::string& path); //should return nullptr when resource was not loaded
 };
-
-
-#endif // RESOURCELOADERS_H_INCLUDED

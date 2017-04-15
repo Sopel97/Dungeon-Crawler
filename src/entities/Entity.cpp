@@ -1,7 +1,7 @@
 #include "entities/Entity.h"
 
 #include "entities/models/EntityModel.h"
-#include "entities/views/EntityView.h"
+#include "entities/renderers/EntityRenderer.h"
 #include "entities/controllers/EntityController.h"
 
 #include <SFML/Graphics.hpp>
@@ -13,24 +13,24 @@
 
 int Entity::m_lastId = -1;
 
-Entity::Entity(std::unique_ptr<EntityModel>&& model, std::unique_ptr<EntityView>&& view, std::unique_ptr<EntityController>&& controller) :
+Entity::Entity(std::unique_ptr<EntityModel>&& model, std::unique_ptr<EntityRenderer>&& renderer, std::unique_ptr<EntityController>&& controller) :
     m_model(std::move(model)),
-    m_view(std::move(view)),
+    m_renderer(std::move(renderer)),
     m_controller(std::move(controller)),
     m_id(++m_lastId)
 {
     m_model->setOwner(this);
-    m_view->setOwner(this);
+    m_renderer->setOwner(this);
     m_controller->setOwner(this);
 }
 Entity::Entity(const Entity& other) :
     m_model(other.m_model->clone()),
-    m_view(other.m_view->clone()),
+    m_renderer(other.m_renderer->clone()),
     m_controller(other.m_controller->clone()),
     m_id(other.m_id)
 {
     m_model->setOwner(this);
-    m_view->setOwner(this);
+    m_renderer->setOwner(this);
     m_controller->setOwner(this);
 }
 Entity::~Entity()
@@ -41,17 +41,17 @@ Entity::~Entity()
 void Entity::loadFromConfiguration(ConfigurationNode& config)
 {
     m_model->loadFromConfiguration(config);
-    m_view->loadFromConfiguration(config);
+    m_renderer->loadFromConfiguration(config);
     m_controller->loadFromConfiguration(config);
 }
 
 void Entity::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) const
 {
-    m_view->draw(renderTarget, renderStates);
+    m_renderer->draw(renderTarget, renderStates);
 }
 void Entity::drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) const
 {
-    m_view->drawMeta(renderTarget, renderStates);
+    m_renderer->drawMeta(renderTarget, renderStates);
 }
 
 const EntityModel& Entity::model() const
@@ -62,13 +62,13 @@ EntityModel& Entity::model()
 {
     return *m_model;
 }
-const EntityView& Entity::view() const
+const EntityRenderer& Entity::renderer() const
 {
-    return *m_view;
+    return *m_renderer;
 }
-EntityView& Entity::view()
+EntityRenderer& Entity::renderer()
 {
-    return *m_view;
+    return *m_renderer;
 }
 const EntityController& Entity::controller() const
 {

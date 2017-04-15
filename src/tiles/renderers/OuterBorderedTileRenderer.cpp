@@ -1,4 +1,4 @@
-#include "tiles/views/OuterBorderedTileView.h"
+#include "tiles/renderers/OuterBorderedTileRenderer.h"
 
 #include "Root.h"
 
@@ -18,24 +18,24 @@
 
 using namespace ls;
 
-OuterBorderedTileView::OuterBorderedTileView() :
-    TileView(),
+OuterBorderedTileRenderer::OuterBorderedTileRenderer() :
+    TileRenderer(),
     m_commonData(nullptr),
     m_spriteId(0)
 {
 
 }
-OuterBorderedTileView::OuterBorderedTileView(const OuterBorderedTileView& other) :
-    TileView(other),
+OuterBorderedTileRenderer::OuterBorderedTileRenderer(const OuterBorderedTileRenderer& other) :
+    TileRenderer(other),
     m_commonData(other.m_commonData),
     m_spriteId(other.m_spriteId)
 {
 }
-OuterBorderedTileView::~OuterBorderedTileView()
+OuterBorderedTileRenderer::~OuterBorderedTileRenderer()
 {
 }
 
-void OuterBorderedTileView::loadFromConfiguration(ConfigurationNode& config)
+void OuterBorderedTileRenderer::loadFromConfiguration(ConfigurationNode& config)
 {
     std::string texturePath = config["texture"].get<std::string>();
     m_commonData->texture = ResourceManager::instance().get<sf::Texture>(texturePath);
@@ -46,7 +46,7 @@ void OuterBorderedTileView::loadFromConfiguration(ConfigurationNode& config)
     m_commonData->outerBorderPriority = config["outerBorderPriority"].get<int>();
 }
 
-void OuterBorderedTileView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const
+void OuterBorderedTileRenderer::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const
 {
     const Vec2I& spritePos = m_commonData->spriteSet.at(m_spriteId);
 
@@ -57,7 +57,7 @@ void OuterBorderedTileView::draw(sf::RenderTarget& renderTarget, sf::RenderState
     renderTarget.draw(spr, renderStates);
 }
 
-void OuterBorderedTileView::drawOutside(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const
+void OuterBorderedTileRenderer::drawOutside(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const
 {
     enum Indices
     {
@@ -133,39 +133,39 @@ void OuterBorderedTileView::drawOutside(sf::RenderTarget& renderTarget, sf::Rend
     }
 }
 
-const sf::Texture& OuterBorderedTileView::texture() const
+const sf::Texture& OuterBorderedTileRenderer::texture() const
 {
     return m_commonData->texture.get();
 }
 
-int OuterBorderedTileView::outerBorderPriority() const
+int OuterBorderedTileRenderer::outerBorderPriority() const
 {
     return m_commonData->outerBorderPriority;
 }
-bool OuterBorderedTileView::hasOuterBorder() const
+bool OuterBorderedTileRenderer::hasOuterBorder() const
 {
     return true;
 }
-bool OuterBorderedTileView::coversOuterBorders() const
+bool OuterBorderedTileRenderer::coversOuterBorders() const
 {
     return false;
 }
 
-void OuterBorderedTileView::onTileInstantiated()
+void OuterBorderedTileRenderer::onTileInstantiated()
 {
     m_spriteId = m_commonData->spriteSet.chooseRandomSprite();
 }
 
-std::unique_ptr<ComponentCommonData> OuterBorderedTileView::createCommonDataStorage() const
+std::unique_ptr<ComponentCommonData> OuterBorderedTileRenderer::createCommonDataStorage() const
 {
     return std::make_unique<CommonData>();
 }
-void OuterBorderedTileView::setCommonDataStorage(ComponentCommonData& commonData)
+void OuterBorderedTileRenderer::setCommonDataStorage(ComponentCommonData& commonData)
 {
     m_commonData = static_cast<CommonData*>(&commonData);
 }
 
-std::unique_ptr<TileView> OuterBorderedTileView::clone() const
+std::unique_ptr<TileRenderer> OuterBorderedTileRenderer::clone() const
 {
-    return std::make_unique<OuterBorderedTileView>(*this);
+    return std::make_unique<OuterBorderedTileRenderer>(*this);
 }

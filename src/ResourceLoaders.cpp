@@ -18,7 +18,7 @@ std::pair<std::string, std::unique_ptr<TilePrefab>> ResourceLoader<TilePrefab>::
     std::string tileName = tileConfig["name"].get<std::string>();
 
     std::unique_ptr<TileModel> model = nullptr;
-    std::unique_ptr<TileView> view = nullptr;
+    std::unique_ptr<TileRenderer> renderer = nullptr;
     std::unique_ptr<TileController> controller = nullptr;
 
     std::string modelName = tileConfig["model"].get<std::string>();
@@ -31,14 +31,14 @@ std::pair<std::string, std::unique_ptr<TilePrefab>> ResourceLoader<TilePrefab>::
         throw std::runtime_error("No tile model with name " + modelName);
     }
 
-    std::string viewName = tileConfig["view"].get<std::string>();
+    std::string rendererName = tileConfig["renderer"].get<std::string>();
     try
     {
-        view = tileViews().at(viewName)->clone();
+        renderer = tileRenderers().at(rendererName)->clone();
     }
     catch(std::out_of_range&)
     {
-        throw std::runtime_error("No tile view with name " + viewName);
+        throw std::runtime_error("No tile renderer with name " + rendererName);
     }
 
     std::string controllerName = tileConfig["controller"].get<std::string>();
@@ -54,13 +54,13 @@ std::pair<std::string, std::unique_ptr<TilePrefab>> ResourceLoader<TilePrefab>::
     std::unique_ptr<TilePrefab> tile = std::make_unique<TilePrefab>
         (
             std::move(model),
-            std::move(view),
+            std::move(renderer),
             std::move(controller)
             );
 
     tile->loadFromConfiguration(tileConfig);
 
-    std::cout << "\nLoaded tile: " << tileName << "\n      model: " << modelName << "\n       view: " << viewName << "\n controller: " << controllerName << '\n';
+    std::cout << "\nLoaded tile: " << tileName << "\n      model: " << modelName << "\n   renderer: " << rendererName << "\n controller: " << controllerName << '\n';
 
     return std::make_pair(tileName, std::move(tile));
 }
@@ -73,7 +73,7 @@ std::pair<std::string, std::unique_ptr<Entity>> ResourceLoader<Entity>::load(con
     std::string entityName = entityConfig["name"].get<std::string>();
 
     std::unique_ptr<EntityModel> model = nullptr;
-    std::unique_ptr<EntityView> view = nullptr;
+    std::unique_ptr<EntityRenderer> renderer = nullptr;
     std::unique_ptr<EntityController> controller = nullptr;
 
     std::string modelName = entityConfig["model"].get<std::string>();
@@ -89,11 +89,11 @@ std::pair<std::string, std::unique_ptr<Entity>> ResourceLoader<Entity>::load(con
     std::string viewName = entityConfig["view"].get<std::string>();
     try
     {
-        view = entityViews().at(viewName)->create(nullptr);
+        renderer = entityRenderers().at(viewName)->create(nullptr);
     }
     catch(std::out_of_range&)
     {
-        throw std::runtime_error("No entity view with name " + viewName);
+        throw std::runtime_error("No entity renderer with name " + viewName);
     }
 
     std::string controllerName = entityConfig["controller"].get<std::string>();
@@ -109,13 +109,13 @@ std::pair<std::string, std::unique_ptr<Entity>> ResourceLoader<Entity>::load(con
     std::unique_ptr<Entity> entity = std::make_unique<Entity>
         (
             std::move(model),
-            std::move(view),
+            std::move(renderer),
             std::move(controller)
             );
 
     entity->loadFromConfiguration(entityConfig);
 
-    std::cout << "\nLoaded entity: " << entityName << "\n        model: " << modelName << "\n         view: " << viewName << "\n   controller: " << controllerName << '\n';
+    std::cout << "\nLoaded entity: " << entityName << "\n        model: " << modelName << "\n     renderer: " << viewName << "\n   controller: " << controllerName << '\n';
 
     return std::make_pair(entityName, std::move(entity));
 }

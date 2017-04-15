@@ -1,8 +1,6 @@
-#ifndef INNERBORDEREDWALLTILEVIEW_H
-#define INNERBORDEREDWALLTILEVIEW_H
+#pragma once
 
-
-#include "TileView.h"
+#include "TileRenderer.h"
 
 #include "ResourceManager.h"
 
@@ -22,12 +20,12 @@ class MapLayer;
 class Tile;
 class TileLocation;
 
-class InnerBorderedWallTileView : public TileView
+class InnerBorderedWallTileRenderer : public TileRenderer
 {
 public:
-    InnerBorderedWallTileView();
-    InnerBorderedWallTileView(const InnerBorderedWallTileView& other);
-    virtual ~InnerBorderedWallTileView();
+    InnerBorderedWallTileRenderer();
+    InnerBorderedWallTileRenderer(const InnerBorderedWallTileRenderer& other);
+    virtual ~InnerBorderedWallTileRenderer();
 
     virtual void loadFromConfiguration(ConfigurationNode& config);
 
@@ -42,7 +40,7 @@ public:
     virtual std::unique_ptr<ComponentCommonData> createCommonDataStorage() const;
     virtual void setCommonDataStorage(ComponentCommonData& commonData);
 
-    virtual std::unique_ptr<TileView> clone() const;
+    virtual std::unique_ptr<TileRenderer> clone() const;
 protected:
     struct CommonData : public ComponentCommonData
     {
@@ -74,6 +72,4 @@ protected:
     virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location, const CommonData::SpriteSet& spriteSet) const;
 };
 
-REGISTER_TILE_VIEW_TYPE(InnerBorderedWallTileView)
-
-#endif // INNERBORDEREDWALLTILEVIEW_H
+REGISTER_TILE_RENDERER_TYPE(InnerBorderedWallTileRenderer)

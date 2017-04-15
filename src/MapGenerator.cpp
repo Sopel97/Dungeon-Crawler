@@ -3,7 +3,7 @@
 #include "tiles/Tile.h"
 #include "tiles/TilePrefab.h"
 #include "tiles/TileStack.h"
-#include "tiles/views/TileView.h"
+#include "tiles/renderers/TileRenderer.h"
 
 #include "TileColumn.h"
 #include "MapLayer.h"

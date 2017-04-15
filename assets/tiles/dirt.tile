@@ -3,7 +3,7 @@ tile = {
     name = "Dirt",
     
     model = "PlainTileModel",
-    view = "OuterBorderedTileView",
+    renderer = "OuterBorderedTileRenderer",
     controller = "PlainTileController",
 
     texture = "Spritesheet",

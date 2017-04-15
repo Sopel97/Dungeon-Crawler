@@ -3,7 +3,7 @@
 #include "TileColumn.h"
 #include "World.h"
 #include "tiles/models/TileModel.h"
-#include "tiles/views/TileView.h"
+#include "tiles/renderers/TileRenderer.h"
 #include "tiles/controllers/TileController.h"
 
 #include "tiles/TileStack.h"

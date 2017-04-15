@@ -1,5 +1,4 @@
-#ifndef TILEVIEW_H
-#define TILEVIEW_H
+#pragma once
 
 #include "Configuration.h"
 
@@ -16,12 +15,12 @@ class MapLayer;
 class Tile;
 class TileLocation;
 
-class TileView //must be functions (ie. all methods must return resonable values and there is no pure virtual member functions)
+class TileRenderer //must be functions (ie. all methods must return resonable values and there is no pure virtual member functions)
 {
 public:
-    TileView();
-    TileView(const TileView& other);
-    virtual ~TileView();
+    TileRenderer();
+    TileRenderer(const TileRenderer& other);
+    virtual ~TileRenderer();
 
     virtual void loadFromConfiguration(ConfigurationNode& config);
 
@@ -47,9 +46,7 @@ public:
     virtual std::unique_ptr<ComponentCommonData> createCommonDataStorage() const;
     virtual void setCommonDataStorage(ComponentCommonData& commonData);
 
-    virtual std::unique_ptr<TileView> clone() const;
+    virtual std::unique_ptr<TileRenderer> clone() const;
 protected:
     Tile* m_owner;
 };
-
-#endif // TILEVIEW_H
