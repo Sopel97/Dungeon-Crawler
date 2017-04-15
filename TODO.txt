@@ -1,16 +1,13 @@
-0. make draw and drawmeta without code duplication
-0.5. make meta sprites specifieable in config files
-0.6. world draw funtion got messy, clean it up
 
+
+0.9. consider passing tilestack to the render function
+0.99. consider making a sprite selector class that can be dynamically specified during creation of tiles.
+    - it would handle sprite selection based on desired tile aspects or some other source (quantity based, weighted)
+    - think of a way to make it performant and VERY generic
 1. consider moving maxQuantity to model
 2. Mimic tile classes for entities
+2.4. Try to do MVC class and inherit from it in tiles and entities, everything related to mvc
 2.5. rename commondata to shareddata
-3. Do optimisation for stateless tiles ONLY when necessary. Would involve a lot of work for little gain
-3??? Optimisation for stateless Tiles. Would not be copied during cloning (tile's clone method STILL clones, user would have to handle it manually). The only instance would be in resource manager.
-3.1??? Optimisation for stateless components. Similar, but Tiles would have to handle it. Only instances would be in component registrars. Would require tiles to use raw pointers and manage components manually.
-3.2 USE DynamicPtr from LibS - factory would return an owning or nonowning pointer depending on statefullness
-
-4. Try making world rendering into a texture and then stretch it onto the window with a custom shader that makes 'stretch lines' depending on world coords, not window coords
 
 5. Decouple WindowSpaceManager with sf::Window (As done in carcassone). Make it automatic instead of unique_ptr
 7. Clear world generation code
@@ -22,6 +19,7 @@
 15. Pass RenderStates by CONST reference
 16. Make renderers less dependent on WindowSpaceManager. Pass parent views to draw methods if relevant.
 17. Make a system that handles moving items between world and inventory (inv->inv, inv->world, world->inv, world->world).
+17.5. Recode inventory system
 18. Look around for names that can be made more meaningful because the project evolved and some names should mean different things than earlier
 19. Make camera like the one in Carcassone. Move there everything involving camera (for example conversion between coordinates)
 20. Direction class similar to one in Carcassone
@@ -44,6 +42,5 @@
 
 23. Convert from pixel units to tile units. (1 tile is 32 pixels)
 
-30. do simple lighting similar to tibia, because fast lighting with a lot of sources is required. raycasting would give cool effects but is too slow for this project
 
 later it could be expanded to produce lightmap fast with the described method and then second pass for player's line of sight using raycasting

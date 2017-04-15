@@ -46,6 +46,10 @@ Debug
 *.ipdb
 *.opensdf
 
+# Visual Studio files
+*.ipch
+*.db
+
 # =========================
 # Operating System Files
 # =========================
