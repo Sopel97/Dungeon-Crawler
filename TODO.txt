@@ -9,6 +9,8 @@
 2.4. Try to do MVC class and inherit from it in tiles and entities, everything related to mvc
 2.5. rename commondata to shareddata
 
+3. Do prefabs for entities too and use Component for entities
+
 5. Decouple WindowSpaceManager with sf::Window (As done in carcassone). Make it automatic instead of unique_ptr
 7. Clear world generation code
 9. in entity manager pass world by reference

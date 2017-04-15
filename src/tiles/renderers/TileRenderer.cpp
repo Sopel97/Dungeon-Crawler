@@ -5,12 +5,12 @@
 #include "GameConstants.h"
 
 TileRenderer::TileRenderer() :
-    m_owner(nullptr)
+    Component()
 {
 
 }
 TileRenderer::TileRenderer(const TileRenderer& other) :
-    m_owner(other.m_owner)
+	Component(other)
 {
 
 }
@@ -30,16 +30,6 @@ void TileRenderer::drawOutside(sf::RenderTarget& renderTarget, sf::RenderStates&
 void TileRenderer::drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const
 {
 
-}
-
-void TileRenderer::loadFromConfiguration(ConfigurationNode& config)
-{
-
-}
-
-void TileRenderer::setOwner(Tile* newOwner)
-{
-    m_owner = newOwner;
 }
 
 int TileRenderer::innerBorderGroup() const
@@ -78,15 +68,6 @@ void TileRenderer::onTileQuantityChanged(int oldQuantity, int newQuantity)
 
 }
 void TileRenderer::onTileInstantiated()
-{
-
-}
-
-std::unique_ptr<ComponentCommonData> TileRenderer::createCommonDataStorage() const
-{
-    return nullptr;
-}
-void TileRenderer::setCommonDataStorage(ComponentCommonData& commonData)
 {
 
 }

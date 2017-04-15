@@ -9,22 +9,21 @@
 
 #include <memory>
 
+#include "Component.h"
+
 class Tile;
 class TileLocation;
 class Inventory;
 
-class TileModel //must be functional (ie. all methods return resonable values and there is no pure virtual member functions)
+class TileModel : public Component<TileModel, Tile>
+	//must be functional (ie. all methods return resonable values and there is no pure virtual member functions)
 {
 public:
     TileModel();
     TileModel(const TileModel& other);
     virtual ~TileModel();
 
-    virtual void loadFromConfiguration(ConfigurationNode& config);
-
-    virtual bool equals(const TileModel& other) const; //NOTE: it is guaranteed that the type of other is the same as the type of *this
-
-    void setOwner(Tile* newOwner);
+    virtual bool equals(const TileModel& other) const; //NOTE: assume that the type of other is the same as the type of *this
 
     virtual bool hasCollider() const;
     virtual const ls::Rectangle2F& collider() const;
@@ -38,12 +37,7 @@ public:
     virtual void onTileQuantityChanged(int oldQuantity, int newQuantity);
     virtual void onTileInstantiated();
 
-    virtual std::unique_ptr<ComponentCommonData> createCommonDataStorage() const;
-    virtual void setCommonDataStorage(ComponentCommonData& commonData);
-
     virtual std::unique_ptr<TileModel> clone() const;
-protected:
-    Tile* m_owner;
 
 private:
     static const ls::Rectangle2F m_emptyCollider;
