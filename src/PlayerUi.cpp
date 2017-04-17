@@ -56,35 +56,26 @@ PlayerUi::~PlayerUi()
 
 void PlayerUi::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
 {
-    for(auto& window : m_panelWindows)
-    {
-        window->draw(*this, renderTarget, renderStates);
-    }
-    for(auto& window : m_popupWindows)
-    {
-        window->draw(*this, renderTarget, renderStates);
+    for(auto& window : m_windows)
+    {	
+		drawWindow(renderTarget, renderStates, *window);
+		setContentViewOfWindow(*window);
+        window->drawContent(*this, renderTarget, renderStates);
     }
 }
 
-void PlayerUi::drawWindowOnPanel(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, Window& window)
+void PlayerUi::drawWindow(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, PanelWindow& window)
 {
     Rectangle2I playerUiPanelRect = Root::instance().windowSpaceManager().regionRect(WindowSpaceManager::Region::Id::PlayerUi);
     const int& topBarHeight = window.hasHeader() ? m_windowHeaderHeight : m_windowTopBarHeight;
-    Rectangle2I windowRect = Rectangle2I::withSize(playerUiPanelRect.min + Vec2I(0, window.offsetFromTop()), m_playerUiPanelWidth, window.contentHeight() + m_windowBottomBarHeight + topBarHeight);
+    Rectangle2I windowRect = window.windowRect().translated(playerUiPanelRect.min);
 
     drawWindow(renderTarget, renderStates, window, windowRect);
 }
-void PlayerUi::drawPopupWindow(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, Window& window)
-{
-    const int& topBarHeight = window.hasHeader() ? m_windowHeaderHeight : m_windowTopBarHeight;
-    Rectangle2I windowRect = Rectangle2I::withSize(window.position(), window.contentWidth() + m_windowLeftBarWidth + m_windowRightBarWidth, window.contentHeight() + m_windowBottomBarHeight + topBarHeight);
-
-    drawWindow(renderTarget, renderStates, window, windowRect);
-}
-void PlayerUi::drawWindow(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, Window& window, const Rectangle2I& rect)
+void PlayerUi::drawWindow(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, PanelWindow& window, const Rectangle2I& rect)
 {
     ResourceHandle<sf::Texture> backgroundTexture = ResourceManager::instance().get<sf::Texture>("UiBackground");
-    ResourceHandle<sf::Texture> verticalBarsSprites = ResourceManager::instance().get<sf::Texture>("UiVerticalBars");
+	ResourceHandle<sf::Texture> verticalBarsSprites = ResourceManager::instance().get<sf::Texture>("UiVerticalBars");
     ResourceHandle<sf::Texture> horizontalBarsSprites = ResourceManager::instance().get<sf::Texture>("UiHorizontalBars");
     ResourceHandle<sf::Texture> nonRepeatingSprites = ResourceManager::instance().get<sf::Texture>("UiNonRepeating");
 
@@ -203,49 +194,39 @@ void PlayerUi::drawWindow(sf::RenderTarget& renderTarget, sf::RenderStates& rend
     }
 }
 
-void PlayerUi::setContentViewOfPanelWindow(Window& window)
+void PlayerUi::setContentViewOfWindow(PanelWindow& window)
 {
-    const int& topBarHeight = window.hasHeader() ? m_windowHeaderHeight : m_windowTopBarHeight;
-
     Rectangle2I playerUiPanelRect = Root::instance().windowSpaceManager().regionRect(WindowSpaceManager::Region::Id::PlayerUi);
-    Rectangle2I rect = Rectangle2I::withSize(playerUiPanelRect.min + Vec2I(0, window.offsetFromTop()), m_playerUiPanelWidth, window.windowHeight());
 
-    Rectangle2I windowInteriorRect(rect.min + Vec2I(m_windowLeftBarWidth, topBarHeight), rect.max - Vec2I(m_windowRightBarWidth, m_windowBottomBarHeight));
-
-    Root::instance().windowSpaceManager().setViewToRect(windowInteriorRect, Rectangle2F::withSize(Vec2F(0.0f, static_cast<float>(window.scroll())), static_cast<float>(window.contentWidth()), static_cast<float>(window.contentHeight())));
-}
-
-void PlayerUi::setContentViewOfPopupWindow(Window& window)
-{
-    const int& topBarHeight = window.hasHeader() ? m_windowHeaderHeight : m_windowTopBarHeight;
-
-    Rectangle2I rect = Rectangle2I::withSize(window.position(), window.windowWidth(), window.windowHeight());
-
-    Rectangle2I windowInteriorRect(rect.min + Vec2I(m_windowLeftBarWidth, topBarHeight), rect.max - Vec2I(m_windowRightBarWidth, m_windowBottomBarHeight));
+    Rectangle2I windowInteriorRect = window.contentRect().translated(playerUiPanelRect.min);
 
     Root::instance().windowSpaceManager().setViewToRect(windowInteriorRect, Rectangle2F::withSize(Vec2F(0.0f, static_cast<float>(window.scroll())), static_cast<float>(window.contentWidth()), static_cast<float>(window.contentHeight())));
 }
 
-void PlayerUi::closeWindow(Window* window)
+void PlayerUi::closeWindow(PanelWindow* window)
 {
-    for(auto& w : m_ownedWindows)
-    {
-        if(w == window)
-        {
-            delete window;
-            break;
-        }
-    }
+    m_windows.erase(std::remove(m_windows.begin(), m_windows.end(), window), m_windows.end());
 
-    m_panelWindows.erase(std::remove(m_panelWindows.begin(), m_panelWindows.end(), window), m_panelWindows.end());
-    m_popupWindows.erase(std::remove(m_popupWindows.begin(), m_popupWindows.end(), window), m_popupWindows.end());
-    m_ownedWindows.erase(std::remove(m_ownedWindows.begin(), m_ownedWindows.end(), window), m_ownedWindows.end());
+	updateWindowPositions();
 }
-void PlayerUi::openPanelWindow(Window* window)
+void PlayerUi::openWindow(PanelWindow* window)
 {
-    m_panelWindows.push_back(window);
+	m_windows.push_back(window);
+
+	updateWindowPositions();
 }
-void PlayerUi::openPopupWindow(Window* window)
+
+void PlayerUi::updateWindowPositions()
 {
-    m_popupWindows.push_back(window);
+	int currentPosition = 0;
+	for (PanelWindow* window : m_windows)
+	{
+		window->setPosition(currentPosition);
+		currentPosition += window->windowHeight();
+	}
+}
+
+void PlayerUi::onWindowUpdated(PanelWindow& window)
+{
+	updateWindowPositions();
 }

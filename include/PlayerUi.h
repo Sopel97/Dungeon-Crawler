@@ -3,6 +3,8 @@
 
 #include <vector>
 
+#include "WindowSpace.h"
+
 #include "../LibS/Shapes.h"
 
 namespace sf
@@ -13,53 +15,74 @@ namespace sf
 class Player;
 class Game;
 
-class PlayerUi
+class PlayerUi : public WindowSpace
 {
 public:
-    class Window
-    {
-    public:
-        virtual int offsetFromTop() const { return 0; } //has specified either this or the position depending on where is stored
-        virtual ls::Vec2I position() const { return ls::Vec2I{0, 0}; }
-        virtual int contentWidth() const { return m_playerUiPanelWidth; }
-        virtual int contentHeight() const { return 0; }
+	class PanelWindow
+	{
+	protected:
+		int m_position;
+	public:
+		virtual int position() const { return m_position; } //offset from top of the panel
+		virtual void setPosition(int newPosition) { m_position = newPosition; }
+		virtual int minContentHeight() const { return 0; }
+		virtual int maxContentHeight() const { return 0; }
 
-        virtual int minContentHeight() const { return 0; }
-        virtual int maxContentHeight() const { return 0; }
+		virtual int scroll() const { return 0; }
 
-        virtual int scroll() const { return 0; }
+		virtual bool isMinimizable() const { return false; }
+		virtual bool isCloseable() const { return false; }
+		virtual bool isResizeable() const { return false; }
 
-        virtual bool isMinimizable() const { return false; }
-        virtual bool isCloseable() const { return false; }
-        virtual bool isResizeable() const { return false; }
+		virtual std::string title() const { return ""; }
+		virtual bool hasHeader() const { return true; }
+		virtual bool hasScrollBar() const { return true; }
 
-        virtual std::string title() const { return ""; }
-        virtual bool hasHeader() const { return true; }
-        virtual bool hasScrollBar() const { return true; }
+		virtual int headerHeight() const 
+		{
+			return this->hasHeader() ? m_windowHeaderHeight : m_windowTopBarHeight;
+		}
 
-        virtual int windowWidth() const { return this->contentWidth() + m_windowLeftBarWidth + m_windowRightBarWidth; }
+		virtual int contentWidth() const { return m_playerUiPanelWidth - m_windowLeftBarWidth - m_windowRightBarWidth; }
+		virtual int contentHeight() const { return 0; }
+		virtual ls::Rectangle2I contentRect() const 
+		{ 
+			return ls::Rectangle2I::withSize(
+				ls::Vec2I(m_windowLeftBarWidth, this->position() + this->headerHeight()),
+				this->contentWidth(),
+				this->contentHeight()
+			);
+		}
+
+        virtual int windowWidth() const { return m_playerUiPanelWidth; }
         virtual int windowHeight() const 
         {
-            const int& topBarHeight = this->hasHeader() ? m_windowHeaderHeight : m_windowTopBarHeight;
-            return this->contentHeight() + m_windowBottomBarHeight + topBarHeight;
+			return this->contentHeight() + this->headerHeight() + m_windowBottomBarHeight;
         }
+		virtual ls::Rectangle2I windowRect() const
+		{
+			return ls::Rectangle2I::withSize(
+				ls::Vec2I(0, this->position()),
+				this->windowWidth(),
+				this->windowHeight()
+			);
+		}
 
-        virtual void draw(PlayerUi& playerUi, sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) = 0;
+        virtual void drawContent(PlayerUi& playerUi, sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) = 0;
     };
 
     PlayerUi(Player& player);
     ~PlayerUi();
 
     void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
-    void drawWindowOnPanel(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, Window& window); //later will somehow draw buttons.
-    void drawPopupWindow(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, Window& window); //later will somehow draw buttons.
+    void drawWindow(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, PanelWindow& window); //later will somehow draw buttons.
 
-    void setContentViewOfPanelWindow(Window& window);
-    void setContentViewOfPopupWindow(Window& window);
+    void setContentViewOfWindow(PanelWindow& window);
 
-    void closeWindow(Window* window);
-    void openPanelWindow(Window* window); //does not take ownership
-    void openPopupWindow(Window* window); //does not take ownership
+    void closeWindow(PanelWindow* window);
+    void openWindow(PanelWindow* window); //does not take ownership
+
+	void onWindowUpdated(PanelWindow& window);
     //TODO: move window position setting from inventory system to here
 
 protected:
@@ -97,11 +120,11 @@ protected:
 
     Player& m_player;
 
-    std::vector<Window*> m_ownedWindows;
-    std::vector<Window*> m_panelWindows;
-    std::vector<Window*> m_popupWindows;
+	std::vector<PanelWindow*> m_windows;
 
-    void drawWindow(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, Window& window, const ls::Rectangle2I& rect);
+    void drawWindow(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, PanelWindow& window, const ls::Rectangle2I& rect);
+
+	void updateWindowPositions();
 };
 
 #endif // PLAYERUI_H

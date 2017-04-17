@@ -11,6 +11,8 @@
 
 #include "ResourceManager.h"
 
+#include "WindowSpace.h"
+
 #include "../LibS/Geometry.h"
 
 #include <SFML/Graphics.hpp>
@@ -21,7 +23,7 @@ class TileLocation;
 class Player;
 class TallDrawable;
 
-class World
+class World : public WindowSpace
 {
 public:
     World(Root& root, Player& player);

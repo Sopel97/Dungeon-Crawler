@@ -56,8 +56,6 @@ void InventorySystem::closeInventory(Inventory* inventory)
         abandonInventory(*current);
         current = parent;
     }
-
-    updatePositionsOfOpenedInventories();
 }
 void InventorySystem::abandonInventory(TrackedInventory& inventory)
 {
@@ -74,17 +72,6 @@ bool InventorySystem::isInventoryTracked(Inventory* inventory)
 bool InventorySystem::isParentOfAnyInventory(TrackedInventory& inventory)
 {
     return std::find_if(m_trackedInventories.begin(), m_trackedInventories.end(), [inventory](const TrackedInventory & inv) {return inv.parentInventory == &inventory;}) != m_trackedInventories.end();
-}
-
-void InventorySystem::updatePositionsOfOpenedInventories()
-{
-    int currentHeight = 0;
-    for(auto& inventory : m_openedInventories)
-    {
-        InventoryView& inventoryView = inventory->inventoryView;
-        inventoryView.setOffsetFromTop(currentHeight);
-        currentHeight += inventoryView.windowHeight();
-    }
 }
 
 bool InventorySystem::tryInteractWithExternalInventory(Inventory* inventory, const TileLocation& location)
@@ -120,9 +107,8 @@ const std::list<InventorySystem::TrackedInventory*>& InventorySystem::openedInve
 void InventorySystem::openInventory(TrackedInventory* inventory)
 {
     m_openedInventories.push_back(inventory);
-    m_playerUi.openPanelWindow(&(inventory->inventoryView));
-    inventory->isOpened = true;
-    inventory->inventoryView.setContentHeightToMax();
+	inventory->inventoryView.setContentHeightToMax();
+	inventory->isOpened = true;
 
-    updatePositionsOfOpenedInventories();
+    m_playerUi.openWindow(&(inventory->inventoryView));
 }

@@ -27,7 +27,7 @@
 20. Direction class similar to one in Carcassone
 
 
-21. WINDOW SYSTEM
+21. WINDOW SYSTEM AND DIVISION BASED WINDOW SPACE MANAGEMENT
     - WindowSpaceManager allows for dynamic creation (registration) of regions and scenes (by subdividing vertically or horizontally (like a tree)), classes that are part of the background regions derive from a special class that makes it possible to callback sfml events
     - Every window derives from an abstract class, a lot of parametrization
     - popup window and inventory window is the same class with different values
@@ -36,6 +36,8 @@
     - sfml events are distributed from game loop to WindowSpaceManager to regions/windows
     - WindowSpace or something, 1. main window space in WindowSpaceManager for popup windows, 2. other windowSpace for user ui panel, both with different constraints on windows
     - on mouse down remembers where it was send so the next mouse up will be send there too
+    - also always sends to region under mouse
+    - event callbacks receive references to regions
 
 22. Simplified sprite system
     - AnimatedSprite class that holds instances of Sprite (x, y, width, height, later also spritesheet id if needed) and table of frame time sums (for binary search)

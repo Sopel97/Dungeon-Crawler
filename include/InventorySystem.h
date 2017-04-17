@@ -6,6 +6,8 @@
 
 #include <list>
 
+//TODO: rewrite as specified in todo
+
 class Inventory;
 class AttemptToInteractWithExternalInventory;
 class TileLocation;
@@ -88,8 +90,6 @@ public:
 
     void abandonInventory(TrackedInventory& inventory);
     bool isParentOfAnyInventory(TrackedInventory& inventory);
-
-    void updatePositionsOfOpenedInventories();
 
     bool tryInteractWithExternalInventory(Inventory* inventory, const TileLocation& location);
 

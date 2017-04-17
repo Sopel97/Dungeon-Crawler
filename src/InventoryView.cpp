@@ -15,7 +15,6 @@ const int InventoryView::m_minSensibleHeight = 46;
 
 InventoryView::InventoryView(Inventory* parent) :
     m_parentInventory(parent),
-    m_offsetFromTop(0),
     m_scroll(0),
     m_contentHeight(m_minSensibleHeight),
     m_minContentHeight(m_minSensibleHeight),
@@ -29,7 +28,6 @@ InventoryView::InventoryView(Inventory* parent) :
 InventoryView::InventoryView(Inventory* parent, const std::vector<InventorySlotView>& slots) :
     m_parentInventory(parent),
     m_slotViews(slots),
-    m_offsetFromTop(0),
     m_scroll(0),
     m_contentHeight(m_minSensibleHeight),
     m_minContentHeight(m_minSensibleHeight),
@@ -43,7 +41,6 @@ InventoryView::InventoryView(Inventory* parent, const std::vector<InventorySlotV
 InventoryView::InventoryView(Inventory* parent, std::vector<InventorySlotView>&& slots) :
     m_parentInventory(parent),
     m_slotViews(std::move(slots)),
-    m_offsetFromTop(0),
     m_scroll(0),
     m_contentHeight(m_minSensibleHeight),
     m_minContentHeight(m_minSensibleHeight),
@@ -55,66 +52,6 @@ InventoryView::InventoryView(Inventory* parent, std::vector<InventorySlotView>&&
     updateMaxContentHeight();
 }
 
-InventoryView::InventoryView(const InventoryView& other) :
-    m_parentInventory(other.m_parentInventory),
-    m_slotViews(other.m_slotViews),
-    m_offsetFromTop(other.m_offsetFromTop),
-    m_scroll(other.m_scroll),
-    m_contentHeight(other.m_contentHeight),
-    m_minContentHeight(other.m_minContentHeight),
-    m_maxContentHeight(other.m_maxContentHeight),
-    m_isMinimizable(other.m_isMinimizable),
-    m_isCloseable(other.m_isCloseable),
-    m_isResizeable(other.m_isResizeable)
-{
-
-}
-InventoryView::InventoryView(InventoryView&& other) :
-    m_parentInventory(std::move(other.m_parentInventory)),
-    m_slotViews(std::move(other.m_slotViews)),
-    m_offsetFromTop(std::move(other.m_offsetFromTop)),
-    m_scroll(std::move(other.m_scroll)),
-    m_contentHeight(std::move(other.m_contentHeight)),
-    m_minContentHeight(std::move(other.m_minContentHeight)),
-    m_maxContentHeight(std::move(other.m_maxContentHeight)),
-    m_isMinimizable(std::move(other.m_isMinimizable)),
-    m_isCloseable(std::move(other.m_isCloseable)),
-    m_isResizeable(std::move(other.m_isResizeable))
-{
-
-}
-
-InventoryView& InventoryView::operator =(const InventoryView& other)
-{
-    m_parentInventory = other.m_parentInventory;
-    m_slotViews = other.m_slotViews;
-    m_offsetFromTop = other.m_offsetFromTop;
-    m_scroll = other.m_scroll;
-    m_contentHeight = other.m_contentHeight;
-    m_minContentHeight = other.m_minContentHeight;
-    m_maxContentHeight = other.m_maxContentHeight;
-    m_isMinimizable = other.m_isMinimizable;
-    m_isCloseable = other.m_isCloseable;
-    m_isResizeable = other.m_isResizeable;
-
-    return *this;
-}
-InventoryView& InventoryView::operator =(InventoryView&& other)
-{
-    m_parentInventory = std::move(other.m_parentInventory);
-    m_slotViews = std::move(other.m_slotViews);
-    m_offsetFromTop = std::move(other.m_offsetFromTop);
-    m_scroll = std::move(other.m_scroll);
-    m_contentHeight = std::move(other.m_contentHeight);
-    m_minContentHeight = std::move(other.m_minContentHeight);
-    m_maxContentHeight = std::move(other.m_maxContentHeight);
-    m_isMinimizable = std::move(other.m_isMinimizable);
-    m_isCloseable = std::move(other.m_isCloseable);
-    m_isResizeable = std::move(other.m_isResizeable);
-
-    return *this;
-}
-
 
 void InventoryView::addInventorySlotView(const InventorySlotView& slot)
 {
@@ -122,18 +59,9 @@ void InventoryView::addInventorySlotView(const InventorySlotView& slot)
     updateMaxContentHeight();
 }
 
-void InventoryView::setOffsetFromTop(int newOffset)
-{
-    m_offsetFromTop = newOffset;
-}
-
 Inventory const* InventoryView::parentInventory() const
 {
     return m_parentInventory;
-}
-int InventoryView::offsetFromTop() const
-{
-    return m_offsetFromTop;
 }
 int InventoryView::contentHeight() const
 {
@@ -193,12 +121,8 @@ void InventoryView::setContentHeightToMax()
     m_contentHeight = m_maxContentHeight;
 }
 
-void InventoryView::draw(PlayerUi& playerUi, sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
+void InventoryView::drawContent(PlayerUi& playerUi, sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
 {
-    playerUi.drawWindowOnPanel(renderTarget, renderStates, *this);
-
-    playerUi.setContentViewOfPanelWindow(*this);
-
     int numberOfSlots = m_slotViews.size();
     for(int i = 0; i < numberOfSlots; ++i)
     {

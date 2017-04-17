@@ -8,24 +8,22 @@
 
 class Inventory;
 
-class InventoryView : public PlayerUi::Window
+class InventoryView : public PlayerUi::PanelWindow
 {
 public:
     InventoryView(Inventory* parent);
     InventoryView(Inventory* parent, const std::vector<InventorySlotView>& slots);
     InventoryView(Inventory* parent, std::vector<InventorySlotView>&& slots);
 
-    InventoryView(const InventoryView& other);
-    InventoryView(InventoryView&& other);
+    InventoryView(const InventoryView& other) = default;
+    InventoryView(InventoryView&& other) = default;
 
-    InventoryView& operator =(const InventoryView& other);
-    InventoryView& operator =(InventoryView&& other);
+    InventoryView& operator =(const InventoryView& other) = default;
+    InventoryView& operator =(InventoryView&& other) = default;
 
     void addInventorySlotView(const InventorySlotView& slot);
-    void setOffsetFromTop(int newOffset);
 
     Inventory const* parentInventory() const;
-    virtual int offsetFromTop() const;
     virtual int contentHeight() const;
     virtual int minContentHeight() const;
     virtual int maxContentHeight() const;
@@ -45,7 +43,7 @@ public:
     void setContentHeight(int newHeight);
     void setContentHeightToMax();
 
-    virtual void draw(PlayerUi& playerUi, sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
+    virtual void drawContent(PlayerUi& playerUi, sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
     void update();
 
 protected:
@@ -54,7 +52,6 @@ protected:
     Inventory* m_parentInventory;
     std::vector<InventorySlotView> m_slotViews;
 
-    int m_offsetFromTop;
     int m_scroll;
     int m_contentHeight;
     int m_minContentHeight;
