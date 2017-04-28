@@ -15,7 +15,7 @@ namespace sf
 class Player;
 class Game;
 
-class PlayerUi : public WindowSpace
+class PlayerUi : public WindowSpaceUser
 {
 public:
 	class PanelWindow

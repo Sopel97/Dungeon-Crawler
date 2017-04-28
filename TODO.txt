@@ -28,7 +28,9 @@
 
 
 21. WINDOW SYSTEM AND DIVISION BASED WINDOW SPACE MANAGEMENT
-    - WindowSpaceManager allows for dynamic creation (registration) of regions and scenes (by subdividing vertically or horizontally (like a tree)), classes that are part of the background regions derive from a special class that makes it possible to callback sfml events
+    - WindowSpaceManager allows for dynamic creation (registration) of regions and scenes (by subdividing vertically or horizontally (like a tree)), classes that are part of the background regions derive from
+     a special class that makes it possible to callback sfml events
+        priority: by pixels -> by percentage -> "what's left"
     - Every window derives from an abstract class, a lot of parametrization
     - popup window and inventory window is the same class with different values
     - window content (interior) is injected into a window class (make it very generic)

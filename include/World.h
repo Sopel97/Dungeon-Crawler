@@ -11,7 +11,7 @@
 
 #include "ResourceManager.h"
 
-#include "WindowSpace.h"
+#include "WindowSpaceUser.h"
 
 #include "../LibS/Geometry.h"
 
@@ -23,7 +23,7 @@ class TileLocation;
 class Player;
 class TallDrawable;
 
-class World : public WindowSpace
+class World : public WindowSpaceUser
 {
 public:
     World(Root& root, Player& player);
