@@ -16,8 +16,10 @@
 
 using namespace ls;
 
-Root::Root() : 
-    m_renderStates(),
+Root::Root() :
+	m_window(sf::VideoMode(m_defaultWindowWidth, m_defaultWindowHeight), "Dungeon Crawler Test"),
+	m_renderStates(),
+	m_windowSpaceManager(m_window),
     m_rng(12341),
     m_lastFrameTime(0.0f),
     m_lastMeasuredFps(0),
@@ -37,9 +39,6 @@ Root& Root::instance()
 
 void Root::run()
 {
-    m_window.create(sf::VideoMode(m_defaultWindowWidth, m_defaultWindowHeight), "Dungeon Crawler Test");
-    m_windowSpaceManager = std::make_unique<WindowSpaceManager>(m_window);
-
     m_game = std::make_unique<Game>(*this);
 
     sf::Clock clock;
@@ -58,11 +57,12 @@ void Root::run()
 
         while(m_window.pollEvent(event))
         {
-            if(event.type == sf::Event::EventType::MouseButtonPressed) onMouseButtonPressed(event.mouseButton);
-            if(event.type == sf::Event::EventType::MouseButtonReleased) onMouseButtonReleased(event.mouseButton);
-            if(event.type == sf::Event::EventType::MouseMoved) onMouseMoved(event.mouseMove);
-            if(event.type == sf::Event::EventType::Closed) m_window.close();
-            if(event.type == sf::Event::EventType::Resized) onWindowResized(event);
+			if (event.type == sf::Event::EventType::Closed) m_window.close();
+			else if (event.type == sf::Event::EventType::Resized) onWindowResized(event);
+			else
+			{
+				m_windowSpaceManager.tryDispatchEvent(event);
+			}
         }
         if(time >= m_tickTime + lastTick)
         {
@@ -79,7 +79,7 @@ void Root::run()
         if(m_window.hasFocus())
         {
             m_window.clear(sf::Color::Black);
-            m_game->draw(m_window, m_renderStates); //temporarly not capped just to see how fps is doing
+            m_game->draw(m_renderStates); //temporarly not capped just to see how fps is doing
             m_window.display();
 
             ++m_currentFpsCounter;
@@ -94,7 +94,7 @@ void Root::processAsyncKeyboardInput(float dt)
     m_game->player().processAsyncKeyboardInput(m_game->world(), dt);
 }
 
-void Root::loadAssets()
+void Root::loadAssets() // TODO: should be done dynamically
 {
     ResourceManager::instance().load<sf::Texture>("assets\\gfx\\spritesheet.png", "Spritesheet");
     if(ResourceHandle<sf::Texture> texture = ResourceManager::instance().load<sf::Texture>("assets\\gfx\\ui_background.png", "UiBackground"))
@@ -120,26 +120,14 @@ void Root::loadAssets()
     ResourceManager::instance().load<sf::Font>("assets\\fonts\\standard_font.ttf", "Font");
 }
 
-void Root::onMouseButtonPressed(sf::Event::MouseButtonEvent& event)
-{
-    m_game->onMouseButtonPressed(event);
-}
-void Root::onMouseButtonReleased(sf::Event::MouseButtonEvent& event)
-{
-    m_game->onMouseButtonReleased(event);
-}
-void Root::onMouseMoved(sf::Event::MouseMoveEvent& event)
-{
-    m_game->onMouseMoved(event);
-}
 void Root::onWindowResized(sf::Event& event)
 {
-    m_windowSpaceManager->onWindowResized(event);
+    m_windowSpaceManager.onWindowResized();
 }
 
 WindowSpaceManager& Root::windowSpaceManager()
 {
-    return *m_windowSpaceManager;
+    return m_windowSpaceManager;
 }
 sf::RenderWindow& Root::window()
 {
@@ -182,3 +170,17 @@ std::vector<std::string> Root::scanForFiles(const std::string& path, const std::
     return files;
 }
 
+
+void Root::setupWindow()
+{
+	auto& scene = m_windowSpaceManager.createScene("MainScene");
+	auto regions = scene.subdivide(
+		scene.rootHandle(),
+		WindowSpaceManager::SubdivisionParams::withPixels(
+			WindowSpaceManager::SubdivisionParams::Orientation::Horizontal,
+			WindowSpaceManager::SubdivisionParams::Subject::Second,
+			PlayerUi::playerUiPanelWidth()),
+		"World",
+		"PlayerUi"
+	);
+}

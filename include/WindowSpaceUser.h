@@ -16,10 +16,13 @@ private:
 	WindowSpaceManager::Scene* m_scene;
 	WindowSpaceManager::WindowRegionHandle m_windowRegionHandle;
 
+protected:
+	WindowSpaceManager::Scene& scene();
+	WindowSpaceManager::WindowRegion& windowRegion();
 public:
-	WindowSpaceUser(WindowSpaceManager& windowSpaceManager, WindowSpaceManager::Scene& scene, WindowSpaceManager::WindowRegionHandle windowRegionHandle);
+	WindowSpaceUser(WindowSpaceManager::WindowRegionFullLocalization& loc);
 	virtual ~WindowSpaceUser();
 
-	virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) = 0;
+	virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) {};
 };
 

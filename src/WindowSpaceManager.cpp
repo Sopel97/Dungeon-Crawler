@@ -353,7 +353,8 @@ void WindowSpaceManager::WindowRegion::draw(sf::RenderTarget& renderTarget, sf::
 }
 
 
-WindowSpaceManager::Scene::Scene(const ls::Rectangle2I& rect, const std::string& name) :
+WindowSpaceManager::Scene::Scene(WindowSpaceManager& windowSpaceManager, const ls::Rectangle2I& rect, const std::string& name) :
+	m_windowSpaceManager(&windowSpaceManager),
 	m_windowRegions(std::make_pair(WindowRegion(rect, "Root", *this), std::nullopt)),
 	m_name(name),
 	m_topmostRegions({ m_windowRegions.rootHandle() }),
@@ -427,10 +428,19 @@ bool WindowSpaceManager::Scene::hasParent(WindowRegionHandle h) const
 {
 	return m_windowRegions.hasParent(h);
 }
+WindowSpaceManager::WindowRegionHandle WindowSpaceManager::Scene::rootHandle() const
+{
+	return m_windowRegions.rootHandle();
+}
 
 WindowSpaceManager::WindowRegionHandle WindowSpaceManager::Scene::find(const std::string& name) const
 {
 	return m_windowRegions.findIf([&name](const WindowRegionStorageNode& node)->bool {return node.first.name() == name; });
+}
+WindowSpaceManager::WindowRegionFullLocalization WindowSpaceManager::Scene::fullLocalizationOf(const std::string& name)
+{
+	WindowRegionHandle h = find(name);
+	return { m_windowSpaceManager, this, h };
 }
 
 void WindowSpaceManager::Scene::update(const ls::Rectangle2I& rect)
@@ -453,7 +463,7 @@ void WindowSpaceManager::Scene::update(WindowRegionHandle h, const ls::Rectangle
 WindowSpaceManager::WindowRegionHandle WindowSpaceManager::Scene::queryRegion(const ls::Vec2I& pos) const
 {
 	WindowRegionHandle currentRegionHandle = m_windowRegions.rootHandle();
-	
+
 	// only leaves can be returned
 	while (hasChildren(currentRegionHandle))
 	{
@@ -518,13 +528,26 @@ bool WindowSpaceManager::Scene::tryDispatchEvent(sf::Event& event, const Vec2I& 
 		return false;
 	}
 }
+void WindowSpaceManager::Scene::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
+{
+	for (WindowRegionHandle h : m_topmostRegions)
+	{
+		WindowRegion& region = windowRegion(h);
+		region.draw(renderTarger, renderStates);
+	}
+}
 
 WindowSpaceManager::WindowSpaceManager(sf::RenderWindow& window) :
 	m_window(window),
 	m_scenes(),
-	m_currentScene()
+	m_currentScene(nullptr)
 {
 
+}
+auto WindowSpaceManager::createScene(const std::string& name)
+	-> Scene&
+{
+	return ((m_scenes.try_emplace(name, *this, rect(), name).first)->second);
 }
 
 WindowSpaceManager::Scene& WindowSpaceManager::scene(const std::string& name)
@@ -551,10 +574,47 @@ void WindowSpaceManager::onWindowResized()
 	m_currentScene->update(rect());
 }
 
+sf::View WindowSpaceManager::getRectView(const ls::Rectangle2I& rect, const ls::Rectangle2F& viewport) const
+{
+	sf::View view(sf::FloatRect(rect.min.x, rect.min.y, rect.width(), rect.height()));
+	view.setViewport(sf::FloatRect(viewport.min.x, viewport.min.y, viewport.width(), viewport.height()));
+	return view;
+}
+sf::View WindowSpaceManager::getRegionView(const WindowRegion& region) const
+{
+	return getRectView(region.rect(), ls::Rectangle2F(ls::Vec2F(0, 0), ls::Vec2F(1, 1)));
+}
+sf::View WindowSpaceManager::getRegionView(const WindowRegion& region, const ls::Rectangle2F& viewport) const
+{
+	return getRectView(region.rect(), viewport);
+}
+void WindowSpaceManager::setRectView(const ls::Rectangle2I& rect, const ls::Rectangle2F& viewport)
+{
+	m_window.setView(getRectView(rect, viewport));
+}
+void WindowSpaceManager::setRegionView(const WindowRegion& region)
+{
+	m_window.setView(getRegionView(region));
+}
+void WindowSpaceManager::setRegionView(const WindowRegion& region, const ls::Rectangle2F& viewport)
+{
+	m_window.setView(getRegionView(region, viewport));
+}
+void WindowSpaceManager::setDefaultView()
+{
+	auto windowSize = m_window.getSize();
+	m_window.setView(getRectView(rect(), ls::Rectangle2F(ls::Vec2F(0, 0), ls::Vec2F(1, 1))));
+}
+
 bool WindowSpaceManager::tryDispatchEvent(sf::Event& event)
 {
 	const sf::Vector2i m = sf::Mouse::getPosition(m_window);
 	const Vec2I mousePos{ m.x, m.y };
 
 	return m_currentScene->tryDispatchEvent(event, mousePos);
+}
+
+void WindowSpaceManager::drawCurrentScene(sf::RenderStates& renderStates)
+{
+	m_currentScene->draw(m_window, renderStates);
 }

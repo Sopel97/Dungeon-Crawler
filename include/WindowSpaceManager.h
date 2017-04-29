@@ -93,6 +93,13 @@ public:
 	using WindowRegionHandle = typename WindowRegionStorage::NodeHandle;
 	static constexpr WindowRegionHandle invalidHandle = WindowRegionStorage::invalidHandle;
 
+	struct WindowRegionFullLocalization
+	{
+		WindowSpaceManager* windowSpaceManager;
+		Scene* scene;
+		WindowRegionHandle regionHandle;
+	};
+
 	class SubdivisionParams
 	{
 	public:
@@ -181,13 +188,14 @@ public:
 	class Scene
 	{
 	private:
+		WindowSpaceManager* m_windowSpaceManager;
 		WindowRegionStorage m_windowRegions;
 		std::string m_name;
 		std::vector<WindowRegionHandle> m_topmostRegions;
 		WindowRegionHandle m_focusedRegionHandle;
 
 	public:
-		Scene(const ls::Rectangle2I& rect, const std::string& name);
+		Scene(WindowSpaceManager& windowSpaceManager, const ls::Rectangle2I& rect, const std::string& name);
 
 		WindowRegion& windowRegion(WindowRegionHandle h);
 		const WindowRegion& windowRegion(WindowRegionHandle h) const;
@@ -205,13 +213,19 @@ public:
 		bool hasChildren(WindowRegionHandle h) const;
 		bool hasParent(WindowRegionHandle h) const;
 
+		WindowRegionHandle rootHandle() const;
+
 		WindowRegionHandle find(const std::string& name) const;
+
+		WindowRegionFullLocalization fullLocalizationOf(const std::string& name);
 
 		void update(const ls::Rectangle2I& rect);
 
 		WindowRegionHandle queryRegion(const ls::Vec2I& pos) const;
 
-		bool tryDispatchEvent(sf::Event& event, const Vec2I& mousePos);
+		bool tryDispatchEvent(sf::Event& event, const ls::Vec2I& mousePos);
+
+		void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
 
 	private:
 		void setSubdivisionParams(WindowRegionHandle h, const SubdivisionParams& params);
@@ -279,6 +293,8 @@ public:
 
 	WindowSpaceManager(sf::RenderWindow& window);
 
+	Scene& createScene(const std::string& name);
+
 	Scene& scene(const std::string& name);
 	const Scene& scene(const std::string& name) const;
 
@@ -297,6 +313,8 @@ public:
 	void setDefaultView();
 
 	bool tryDispatchEvent(sf::Event& event);
+
+	void drawCurrentScene(sf::RenderStates& renderStates);
 
 private:
 	sf::RenderWindow& m_window;

@@ -54,6 +54,9 @@ public:
     float drag(const ls::Vec2F& position) const;
 
     std::vector<ls::Rectangle2F> queryTileColliders(const ls::Rectangle2F& queryRegion) const;
+
+	EventResult onMouseButtonPressed(sf::Event::MouseButtonEvent& event, EventContext context);
+
 protected:
     Root& m_root;
     int m_width;

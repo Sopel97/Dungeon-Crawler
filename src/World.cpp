@@ -34,6 +34,7 @@
 using namespace ls;
 
 World::World(Root& root, Player& player) :
+	WindowSpaceUser(root.windowSpaceManager().scene("MainScene").fullLocalizationOf("World")),
     m_root(root),
     m_width(m_worldWidth),
     m_height(m_worldHeight),
@@ -395,4 +396,19 @@ float World::drag(const Vec2F& position) const
 std::vector<Rectangle2F> World::queryTileColliders(const Rectangle2F& queryRegion) const
 {
     return m_mapLayer->queryTileColliders(queryRegion);
+}
+
+
+auto World::onMouseButtonPressed(sf::Event::MouseButtonEvent& event, EventContext context)
+-> EventResult
+{
+	if (event.button == sf::Mouse::Button::Right)
+	{
+		const Rectangle2I& worldViewRect = windowRegion().rect();
+		if (ls::intersect(worldViewRect, Vec2I(event.x, event.y)))
+		{
+			const Vec2I tilePosition = screenToTile(Vec2I(event.x, event.y));
+			useTile(tilePosition);
+		}
+	}
 }

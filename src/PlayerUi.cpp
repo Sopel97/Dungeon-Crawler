@@ -44,6 +44,7 @@ const Vec2I PlayerUi::m_windowScrollBarDownButtonSpritePosition = {12, 57};
 const Vec2I PlayerUi::m_windowScrollBarSliderSpritePosition = {24, 57};
 
 PlayerUi::PlayerUi(Player& player) :
+	WindowSpaceUser(Root::instance().windowSpaceManager().scene("MainScene").fullLocalizationOf("PlayerUi")),
     m_player(player)
 {
 

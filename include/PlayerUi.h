@@ -3,7 +3,7 @@
 
 #include <vector>
 
-#include "WindowSpace.h"
+#include "WindowSpaceUser.h"
 
 #include "../LibS/Shapes.h"
 
@@ -85,6 +85,8 @@ public:
 	void onWindowUpdated(PanelWindow& window);
     //TODO: move window position setting from inventory system to here
 
+
+	static constexpr int playerUiPanelWidth() { return m_playerUiPanelWidth; }
 protected:
     static const int m_playerUiPanelWidth;
     static const int m_windowTopBarHeight;

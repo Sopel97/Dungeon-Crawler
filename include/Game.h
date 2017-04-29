@@ -19,6 +19,7 @@ namespace sf
 class Player;
 class Root;
 class World;
+class WindowSpaceManager;
 
 class Game
 {
@@ -26,11 +27,7 @@ public:
     Game(Root& root);
 
     void tick(float dt);
-    void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
-
-    void onMouseButtonPressed(sf::Event::MouseButtonEvent& event);
-    void onMouseButtonReleased(sf::Event::MouseButtonEvent& event);
-    void onMouseMoved(sf::Event::MouseMoveEvent& event);
+    void draw(sf::RenderStates& renderStates);
 
     Player& player();
 

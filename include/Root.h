@@ -31,10 +31,7 @@ public:
     void run();
     void loadAssets();
 
-    void processAsyncKeyboardInput(float dt);
-    void onMouseButtonPressed(sf::Event::MouseButtonEvent& event);
-    void onMouseButtonReleased(sf::Event::MouseButtonEvent& event);
-    void onMouseMoved(sf::Event::MouseMoveEvent& event);
+    void processAsyncKeyboardInput(float dt); //TODO: replace this with usage of standard events
     void onWindowResized(sf::Event& event);
 
     WindowSpaceManager& windowSpaceManager();
@@ -47,10 +44,12 @@ public:
 
     std::vector<std::string> scanForFiles(const std::string& path, const std::string& query) const;
 
+	void setupWindow();
+
 protected:
     sf::RenderWindow m_window;
     sf::RenderStates m_renderStates;
-    std::unique_ptr<WindowSpaceManager> m_windowSpaceManager;
+    WindowSpaceManager m_windowSpaceManager;
     std::mt19937 m_rng;
     float m_lastFrameTime;
     int m_lastMeasuredFps;
