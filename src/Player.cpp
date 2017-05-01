@@ -16,9 +16,9 @@
 
 using namespace ls;
 
-Player::Player(Game& game) :
+Player::Player(Game& game, const WindowSpaceManager::WindowRegionFullLocalization& loc) :
     m_playerEntity(nullptr),
-    m_playerUi(*this),
+    m_playerUi(*this, loc),
     m_inventorySystem(*this)
 {
 

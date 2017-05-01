@@ -66,6 +66,7 @@ InventoryView PlayerEquipmentInventory::createInventoryView()
     inventoryView.setMinimizable(true);
     inventoryView.setCloseable(false);
     inventoryView.setResizeable(false);
+    inventoryView.setScrollBarEnabled(false);
     inventoryView.setContentHeightToMax();
 
     return inventoryView;

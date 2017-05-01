@@ -33,8 +33,8 @@
 
 using namespace ls;
 
-World::World(Root& root, Player& player) :
-	WindowSpaceUser(root.windowSpaceManager().scene("MainScene").fullLocalizationOf("World")),
+World::World(Root& root, Player& player, const WindowSpaceManager::WindowRegionFullLocalization& loc) :
+	WindowSpaceUser(loc),
     m_root(root),
     m_width(m_worldWidth),
     m_height(m_worldHeight),
@@ -71,7 +71,7 @@ World::~World()
 
 void World::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
 {
-    m_root.windowSpaceManager().setViewToRegion(WindowSpaceManager::Region::World, Rectangle2F::withSize(Vec2F(0, 0), m_intermidiateRenderTarget.getSize().x, m_intermidiateRenderTarget.getSize().y));
+    windowSpaceManager().setRegionView(windowRegion(), Rectangle2F::withSize(Vec2F(0,0), m_intermidiateRenderTarget.getSize().x, m_intermidiateRenderTarget.getSize().y));
     
     prepareIntermidiateRenderTarget();
     prepareLightMap();
@@ -79,7 +79,6 @@ void World::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
     updateShaderUniforms();
 
     const Rectangle2F cameraRect = m_camera.viewRectangle();
-
     const Vec2F& cameraTopLeft     = cameraRect.min;
     const Vec2F& cameraBottomRight = cameraRect.max;
     int firstTileX = std::max(Util::fastFloor(cameraTopLeft.x / GameConstants::tileSize), 0);
@@ -194,7 +193,7 @@ void World::updateShaderUniforms()
     const Rectangle2F cameraRect = m_camera.viewRectangle();
 
     m_prettyStretchShader.setParameter("worldOffset", sf::Vector2f(cameraRect.min.x, cameraRect.min.y));
-    const auto& viewRect = m_root.windowSpaceManager().regionRect(WindowSpaceManager::Region::World);
+    const auto& viewRect = windowRegion().rect();
     m_prettyStretchShader.setParameter("viewOffset", sf::Vector2f(viewRect.min.x, viewRect.min.y)); //NOTE: probably should be windowheight - miny
     m_prettyStretchShader.setParameter("destinationTextureSize", sf::Vector2f(viewRect.width(), viewRect.height()));
 }
@@ -235,6 +234,9 @@ void World::drawMeta(sf::RenderStates& renderStates, const std::vector<TallDrawa
 }
 void World::drawIntermidiate(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
 {
+    //TODO: some calculations to preserve view aspect ratio, since it is no more done by window space manager
+    //TODO: or - make an option for SubdivisionParams to preserve certain aspect ratio - probably better
+
     sf::Sprite intermidiateFinal(m_intermidiateRenderTarget.getTexture());
     sf::RenderStates intermidiateRenderStates = renderStates;
     intermidiateRenderStates.shader = &m_prettyStretchShader;
@@ -359,12 +361,12 @@ Vec2I World::worldToTile(const Vec2F& worldPosition) const
 }
 ls::Vec2F World::screenToWorld(const ls::Vec2I& screenPosition) const
 {
-    const sf::Vector2f worldPosition = m_root.window().mapPixelToCoords(sf::Vector2i(screenPosition.x, screenPosition.y), m_root.windowSpaceManager().viewOfRegion(WindowSpaceManager::Region::Id::World, m_camera.viewRectangle()));
+    const sf::Vector2f worldPosition = m_root.window().mapPixelToCoords(sf::Vector2i(screenPosition.x, screenPosition.y), windowSpaceManager().getRegionView(windowRegion(), m_camera.viewRectangle()));
     return{worldPosition.x, worldPosition.y};
 }
 ls::Vec2I World::worldToScreen(const ls::Vec2F& worldPosition) const
 {
-    const sf::Vector2i screenPosition = m_root.window().mapCoordsToPixel(sf::Vector2f(worldPosition.x, worldPosition.y), m_root.windowSpaceManager().viewOfRegion(WindowSpaceManager::Region::Id::World, m_camera.viewRectangle()));
+    const sf::Vector2i screenPosition = m_root.window().mapCoordsToPixel(sf::Vector2f(worldPosition.x, worldPosition.y), windowSpaceManager().getRegionView(windowRegion(), m_camera.viewRectangle()));
     return{screenPosition.x, screenPosition.y};
 }
 ls::Vec2I World::screenToTile(const ls::Vec2I& screenPosition) const
@@ -411,4 +413,6 @@ auto World::onMouseButtonPressed(sf::Event::MouseButtonEvent& event, EventContex
 			useTile(tilePosition);
 		}
 	}
+
+    return {true, true};
 }

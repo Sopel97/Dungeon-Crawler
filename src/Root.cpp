@@ -55,10 +55,17 @@ void Root::run()
         float dt = time - lastTick; //delta time is for the tick
         m_lastFrameTime = time - lastDraw;
 
+        // BUG: crashes after making some event and going out of the window??????????
         while(m_window.pollEvent(event))
         {
-			if (event.type == sf::Event::EventType::Closed) m_window.close();
-			else if (event.type == sf::Event::EventType::Resized) onWindowResized(event);
+            if (event.type == sf::Event::EventType::Closed)
+            {
+                m_window.close();
+            }
+            else if (event.type == sf::Event::EventType::Resized)
+            {
+                onWindowResized(event);
+            }
 			else
 			{
 				m_windowSpaceManager.tryDispatchEvent(event);
@@ -168,19 +175,4 @@ std::vector<std::string> Root::scanForFiles(const std::string& path, const std::
     }
     FindClose(hFind);
     return files;
-}
-
-
-void Root::setupWindow()
-{
-	auto& scene = m_windowSpaceManager.createScene("MainScene");
-	auto regions = scene.subdivide(
-		scene.rootHandle(),
-		WindowSpaceManager::SubdivisionParams::withPixels(
-			WindowSpaceManager::SubdivisionParams::Orientation::Horizontal,
-			WindowSpaceManager::SubdivisionParams::Subject::Second,
-			PlayerUi::playerUiPanelWidth()),
-		"World",
-		"PlayerUi"
-	);
 }

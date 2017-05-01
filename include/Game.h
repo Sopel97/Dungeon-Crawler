@@ -36,8 +36,8 @@ public:
 protected:
     Root& m_root;
 
-    Player m_player;
-    World m_world;
+    std::unique_ptr<Player> m_player;
+    std::unique_ptr<World> m_world;
 
 };
 

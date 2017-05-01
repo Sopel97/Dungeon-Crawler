@@ -35,10 +35,12 @@ public:
     virtual bool isMinimizable() const;
     virtual bool isCloseable() const;
     virtual bool isResizeable() const;
+    virtual bool hasScrollBar() const;
 
     void setMinimizable(bool newValue);
     void setCloseable(bool newValue);
     void setResizeable(bool newValue);
+    void setScrollBarEnabled(bool doEnable);
 
     void setContentHeight(int newHeight);
     void setContentHeightToMax();
@@ -60,6 +62,7 @@ protected:
     bool m_isMinimizable;
     bool m_isCloseable;
     bool m_isResizeable;
+    bool m_hasScrollBar;
 
     void updateMaxContentHeight();
 };

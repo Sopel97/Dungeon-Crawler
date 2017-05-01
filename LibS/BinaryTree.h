@@ -166,11 +166,11 @@ namespace ls
 		}
 		bool hasLeft(NodeHandle h) const
 		{
-			return left() != invalidHandle;
+			return left(h) != invalidHandle;
 		}
 		bool hasRight(NodeHandle h) const
 		{
-			return right() != invalidHandle;
+			return right(h) != invalidHandle;
 		}
 		bool isLeaf(NodeHandle h) const
 		{
@@ -218,7 +218,7 @@ namespace ls
 			return invalidHandle;
 		}
 		template <class Func>
-		NodeHandle findIf(Func&& comparator)
+		NodeHandle findIf(Func&& comparator) const
 		{
 			const int size = m_nodes.size();
 			for (int i = 0; i < size; ++i)

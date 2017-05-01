@@ -43,8 +43,8 @@ const Vec2I PlayerUi::m_windowScrollBarUpButtonSpritePosition = {0, 57};
 const Vec2I PlayerUi::m_windowScrollBarDownButtonSpritePosition = {12, 57};
 const Vec2I PlayerUi::m_windowScrollBarSliderSpritePosition = {24, 57};
 
-PlayerUi::PlayerUi(Player& player) :
-	WindowSpaceUser(Root::instance().windowSpaceManager().scene("MainScene").fullLocalizationOf("PlayerUi")),
+PlayerUi::PlayerUi(Player& player, const WindowSpaceManager::WindowRegionFullLocalization& loc) :
+	WindowSpaceUser(loc),
     m_player(player)
 {
 
@@ -67,7 +67,7 @@ void PlayerUi::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStat
 
 void PlayerUi::drawWindow(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, PanelWindow& window)
 {
-    Rectangle2I playerUiPanelRect = Root::instance().windowSpaceManager().regionRect(WindowSpaceManager::Region::Id::PlayerUi);
+    const Rectangle2I& playerUiPanelRect = windowRegion().rect();
     const int& topBarHeight = window.hasHeader() ? m_windowHeaderHeight : m_windowTopBarHeight;
     Rectangle2I windowRect = window.windowRect().translated(playerUiPanelRect.min);
 
@@ -80,7 +80,7 @@ void PlayerUi::drawWindow(sf::RenderTarget& renderTarget, sf::RenderStates& rend
     ResourceHandle<sf::Texture> horizontalBarsSprites = ResourceManager::instance().get<sf::Texture>("UiHorizontalBars");
     ResourceHandle<sf::Texture> nonRepeatingSprites = ResourceManager::instance().get<sf::Texture>("UiNonRepeating");
 
-    Root::instance().windowSpaceManager().setDefaultView();
+    windowSpaceManager().setDefaultView();
 
     const int& topBarHeight = window.hasHeader() ? m_windowHeaderHeight : m_windowTopBarHeight;
     const Vec2I& topBarSpritePosition = window.hasHeader() ? m_windowHeaderSpritePosition : m_windowTopBarSpritePosition;
@@ -197,11 +197,11 @@ void PlayerUi::drawWindow(sf::RenderTarget& renderTarget, sf::RenderStates& rend
 
 void PlayerUi::setContentViewOfWindow(PanelWindow& window)
 {
-    Rectangle2I playerUiPanelRect = Root::instance().windowSpaceManager().regionRect(WindowSpaceManager::Region::Id::PlayerUi);
+    const Rectangle2I& playerUiPanelRect = windowRegion().rect();
 
-    Rectangle2I windowInteriorRect = window.contentRect().translated(playerUiPanelRect.min);
+    const Rectangle2I windowInteriorRect = window.contentRect().translated(playerUiPanelRect.min);
 
-    Root::instance().windowSpaceManager().setViewToRect(windowInteriorRect, Rectangle2F::withSize(Vec2F(0.0f, static_cast<float>(window.scroll())), static_cast<float>(window.contentWidth()), static_cast<float>(window.contentHeight())));
+    windowSpaceManager().setRectView(windowInteriorRect, Rectangle2F::withSize(Vec2F(0.0f, static_cast<float>(window.scroll())), static_cast<float>(window.contentWidth()), static_cast<float>(window.contentHeight())));
 }
 
 void PlayerUi::closeWindow(PanelWindow* window)

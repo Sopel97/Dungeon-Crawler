@@ -26,7 +26,7 @@ class TallDrawable;
 class World : public WindowSpaceUser
 {
 public:
-    World(Root& root, Player& player);
+    World(Root& root, Player& player, const WindowSpaceManager::WindowRegionFullLocalization& loc);
     ~World();
 
     void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
@@ -55,7 +55,7 @@ public:
 
     std::vector<ls::Rectangle2F> queryTileColliders(const ls::Rectangle2F& queryRegion) const;
 
-	EventResult onMouseButtonPressed(sf::Event::MouseButtonEvent& event, EventContext context);
+    EventResult onMouseButtonPressed(sf::Event::MouseButtonEvent& event, EventContext context);
 
 protected:
     Root& m_root;

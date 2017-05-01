@@ -21,7 +21,8 @@ InventoryView::InventoryView(Inventory* parent) :
     m_maxContentHeight(m_minSensibleHeight),
     m_isMinimizable(true),
     m_isCloseable(true),
-    m_isResizeable(true)
+    m_isResizeable(true),
+    m_hasScrollBar(true)
 {
 
 }
@@ -34,7 +35,8 @@ InventoryView::InventoryView(Inventory* parent, const std::vector<InventorySlotV
     m_maxContentHeight(m_minSensibleHeight),
     m_isMinimizable(true),
     m_isCloseable(true),
-    m_isResizeable(true)
+    m_isResizeable(true),
+    m_hasScrollBar(true)
 {
     updateMaxContentHeight();
 }
@@ -47,7 +49,8 @@ InventoryView::InventoryView(Inventory* parent, std::vector<InventorySlotView>&&
     m_maxContentHeight(m_minSensibleHeight),
     m_isMinimizable(true),
     m_isCloseable(true),
-    m_isResizeable(true)
+    m_isResizeable(true),
+    m_hasScrollBar(true)
 {
     updateMaxContentHeight();
 }
@@ -98,6 +101,10 @@ bool InventoryView::isResizeable() const
 {
     return m_isResizeable;
 }
+bool InventoryView::hasScrollBar() const
+{
+    return m_hasScrollBar;
+}
 
 void InventoryView::setMinimizable(bool newValue)
 {
@@ -110,6 +117,10 @@ void InventoryView::setCloseable(bool newValue)
 void InventoryView::setResizeable(bool newValue)
 {
     m_isResizeable = newValue;
+}
+void InventoryView::setScrollBarEnabled(bool doEnable)
+{
+    m_hasScrollBar = doEnable;
 }
 
 void InventoryView::setContentHeight(int newHeight)

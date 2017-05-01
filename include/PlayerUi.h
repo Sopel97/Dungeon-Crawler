@@ -71,7 +71,7 @@ public:
         virtual void drawContent(PlayerUi& playerUi, sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) = 0;
     };
 
-    PlayerUi(Player& player);
+    PlayerUi(Player& player, const WindowSpaceManager::WindowRegionFullLocalization& loc);
     ~PlayerUi();
 
     void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
