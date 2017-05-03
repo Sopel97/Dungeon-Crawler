@@ -241,9 +241,29 @@ WindowSpaceManager::Scene::Scene(WindowSpaceManager& windowSpaceManager, const l
     m_windowSpaceManager(&windowSpaceManager),
     m_windowRegions(std::make_pair(WindowRegion(rect, "Root", *this), std::nullopt)),
     m_name(name),
-    m_topmostRegions({ m_windowRegions.rootHandle() }),
-    m_focusedRegionHandle(m_windowRegions.rootHandle())
+    m_topmostRegions({ m_windowRegions.root().handle() }),
+    m_focusedRegionHandle(m_windowRegions.root().handle())
 {
+
+}
+WindowSpaceManager::Scene::Scene(WindowSpaceManager::Scene&& other) :
+    m_windowSpaceManager(other.m_windowSpaceManager),
+    m_windowRegions(std::move(other.m_windowRegions)),
+    m_name(std::move(other.m_name)),
+    m_topmostRegions(std::move(other.m_topmostRegions)),
+    m_focusedRegionHandle(other.m_focusedRegionHandle)
+{
+
+}
+WindowSpaceManager::Scene& WindowSpaceManager::Scene::operator=(WindowSpaceManager::Scene&& other)
+{
+    m_windowSpaceManager = other.m_windowSpaceManager;
+    m_windowRegions = std::move(other.m_windowRegions);
+    m_name = std::move(other.m_name);
+    m_topmostRegions = std::move(other.m_topmostRegions);
+    m_focusedRegionHandle = other.m_focusedRegionHandle;
+
+    return *this;
 }
 
 WindowSpaceManager::WindowRegion& WindowSpaceManager::Scene::windowRegion(WindowRegionHandle h)
@@ -325,6 +345,10 @@ WindowSpaceManager::ConstWindowRegionHandle WindowSpaceManager::Scene::parent(Co
 {
     return m_windowRegions.parent(h);
 }
+const std::string& WindowSpaceManager::Scene::name() const
+{
+    return m_name;
+}
 bool WindowSpaceManager::Scene::hasChildren(ConstWindowRegionHandle h) const
 {
     return m_windowRegions.hasLeft(h);	// should always have right too
@@ -335,11 +359,11 @@ bool WindowSpaceManager::Scene::hasParent(ConstWindowRegionHandle h) const
 }
 WindowSpaceManager::WindowRegionHandle WindowSpaceManager::Scene::rootHandle()
 {
-    return m_windowRegions.rootHandle();
+    return m_windowRegions.root().handle();
 }
 WindowSpaceManager::ConstWindowRegionHandle WindowSpaceManager::Scene::rootHandle() const
 {
-    return m_windowRegions.rootHandle();
+    return m_windowRegions.root().handle();
 }
 
 WindowSpaceManager::WindowRegionHandle WindowSpaceManager::Scene::find(const std::string& name)
@@ -357,7 +381,7 @@ WindowSpaceManager::WindowRegionFullLocalization WindowSpaceManager::Scene::full
 
 void WindowSpaceManager::Scene::update(const ls::Rectangle2I& rect)
 {
-    update(m_windowRegions.rootHandle(), rect);
+    update(m_windowRegions.root().handle(), rect);
 }
 void WindowSpaceManager::Scene::update(WindowRegionHandle h, const ls::Rectangle2I& rect)
 {
@@ -378,7 +402,7 @@ WindowSpaceManager::WindowRegionHandle WindowSpaceManager::Scene::queryRegion(co
 }
 WindowSpaceManager::ConstWindowRegionHandle WindowSpaceManager::Scene::queryRegion(const ls::Vec2I& pos) const
 {
-    ConstWindowRegionHandle currentRegionHandle = m_windowRegions.rootHandle();
+    ConstWindowRegionHandle currentRegionHandle = m_windowRegions.root().handle();
 
     // only leaves can be returned
     for (;;)
@@ -464,7 +488,7 @@ WindowSpaceManager::WindowSpaceManager(sf::RenderWindow& window) :
 }
 WindowSpaceManager::~WindowSpaceManager()
 {
-    for (auto p : m_scenes)
+    for (auto& p : m_scenes)
     {
         delete p.second;
     }
@@ -472,7 +496,7 @@ WindowSpaceManager::~WindowSpaceManager()
 auto WindowSpaceManager::createScene(const std::string& name)
 -> Scene&
 {
-    return *((m_scenes.try_emplace(name, new Scene(*this, rect(), name)).first)->second);
+    return *(m_scenes.emplace(std::make_pair(name, new Scene(*this, rect(), name))).first->second);
 }
 
 WindowSpaceManager::Scene& WindowSpaceManager::scene(const std::string& name)

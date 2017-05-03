@@ -13,6 +13,7 @@ namespace ls
     {
     private:
         using ConstNodeHandle = typename Tree<DataType>::ConstNodeHandle;
+        static constexpr ConstNodeHandle invalidHandle = Tree<DataType>::invalidHandle;
 
         const Tree<DataType>* m_tree;
         ConstNodeHandle m_node;
@@ -51,6 +52,68 @@ namespace ls
         ConstNodeHandle handle() const
         {
             return m_node;
+        }
+        bool isValid() const
+        {
+            return m_node != invalidHandle;
+        }
+        const Tree<DataType>& tree() const
+        {
+            return *m_tree;
+        }
+    };
+    template <class DataType>
+    class TreeIterator
+    {
+    private:
+        using NodeHandle = typename Tree<DataType>::NodeHandle;
+        static constexpr NodeHandle invalidHandle = Tree<DataType>::invalidHandle;
+
+        Tree<DataType>* m_tree;
+        NodeHandle m_node;
+    public:
+        TreeIterator(Tree<DataType>& tree, NodeHandle h) :
+            m_tree(&tree),
+            m_node(h)
+        {
+
+        }
+
+        TreeIterator<DataType> parent() const
+        {
+            return { *m_tree, m_tree->parent(m_node) };
+        }
+        TreeIterator<DataType> child(int i) const
+        {
+            return { *m_tree, m_tree->child(m_node, i) };
+        }
+        int numberOfChildren() const
+        {
+            return m_tree->numberOfChildren(m_node);
+        }
+        bool hasParent() const
+        {
+            return m_tree->hasParent(m_node);
+        }
+        bool isLeaf() const
+        {
+            return m_tree->isLeaf(m_node);
+        }
+        DataType& data() const
+        {
+            return m_tree->data(m_node);
+        }
+        NodeHandle handle() const
+        {
+            return m_node;
+        }
+        bool isValid() const
+        {
+            return m_node != invalidHandle;
+        }
+        Tree<DataType>& tree() const
+        {
+            return *m_tree;
         }
     };
 
@@ -123,6 +186,8 @@ namespace ls
     public:
         using NodeHandle = Node*;
         using ConstNodeHandle = const Node*;
+        using Iterator = TreeIterator<T>;
+        using ConstIterator = ConstTreeIterator<T>;
         constexpr static NodeHandle invalidHandle = nullptr;
     public:
 
@@ -148,17 +213,17 @@ namespace ls
             return *this;
         }
 
-        NodeHandle rootHandle()
+        Iterator root()
         {
-            return &m_root;
+            return { *this, &m_root };
         }
-        ConstNodeHandle rootHandle() const
+        ConstIterator root() const
         {
-            return &m_root;
+            return { *this, &m_root };
         }
-        ConstNodeHandle rootConstHandle() const
+        ConstIterator croot() const
         {
-            return &m_root;
+            return { *this, &m_root };
         }
 
         DataType& data(NodeHandle h)
@@ -177,7 +242,7 @@ namespace ls
         bool hasParent(ConstNodeHandle h) const
         {
             //only root does not have a parent
-            return h != rootHandle();
+            return h != root().handle();
         }
         bool isLeaf(ConstNodeHandle h) const
         {
@@ -228,21 +293,21 @@ namespace ls
 
         NodeHandle find(const DataType& el)
         {
-            return find(el, rootHandle());
+            return find(el, root().handle());
         }
         template <class Func>
         NodeHandle findIf(Func&& comparator)
         {
-            return findIf(std::forward<Func>(comparator), rootHandle());
+            return findIf(std::forward<Func>(comparator), root().handle());
         }
         ConstNodeHandle find(const DataType& el) const
         {
-            return find(el, rootConstHandle());
+            return find(el, croot().handle());
         }
         template <class Func>
         ConstNodeHandle findIf(Func&& comparator) const
         {
-            return findIf(std::forward<Func>(comparator), rootConstHandle());
+            return findIf(std::forward<Func>(comparator), croot().handle());
         }
 
         NodeHandle findChild(NodeHandle h, const DataType& el)

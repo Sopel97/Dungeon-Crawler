@@ -54,7 +54,7 @@ void Game::tick(float dt)
 
 void Game::draw(sf::RenderStates& renderStates)
 {
-    WindowSpaceManager windowSpaceManager = m_root.windowSpaceManager();
+    WindowSpaceManager& windowSpaceManager = m_root.windowSpaceManager();
 
     //sf::VertexArray vertexBuffer(sf::PrimitiveType::Triangles);
     //SFMLUtil::appendAsTriangleList(vertexBuffer, Rectangle2F(windowSpaceManager.regionRect(WindowSpaceManager::Region::World)), sf::Color::Red);

@@ -10,6 +10,7 @@
 #include <map>
 #include <optional>
 #include <utility>
+#include <list>
 
 #include "SfmlEventHandler.h"
 
@@ -153,8 +154,8 @@ public:
     public:
         Scene(WindowSpaceManager& windowSpaceManager, const ls::Rectangle2I& rect, const std::string& name);
 
-        Scene(Scene&& other) = default;
-        Scene& operator=(Scene&& other) = default;
+        Scene(Scene&& other);
+        Scene& operator=(Scene&& other);
 
         WindowRegion& windowRegion(WindowRegionHandle h);
         const WindowRegion& windowRegion(ConstWindowRegionHandle h) const;
@@ -172,6 +173,7 @@ public:
         ConstWindowRegionHandle secondChild(ConstWindowRegionHandle h) const;
         WindowRegionHandle parent(WindowRegionHandle h);
         ConstWindowRegionHandle parent(ConstWindowRegionHandle h) const;
+        const std::string& name() const;
         bool hasChildren(ConstWindowRegionHandle h) const;
         bool hasParent(ConstWindowRegionHandle h) const;
 
@@ -255,6 +257,10 @@ public:
     };
 
     WindowSpaceManager(sf::RenderWindow& window);
+    WindowSpaceManager(const WindowSpaceManager&) = delete;
+    WindowSpaceManager(WindowSpaceManager&& other) = delete;
+    WindowSpaceManager& operator=(const WindowSpaceManager&) = delete;
+    WindowSpaceManager& operator=(WindowSpaceManager&& other) = delete;
 
     ~WindowSpaceManager();
 
@@ -284,7 +290,7 @@ public:
 
 private:
     sf::RenderWindow& m_window;
-    std::map<std::string, Scene*> m_scenes; //NOTE: msvc won't compile with movable only type as data
+    std::map<std::string, Scene*> m_scenes;
     Scene* m_currentScene;
 
     sf::FloatRect viewportConvertToRatio(const ls::Rectangle2I& rect) const;

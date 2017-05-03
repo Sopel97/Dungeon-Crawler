@@ -14,11 +14,12 @@ namespace ls
     {
     private:
         using ConstNodeHandle = typename BinaryTree<T>::ConstNodeHandle;
+        static constexpr ConstNodeHandle invalidHandle = BinaryTree<T>::invalidHandle;
 
-        BinaryTree<T>* m_tree;
+        const BinaryTree<T>* m_tree;
         ConstNodeHandle m_node;
     public:
-        ConstBinaryTreeIterator(BinaryTree<T>& tree, ConstNodeHandle h) :
+        ConstBinaryTreeIterator(const BinaryTree<T>& tree, ConstNodeHandle h) :
             m_tree(&tree),
             m_node(h)
         {
@@ -60,6 +61,77 @@ namespace ls
         ConstNodeHandle handle() const
         {
             return m_node;
+        }
+        const BinaryTree<T>& tree() const
+        {
+            return *m_tree;
+        }
+        bool isValid() const
+        {
+            return m_node != invalidHandle;
+        }
+    };
+
+    template <class T>
+    class BinaryTreeIterator
+    {
+    private:
+        using NodeHandle = typename BinaryTree<T>::NodeHandle;
+        static constexpr NodeHandle invalidHandle = BinaryTree<T>::invalidHandle;
+
+        BinaryTree<T>* m_tree;
+        NodeHandle m_node;
+    public:
+        BinaryTreeIterator(BinaryTree<T>& tree, NodeHandle h) :
+            m_tree(&tree),
+            m_node(h)
+        {
+
+        }
+
+        BinaryTreeIterator<T> left() const
+        {
+            return { *m_tree, m_tree->left(m_node) };
+        }
+        BinaryTreeIterator<T> right() const
+        {
+            return { *m_tree, m_tree->right(m_node) };
+        }
+        BinaryTreeIterator<T> parent() const
+        {
+            return { *m_tree, m_tree->parent(m_node) };
+        }
+        bool hasLeft() const
+        {
+            return m_tree->hasLeft(m_node);
+        }
+        bool hasRight() const
+        {
+            return m_tree->hasRight(m_node);
+        }
+        bool hasParent() const
+        {
+            return m_tree->hasParent(m_node);
+        }
+        bool isLeaf() const
+        {
+            return m_tree->isLeaf(m_node);
+        }
+        T& data() const
+        {
+            return m_tree->data(m_node);
+        }
+        NodeHandle handle() const
+        {
+            return m_node;
+        }
+        BinaryTree<T>& tree() const
+        {
+            return *m_tree;
+        }
+        bool isValid() const
+        {
+            return m_node != invalidHandle;
         }
     };
 
@@ -125,9 +197,12 @@ namespace ls
         };
 
         Node m_root;
+
     public:
         using NodeHandle = Node*;
         using ConstNodeHandle = const Node*;
+        using Iterator = BinaryTreeIterator<T>;
+        using ConstIterator = ConstBinaryTreeIterator<T>;
         constexpr static NodeHandle invalidHandle = nullptr;
 
         BinaryTree(const T& rootData) :
@@ -153,17 +228,17 @@ namespace ls
             return *this;
         }
 
-        NodeHandle rootHandle()
+        Iterator root()
         {
-            return &m_root;
+            return { *this, &m_root };
         }
-        ConstNodeHandle rootHandle() const
+        ConstIterator root() const
         {
-            return &m_root;
+            return { *this, &m_root };
         }
-        ConstNodeHandle rootConstHandle() const
+        ConstIterator croot() const
         {
-            return &m_root;
+            return { *this, &m_root };
         }
 
         T& data(NodeHandle h)
@@ -201,7 +276,7 @@ namespace ls
         }
         bool hasParent(ConstNodeHandle h) const
         {
-            return h != rootHandle();
+            return h != &m_root;
         }
         bool hasLeft(ConstNodeHandle h) const
         {
@@ -245,24 +320,28 @@ namespace ls
         {
             return { *this, h };
         }
+        BinaryTreeIterator<T> iterator(NodeHandle h)
+        {
+            return { *this, h };
+        }
 
         NodeHandle find(const T& el)
         {
-            find(el, rootHandle());
+            return find(el, root().handle());
         }
         ConstNodeHandle find(const T& el) const
         {
-            find(el, rootConstHandle());
+            return find(el, croot().handle());
         }
         template <class Func>
         NodeHandle findIf(Func&& comparator)
         {
-            return findIf(std::forward<Func>(comparator), rootHandle());
+            return findIf(std::forward<Func>(comparator), root().handle());
         }
         template <class Func>
         ConstNodeHandle findIf(Func&& comparator) const
         {
-            return findIf(std::forward<Func>(comparator), rootConstHandle());
+            return findIf(std::forward<Func>(comparator), croot().handle());
         }
 
     private:
@@ -282,12 +361,12 @@ namespace ls
             if (h->left != invalidHandle)
             {
                 auto foundLeft = find(el, h->left);
-                if (found != invalidHandle) return found;
+                if (foundLeft != invalidHandle) return foundLeft;
             }
             if (h->right != invalidHandle)
             {
-                auto foundLeft = find(el, h->right);
-                if (found != invalidHandle) return found;
+                auto foundRight = find(el, h->right);
+                if (foundRight != invalidHandle) return foundRight;
             }
 
             return invalidHandle;

@@ -56,7 +56,7 @@ namespace ls
         {
             for (auto iter = m_trees.begin(); iter != m_trees.end(); ++iter)
             {
-                if (iter->data(iter->rootConstHandle()) == el) return iter;
+                if (iter->croot().data() == el) return iter;
             }
 
             return m_trees.end();
@@ -65,7 +65,7 @@ namespace ls
         {
             for (auto iter = m_trees.cbegin(); iter != m_trees.cend(); ++iter)
             {
-                if (iter->data(iter->rootConstHandle()) == el) return iter;
+                if (iter->croot().data() == el) return iter;
             }
 
             return m_trees.cend();
