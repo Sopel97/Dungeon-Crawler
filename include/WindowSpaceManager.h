@@ -2,7 +2,6 @@
 #define WINDOWSPACEMANAGER_H
 
 #include "../LibS/Geometry.h"
-#include "../LibS/BinaryTree.h"
 
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
@@ -18,86 +17,24 @@ class WindowSpaceUser;
 
 class WindowSpaceManager
 {
-    /*
-public:
-    enum class Scene
-    {
-        Main
-    };
-    class Region
-    {
-    public:
-        enum Id
-        {
-            World,
-            PlayerUi
-        };
-
-        Region() = default;
-        Region(const ls::Rectangle2I& rect, Id id, const std::vector<Scene>& parentScenes, int zIndex = 0);
-        Region(const Region&) = default;
-        Region(Region&&) = default;
-
-        Region& operator=(const Region&) = default;
-        Region& operator=(Region &&) = default;
-
-        ls::Vec2I localCoords(const ls::Vec2I& windowCoords) const;
-        const ls::Rectangle2I& rect() const;
-        Id id() const;
-        const std::vector<Scene>& parentScenes() const;
-        bool isPresentOnScene(Scene scene) const;
-        int zIndex() const;
-    protected:
-        ls::Rectangle2I m_rect;
-        Id m_id;
-        std::vector<Scene> m_parentScenes;
-        int m_zIndex; //determines priority. Higher means it will be more to the top
-    };
-public:
-    WindowSpaceManager(sf::RenderWindow& window);
-
-    sf::View viewOfRect(const ls::Rectangle2I& windowViewRect, const ls::Rectangle2F& worldViewRect);
-    sf::View viewOfRegion(Region::Id regionId);
-    sf::View viewOfRegion(Region::Id regionId, const ls::Rectangle2F& worldViewRect);
-
-    void setViewToRect(const ls::Rectangle2I& windowViewRect, const ls::Rectangle2F& worldViewRect);
-    void setViewToRegion(Region::Id regionId);
-    void setViewToRegion(Region::Id regionId, const ls::Rectangle2F& worldViewRect);
-
-    void setDefaultView();
-    void updateRegions();
-
-    Scene currentScene() const;
-    void setCurrentScene(Scene scene);
-
-    const std::map<Region::Id, Region>& regions() const;
-    const Region& region(Region::Id regionId) const;
-    const Region* pointedRegion(const ls::Vec2I& windowCoords) const;
-    const ls::Rectangle2I& regionRect(Region::Id regionId) const;
-
-    void onWindowResized(const sf::Event& windowResizedEvent);
-protected:
-    sf::RenderWindow& m_window;
-    Scene m_currentScene;
-
-    std::map<Region::Id, Region> m_regions;
-
-    */
 public:
     class WindowRegion;
     class Scene;
     class SubdivisionParams;
 
-    using WindowRegionStorageNode = std::pair<WindowRegion, std::optional<SubdivisionParams>>;
-    using WindowRegionStorage = ls::BinaryTree<WindowRegionStorageNode>;
-    using WindowRegionHandle = typename WindowRegionStorage::NodeHandle;
-    static constexpr WindowRegionHandle invalidHandle = WindowRegionStorage::invalidHandle;
-
-    struct WindowRegionFullLocalization
+    class AspectRatio
     {
-        WindowSpaceManager* windowSpaceManager;
-        Scene* scene;
-        WindowRegionHandle regionHandle;
+    private:
+        float m_ratio;
+    public:
+        AspectRatio(float r);
+        AspectRatio(int h, int v);
+
+        ls::Rectangle2I fitRectCentered(const ls::Rectangle2I& space) const;
+
+        float ratio() const;
+        void setRatio(float r);
+        void setRatio(int h, int v);
     };
 
     class SubdivisionParams
@@ -130,10 +67,15 @@ public:
         AmountType m_amountType;
         Subject m_subject;
         Orientation m_orientation;
+        std::optional<AspectRatio> m_aspectRatioFirst;
+        std::optional<AspectRatio> m_aspectRatioSecond;
+
     public:
 
         static SubdivisionParams withPixels(Orientation orientation, Subject subject, int pixels);
         static SubdivisionParams withRatio(Orientation orientation, Subject subject, float ratio);
+
+        SubdivisionParams& withAspectRatio(AspectRatio ratio, Subject subject);
 
         SubdivisionParams(const SubdivisionParams& other) = default;
         SubdivisionParams(SubdivisionParams&& other) = default;
@@ -185,6 +127,20 @@ public:
     };
 
 
+    using WindowRegionStorageNode = std::pair<WindowRegion, std::optional<SubdivisionParams>>;
+    using WindowRegionStorage = ls::BinaryTree<WindowRegionStorageNode>;
+    using WindowRegionHandle = typename WindowRegionStorage::NodeHandle;
+    using ConstWindowRegionHandle = typename WindowRegionStorage::ConstNodeHandle;
+    static constexpr WindowRegionHandle invalidHandle = WindowRegionStorage::invalidHandle;
+
+    struct WindowRegionFullLocalization
+    {
+        WindowSpaceManager* windowSpaceManager;
+        Scene* scene;
+        WindowRegionHandle regionHandle;
+    };
+
+
     class Scene
     {
     private:
@@ -197,31 +153,40 @@ public:
     public:
         Scene(WindowSpaceManager& windowSpaceManager, const ls::Rectangle2I& rect, const std::string& name);
 
-        WindowRegion& windowRegion(WindowRegionHandle h);
-        const WindowRegion& windowRegion(WindowRegionHandle h) const;
+        Scene(Scene&& other) = default;
+        Scene& operator=(Scene&& other) = default;
 
-        bool isSubdivided(WindowRegionHandle h) const;
+        WindowRegion& windowRegion(WindowRegionHandle h);
+        const WindowRegion& windowRegion(ConstWindowRegionHandle h) const;
+
+        bool isSubdivided(ConstWindowRegionHandle h) const;
 
         SubdivisionParams& subdivisionParams(WindowRegionHandle h);
-        const SubdivisionParams& subdivisionParams(WindowRegionHandle h) const;
+        const SubdivisionParams& subdivisionParams(ConstWindowRegionHandle h) const;
 
         std::pair<WindowRegionHandle, WindowRegionHandle> subdivide(WindowRegionHandle h, const SubdivisionParams& params, const std::string& nameFirst, const std::string& nameSecond);
 
-        WindowRegionHandle firstChild(WindowRegionHandle h) const;
-        WindowRegionHandle secondChild(WindowRegionHandle h) const;
-        WindowRegionHandle parent(WindowRegionHandle h) const;
-        bool hasChildren(WindowRegionHandle h) const;
-        bool hasParent(WindowRegionHandle h) const;
+        WindowRegionHandle firstChild(WindowRegionHandle h);
+        ConstWindowRegionHandle firstChild(ConstWindowRegionHandle h) const;
+        WindowRegionHandle secondChild(WindowRegionHandle h);
+        ConstWindowRegionHandle secondChild(ConstWindowRegionHandle h) const;
+        WindowRegionHandle parent(WindowRegionHandle h);
+        ConstWindowRegionHandle parent(ConstWindowRegionHandle h) const;
+        bool hasChildren(ConstWindowRegionHandle h) const;
+        bool hasParent(ConstWindowRegionHandle h) const;
 
-        WindowRegionHandle rootHandle() const;
+        WindowRegionHandle rootHandle();
+        ConstWindowRegionHandle rootHandle() const;
 
-        WindowRegionHandle find(const std::string& name) const;
+        WindowRegionHandle find(const std::string& name);
+        ConstWindowRegionHandle find(const std::string& name) const;
 
         WindowRegionFullLocalization fullLocalizationOf(WindowRegionHandle h);
 
         void update(const ls::Rectangle2I& rect);
 
-        WindowRegionHandle queryRegion(const ls::Vec2I& pos) const;
+        WindowRegionHandle queryRegion(const ls::Vec2I& pos);
+        ConstWindowRegionHandle queryRegion(const ls::Vec2I& pos) const;
 
         bool tryDispatchEvent(sf::Event& event, const ls::Vec2I& mousePos);
 
@@ -291,6 +256,8 @@ public:
 
     WindowSpaceManager(sf::RenderWindow& window);
 
+    ~WindowSpaceManager();
+
     Scene& createScene(const std::string& name);
 
     Scene& scene(const std::string& name);
@@ -317,7 +284,7 @@ public:
 
 private:
     sf::RenderWindow& m_window;
-    std::map<std::string, Scene> m_scenes;
+    std::map<std::string, Scene*> m_scenes; //NOTE: msvc won't compile with movable only type as data
     Scene* m_currentScene;
 
     sf::FloatRect viewportConvertToRatio(const ls::Rectangle2I& rect) const;

@@ -3,189 +3,52 @@
 #include "WindowSpaceUser.h"
 
 using namespace ls;
-/*
 
-WindowSpaceManager::Region::Region(const Rectangle2I& rect, WindowSpaceManager::Region::Id id, const std::vector<WindowSpaceManager::Scene>& parentScenes, int zIndex) :
-    m_rect(rect),
-    m_id(id),
-    m_parentScenes(parentScenes),
-    m_zIndex(zIndex)
+
+WindowSpaceManager::AspectRatio::AspectRatio(float r) :
+    m_ratio(r)
 {
 
 }
+WindowSpaceManager::AspectRatio::AspectRatio(int h, int v) :
+    m_ratio(static_cast<float>(h) / v)
+{
 
-
-Vec2I WindowSpaceManager::Region::localCoords(const Vec2I& windowCoords) const
-{
-    return windowCoords - m_rect.min;
-}
-const Rectangle2I& WindowSpaceManager::Region::rect() const
-{
-    return m_rect;
-}
-WindowSpaceManager::Region::Id WindowSpaceManager::Region::id() const
-{
-    return m_id;
-}
-const std::vector<WindowSpaceManager::Scene>& WindowSpaceManager::Region::parentScenes() const
-{
-    return m_parentScenes;
-}
-bool WindowSpaceManager::Region::isPresentOnScene(WindowSpaceManager::Scene scene) const
-{
-    return std::find(m_parentScenes.begin(), m_parentScenes.end(), scene) != m_parentScenes.end();
-}
-int WindowSpaceManager::Region::zIndex() const
-{
-    return m_zIndex;
 }
 
-WindowSpaceManager::WindowSpaceManager(sf::RenderWindow& window) :
-    m_window(window),
-    m_currentScene(Scene::Main)
+ls::Rectangle2I WindowSpaceManager::AspectRatio::fitRectCentered(const ls::Rectangle2I& space) const
 {
-    updateRegions();
-}
-
-sf::View WindowSpaceManager::viewOfRect(const ls::Rectangle2I& windowViewRect, const ls::Rectangle2F& worldViewRect)
-{
-    Vec2F windowSize{(float)m_window.getSize().x, (float)m_window.getSize().y};
-    Vec2F windowViewTopLeft = Vec2F(windowViewRect.min);
-    Vec2F windowViewSize = Vec2F(windowViewRect.max - windowViewRect.min);
-    Vec2F windowViewTopLeftRelativeToWindow = windowViewTopLeft / windowSize;
-    Vec2F windowViewSizeRelativeToWindow = windowViewSize / windowSize;
-
-    sf::FloatRect view(windowViewTopLeftRelativeToWindow.x, windowViewTopLeftRelativeToWindow.y, windowViewSizeRelativeToWindow.x, windowViewSizeRelativeToWindow.y);
-    sf::View panelView(sf::Vector2f(worldViewRect.min.x + worldViewRect.width() / 2.0f, (worldViewRect.min.y + worldViewRect.height() / 2.0f)), sf::Vector2f(worldViewRect.width(), worldViewRect.height()));
-    panelView.setViewport(view);
-
-    return panelView;
-}
-sf::View WindowSpaceManager::viewOfRegion(Region::Id regionId)
-{
-    const Rectangle2I& rect = regionRect(regionId);
-    return viewOfRect(rect, Rectangle2F::withSize(Vec2F(0.0f, 0.0f), static_cast<float>(rect.width()), static_cast<float>(rect.height())));
-}
-sf::View WindowSpaceManager::viewOfRegion(Region::Id regionId, const ls::Rectangle2F& worldViewRect)
-{
-    const Rectangle2I& rect = regionRect(regionId);
-    return viewOfRect(rect, worldViewRect);
-}
-void WindowSpaceManager::setViewToRect(const Rectangle2I& windowViewRect, const Rectangle2F& worldViewRect)
-{
-    m_window.setView(viewOfRect(windowViewRect, worldViewRect));
-}
-void WindowSpaceManager::setViewToRegion(WindowSpaceManager::Region::Id regionId)
-{
-    m_window.setView(viewOfRegion(regionId));
-}
-void WindowSpaceManager::setViewToRegion(WindowSpaceManager::Region::Id regionId, const Rectangle2F& worldViewRect)
-{
-    m_window.setView(viewOfRegion(regionId, worldViewRect));
-}
-
-void WindowSpaceManager::setDefaultView()
-{
-    Vec2F windowSize {(float)m_window.getSize().x, (float)m_window.getSize().y};
-
-    sf::FloatRect view(0.0f, 0.0f, 1.0f, 1.0f);
-    sf::View panelView(sf::Vector2f((windowSize.x) / 2.0f, ((windowSize.y) / 2.0f)), sf::Vector2f(windowSize.x, windowSize.y));
-    panelView.setViewport(view);
-    m_window.setView(panelView);
-}
-void WindowSpaceManager::updateRegions()
-{
-    constexpr int playerUiWidth = 230;
-
-    Vec2I windowSize {(int)m_window.getSize().x, (int)m_window.getSize().y};
-
-    int worldViewSize = std::min(windowSize.x - playerUiWidth, windowSize.y);
-
-    m_regions[Region::PlayerUi] = Region
+    //try full height
     {
-        Rectangle2I::withSize
-        (
-            Vec2I
-            (
-                windowSize.x - playerUiWidth,
-                0
-            ),
-            playerUiWidth,
-            windowSize.y
-        ),
-        Region::PlayerUi,
-        std::vector<Scene>
-        {
-            Scene::Main
-        },
-        0
-    };
-    m_regions[Region::World] = Region
-    {
-        Rectangle2I::withSize
-        (
-            Vec2I
-            (
-                (windowSize.x - playerUiWidth - worldViewSize) / 2,
-                (windowSize.y - worldViewSize) / 2
-            ),
-            worldViewSize,
-            worldViewSize
-        ),
-        Region::World,
-        std::vector<Scene>
-        {
-            Scene::Main
-        },
-        0
-    };
-}
-
-WindowSpaceManager::Scene WindowSpaceManager::currentScene() const
-{
-    return m_currentScene;
-}
-void WindowSpaceManager::setCurrentScene(Scene scene)
-{
-    m_currentScene = scene;
-}
-
-const std::map<WindowSpaceManager::Region::Id, WindowSpaceManager::Region>& WindowSpaceManager::regions() const
-{
-    return m_regions;
-}
-const WindowSpaceManager::Region& WindowSpaceManager::region(WindowSpaceManager::Region::Id regionId) const
-{
-    return m_regions.at(regionId);
-}
-const WindowSpaceManager::Region* WindowSpaceManager::pointedRegion(const Vec2I& windowCoords) const
-{
-    const Region* bestCandidate = nullptr;
-    int highestZ = std::numeric_limits<int>::min();
-    for(const auto& region : m_regions)
-    {
-        const Region& candidate = region.second;
-        if(!candidate.isPresentOnScene(m_currentScene)) continue;
-        if(candidate.zIndex() < highestZ) continue;
-        if(ls::intersect(candidate.rect(), windowCoords))
-        {
-            bestCandidate = &candidate;
-            highestZ = candidate.zIndex();
-        }
+        const int fullHeight = space.height();
+        const int width = fullHeight * m_ratio;
+        const int widthDiff = space.width() - width;
+        if (widthDiff >= 0)
+            return ls::Rectangle2I::withSize(ls::Vec2I(widthDiff / 2, 0), width, fullHeight);
     }
-    return bestCandidate;
-}
-const Rectangle2I& WindowSpaceManager::regionRect(WindowSpaceManager::Region::Id regionId) const
-{
-    return region(regionId).rect();
+
+    //go with full width
+    {
+        const int fullWidth = space.width();
+        const int height = fullWidth / m_ratio;
+        const int heightDiff = space.height() - height;
+
+        return ls::Rectangle2I::withSize(ls::Vec2I(0, heightDiff / 2), fullWidth, height);
+    }
 }
 
-void WindowSpaceManager::onWindowResized(const sf::Event& windowResizedEvent)
+float WindowSpaceManager::AspectRatio::ratio() const
 {
-    updateRegions();
+    return m_ratio;
 }
-*/
-
+void WindowSpaceManager::AspectRatio::setRatio(float r)
+{
+    m_ratio = r;
+}
+void WindowSpaceManager::AspectRatio::setRatio(int h, int v)
+{
+    m_ratio = static_cast<float>(h) / v;
+}
 
 WindowSpaceManager::SubdivisionParams WindowSpaceManager::SubdivisionParams::
 withPixels(WindowSpaceManager::SubdivisionParams::Orientation orientation, WindowSpaceManager::SubdivisionParams::Subject subject, int pixels)
@@ -197,6 +60,14 @@ WindowSpaceManager::SubdivisionParams WindowSpaceManager::SubdivisionParams::
 withRatio(WindowSpaceManager::SubdivisionParams::Orientation orientation, WindowSpaceManager::SubdivisionParams::Subject subject, float ratio)
 {
     return SubdivisionParams(orientation, subject, ratio);
+}
+WindowSpaceManager::SubdivisionParams& WindowSpaceManager::SubdivisionParams::
+withAspectRatio(WindowSpaceManager::AspectRatio ratio, WindowSpaceManager::SubdivisionParams::Subject subject)
+{
+    if (subject == Subject::First) m_aspectRatioFirst = ratio;
+    else m_aspectRatioSecond = ratio;
+
+    return *this;
 }
 
 std::pair<ls::Rectangle2I, ls::Rectangle2I> WindowSpaceManager::SubdivisionParams::
@@ -230,10 +101,19 @@ calculateSubRects(const ls::Rectangle2I& rect) const
         offset.y = height1;
     }
 
-    return {
-        ls::Rectangle2I::withSize(rect.min, width1, height1),
-        ls::Rectangle2I::withSize(rect.min + offset, width2, height2)
-    };
+    ls::Rectangle2I rect1 = ls::Rectangle2I::withSize(rect.min, width1, height1);
+    ls::Rectangle2I rect2 = ls::Rectangle2I::withSize(rect.min + offset, width2, height2);
+
+    if (m_aspectRatioFirst.has_value())
+    {
+        rect1 = m_aspectRatioFirst.value().fitRectCentered(rect1);
+    }
+    if (m_aspectRatioSecond.has_value())
+    {
+        rect2 = m_aspectRatioSecond.value().fitRectCentered(rect2);
+    }
+
+    return { rect1, rect2 };
 }
 
 int WindowSpaceManager::SubdivisionParams::asPixels(const ls::Rectangle2I& rect) const
@@ -287,7 +167,9 @@ WindowSpaceManager::SubdivisionParams::
 SubdivisionParams(WindowSpaceManager::SubdivisionParams::Orientation orientation, WindowSpaceManager::SubdivisionParams::Subject subject, int pixels) :
     m_orientation(orientation),
     m_amountType(AmountType::Pixels),
-    m_subject(subject)
+    m_subject(subject),
+    m_aspectRatioFirst(std::nullopt),
+    m_aspectRatioSecond(std::nullopt)
 {
     m_amount.pixels = pixels;
 }
@@ -295,7 +177,9 @@ WindowSpaceManager::SubdivisionParams::
 SubdivisionParams(WindowSpaceManager::SubdivisionParams::Orientation orientation, WindowSpaceManager::SubdivisionParams::Subject subject, float ratio) :
     m_orientation(orientation),
     m_amountType(AmountType::Ratio),
-    m_subject(subject)
+    m_subject(subject),
+    m_aspectRatioFirst(std::nullopt),
+    m_aspectRatioSecond(std::nullopt)
 {
     m_amount.ratio = ratio;
 }
@@ -364,26 +248,26 @@ WindowSpaceManager::Scene::Scene(WindowSpaceManager& windowSpaceManager, const l
 
 WindowSpaceManager::WindowRegion& WindowSpaceManager::Scene::windowRegion(WindowRegionHandle h)
 {
-    return m_windowRegions.node(h).first;
+    return m_windowRegions.data(h).first;
 }
 
-const WindowSpaceManager::WindowRegion& WindowSpaceManager::Scene::windowRegion(WindowRegionHandle h) const
+const WindowSpaceManager::WindowRegion& WindowSpaceManager::Scene::windowRegion(ConstWindowRegionHandle h) const
 {
-    return m_windowRegions.node(h).first;
+    return m_windowRegions.data(h).first;
 }
 
-bool WindowSpaceManager::Scene::isSubdivided(WindowRegionHandle h) const
+bool WindowSpaceManager::Scene::isSubdivided(ConstWindowRegionHandle h) const
 {
-    return m_windowRegions.node(h).second.has_value();
+    return m_windowRegions.data(h).second.has_value();
 }
 
 WindowSpaceManager::SubdivisionParams& WindowSpaceManager::Scene::subdivisionParams(WindowRegionHandle h)
 {
-    return m_windowRegions.node(h).second.value();
+    return m_windowRegions.data(h).second.value();
 }
-const WindowSpaceManager::SubdivisionParams& WindowSpaceManager::Scene::subdivisionParams(WindowRegionHandle h) const
+const WindowSpaceManager::SubdivisionParams& WindowSpaceManager::Scene::subdivisionParams(ConstWindowRegionHandle h) const
 {
-    return m_windowRegions.node(h).second.value();
+    return m_windowRegions.data(h).second.value();
 }
 
 std::pair<WindowSpaceManager::WindowRegionHandle, WindowSpaceManager::WindowRegionHandle> WindowSpaceManager::Scene::
@@ -414,35 +298,55 @@ subdivide(WindowRegionHandle h, const SubdivisionParams& params, const std::stri
 void WindowSpaceManager::Scene::
 setSubdivisionParams(WindowSpaceManager::WindowRegionHandle h, const WindowSpaceManager::SubdivisionParams& params)
 {
-    m_windowRegions.node(h).second.emplace(params);
+    m_windowRegions.data(h).second.emplace(params);
 }
 
-WindowSpaceManager::WindowRegionHandle WindowSpaceManager::Scene::firstChild(WindowRegionHandle h) const
+WindowSpaceManager::WindowRegionHandle WindowSpaceManager::Scene::firstChild(WindowRegionHandle h)
 {
     return m_windowRegions.left(h);
 }
-WindowSpaceManager::WindowRegionHandle WindowSpaceManager::Scene::secondChild(WindowRegionHandle h) const
+WindowSpaceManager::ConstWindowRegionHandle WindowSpaceManager::Scene::firstChild(ConstWindowRegionHandle h) const
+{
+    return m_windowRegions.left(h);
+}
+WindowSpaceManager::WindowRegionHandle WindowSpaceManager::Scene::secondChild(WindowRegionHandle h)
 {
     return m_windowRegions.right(h);
 }
-WindowSpaceManager::WindowRegionHandle WindowSpaceManager::Scene::parent(WindowRegionHandle h) const
+WindowSpaceManager::ConstWindowRegionHandle WindowSpaceManager::Scene::secondChild(ConstWindowRegionHandle h) const
+{
+    return m_windowRegions.right(h);
+}
+WindowSpaceManager::WindowRegionHandle WindowSpaceManager::Scene::parent(WindowRegionHandle h)
 {
     return m_windowRegions.parent(h);
 }
-bool WindowSpaceManager::Scene::hasChildren(WindowRegionHandle h) const
+WindowSpaceManager::ConstWindowRegionHandle WindowSpaceManager::Scene::parent(ConstWindowRegionHandle h) const
+{
+    return m_windowRegions.parent(h);
+}
+bool WindowSpaceManager::Scene::hasChildren(ConstWindowRegionHandle h) const
 {
     return m_windowRegions.hasLeft(h);	// should always have right too
 }
-bool WindowSpaceManager::Scene::hasParent(WindowRegionHandle h) const
+bool WindowSpaceManager::Scene::hasParent(ConstWindowRegionHandle h) const
 {
     return m_windowRegions.hasParent(h);
 }
-WindowSpaceManager::WindowRegionHandle WindowSpaceManager::Scene::rootHandle() const
+WindowSpaceManager::WindowRegionHandle WindowSpaceManager::Scene::rootHandle()
+{
+    return m_windowRegions.rootHandle();
+}
+WindowSpaceManager::ConstWindowRegionHandle WindowSpaceManager::Scene::rootHandle() const
 {
     return m_windowRegions.rootHandle();
 }
 
-WindowSpaceManager::WindowRegionHandle WindowSpaceManager::Scene::find(const std::string& name) const
+WindowSpaceManager::WindowRegionHandle WindowSpaceManager::Scene::find(const std::string& name)
+{
+    return m_windowRegions.findIf([&name](const WindowRegionStorageNode& node)->bool {return node.first.name() == name; });
+}
+WindowSpaceManager::ConstWindowRegionHandle WindowSpaceManager::Scene::find(const std::string& name) const
 {
     return m_windowRegions.findIf([&name](const WindowRegionStorageNode& node)->bool {return node.first.name() == name; });
 }
@@ -468,12 +372,16 @@ void WindowSpaceManager::Scene::update(WindowRegionHandle h, const ls::Rectangle
     }
 }
 
-WindowSpaceManager::WindowRegionHandle WindowSpaceManager::Scene::queryRegion(const ls::Vec2I& pos) const
+WindowSpaceManager::WindowRegionHandle WindowSpaceManager::Scene::queryRegion(const ls::Vec2I& pos)
 {
-    WindowRegionHandle currentRegionHandle = m_windowRegions.rootHandle();
+    return const_cast<WindowRegionHandle>(const_cast<const Scene*>(this)->queryRegion(pos));
+}
+WindowSpaceManager::ConstWindowRegionHandle WindowSpaceManager::Scene::queryRegion(const ls::Vec2I& pos) const
+{
+    ConstWindowRegionHandle currentRegionHandle = m_windowRegions.rootHandle();
 
     // only leaves can be returned
-    for(;;)
+    for (;;)
     {
         // we know it has both left and right child
 
@@ -481,11 +389,11 @@ WindowSpaceManager::WindowRegionHandle WindowSpaceManager::Scene::queryRegion(co
         {
             return invalidHandle;
         }
-        
+
         if (!hasChildren(currentRegionHandle)) break;
 
-        WindowRegionHandle leftChildHandle = m_windowRegions.left(currentRegionHandle);
-        WindowRegionHandle rightChildHandle = m_windowRegions.right(currentRegionHandle);
+        ConstWindowRegionHandle leftChildHandle = m_windowRegions.left(currentRegionHandle);
+        ConstWindowRegionHandle rightChildHandle = m_windowRegions.right(currentRegionHandle);
 
         //explore further the intersecting region
         if (ls::intersect(windowRegion(leftChildHandle).rect(), pos))
@@ -554,19 +462,26 @@ WindowSpaceManager::WindowSpaceManager(sf::RenderWindow& window) :
 {
 
 }
+WindowSpaceManager::~WindowSpaceManager()
+{
+    for (auto p : m_scenes)
+    {
+        delete p.second;
+    }
+}
 auto WindowSpaceManager::createScene(const std::string& name)
 -> Scene&
 {
-    return ((m_scenes.try_emplace(name, *this, rect(), name).first)->second);
+    return *((m_scenes.try_emplace(name, new Scene(*this, rect(), name)).first)->second);
 }
 
 WindowSpaceManager::Scene& WindowSpaceManager::scene(const std::string& name)
 {
-    return m_scenes.at(name);
+    return *(m_scenes.at(name));
 }
 const WindowSpaceManager::Scene& WindowSpaceManager::scene(const std::string& name) const
 {
-    return m_scenes.at(name);
+    return *(m_scenes.at(name));
 }
 
 void WindowSpaceManager::changeScene(const std::string& name)

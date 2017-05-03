@@ -11,3 +11,6 @@
 #include "Transformations.h"
 #include "Util.h"
 #include "Printers.h"
+#include "include/BinaryTree.h"
+#include "include/Tree.h"
+#include "include/TreeForest.h"

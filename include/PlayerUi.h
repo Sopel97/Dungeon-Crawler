@@ -83,8 +83,6 @@ public:
     void openWindow(PanelWindow* window); //does not take ownership
 
 	void onWindowUpdated(PanelWindow& window);
-    //TODO: move window position setting from inventory system to here
-
 
 	static constexpr int playerUiPanelWidth() { return m_playerUiPanelWidth; }
 protected:

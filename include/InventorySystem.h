@@ -15,7 +15,7 @@ class TileLocation;
 class InventorySystem
 {
 public:
-    struct TrackedInventory //forms a forward linked list
+    struct TrackedInventory //forms a tree, TODO: rewrite with a Forest data structure
     {
         enum class Origin
         {
