@@ -12,8 +12,8 @@ namespace ls
         using TreeStorageType = std::list<TreeType>;
         using TreeHandle = typename TreeStorageType::iterator;
         using ConstTreeHandle = typename TreeStorageType::const_iterator;
-        using NodeHandle = typename TreeType::NodeHandle;
-        using ConstNodeHandle = typename TreeType::ConstNodeHandle;
+        using NodeIterator = typename TreeType::Iterator;
+        using ConstNodeIterator = typename TreeType::ConstIterator;
     private:
         TreeStorageType m_trees;
     public:
@@ -71,34 +71,34 @@ namespace ls
             return m_trees.cend();
         }
 
-        NodeHandle find(const DataType& el)
+        NodeIterator find(const DataType& el)
         {
-            return const_cast<NodeHandle>(const_cast<const TreeForest<TreeType>*>(this)->find(el));
+            return const_cast<NodeIterator>(const_cast<const TreeForest<TreeType>*>(this)->find(el));
         }
         template <class Func>
-        NodeHandle findIf(Func&& comparator)
+        NodeIterator findIf(Func&& comparator)
         {
-            return const_cast<NodeHandle>(const_cast<const TreeForest<TreeType>*>(this)->findIf(std::forward<Func>(comparator)));
+            return const_cast<NodeIterator>(const_cast<const TreeForest<TreeType>*>(this)->findIf(std::forward<Func>(comparator)));
         }
-        ConstNodeHandle find(const DataType& el) const
+        ConstNodeIterator find(const DataType& el) const
         {
             for (const TreeType* tree : m_trees)
             {
                 auto found = tree->find(el);
-                if (found != TreeType::invalidHandle) return found;
+                if (found.isValid()) return found;
             }
         }
         template <class Func>
-        ConstNodeHandle findIf(Func&& comparator) const
+        ConstNodeIterator findIf(Func&& comparator) const
         {
             for (const TreeType* tree : m_trees)
             {
                 auto found = tree->find(std::forward<Func>(comparator));
-                if (found != TreeType::invalidHandle) return found;
+                if (found.isValid()) return found;
             }
         }
 
-        bool isValidHandle(ConstTreeHandle h) const
+        bool isValidTree(ConstTreeHandle h) const
         {
             return h != m_trees.cend();
         }

@@ -47,7 +47,6 @@ PlayerUi::PlayerUi(Player& player, const WindowSpaceManager::WindowRegionFullLoc
 	WindowSpaceUser(loc),
     m_player(player)
 {
-
 }
 
 PlayerUi::~PlayerUi()

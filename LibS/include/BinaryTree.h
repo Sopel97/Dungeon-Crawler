@@ -10,118 +10,70 @@ namespace ls
     class BinaryTree;
 
     template <class T>
-    class ConstBinaryTreeIterator
-    {
-    private:
-        using ConstNodeHandle = typename BinaryTree<T>::ConstNodeHandle;
-        static constexpr ConstNodeHandle invalidHandle = BinaryTree<T>::invalidHandle;
-
-        const BinaryTree<T>* m_tree;
-        ConstNodeHandle m_node;
-    public:
-        ConstBinaryTreeIterator(const BinaryTree<T>& tree, ConstNodeHandle h) :
-            m_tree(&tree),
-            m_node(h)
-        {
-
-        }
-
-        ConstBinaryTreeIterator<T> left() const
-        {
-            return { *m_tree, m_tree->left(m_node) };
-        }
-        ConstBinaryTreeIterator<T> right() const
-        {
-            return { *m_tree, m_tree->right(m_node) };
-        }
-        ConstBinaryTreeIterator<T> parent() const
-        {
-            return { *m_tree, m_tree->parent(m_node) };
-        }
-        bool hasLeft() const
-        {
-            return m_tree->hasLeft(m_node);
-        }
-        bool hasRight() const
-        {
-            return m_tree->hasRight(m_node);
-        }
-        bool hasParent() const
-        {
-            return m_tree->hasParent(m_node);
-        }
-        bool isLeaf() const
-        {
-            return m_tree->isLeaf(m_node);
-        }
-        const T& data() const
-        {
-            return m_tree->data(m_node);
-        }
-        ConstNodeHandle handle() const
-        {
-            return m_node;
-        }
-        const BinaryTree<T>& tree() const
-        {
-            return *m_tree;
-        }
-        bool isValid() const
-        {
-            return m_node != invalidHandle;
-        }
-    };
-
-    template <class T>
     class BinaryTreeIterator
     {
     private:
-        using NodeHandle = typename BinaryTree<T>::NodeHandle;
-        static constexpr NodeHandle invalidHandle = BinaryTree<T>::invalidHandle;
+        using Node = typename BinaryTree<T>::Node;
 
         BinaryTree<T>* m_tree;
-        NodeHandle m_node;
+        Node* m_node;
+
     public:
-        BinaryTreeIterator(BinaryTree<T>& tree, NodeHandle h) :
+        BinaryTreeIterator() :
+            m_tree(nullptr),
+            m_node(nullptr)
+        {
+
+        }
+        BinaryTreeIterator(BinaryTree<T>& tree, Node* h) :
             m_tree(&tree),
             m_node(h)
         {
 
+        }
+
+        bool operator==(const BinaryTreeIterator<T>& rhs) const
+        {
+            return m_tree == rhs.m_tree && m_node == rhs.m_node;
+        }
+        bool operator!=(const BinaryTreeIterator<T>& rhs) const
+        {
+            return !this->operator==(rhs);
         }
 
         BinaryTreeIterator<T> left() const
         {
-            return { *m_tree, m_tree->left(m_node) };
+            return { *m_tree, m_node->left };
         }
         BinaryTreeIterator<T> right() const
         {
-            return { *m_tree, m_tree->right(m_node) };
+            return { *m_tree, m_node->right };
         }
         BinaryTreeIterator<T> parent() const
         {
-            return { *m_tree, m_tree->parent(m_node) };
+            return { *m_tree, m_node->parent };
         }
         bool hasLeft() const
         {
-            return m_tree->hasLeft(m_node);
+            return m_node->left != nullptr;
         }
         bool hasRight() const
         {
-            return m_tree->hasRight(m_node);
+            return m_node->right != nullptr;
         }
         bool hasParent() const
         {
-            return m_tree->hasParent(m_node);
+            return m_node->parent != nullptr;
         }
         bool isLeaf() const
         {
-            return m_tree->isLeaf(m_node);
+            return !hasLeft() && !hasRight();
         }
         T& data() const
         {
-            return m_tree->data(m_node);
+            return m_node->data;
         }
-        NodeHandle handle() const
+        Node* node() const
         {
             return m_node;
         }
@@ -131,7 +83,91 @@ namespace ls
         }
         bool isValid() const
         {
-            return m_node != invalidHandle;
+            return m_node != nullptr;
+        }
+    };
+
+    template <class T>
+    class ConstBinaryTreeIterator
+    {
+    private:
+        using Node = typename BinaryTree<T>::Node;
+
+        const BinaryTree<T>* m_tree;
+        const Node* m_node;
+
+    public:
+        ConstBinaryTreeIterator() :
+            m_tree(nullptr),
+            m_node(nullptr)
+        {
+
+        }
+        ConstBinaryTreeIterator(const BinaryTree<T>& tree, const Node* h) :
+            m_tree(&tree),
+            m_node(h)
+        {
+
+        }
+        ConstBinaryTreeIterator(const BinaryTreeIterator<T>& other) :
+            m_tree(&(other.tree())),
+            m_node(other.node())
+        {
+
+        }
+
+        bool operator==(const ConstBinaryTreeIterator<T>& rhs) const
+        {
+            return m_tree == rhs.m_tree && m_node == rhs.m_node;
+        }
+        bool operator!=(const ConstBinaryTreeIterator<T>& rhs) const
+        {
+            return !this->operator==(rhs);
+        }
+
+        ConstBinaryTreeIterator<T> left() const
+        {
+            return { *m_tree, m_node->left };
+        }
+        ConstBinaryTreeIterator<T> right() const
+        {
+            return { *m_tree, m_node->right };
+        }
+        ConstBinaryTreeIterator<T> parent() const
+        {
+            return { *m_tree, m_node->parent };
+        }
+        bool hasLeft() const
+        {
+            return m_node->left != nullptr;
+        }
+        bool hasRight() const
+        {
+            return m_node->right != nullptr;
+        }
+        bool hasParent() const
+        {
+            return m_node->parent != nullptr;
+        }
+        bool isLeaf() const
+        {
+            return !hasLeft() && !hasRight();
+        }
+        const T& data() const
+        {
+            return m_node->data;
+        }
+        const Node* node() const
+        {
+            return m_node;
+        }
+        const BinaryTree<T>& tree() const
+        {
+            return *m_tree;
+        }
+        bool isValid() const
+        {
+            return m_node != nullptr;
         }
     };
 
@@ -140,7 +176,7 @@ namespace ls
     {
     public:
         using DataType = T;
-    private:
+
         struct Node
         {
             Node(Node* l, Node* r, Node* p, const DataType& d) :
@@ -195,22 +231,19 @@ namespace ls
             Node* parent;
             DataType data;
         };
-
+    private:
         Node m_root;
 
     public:
-        using NodeHandle = Node*;
-        using ConstNodeHandle = const Node*;
         using Iterator = BinaryTreeIterator<T>;
         using ConstIterator = ConstBinaryTreeIterator<T>;
-        constexpr static NodeHandle invalidHandle = nullptr;
 
         BinaryTree(const T& rootData) :
-            m_root(invalidHandle, invalidHandle, invalidHandle, rootData)
+            m_root(nullptr, nullptr, nullptr, rootData)
         {
         }
         BinaryTree(T&& rootData) :
-            m_root(invalidHandle, invalidHandle, invalidHandle, std::move(rootData))
+            m_root(nullptr, nullptr, nullptr, std::move(rootData))
         {
         }
         BinaryTree(const BinaryTree<T>& other) = delete;
@@ -241,168 +274,105 @@ namespace ls
             return { *this, &m_root };
         }
 
-        T& data(NodeHandle h)
-        {
-            return h->data;
-        }
-        const T& data(ConstNodeHandle h) const
-        {
-            return h->data;
-        }
-
-        NodeHandle left(NodeHandle h)
-        {
-            return h->left;
-        }
-        ConstNodeHandle left(ConstNodeHandle h) const
-        {
-            return h->left;
-        }
-        NodeHandle right(NodeHandle h)
-        {
-            return h->right;
-        }
-        ConstNodeHandle right(ConstNodeHandle h) const
-        {
-            return h->right;
-        }
-        NodeHandle parent(NodeHandle h)
-        {
-            return h->parent;
-        }
-        ConstNodeHandle parent(ConstNodeHandle h) const
-        {
-            return h->parent;
-        }
-        bool hasParent(ConstNodeHandle h) const
-        {
-            return h != &m_root;
-        }
-        bool hasLeft(ConstNodeHandle h) const
-        {
-            return h->left != invalidHandle;
-        }
-        bool hasRight(ConstNodeHandle h) const
-        {
-            return h->right != invalidHandle;
-        }
-        bool isLeaf(ConstNodeHandle h) const
-        {
-            return !hasRight(h) && !hasLeft(h);
-        }
-        bool isValidHandle(NodeHandle h) const
-        {
-            return h != invalidHandle;
-        }
-
         template <class U>
-        NodeHandle insertLeft(NodeHandle h, U&& newElement)
+        Iterator insertLeft(Iterator h, U&& newElement)
         {
-            return insert(h, &Node::left, std::forward<U>(newElement));
+            return { *this, insert(h.node(), &Node::left, std::forward<U>(newElement)) };
         }
         template <class U>
-        NodeHandle insertRight(NodeHandle h, U&& newElement)
+        Iterator insertRight(Iterator h, U&& newElement)
         {
-            return insert(h, &Node::right, std::forward<U>(newElement));
+            return { *this, insert(h.node(), &Node::right, std::forward<U>(newElement)) };
         }
         template <class... Args>
-        NodeHandle emplaceLeft(NodeHandle h, Args&&... args)
+        Iterator emplaceLeft(Iterator h, Args&&... args)
         {
-            return emplace(h, &Node::left, std::forward<Args>(args)...);
+            return { *this, emplace(h.node(), &Node::left, std::forward<Args>(args)...) };
         }
         template <class... Args>
-        NodeHandle emplaceRight(NodeHandle h, Args&&... args)
+        Iterator emplaceRight(Iterator h, Args&&... args)
         {
-            return emplace(h, &Node::right, std::forward<Args>(args)...);
+            return { *this, emplace(h.node(), &Node::right, std::forward<Args>(args)...) };
         }
 
-        ConstBinaryTreeIterator<T> constIterator(ConstNodeHandle h)
+        Iterator find(const T& el)
         {
-            return { *this, h };
+            return { *this, find(el, root().node()) };
         }
-        BinaryTreeIterator<T> iterator(NodeHandle h)
+        ConstIterator find(const T& el) const
         {
-            return { *this, h };
-        }
-
-        NodeHandle find(const T& el)
-        {
-            return find(el, root().handle());
-        }
-        ConstNodeHandle find(const T& el) const
-        {
-            return find(el, croot().handle());
+            return { *this, find(el, croot().node()) };
         }
         template <class Func>
-        NodeHandle findIf(Func&& comparator)
+        Iterator findIf(Func&& comparator)
         {
-            return findIf(std::forward<Func>(comparator), root().handle());
+            return { *this, findIf(std::forward<Func>(comparator), root().node()) };
         }
         template <class Func>
-        ConstNodeHandle findIf(Func&& comparator) const
+        ConstIterator findIf(Func&& comparator) const
         {
-            return findIf(std::forward<Func>(comparator), croot().handle());
+            return { *this, findIf(std::forward<Func>(comparator), croot().node()) };
         }
 
     private:
-        NodeHandle find(const DataType& el, NodeHandle h)
+        Node* find(const DataType& el, Node* h)
         {
-            return const_cast<NodeHandle>(const_cast<const BinaryTree<DataType>*>(this)->find(el, h));
+            return const_cast<Node*>(const_cast<const BinaryTree<DataType>*>(this)->find(el, h));
         }
         template <class Func>
-        NodeHandle findIf(Func&& comparator, NodeHandle h)
+        Node* findIf(Func&& comparator, Node* h)
         {
-            return const_cast<NodeHandle>(const_cast<const BinaryTree<DataType>*>(this)->findIf(std::forward<Func>(comparator), h));
+            return const_cast<Node*>(const_cast<const BinaryTree<DataType>*>(this)->findIf(std::forward<Func>(comparator), h));
         }
-        ConstNodeHandle find(const DataType& el, ConstNodeHandle h) const
+        const Node* find(const DataType& el, const Node* h) const
         {
             if (h->data == el) return h;
 
-            if (h->left != invalidHandle)
+            if (h->left != nullptr)
             {
                 auto foundLeft = find(el, h->left);
-                if (foundLeft != invalidHandle) return foundLeft;
+                if (foundLeft != nullptr) return foundLeft;
             }
-            if (h->right != invalidHandle)
+            if (h->right != nullptr)
             {
                 auto foundRight = find(el, h->right);
-                if (foundRight != invalidHandle) return foundRight;
+                if (foundRight != nullptr) return foundRight;
             }
 
-            return invalidHandle;
+            return nullptr;
         }
         template <class Func>
-        ConstNodeHandle findIf(Func&& comparator, ConstNodeHandle h) const
+        const Node* findIf(Func&& comparator, const Node* h) const
         {
             if (std::forward<Func>(comparator)(h->data)) return h;
 
-            if (h->left != invalidHandle)
+            if (h->left != nullptr)
             {
                 auto foundLeft = findIf(std::forward<Func>(comparator), h->left);
-                if (foundLeft != invalidHandle) return foundLeft;
+                if (foundLeft != nullptr) return foundLeft;
             }
-            if (h->right != invalidHandle)
+            if (h->right != nullptr)
             {
                 auto foundRight = findIf(std::forward<Func>(comparator), h->right);
-                if (foundRight != invalidHandle) return foundRight;
+                if (foundRight != nullptr) return foundRight;
             }
 
-            return invalidHandle;
+            return nullptr;
         }
 
         template <class U>
-        NodeHandle insert(NodeHandle h, NodeHandle Node::*child, U&& newElement)
+        Node* insert(Node* h, Node* Node::*child, U&& newElement)
         {
-            Node* newNode = new Node(invalidHandle, invalidHandle, h, std::forward<U>(newElement));
+            Node* newNode = new Node(nullptr, nullptr, h, std::forward<U>(newElement));
             h->*child = newNode;
 
             return newNode;
         }
 
         template <class... Args>
-        NodeHandle emplace(NodeHandle h, NodeHandle Node::*child, Args&&... args)
+        Node* emplace(Node* h, Node* Node::*child, Args&&... args)
         {
-            Node* newNode = new Node(invalidHandle, invalidHandle, h, DataType(std::forward<Args>(args)...));
+            Node* newNode = new Node(nullptr, nullptr, h, DataType(std::forward<Args>(args)...));
             h->*child = newNode;
 
             return newNode;

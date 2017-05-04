@@ -241,8 +241,8 @@ WindowSpaceManager::Scene::Scene(WindowSpaceManager& windowSpaceManager, const l
     m_windowSpaceManager(&windowSpaceManager),
     m_windowRegions(std::make_pair(WindowRegion(rect, "Root", *this), std::nullopt)),
     m_name(name),
-    m_topmostRegions({ m_windowRegions.root().handle() }),
-    m_focusedRegionHandle(m_windowRegions.root().handle())
+    m_topmostRegions({ m_windowRegions.root() }),
+    m_focusedRegionHandle(m_windowRegions.root())
 {
 
 }
@@ -268,26 +268,26 @@ WindowSpaceManager::Scene& WindowSpaceManager::Scene::operator=(WindowSpaceManag
 
 WindowSpaceManager::WindowRegion& WindowSpaceManager::Scene::windowRegion(WindowRegionHandle h)
 {
-    return m_windowRegions.data(h).first;
+    return h.data().first;
 }
 
 const WindowSpaceManager::WindowRegion& WindowSpaceManager::Scene::windowRegion(ConstWindowRegionHandle h) const
 {
-    return m_windowRegions.data(h).first;
+    return h.data().first;
 }
 
 bool WindowSpaceManager::Scene::isSubdivided(ConstWindowRegionHandle h) const
 {
-    return m_windowRegions.data(h).second.has_value();
+    return h.data().second.has_value();
 }
 
 WindowSpaceManager::SubdivisionParams& WindowSpaceManager::Scene::subdivisionParams(WindowRegionHandle h)
 {
-    return m_windowRegions.data(h).second.value();
+    return h.data().second.value();
 }
 const WindowSpaceManager::SubdivisionParams& WindowSpaceManager::Scene::subdivisionParams(ConstWindowRegionHandle h) const
 {
-    return m_windowRegions.data(h).second.value();
+    return h.data().second.value();
 }
 
 std::pair<WindowSpaceManager::WindowRegionHandle, WindowSpaceManager::WindowRegionHandle> WindowSpaceManager::Scene::
@@ -318,32 +318,32 @@ subdivide(WindowRegionHandle h, const SubdivisionParams& params, const std::stri
 void WindowSpaceManager::Scene::
 setSubdivisionParams(WindowSpaceManager::WindowRegionHandle h, const WindowSpaceManager::SubdivisionParams& params)
 {
-    m_windowRegions.data(h).second.emplace(params);
+    h.data().second.emplace(params);
 }
 
 WindowSpaceManager::WindowRegionHandle WindowSpaceManager::Scene::firstChild(WindowRegionHandle h)
 {
-    return m_windowRegions.left(h);
+    return h.left();
 }
 WindowSpaceManager::ConstWindowRegionHandle WindowSpaceManager::Scene::firstChild(ConstWindowRegionHandle h) const
 {
-    return m_windowRegions.left(h);
+    return h.left();
 }
 WindowSpaceManager::WindowRegionHandle WindowSpaceManager::Scene::secondChild(WindowRegionHandle h)
 {
-    return m_windowRegions.right(h);
+    return h.right();
 }
 WindowSpaceManager::ConstWindowRegionHandle WindowSpaceManager::Scene::secondChild(ConstWindowRegionHandle h) const
 {
-    return m_windowRegions.right(h);
+    return h.right();
 }
 WindowSpaceManager::WindowRegionHandle WindowSpaceManager::Scene::parent(WindowRegionHandle h)
 {
-    return m_windowRegions.parent(h);
+    return h.parent();
 }
 WindowSpaceManager::ConstWindowRegionHandle WindowSpaceManager::Scene::parent(ConstWindowRegionHandle h) const
 {
-    return m_windowRegions.parent(h);
+    return h.parent();
 }
 const std::string& WindowSpaceManager::Scene::name() const
 {
@@ -351,19 +351,19 @@ const std::string& WindowSpaceManager::Scene::name() const
 }
 bool WindowSpaceManager::Scene::hasChildren(ConstWindowRegionHandle h) const
 {
-    return m_windowRegions.hasLeft(h);	// should always have right too
+    return h.hasLeft();	// should always have right too
 }
 bool WindowSpaceManager::Scene::hasParent(ConstWindowRegionHandle h) const
 {
-    return m_windowRegions.hasParent(h);
+    return h.hasParent();
 }
 WindowSpaceManager::WindowRegionHandle WindowSpaceManager::Scene::rootHandle()
 {
-    return m_windowRegions.root().handle();
+    return m_windowRegions.root();
 }
 WindowSpaceManager::ConstWindowRegionHandle WindowSpaceManager::Scene::rootHandle() const
 {
-    return m_windowRegions.root().handle();
+    return m_windowRegions.root();
 }
 
 WindowSpaceManager::WindowRegionHandle WindowSpaceManager::Scene::find(const std::string& name)
@@ -381,7 +381,7 @@ WindowSpaceManager::WindowRegionFullLocalization WindowSpaceManager::Scene::full
 
 void WindowSpaceManager::Scene::update(const ls::Rectangle2I& rect)
 {
-    update(m_windowRegions.root().handle(), rect);
+    update(m_windowRegions.root(), rect);
 }
 void WindowSpaceManager::Scene::update(WindowRegionHandle h, const ls::Rectangle2I& rect)
 {
@@ -391,18 +391,24 @@ void WindowSpaceManager::Scene::update(WindowRegionHandle h, const ls::Rectangle
     auto subdividedRects = subdivisionParams(h).calculateSubRects(rect);
     if (hasChildren(h))
     {
-        update(m_windowRegions.left(h), subdividedRects.first);
-        update(m_windowRegions.right(h), subdividedRects.second);
+        update(h.left(), subdividedRects.first);
+        update(h.right(), subdividedRects.second);
     }
 }
 
 WindowSpaceManager::WindowRegionHandle WindowSpaceManager::Scene::queryRegion(const ls::Vec2I& pos)
 {
-    return const_cast<WindowRegionHandle>(const_cast<const Scene*>(this)->queryRegion(pos));
+    auto iter = const_cast<const Scene*>(this)->queryRegion(pos);
+
+    //dirty hack for now TODO: this better
+    return WindowRegionHandle(
+        const_cast<WindowRegionStorage&>(iter.tree()),
+        const_cast<WindowRegionStorage::Node*>(iter.node())
+    );
 }
 WindowSpaceManager::ConstWindowRegionHandle WindowSpaceManager::Scene::queryRegion(const ls::Vec2I& pos) const
 {
-    ConstWindowRegionHandle currentRegionHandle = m_windowRegions.root().handle();
+    ConstWindowRegionHandle currentRegionHandle = m_windowRegions.root();
 
     // only leaves can be returned
     for (;;)
@@ -411,13 +417,13 @@ WindowSpaceManager::ConstWindowRegionHandle WindowSpaceManager::Scene::queryRegi
 
         if (!ls::intersect(windowRegion(currentRegionHandle).rect(), pos))
         {
-            return invalidHandle;
+            return {};
         }
 
         if (!hasChildren(currentRegionHandle)) break;
 
-        ConstWindowRegionHandle leftChildHandle = m_windowRegions.left(currentRegionHandle);
-        ConstWindowRegionHandle rightChildHandle = m_windowRegions.right(currentRegionHandle);
+        ConstWindowRegionHandle leftChildHandle = currentRegionHandle.left();
+        ConstWindowRegionHandle rightChildHandle = currentRegionHandle.right();
 
         //explore further the intersecting region
         if (ls::intersect(windowRegion(leftChildHandle).rect(), pos))
@@ -428,7 +434,7 @@ WindowSpaceManager::ConstWindowRegionHandle WindowSpaceManager::Scene::queryRegi
         {
             currentRegionHandle = rightChildHandle;
         }
-        else return invalidHandle; //should not happen
+        else return {}; //should not happen
     }
 
     return currentRegionHandle;
@@ -486,26 +492,19 @@ WindowSpaceManager::WindowSpaceManager(sf::RenderWindow& window) :
 {
 
 }
-WindowSpaceManager::~WindowSpaceManager()
-{
-    for (auto& p : m_scenes)
-    {
-        delete p.second;
-    }
-}
 auto WindowSpaceManager::createScene(const std::string& name)
 -> Scene&
 {
-    return *(m_scenes.emplace(std::make_pair(name, new Scene(*this, rect(), name))).first->second);
+    return m_scenes.try_emplace(name, *this, rect(), name).first->second;
 }
 
 WindowSpaceManager::Scene& WindowSpaceManager::scene(const std::string& name)
 {
-    return *(m_scenes.at(name));
+    return m_scenes.at(name);
 }
 const WindowSpaceManager::Scene& WindowSpaceManager::scene(const std::string& name) const
 {
-    return *(m_scenes.at(name));
+    return m_scenes.at(name);
 }
 
 void WindowSpaceManager::changeScene(const std::string& name)

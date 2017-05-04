@@ -130,9 +130,8 @@ public:
 
     using WindowRegionStorageNode = std::pair<WindowRegion, std::optional<SubdivisionParams>>;
     using WindowRegionStorage = ls::BinaryTree<WindowRegionStorageNode>;
-    using WindowRegionHandle = typename WindowRegionStorage::NodeHandle;
-    using ConstWindowRegionHandle = typename WindowRegionStorage::ConstNodeHandle;
-    static constexpr WindowRegionHandle invalidHandle = WindowRegionStorage::invalidHandle;
+    using WindowRegionHandle = typename WindowRegionStorage::Iterator;
+    using ConstWindowRegionHandle = typename WindowRegionStorage::ConstIterator;
 
     struct WindowRegionFullLocalization
     {
@@ -216,7 +215,7 @@ public:
             // other regions
 
             WindowRegionHandle mouseOverRegionHandle = queryRegion(mousePos);
-            if (mouseOverRegionHandle != WindowSpaceManager::invalidHandle && mouseOverRegionHandle != m_focusedRegionHandle)
+            if (mouseOverRegionHandle.isValid() && mouseOverRegionHandle != m_focusedRegionHandle)
             {
                 WindowRegion& mouseOverRegion = windowRegion(mouseOverRegionHandle);
                 if (mouseOverRegion.hasEventHandler())
@@ -262,8 +261,6 @@ public:
     WindowSpaceManager& operator=(const WindowSpaceManager&) = delete;
     WindowSpaceManager& operator=(WindowSpaceManager&& other) = delete;
 
-    ~WindowSpaceManager();
-
     Scene& createScene(const std::string& name);
 
     Scene& scene(const std::string& name);
@@ -290,7 +287,7 @@ public:
 
 private:
     sf::RenderWindow& m_window;
-    std::map<std::string, Scene*> m_scenes;
+    std::map<std::string, Scene> m_scenes;
     Scene* m_currentScene;
 
     sf::FloatRect viewportConvertToRatio(const ls::Rectangle2I& rect) const;

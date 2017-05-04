@@ -119,7 +119,6 @@ protected:
     static const ls::Vec2I m_windowScrollBarSliderSpritePosition;
 
     Player& m_player;
-
 	std::vector<PanelWindow*> m_windows;
 
     void drawWindow(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, PanelWindow& window, const ls::Rectangle2I& rect);
