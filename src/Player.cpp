@@ -34,7 +34,7 @@ void Player::onKeyPressed(sf::Event::KeyEvent& keyEvent)
 
 }
 
-bool Player::tryInteractWithExternalInventory(Inventory* inventory, const TileLocation& location)
+bool Player::tryInteractWithExternalInventory(Inventory& inventory, const TileLocation& location)
 {
     return m_inventorySystem.tryInteractWithExternalInventory(inventory, location);
 }

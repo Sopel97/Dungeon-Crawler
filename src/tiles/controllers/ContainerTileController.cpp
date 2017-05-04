@@ -24,7 +24,7 @@ ContainerTileController::~ContainerTileController()
 
 void ContainerTileController::onTileInteracted(Player& player, const TileLocation& location)
 {
-    player.tryInteractWithExternalInventory(m_owner->model().inventory(), location);
+    player.tryInteractWithExternalInventory(*(m_owner->model().inventory()), location);
 }
 
 std::unique_ptr<TileController> ContainerTileController::clone() const

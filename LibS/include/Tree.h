@@ -199,6 +199,7 @@ namespace ls
                         children.pop_back();
                     }
                 }
+                delete toRemove;
             }
 
             ~Node()
@@ -274,10 +275,10 @@ namespace ls
         }
 
         //also removes all children of h
+        // must not be the root
         void remove(Iterator h)
         {
-            h.node()->parent.removeChild(h.node());
-            delete h.node();
+            h.parent().node()->removeChild(h.node());
         }
 
         Iterator find(const DataType& el)

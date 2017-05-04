@@ -12,69 +12,92 @@ InventorySystem::InventorySystem(Player& player) :
     m_playerUi(player.playerUi()),
     m_equipmentInventory()
 {
-    tryOpenInternalInventory(&m_equipmentInventory, nullptr);
+    openPermanentInventory(m_equipmentInventory);
 }
 
-bool InventorySystem::tryOpenExternalInventory(Inventory* inventory, int x, int y)
+bool InventorySystem::tryOpenExternalInventory(Inventory& inventory, const ls::Vec2I& pos)
 {
-    TrackedInventory* trackedInventory = findTrackedInventory(inventory);
-    if(trackedInventory == nullptr)
+    TrackedInventoryHandle h = find(inventory);
+    if(!h.isValid())
     {
-        trackedInventory = &(*m_trackedInventories.emplace(m_trackedInventories.end(), TrackedInventory::createExternal(inventory, x, y)));
+        auto treeIter = m_trackedInventories.emplaceTree(TrackedInventory::makeExternal(inventory, pos));
+        h = m_trackedInventories.tree(treeIter).root();
     }
 
-    openInventory(trackedInventory);
+    openTrackedInventory(h);
 
     return true;
 }
-bool InventorySystem::tryOpenInternalInventory(Inventory* inventory, TrackedInventory* parentInventory)
+bool InventorySystem::tryOpenInternalInventory(Inventory& inventory, Inventory& parentInventory)
 {
-    TrackedInventory* trackedInventory = findTrackedInventory(inventory);
-    if(trackedInventory == nullptr)
+    TrackedInventoryHandle trackedParentHandle = find(parentInventory);
+    if (!trackedParentHandle.isValid() || !trackedParentHandle.data().isOpened) return false;
+
+    TrackedInventoryHandle h = find(inventory);
+    if (!h.isValid())
     {
-        trackedInventory = &(*m_trackedInventories.emplace(m_trackedInventories.end(), TrackedInventory::createInternal(inventory, parentInventory)));
+        auto& tree = trackedParentHandle.tree();
+        h = tree.insertChild(trackedParentHandle, TrackedInventory::makeInternal(inventory));
     }
 
-    openInventory(trackedInventory);
+    openTrackedInventory(h);
 
     return true;
 }
-void InventorySystem::closeInventory(Inventory* inventory)
+void InventorySystem::openPermanentInventory(Inventory& inventory)
 {
-    TrackedInventory* openedInventory = findTrackedInventory(inventory);
-    if(openedInventory == nullptr) return;
-    m_openedInventories.remove(openedInventory);
-    m_playerUi.closeWindow(&(openedInventory->inventoryView));
+    TrackedInventoryHandle h = find(inventory);
+    if (!h.isValid())
+    {
+        auto treeIter = m_trackedInventories.emplaceTree(TrackedInventory::makePermanent(inventory));
+        h = m_trackedInventories.tree(treeIter).root();
+    }
 
-    openedInventory->isOpened = false;
-    TrackedInventory* current = openedInventory;
-    while(current != nullptr && current->isOpened == false)
-    {   
-        if(isParentOfAnyInventory(*current)) break;
+    openTrackedInventory(h);
+}
+void InventorySystem::closeInventory(Inventory& inventory)
+{
+    TrackedInventoryHandle inventoryHandle = find(inventory);
+    if (!inventoryHandle.isValid() || !inventoryHandle.data().isOpened) return; //nothing to do
 
-        TrackedInventory* parent = current->parentInventory;
-        abandonInventory(*current);
+    m_playerUi.closeWindow(&(inventoryHandle.data().inventoryView));
+    inventoryHandle.data().isOpened = false;
+    if (inventoryHandle.hasParent()) return; // we can't abandon it since some inventories depent on it
+
+    TrackedInventoryHandle current = inventoryHandle;
+    while(current.isValid() && !current.data().isOpened) //abandon all inventories that were just because this one was opened
+    {
+        auto parent = current.parent(); //we have to remember it here since abandon inventory deletes current
+        abandonInventory(current);
         current = parent;
     }
 }
-void InventorySystem::abandonInventory(TrackedInventory& inventory)
+void InventorySystem::abandonInventory(TrackedInventoryHandle inventory)
 {
-    m_trackedInventories.remove(inventory);
+    // has no children
+
+    // is not root
+    if (inventory.hasParent())
+    {
+        inventory.tree().remove(inventory);
+    }
+    else //if root then delete whole tree
+    {
+        auto treeIter = m_trackedInventories.findTree(&(inventory.tree()));
+        m_trackedInventories.removeTree(treeIter);
+    }
 }
-bool InventorySystem::isInventoryOpened(Inventory* inventory)
+bool InventorySystem::isInventoryOpened(Inventory& inventory)
 {
-    return std::find_if(m_openedInventories.begin(), m_openedInventories.end(), [inventory](const TrackedInventory * inv) {return inv->inventory == inventory;}) != m_openedInventories.end();
+    auto h = find(inventory);
+    return h.isValid() && h.data().isOpened;
 }
-bool InventorySystem::isInventoryTracked(Inventory* inventory)
+bool InventorySystem::isInventoryTracked(Inventory& inventory)
 {
-    return findTrackedInventory(inventory) != nullptr;
-}
-bool InventorySystem::isParentOfAnyInventory(TrackedInventory& inventory)
-{
-    return std::find_if(m_trackedInventories.begin(), m_trackedInventories.end(), [inventory](const TrackedInventory & inv) {return inv.parentInventory == &inventory;}) != m_trackedInventories.end();
+    return find(inventory).isValid();
 }
 
-bool InventorySystem::tryInteractWithExternalInventory(Inventory* inventory, const TileLocation& location)
+bool InventorySystem::tryInteractWithExternalInventory(Inventory& inventory, const TileLocation& location)
 {
     if (isInventoryOpened(inventory))
     {
@@ -83,32 +106,24 @@ bool InventorySystem::tryInteractWithExternalInventory(Inventory* inventory, con
     }
     else
     {
-        return tryOpenExternalInventory(inventory, location.x, location.y);
+        return tryOpenExternalInventory(inventory, ls::Vec2I(location.x, location.y));
     }
 }
 
-InventorySystem::TrackedInventory* InventorySystem::findTrackedInventory(Inventory* inventory)
+InventorySystem::TrackedInventoryHandle InventorySystem::find(Inventory& inventory)
 {
-    auto iter = std::find(m_trackedInventories.begin(), m_trackedInventories.end(), inventory);
-
-    if(iter == m_trackedInventories.end()) return nullptr;
-    else return &(*iter);
+    return m_trackedInventories.findIf([&inventory](const TrackedInventory& inv) {return inv.inventory == &inventory; });
 }
 
 PlayerEquipmentInventory& InventorySystem::equipmentInventory()
 {
     return m_equipmentInventory;
 }
-const std::list<InventorySystem::TrackedInventory*>& InventorySystem::openedInventories() const
-{
-    return m_openedInventories;
-}
 
-void InventorySystem::openInventory(TrackedInventory* inventory)
+void InventorySystem::openTrackedInventory(TrackedInventoryHandle inventory)
 {
-    m_openedInventories.push_back(inventory);
-	inventory->inventoryView.setContentHeightToMax();
-	inventory->isOpened = true;
+	inventory.data().inventoryView.setContentHeightToMax();
+	inventory.data().isOpened = true;
 
-    m_playerUi.openWindow(&(inventory->inventoryView));
+    m_playerUi.openWindow(&(inventory.data().inventoryView));
 }

@@ -28,7 +28,7 @@ public:
     void onKeyPressed(sf::Event::KeyEvent& keyEvent);
     void processAsyncKeyboardInput(World& world, float dt);
 
-    bool tryInteractWithExternalInventory(Inventory* inventory, const TileLocation& location);
+    bool tryInteractWithExternalInventory(Inventory& inventory, const TileLocation& location);
 
     PlayerUi& playerUi();
     const PlayerUi& playerUi() const;

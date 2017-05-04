@@ -52,6 +52,15 @@ namespace ls
             return *h;
         }
 
+        TreeHandle findTree(const TreeType* tree)
+        {
+            for (auto iter = m_trees.begin(); iter != m_trees.end(); ++iter)
+            {
+                if (&(*iter) == tree) return iter;
+            }
+
+            return m_trees.end();
+        }
         TreeHandle findTree(const DataType& el)
         {
             for (auto iter = m_trees.begin(); iter != m_trees.end(); ++iter)
@@ -73,29 +82,41 @@ namespace ls
 
         NodeIterator find(const DataType& el)
         {
-            return const_cast<NodeIterator>(const_cast<const TreeForest<TreeType>*>(this)->find(el));
+            for (TreeType& tree : m_trees)
+            {
+                auto found = tree.find(el);
+                if (found.isValid()) return found;
+            }
+            return {};
         }
         template <class Func>
         NodeIterator findIf(Func&& comparator)
         {
-            return const_cast<NodeIterator>(const_cast<const TreeForest<TreeType>*>(this)->findIf(std::forward<Func>(comparator)));
+            for (TreeType& tree : m_trees)
+            {
+                auto found = tree.findIf(std::forward<Func>(comparator));
+                if (found.isValid()) return found;
+            }
+            return {};
         }
         ConstNodeIterator find(const DataType& el) const
         {
-            for (const TreeType* tree : m_trees)
+            for (const TreeType& tree : m_trees)
             {
-                auto found = tree->find(el);
+                auto found = tree.find(el);
                 if (found.isValid()) return found;
             }
+            return {};
         }
         template <class Func>
         ConstNodeIterator findIf(Func&& comparator) const
         {
-            for (const TreeType* tree : m_trees)
+            for (const TreeType& tree : m_trees)
             {
-                auto found = tree->find(std::forward<Func>(comparator));
+                auto found = tree.findIf(std::forward<Func>(comparator));
                 if (found.isValid()) return found;
             }
+            return {};
         }
 
         bool isValidTree(ConstTreeHandle h) const
