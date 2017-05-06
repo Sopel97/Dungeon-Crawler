@@ -1,35 +1,39 @@
 #ifndef INVENTORY_H
 #define INVENTORY_H
 
+#include "WindowSpaceManager.h"
+#include "InventoryView.h"
+
 #include <vector>
 
 class TileStack;
-class InventoryView;
+
+enum class InventoryContentRequirement
+{
+    None,
+    Helmet,
+    Chestplate,
+    Pants,
+    Boots,
+    Sword,
+    Shield,
+    Necklace,
+    Ring,
+    Ammo,
+    Container
+};
 
 class Inventory
 {
 public:
-    enum class ContentRequirement
-    {
-        None,
-        Helmet,
-        Chestplate,
-        Pants,
-        Boots,
-        Sword,
-        Shield,
-        Necklace,
-        Ring,
-        Ammo,
-        Container
-    };
 
     Inventory();
     virtual ~Inventory();
 
     virtual std::vector<TileStack*>& contents() = 0;
-    virtual const ContentRequirement slotContentRequirement(size_t slotId) const = 0;
-    virtual InventoryView createInventoryView() = 0;
+    virtual const InventoryContentRequirement slotContentRequirement(size_t slotId) const = 0;
+    virtual std::unique_ptr<InventoryView> createInventoryView(const WindowSpaceManager::WindowFullLocalization& loc) = 0;
+    virtual std::unique_ptr<InventoryWindow> createInventoryWindow() const = 0;
 
     virtual TileStack* at(size_t slotId);
 

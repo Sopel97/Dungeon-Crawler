@@ -23,10 +23,16 @@ public:
     struct TrackedInventory
     {
         Inventory* inventory;
-        InventoryView inventoryView;
+        std::unique_ptr<InventoryWindow> inventoryWindow;
+        std::unique_ptr<InventoryView> inventoryView;
         std::optional<ls::Vec2I> worldPosition;
         bool isOpened;
         bool isPermanent;
+
+        TrackedInventory(const TrackedInventory&) = delete;
+        TrackedInventory(TrackedInventory&&) = default;
+        TrackedInventory& operator=(const TrackedInventory&) = delete;
+        TrackedInventory& operator=(TrackedInventory&&) = default;
 
         bool operator==(const Inventory* inv) {return inv == inventory;}
         bool operator==(const TrackedInventory& inv) {return inv.inventory == inventory;}
@@ -46,21 +52,23 @@ public:
     private:
         TrackedInventory(Inventory& inv, bool perm = false) :
             inventory(&inv),
-            inventoryView(inv.createInventoryView()),
+            inventoryWindow(inv.createInventoryWindow()),
+            inventoryView(inv.createInventoryView(inventoryWindow->fullLocalization())),
             worldPosition(std::nullopt),
             isOpened(true),
             isPermanent(perm)
         {
-
+            inventoryWindow->updateMaxContentHeight(*inventoryView);
         }
         TrackedInventory(Inventory& inv, const ls::Vec2I& pos) :
             inventory(&inv),
-            inventoryView(inv.createInventoryView()),
+            inventoryWindow(inv.createInventoryWindow()),
+            inventoryView(inv.createInventoryView(inventoryWindow->fullLocalization())),
             worldPosition(pos),
             isOpened(true),
             isPermanent(false)
         {
-
+            inventoryWindow->updateMaxContentHeight(*inventoryView);
         }
     };
 

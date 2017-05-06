@@ -15,8 +15,9 @@ public:
     virtual ~ContainerInventory();
 
     virtual std::vector<TileStack*>& contents();
-    virtual const Inventory::ContentRequirement slotContentRequirement(size_t slotId) const;
-    virtual InventoryView createInventoryView();
+    virtual const InventoryContentRequirement slotContentRequirement(size_t slotId) const;
+    virtual std::unique_ptr<InventoryView> createInventoryView(const WindowSpaceManager::WindowFullLocalization& loc);
+    virtual std::unique_ptr<InventoryWindow> createInventoryWindow() const;
 
     void setSize(int newSize);
 

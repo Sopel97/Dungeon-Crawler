@@ -197,7 +197,6 @@ WindowSpaceManager::Window::~Window()
 
 }
 
-const int WindowSpaceManager::Window::m_playerUiPanelWidth = 230;
 const int WindowSpaceManager::Window::m_windowTopBarHeight = 4;
 const int WindowSpaceManager::Window::m_windowHeaderHeight = 15;
 const int WindowSpaceManager::Window::m_windowLeftBarWidth = 4;
@@ -267,7 +266,46 @@ void WindowSpaceManager::Window::setWindowSize(const ls::Vec2I& newSize)
 {
     m_windowRect.max = m_windowRect.min + newSize;
 }
+void WindowSpaceManager::Window::setWindowWidth(int newWidth)
+{
+    m_windowRect.max.x = m_windowRect.min.x + newWidth;
+}
+void WindowSpaceManager::Window::setWindowHeight(int newHeight)
+{
+    m_windowRect.max.y = m_windowRect.min.y + newHeight;
+}
+void WindowSpaceManager::Window::setContentSize(const ls::Vec2I& newSize)
+{
+    auto rect = this->contentRect();
+    int widthDiff = m_windowRect.width() - rect.width();
+    int heightDiff = m_windowRect.height() - rect.height();
+    this->setWindowSize(newSize + ls::Vec2I(widthDiff, heightDiff));
+}
+void WindowSpaceManager::Window::setContentWidth(int newWidth)
+{
+    auto rect = this->contentRect();
+    int widthDiff = m_windowRect.width() - rect.width();
+    this->setWindowWidth(newWidth + widthDiff);
+}
+void WindowSpaceManager::Window::setContentHeight(int newHeight)
+{
+    auto rect = this->contentRect();
+    int heightDiff = m_windowRect.height() - rect.height();
+    this->setWindowHeight(newHeight + heightDiff);
+}
 
+ls::Vec2I WindowSpaceManager::Window::minWindowSize() const
+{
+    return { 0, 0 };
+}
+bool WindowSpaceManager::Window::hasMaxWindowSize() const
+{
+    return false;
+}
+ls::Vec2I WindowSpaceManager::Window::maxWindowSize() const
+{
+    return { 0, 0 };
+}
 ls::Vec2I WindowSpaceManager::Window::minContentSize() const
 {
     return { 0, 0 };
@@ -324,6 +362,10 @@ SfmlEventHandler& WindowSpaceManager::Window::eventHandler()
 void WindowSpaceManager::Window::setUser(WindowSpaceUser& newUser)
 {
     m_spaceUser = &newUser;
+}
+WindowSpaceUser* WindowSpaceManager::Window::user()
+{
+    return m_spaceUser;
 }
 
 ls::Vec2I WindowSpaceManager::Window::localWindowCoords(const ls::Vec2I& globalCoords) const

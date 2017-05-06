@@ -23,11 +23,11 @@ std::vector<TileStack*>& ContainerInventory::contents()
 {
     return m_contents;
 }
-const Inventory::ContentRequirement ContainerInventory::slotContentRequirement(size_t slotId) const
+const InventoryContentRequirement ContainerInventory::slotContentRequirement(size_t slotId) const
 {
-    return Inventory::ContentRequirement::None;
+    return InventoryContentRequirement::None;
 }
-InventoryView ContainerInventory::createInventoryView()
+std::unique_ptr<InventoryView> ContainerInventory::createInventoryView(const WindowSpaceManager::WindowFullLocalization& loc)
 {
     constexpr int margins = 4;
     constexpr int spacesBetweenSlots = 3;
@@ -50,13 +50,17 @@ InventoryView ContainerInventory::createInventoryView()
         }
     }
 
-    InventoryView inventoryView(this, std::move(slotViews));
-    inventoryView.setMinimizable(true);
-    inventoryView.setCloseable(true);
-    inventoryView.setResizeable(true);
-    inventoryView.setContentHeightToMax();
-
-    return inventoryView;
+    return std::make_unique<InventoryView>(loc, *this, std::move(slotViews));
+}
+std::unique_ptr<InventoryWindow> ContainerInventory::createInventoryWindow() const
+{
+    std::unique_ptr<InventoryWindow> window = std::make_unique<InventoryWindow>("");
+    window->setMinimizable(true);
+    window->setCloseable(true);
+    window->setResizeable(true);
+    window->setHeaderEnabled(true);
+    window->setScrollBarEnabled(true);
+    return window;
 }
 
 void ContainerInventory::setSize(int newSize)

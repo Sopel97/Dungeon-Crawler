@@ -141,8 +141,16 @@ public:
 
         virtual void setWindowRect(const ls::Rectangle2I& newRect);
         virtual void setWindowPosition(const ls::Vec2I& newPosition);
+        virtual void setWindowWidth(int newWidth);
+        virtual void setWindowHeight(int newHeight);
         virtual void setWindowSize(const ls::Vec2I& newSize);
+        virtual void setContentSize(const ls::Vec2I& newSize);
+        virtual void setContentWidth(int newWidth);
+        virtual void setContentHeight(int newHeight);
 
+        virtual ls::Vec2I minWindowSize() const;
+        virtual bool hasMaxWindowSize() const;
+        virtual ls::Vec2I maxWindowSize() const;
         virtual ls::Vec2I minContentSize() const;
         virtual bool hasMaxContentSize() const;
         virtual ls::Vec2I maxContentSize() const;
@@ -161,6 +169,7 @@ public:
         virtual SfmlEventHandler& eventHandler();
 
         virtual void setUser(WindowSpaceUser& newUser);
+        virtual WindowSpaceUser* user();
 
         virtual ls::Vec2I localWindowCoords(const ls::Vec2I& globalCoords) const;
         virtual ls::Vec2I localContentCoords(const ls::Vec2I& globalCoords) const;
@@ -168,7 +177,6 @@ public:
         virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
 
     private:
-        static const int m_playerUiPanelWidth;
         static const int m_windowTopBarHeight;
         static const int m_windowHeaderHeight;
         static const int m_windowLeftBarWidth;

@@ -60,7 +60,7 @@ void InventorySystem::closeInventory(Inventory& inventory)
     TrackedInventoryHandle inventoryHandle = find(inventory);
     if (!inventoryHandle.isValid() || !inventoryHandle.data().isOpened) return; //nothing to do
 
-    m_playerUi.closeWindow(&(inventoryHandle.data().inventoryView));
+    m_playerUi.closeWindow(inventoryHandle.data().inventoryWindow.get());
     inventoryHandle.data().isOpened = false;
     if (inventoryHandle.hasParent()) return; // we can't abandon it since some inventories depent on it
 
@@ -122,8 +122,8 @@ PlayerEquipmentInventory& InventorySystem::equipmentInventory()
 
 void InventorySystem::openTrackedInventory(TrackedInventoryHandle inventory)
 {
-	inventory.data().inventoryView.setContentHeightToMax();
+	inventory.data().inventoryWindow->setContentSizeToMax();
 	inventory.data().isOpened = true;
 
-    m_playerUi.openWindow(&(inventory.data().inventoryView));
+    m_playerUi.openWindow(inventory.data().inventoryWindow.get());
 }

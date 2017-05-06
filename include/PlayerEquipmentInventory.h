@@ -2,6 +2,7 @@
 #define PLAYEREQUIPMENTINVENTORY_H
 
 #include "Inventory.h"
+#include "WindowSpaceManager.h"
 
 #include <vector>
 
@@ -14,15 +15,16 @@ public:
     virtual ~PlayerEquipmentInventory();
 
     virtual std::vector<TileStack*>& contents();
-    virtual const Inventory::ContentRequirement slotContentRequirement(size_t slotId) const;
-    virtual InventoryView createInventoryView();
+    virtual const InventoryContentRequirement slotContentRequirement(size_t slotId) const;
+    virtual std::unique_ptr<InventoryView> createInventoryView(const WindowSpaceManager::WindowFullLocalization& loc);
+    virtual std::unique_ptr<InventoryWindow> createInventoryWindow() const;
 
     virtual int numberOfSlots() const;
 
 protected:
 private:
     std::vector<TileStack*> m_contents;
-    std::vector<Inventory::ContentRequirement> m_contentRequirements;
+    std::vector<InventoryContentRequirement> m_contentRequirements;
 };
 
 #endif // PLAYEREQUIPMENTINVENTORY_H

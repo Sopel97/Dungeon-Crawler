@@ -11,147 +11,167 @@
 
 using namespace ls;
 
-const int InventoryView::m_minSensibleHeight = 46;
+const int InventoryWindow::m_minSensibleHeight = 46;
 
-InventoryView::InventoryView(Inventory* parent) :
-    m_parentInventory(parent),
-    m_scroll(0),
-    m_contentHeight(m_minSensibleHeight),
-    m_minContentHeight(m_minSensibleHeight),
-    m_maxContentHeight(m_minSensibleHeight),
-    m_isMinimizable(true),
-    m_isCloseable(true),
-    m_isResizeable(true),
-    m_hasScrollBar(true)
+InventoryView::InventoryView(const WindowSpaceManager::WindowFullLocalization& loc, Inventory& inventory) :
+    WindowSpaceUser(loc),
+    m_inventory(&inventory)
 {
-
 }
-InventoryView::InventoryView(Inventory* parent, const std::vector<InventorySlotView>& slots) :
-    m_parentInventory(parent),
-    m_slotViews(slots),
-    m_scroll(0),
-    m_contentHeight(m_minSensibleHeight),
-    m_minContentHeight(m_minSensibleHeight),
-    m_maxContentHeight(m_minSensibleHeight),
-    m_isMinimizable(true),
-    m_isCloseable(true),
-    m_isResizeable(true),
-    m_hasScrollBar(true)
+InventoryView::InventoryView(const WindowSpaceManager::WindowFullLocalization& loc, Inventory& inventory, const std::vector<InventorySlotView>& slots) :
+    WindowSpaceUser(loc),
+    m_inventory(&inventory),
+    m_slotViews(slots)
 {
-    updateMaxContentHeight();
 }
-InventoryView::InventoryView(Inventory* parent, std::vector<InventorySlotView>&& slots) :
-    m_parentInventory(parent),
-    m_slotViews(std::move(slots)),
-    m_scroll(0),
-    m_contentHeight(m_minSensibleHeight),
-    m_minContentHeight(m_minSensibleHeight),
-    m_maxContentHeight(m_minSensibleHeight),
-    m_isMinimizable(true),
-    m_isCloseable(true),
-    m_isResizeable(true),
-    m_hasScrollBar(true)
+InventoryView::InventoryView(const WindowSpaceManager::WindowFullLocalization& loc, Inventory& inventory, std::vector<InventorySlotView>&& slots) :
+    WindowSpaceUser(loc),
+    m_inventory(&inventory),
+    m_slotViews(std::move(slots))
 {
-    updateMaxContentHeight();
 }
-
 
 void InventoryView::addInventorySlotView(const InventorySlotView& slot)
 {
     m_slotViews.push_back(slot);
-    updateMaxContentHeight();
 }
 
-Inventory const* InventoryView::parentInventory() const
+const std::vector<InventorySlotView>& InventoryView::slotViews() const
 {
-    return m_parentInventory;
-}
-int InventoryView::contentHeight() const
-{
-    return m_contentHeight;
-}
-int InventoryView::minContentHeight() const
-{
-    return m_minContentHeight;
-}
-int InventoryView::maxContentHeight() const
-{
-    return m_maxContentHeight;
+    return m_slotViews;
 }
 
-int InventoryView::scroll() const
+Inventory& InventoryView::inventory() const
+{
+    return *m_inventory;
+}
+
+void InventoryView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
+{
+    int numberOfSlots = m_slotViews.size();
+    for (int i = 0; i < numberOfSlots; ++i)
+    {
+        m_slotViews[i].draw(renderTarget, renderStates, m_inventory->slotContentRequirement(i));
+    }
+}
+
+InventoryWindow::InventoryWindow(const std::string& name) :
+    PanelWindow(name),
+    m_scroll(0),
+    m_minContentHeight(m_minSensibleHeight),
+    m_maxContentHeight(m_minSensibleHeight),
+    m_isMinimizable(false),
+    m_isCloseable(true),
+    m_isResizeable(false),
+    m_isMovable(false),
+    m_hasHeader(false),
+    m_hasScrollBar(false)
+{
+}
+
+ls::Vec2I InventoryWindow::minContentSize() const
+{
+    return ls::Vec2I(0, m_minContentHeight);
+}
+ls::Vec2I InventoryWindow::minWindowSize() const
+{
+    return ls::Vec2I(PlayerUi::playerUiPanelWidth(), 0);
+}
+bool InventoryWindow::hasMaxWindowSize() const
+{
+    return true;
+}
+ls::Vec2I InventoryWindow::maxWindowSize() const
+{
+    return ls::Vec2I(PlayerUi::playerUiPanelWidth(), m_maxContentHeight + 999); //margin for the border, is restricted by maxContentSize.y
+}
+bool InventoryWindow::hasMaxContentSize() const
+{
+    return true;
+}
+ls::Vec2I InventoryWindow::maxContentSize() const
+{
+    return ls::Vec2I(PlayerUi::playerUiPanelWidth()-8, m_maxContentHeight); //-8 should not be there, will be removed when checking constraints for windows and adjusting size will be made
+}
+
+int InventoryWindow::verticalScroll() const
 {
     return m_scroll;
 }
 
-int InventoryView::size() const
-{
-    return m_slotViews.size();
-}
-
-bool InventoryView::isMinimizable() const
+bool InventoryWindow::isMinimizable() const
 {
     return m_isMinimizable;
 }
-bool InventoryView::isCloseable() const
+bool InventoryWindow::isCloseable() const
 {
     return m_isCloseable;
 }
-bool InventoryView::isResizeable() const
+bool InventoryWindow::isResizeable() const
 {
     return m_isResizeable;
 }
-bool InventoryView::hasScrollBar() const
+bool InventoryWindow::isMovable() const
+{
+    return m_isMovable;
+}
+
+bool InventoryWindow::hasHeader() const
+{
+    return m_hasHeader;
+}
+bool InventoryWindow::hasScrollBar() const
 {
     return m_hasScrollBar;
 }
 
-void InventoryView::setMinimizable(bool newValue)
+void InventoryWindow::setMinimizable(bool newValue)
 {
     m_isMinimizable = newValue;
 }
-void InventoryView::setCloseable(bool newValue)
+void InventoryWindow::setCloseable(bool newValue)
 {
     m_isCloseable = newValue;
 }
-void InventoryView::setResizeable(bool newValue)
+void InventoryWindow::setResizeable(bool newValue)
 {
     m_isResizeable = newValue;
 }
-void InventoryView::setScrollBarEnabled(bool doEnable)
+void InventoryWindow::setMovable(bool newValue)
+{
+    m_isMovable = newValue;
+}
+void InventoryWindow::setHeaderEnabled(bool newValue)
+{
+    m_hasHeader = newValue;
+}
+void InventoryWindow::setScrollBarEnabled(bool doEnable)
 {
     m_hasScrollBar = doEnable;
 }
 
-void InventoryView::setContentHeight(int newHeight)
+void InventoryWindow::setContentSizeToMax()
 {
-    m_contentHeight = newHeight;
+    this->setContentSize(maxContentSize());
 }
-void InventoryView::setContentHeightToMax()
+void InventoryWindow::update()
 {
-    m_contentHeight = m_maxContentHeight;
-}
-
-void InventoryView::drawContent(PlayerUi& playerUi, sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
-{
-    int numberOfSlots = m_slotViews.size();
-    for(int i = 0; i < numberOfSlots; ++i)
-    {
-        m_slotViews[i].draw(renderTarget, renderStates, m_parentInventory->slotContentRequirement(i));
-    }
-}
-void InventoryView::update()
-{
-    m_contentHeight = std::min(std::max(m_contentHeight, m_minContentHeight), m_maxContentHeight);
-    m_scroll = std::min(std::max(m_scroll, 0), m_maxContentHeight - m_contentHeight);
+    m_scroll = std::min(std::max(m_scroll, 0), m_maxContentHeight - this->contentRect().height());
 }
 
-void InventoryView::updateMaxContentHeight()
+void InventoryWindow::updateMaxContentHeight(const InventoryView& view)
 {
+    m_maxContentHeight = 0;
+
     constexpr int padding = 4;
-    for(const auto& slot : m_slotViews)
+    for(const auto& slot : view.slotViews())
     {
         int slotBottom = slot.position().y + InventorySlotView::slotSize().y;
         m_maxContentHeight = std::max(m_maxContentHeight, slotBottom + padding);
     }
+}
+
+WindowSpaceManager::WindowFullLocalization InventoryWindow::fullLocalization()
+{
+    return { &(Root::instance().windowSpaceManager()), this };
 }

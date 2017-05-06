@@ -14,18 +14,18 @@ PlayerEquipmentInventory::PlayerEquipmentInventory()
 {
     m_contents.resize(10, nullptr);
     m_contentRequirements.reserve(10);
-    m_contentRequirements.push_back(Inventory::ContentRequirement::Necklace);
-    m_contentRequirements.push_back(Inventory::ContentRequirement::Sword);
-    m_contentRequirements.push_back(Inventory::ContentRequirement::Ring);
+    m_contentRequirements.push_back(InventoryContentRequirement::Necklace);
+    m_contentRequirements.push_back(InventoryContentRequirement::Sword);
+    m_contentRequirements.push_back(InventoryContentRequirement::Ring);
 
-    m_contentRequirements.push_back(Inventory::ContentRequirement::Helmet);
-    m_contentRequirements.push_back(Inventory::ContentRequirement::Chestplate);
-    m_contentRequirements.push_back(Inventory::ContentRequirement::Pants);
-    m_contentRequirements.push_back(Inventory::ContentRequirement::Boots);
+    m_contentRequirements.push_back(InventoryContentRequirement::Helmet);
+    m_contentRequirements.push_back(InventoryContentRequirement::Chestplate);
+    m_contentRequirements.push_back(InventoryContentRequirement::Pants);
+    m_contentRequirements.push_back(InventoryContentRequirement::Boots);
 
-    m_contentRequirements.push_back(Inventory::ContentRequirement::Container);
-    m_contentRequirements.push_back(Inventory::ContentRequirement::Shield);
-    m_contentRequirements.push_back(Inventory::ContentRequirement::Ammo);
+    m_contentRequirements.push_back(InventoryContentRequirement::Container);
+    m_contentRequirements.push_back(InventoryContentRequirement::Shield);
+    m_contentRequirements.push_back(InventoryContentRequirement::Ammo);
 }
 PlayerEquipmentInventory::~PlayerEquipmentInventory()
 {
@@ -40,11 +40,11 @@ std::vector<TileStack*>& PlayerEquipmentInventory::contents()
 {
     return m_contents;
 }
-const Inventory::ContentRequirement PlayerEquipmentInventory::slotContentRequirement(size_t slotId) const
+const InventoryContentRequirement PlayerEquipmentInventory::slotContentRequirement(size_t slotId) const
 {
     return m_contentRequirements[slotId];
 }
-InventoryView PlayerEquipmentInventory::createInventoryView()
+std::unique_ptr<InventoryView> PlayerEquipmentInventory::createInventoryView(const WindowSpaceManager::WindowFullLocalization& loc)
 {
     std::vector<InventorySlotView> slotViews;
     slotViews.reserve(m_contents.size());
@@ -62,16 +62,19 @@ InventoryView PlayerEquipmentInventory::createInventoryView()
     slotViews.emplace_back(this, 8, Vec2I(138, 17+43*1));
     slotViews.emplace_back(this, 9, Vec2I(138, 17+43*2));
 
-    InventoryView inventoryView(this, std::move(slotViews));
-    inventoryView.setMinimizable(true);
-    inventoryView.setCloseable(false);
-    inventoryView.setResizeable(false);
-    inventoryView.setScrollBarEnabled(false);
-    inventoryView.setContentHeightToMax();
-
-    return inventoryView;
+    return std::make_unique<InventoryView>(loc, *this, std::move(slotViews));
 }
 
+std::unique_ptr<InventoryWindow> PlayerEquipmentInventory::createInventoryWindow() const
+{
+    std::unique_ptr<InventoryWindow> window = std::make_unique<InventoryWindow>("");
+    window->setMinimizable(true);
+    window->setCloseable(false);
+    window->setResizeable(false);
+    window->setScrollBarEnabled(false);
+    window->setHeaderEnabled(false);
+    return window;
+}
 int PlayerEquipmentInventory::numberOfSlots() const
 {
     return m_contents.size();

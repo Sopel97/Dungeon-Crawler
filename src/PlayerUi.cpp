@@ -18,30 +18,30 @@ const int PlayerUi::m_windowLeftBarWidth = 4;
 const int PlayerUi::m_windowBottomBarHeight = 4;
 const int PlayerUi::m_windowRightBarWidth = 4;
 const int PlayerUi::m_windowScrollBarWidth = 12;
-const Vec2I PlayerUi::m_windowHighTopLeftCornerSize = {m_windowLeftBarWidth, m_windowHeaderHeight};
-const Vec2I PlayerUi::m_windowLowTopLeftCornerSize = {m_windowLeftBarWidth, m_windowTopBarHeight};
-const Vec2I PlayerUi::m_windowHighTopRightCornerSize = {m_windowRightBarWidth, m_windowTopBarHeight};
-const Vec2I PlayerUi::m_windowLowTopRightCornerSize = {m_windowRightBarWidth, m_windowTopBarHeight};
-const Vec2I PlayerUi::m_windowBottomLeftCornerSize = {m_windowLeftBarWidth, m_windowBottomBarHeight};
-const Vec2I PlayerUi::m_windowBottomRightCornerSize = {m_windowRightBarWidth, m_windowBottomBarHeight};
-const Vec2I PlayerUi::m_windowButtonSize = {12, 12};
-const Vec2I PlayerUi::m_windowScrollSliderSize = {12, 12};
+const Vec2I PlayerUi::m_windowHighTopLeftCornerSize = { m_windowLeftBarWidth, m_windowHeaderHeight };
+const Vec2I PlayerUi::m_windowLowTopLeftCornerSize = { m_windowLeftBarWidth, m_windowTopBarHeight };
+const Vec2I PlayerUi::m_windowHighTopRightCornerSize = { m_windowRightBarWidth, m_windowTopBarHeight };
+const Vec2I PlayerUi::m_windowLowTopRightCornerSize = { m_windowRightBarWidth, m_windowTopBarHeight };
+const Vec2I PlayerUi::m_windowBottomLeftCornerSize = { m_windowLeftBarWidth, m_windowBottomBarHeight };
+const Vec2I PlayerUi::m_windowBottomRightCornerSize = { m_windowRightBarWidth, m_windowBottomBarHeight };
+const Vec2I PlayerUi::m_windowButtonSize = { 12, 12 };
+const Vec2I PlayerUi::m_windowScrollSliderSize = { 12, 12 };
 
-const Vec2I PlayerUi::m_windowTopBarSpritePosition = {0, 0};
-const Vec2I PlayerUi::m_windowHeaderSpritePosition = {0, 8};
-const Vec2I PlayerUi::m_windowLeftBarSpritePosition = {0, 0};
-const Vec2I PlayerUi::m_windowRightBarSpritePosition = {4, 0};
-const Vec2I PlayerUi::m_windowBottomBarSpritePosition = {0, 4};
-const Vec2I PlayerUi::m_windowHighTopLeftCornerSpritePosition = {206, 19};
-const Vec2I PlayerUi::m_windowLowTopLeftCornerSpritePosition = {198, 19};
-const Vec2I PlayerUi::m_windowHighTopRightCornerSpritePosition = {210, 19};
-const Vec2I PlayerUi::m_windowLowTopRightCornerSpritePosition = {202, 19};
-const Vec2I PlayerUi::m_windowBottomLeftCornerSpritePosition = {198, 23};
-const Vec2I PlayerUi::m_windowBottomRightCornerSpritePosition = {202, 23};
-const Vec2I PlayerUi::m_windowScrollBarSpritePosition = {8, 0};
-const Vec2I PlayerUi::m_windowScrollBarUpButtonSpritePosition = {0, 57};
-const Vec2I PlayerUi::m_windowScrollBarDownButtonSpritePosition = {12, 57};
-const Vec2I PlayerUi::m_windowScrollBarSliderSpritePosition = {24, 57};
+const Vec2I PlayerUi::m_windowTopBarSpritePosition = { 0, 0 };
+const Vec2I PlayerUi::m_windowHeaderSpritePosition = { 0, 8 };
+const Vec2I PlayerUi::m_windowLeftBarSpritePosition = { 0, 0 };
+const Vec2I PlayerUi::m_windowRightBarSpritePosition = { 4, 0 };
+const Vec2I PlayerUi::m_windowBottomBarSpritePosition = { 0, 4 };
+const Vec2I PlayerUi::m_windowHighTopLeftCornerSpritePosition = { 206, 19 };
+const Vec2I PlayerUi::m_windowLowTopLeftCornerSpritePosition = { 198, 19 };
+const Vec2I PlayerUi::m_windowHighTopRightCornerSpritePosition = { 210, 19 };
+const Vec2I PlayerUi::m_windowLowTopRightCornerSpritePosition = { 202, 19 };
+const Vec2I PlayerUi::m_windowBottomLeftCornerSpritePosition = { 198, 23 };
+const Vec2I PlayerUi::m_windowBottomRightCornerSpritePosition = { 202, 23 };
+const Vec2I PlayerUi::m_windowScrollBarSpritePosition = { 8, 0 };
+const Vec2I PlayerUi::m_windowScrollBarUpButtonSpritePosition = { 0, 57 };
+const Vec2I PlayerUi::m_windowScrollBarDownButtonSpritePosition = { 12, 57 };
+const Vec2I PlayerUi::m_windowScrollBarSliderSpritePosition = { 24, 57 };
 
 PlayerUi::PlayerUi(Player& player, const WindowSpaceManager::WindowFullLocalization& loc) :
 	WindowSpaceUser(loc),
@@ -56,23 +56,24 @@ PlayerUi::~PlayerUi()
 
 void PlayerUi::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
 {
-    for(auto& window : m_windows)
-    {	
-		drawWindow(renderTarget, renderStates, *window);
-		setContentViewOfWindow(*window);
-        window->drawContent(*this, renderTarget, renderStates);
+    for(auto wnd : m_windows)
+    {
+		drawWindow(renderTarget, renderStates, *wnd);
+		setContentViewOfWindow(*wnd);
+        wnd->draw(renderTarget, renderStates);
     }
 }
 
-void PlayerUi::drawWindow(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, PanelWindow& wnd)
+void PlayerUi::drawWindow(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const PanelWindow& wnd)
 {
     const Rectangle2I& playerUiPanelRect = window().windowRect();
     const int& topBarHeight = wnd.hasHeader() ? m_windowHeaderHeight : m_windowTopBarHeight;
     Rectangle2I windowRect = wnd.windowRect().translated(playerUiPanelRect.min);
+    Rectangle2I contentRect = wnd.contentRect().translated(playerUiPanelRect.min);
 
-    drawWindow(renderTarget, renderStates, wnd, windowRect);
+    drawWindow(renderTarget, renderStates, wnd, windowRect, contentRect);
 }
-void PlayerUi::drawWindow(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, PanelWindow& window, const Rectangle2I& rect)
+void PlayerUi::drawWindow(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const PanelWindow& wnd, const Rectangle2I& windowRect, const Rectangle2I& contentRect)
 {
     ResourceHandle<sf::Texture> backgroundTexture = ResourceManager::instance().get<sf::Texture>("UiBackground");
 	ResourceHandle<sf::Texture> verticalBarsSprites = ResourceManager::instance().get<sf::Texture>("UiVerticalBars");
@@ -81,22 +82,20 @@ void PlayerUi::drawWindow(sf::RenderTarget& renderTarget, sf::RenderStates& rend
 
     windowSpaceManager().setDefaultView();
 
-    const int& topBarHeight = window.hasHeader() ? m_windowHeaderHeight : m_windowTopBarHeight;
-    const Vec2I& topBarSpritePosition = window.hasHeader() ? m_windowHeaderSpritePosition : m_windowTopBarSpritePosition;
-    const Vec2I& topLeftCornerSpritePosition = window.hasHeader() ? m_windowHighTopLeftCornerSpritePosition : m_windowLowTopLeftCornerSpritePosition;
-    const Vec2I& topRightCornerSpritePosition = window.hasHeader() ? m_windowHighTopRightCornerSpritePosition : m_windowLowTopRightCornerSpritePosition;
+    const int& topBarHeight = wnd.hasHeader() ? m_windowHeaderHeight : m_windowTopBarHeight;
+    const Vec2I& topBarSpritePosition = wnd.hasHeader() ? m_windowHeaderSpritePosition : m_windowTopBarSpritePosition;
+    const Vec2I& topLeftCornerSpritePosition = wnd.hasHeader() ? m_windowHighTopLeftCornerSpritePosition : m_windowLowTopLeftCornerSpritePosition;
+    const Vec2I& topRightCornerSpritePosition = wnd.hasHeader() ? m_windowHighTopRightCornerSpritePosition : m_windowLowTopRightCornerSpritePosition;
 
-    Rectangle2I windowInteriorRect(rect.min + Vec2I(m_windowLeftBarWidth, topBarHeight), rect.max - Vec2I(m_windowRightBarWidth, m_windowBottomBarHeight));
+    const Vec2I& windowTopLeft = windowRect.min;
+    const Vec2I& windowBottomRight = windowRect.max;
+    const Vec2I& windowInteriorTopLeft = contentRect.min;
+    const Vec2I& windowInteriorBottomRight = contentRect.max;
 
-    const Vec2I& windowTopLeft(rect.min);
-    const Vec2I& windowBottomRight(rect.max);
-    const Vec2I& windowInteriorTopLeft(windowInteriorRect.min);
-    const Vec2I& windowInteriorBottomRight(windowInteriorRect.max);
-
-    int windowWidth = rect.width();
-    int windowHeight = rect.height();
-    int windowInteriorWidth = windowInteriorRect.width();
-    int windowInteriorHeight = windowInteriorRect.height();
+    int windowWidth = windowRect.width();
+    int windowHeight = windowRect.height();
+    int windowInteriorWidth = contentRect.width();
+    int windowInteriorHeight = contentRect.height();
 
     sf::Sprite topBarSprite;
     topBarSprite.setPosition(static_cast<float>(windowInteriorTopLeft.x), static_cast<float>(windowTopLeft.y));
@@ -149,14 +148,14 @@ void PlayerUi::drawWindow(sf::RenderTarget& renderTarget, sf::RenderStates& rend
     sf::Sprite backgroundSprite;
     backgroundSprite.setPosition(static_cast<float>(windowInteriorTopLeft.x), static_cast<float>(windowInteriorTopLeft.y));
     backgroundSprite.setTexture(backgroundTexture.get());
-    backgroundSprite.setTextureRect(sf::IntRect(sf::Vector2i(0, window.scroll()), sf::Vector2i(windowInteriorWidth, windowInteriorHeight)));
+    backgroundSprite.setTextureRect(sf::IntRect(sf::Vector2i(0, wnd.verticalScroll()), sf::Vector2i(windowInteriorWidth, windowInteriorHeight)));
     renderTarget.draw(backgroundSprite, renderStates);
 
-    if(window.hasScrollBar())
+    if(wnd.hasScrollBar())
     {
         int scrollBarHeight = windowInteriorHeight;
 
-        const Vec2I scrollBarTopLeft(windowInteriorRect.max.x - m_windowScrollBarWidth, windowInteriorRect.min.y);
+        const Vec2I scrollBarTopLeft(contentRect.max.x - m_windowScrollBarWidth, contentRect.min.y);
 
         sf::Sprite scrollBarSprite;
         scrollBarSprite.setPosition(static_cast<float>(scrollBarTopLeft.x), static_cast<float>(scrollBarTopLeft.y));
@@ -176,13 +175,14 @@ void PlayerUi::drawWindow(sf::RenderTarget& renderTarget, sf::RenderStates& rend
         scrollBarDownButtonSprite.setTextureRect(sf::IntRect(sf::Vector2i(m_windowScrollBarDownButtonSpritePosition.x, m_windowScrollBarDownButtonSpritePosition.y), sf::Vector2i(m_windowButtonSize.x, m_windowButtonSize.y)));
         renderTarget.draw(scrollBarDownButtonSprite, renderStates);
 
-        if(windowInteriorHeight < window.contentHeight())
+        auto contentRect = wnd.contentRect();
+        if(windowInteriorHeight < contentRect.height())
         {
             int sliderMin = static_cast<int>(scrollBarTopLeft.y) + m_windowButtonSize.y / 2 + m_windowButtonSize.y;
             int sliderMax = static_cast<int>(scrollBarTopLeft.y) + scrollBarHeight - m_windowButtonSize.y / 2 - 2 * m_windowButtonSize.y;
             int sliderRangeLength = sliderMax - sliderMin;
-            int scrollRangeLength = window.contentHeight() - windowInteriorHeight;
-            float scrolled = static_cast<float>(window.scroll()) / static_cast<float>(scrollRangeLength);
+            int scrollRangeLength = contentRect.height() - windowInteriorHeight;
+            float scrolled = static_cast<float>(wnd.verticalScroll()) / static_cast<float>(scrollRangeLength);
             int sliderPosition = static_cast<int>(sliderMin + sliderRangeLength * scrolled);
 
             sf::Sprite scrollBarSliderButtonSprite;
@@ -198,9 +198,10 @@ void PlayerUi::setContentViewOfWindow(PanelWindow& wnd)
 {
     const Rectangle2I& playerUiPanelRect = window().windowRect();
 
-    const Rectangle2I windowInteriorRect = wnd.contentRect().translated(playerUiPanelRect.min);
+    auto contentRect = wnd.contentRect();
+    const Rectangle2I windowInteriorRect = contentRect.translated(playerUiPanelRect.min);
 
-    windowSpaceManager().setRectView(windowInteriorRect, Rectangle2F::withSize(Vec2F(0.0f, static_cast<float>(wnd.scroll())), static_cast<float>(wnd.contentWidth()), static_cast<float>(wnd.contentHeight())));
+    windowSpaceManager().setRectView(windowInteriorRect, Rectangle2F::withSize(Vec2F(0.0f, static_cast<float>(wnd.verticalScroll())), static_cast<float>(contentRect.width()), static_cast<float>(contentRect.height())));
 }
 
 void PlayerUi::closeWindow(PanelWindow* window)
@@ -221,8 +222,8 @@ void PlayerUi::updateWindowPositions()
 	int currentPosition = 0;
 	for (PanelWindow* window : m_windows)
 	{
-		window->setPosition(currentPosition);
-		currentPosition += window->windowHeight();
+		window->setWindowPosition(ls::Vec2I(0, currentPosition));
+		currentPosition += window->windowRect().height();
 	}
 }
 

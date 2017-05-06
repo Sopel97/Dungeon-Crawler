@@ -15,7 +15,7 @@ private:
 	WindowSpaceManager* m_windowSpaceManager;
 	WindowSpaceManager::Window* m_window;
 
-protected:
+public:
     const WindowSpaceManager::Window& window() const;
 	WindowSpaceManager::Window& window();
     const WindowSpaceManager& windowSpaceManager() const;
@@ -23,6 +23,11 @@ protected:
 public:
 	WindowSpaceUser(const WindowSpaceManager::WindowFullLocalization& loc);
 	virtual ~WindowSpaceUser();
+
+    WindowSpaceUser(const WindowSpaceUser&) = default;
+    WindowSpaceUser(WindowSpaceUser&&) = default;
+    WindowSpaceUser& operator=(const WindowSpaceUser&) = default;
+    WindowSpaceUser& operator=(WindowSpaceUser&&) = default;
 
 	virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) {};
 };

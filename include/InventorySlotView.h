@@ -2,13 +2,13 @@
 
 #include "ResourceManager.h"
 
-#include "Inventory.h"
-
 #include "../LibS/Geometry.h"
 
 #include <map>
 
 class TileStack;
+class Inventory;
+enum class InventoryContentRequirement;
 
 namespace sf
 {
@@ -32,7 +32,7 @@ public:
     TileStack* content() const;
     const ls::Vec2I& position() const;
 
-    void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, Inventory::ContentRequirement contentRequirement);
+    void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, InventoryContentRequirement contentRequirement);
 
     static const ls::Vec2I& slotSize();
 
@@ -41,7 +41,7 @@ protected:
     static ls::Vec2I m_slotTexture;
     static ls::Vec2I m_slotTextureSize;
     static ls::Vec2I m_requirementIconSize;
-    static std::map<Inventory::ContentRequirement, ls::Vec2I> m_requirementIcons;
+    static std::map<InventoryContentRequirement, ls::Vec2I> m_requirementIcons;
 
     Inventory* m_inventory; //inventory will always outlive the views of its slots
     size_t m_slotId;
