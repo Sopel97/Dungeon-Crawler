@@ -26,7 +26,7 @@ class TallDrawable;
 class World : public WindowSpaceUser
 {
 public:
-    World(Root& root, Player& player, const WindowSpaceManager::WindowRegionFullLocalization& loc);
+    World(Root& root, Player& player, const WindowSpaceManager::WindowFullLocalization& loc);
     ~World();
 
     void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);

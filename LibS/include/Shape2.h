@@ -26,6 +26,8 @@ namespace ls
         using ValueType = T;
 
         using VectorType = Vec2<T>;
+
+        constexpr Shape2() = default;
     };
 
     using Shape2D = Shape2<double>;

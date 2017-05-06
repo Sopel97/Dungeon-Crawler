@@ -9,6 +9,8 @@ namespace ls
     {
     public:
         using ValueType = T;
+
+        constexpr Shape() = default;
     };
 
     using ShapeD = Shape<double>;

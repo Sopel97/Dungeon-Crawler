@@ -1,24 +1,19 @@
 #include "..\include\WindowSpaceUser.h"
 
 
-WindowSpaceUser::WindowSpaceUser(const WindowSpaceManager::WindowRegionFullLocalization& loc) :
+WindowSpaceUser::WindowSpaceUser(const WindowSpaceManager::WindowFullLocalization& loc) :
 	m_windowSpaceManager(loc.windowSpaceManager),
-	m_scene(loc.scene),
-	m_windowRegion(loc.windowRegion)
+	m_window(loc.window)
 {
-	m_windowRegion->setUser(*this);
+	m_window->setUser(*this);
 }
-WindowSpaceManager::Scene& WindowSpaceUser::scene()
+const WindowSpaceManager::Window& WindowSpaceUser::window() const
 {
-	return *m_scene;
+    return *m_window;
 }
-const WindowSpaceManager::WindowRegion& WindowSpaceUser::windowRegion() const
+WindowSpaceManager::Window& WindowSpaceUser::window()
 {
-    return *m_windowRegion;
-}
-WindowSpaceManager::WindowRegion& WindowSpaceUser::windowRegion()
-{
-    return *m_windowRegion;
+    return *m_window;
 }
 const WindowSpaceManager& WindowSpaceUser::windowSpaceManager() const
 {

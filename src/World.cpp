@@ -33,7 +33,7 @@
 
 using namespace ls;
 
-World::World(Root& root, Player& player, const WindowSpaceManager::WindowRegionFullLocalization& loc) :
+World::World(Root& root, Player& player, const WindowSpaceManager::WindowFullLocalization& loc) :
 	WindowSpaceUser(loc),
     m_root(root),
     m_width(m_worldWidth),
@@ -71,7 +71,7 @@ World::~World()
 
 void World::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
 {
-    windowSpaceManager().setRegionView(windowRegion(), Rectangle2F::withSize(Vec2F(0,0), m_intermidiateRenderTarget.getSize().x, m_intermidiateRenderTarget.getSize().y));
+    windowSpaceManager().setWindowView(window(), Rectangle2F::withSize(Vec2F(0,0), m_intermidiateRenderTarget.getSize().x, m_intermidiateRenderTarget.getSize().y));
     
     prepareIntermidiateRenderTarget();
     prepareLightMap();
@@ -193,7 +193,7 @@ void World::updateShaderUniforms()
     const Rectangle2F cameraRect = m_camera.viewRectangle();
 
     m_prettyStretchShader.setParameter("worldOffset", sf::Vector2f(cameraRect.min.x, cameraRect.min.y));
-    const auto& viewRect = windowRegion().rect();
+    const auto& viewRect = window().windowRect();
     m_prettyStretchShader.setParameter("viewOffset", sf::Vector2f(viewRect.min.x, viewRect.min.y)); //NOTE: probably should be windowheight - miny
     m_prettyStretchShader.setParameter("destinationTextureSize", sf::Vector2f(viewRect.width(), viewRect.height()));
 }
@@ -361,12 +361,12 @@ Vec2I World::worldToTile(const Vec2F& worldPosition) const
 }
 ls::Vec2F World::screenToWorld(const ls::Vec2I& screenPosition) const
 {
-    const sf::Vector2f worldPosition = m_root.window().mapPixelToCoords(sf::Vector2i(screenPosition.x, screenPosition.y), windowSpaceManager().getRegionView(windowRegion(), m_camera.viewRectangle()));
+    const sf::Vector2f worldPosition = m_root.window().mapPixelToCoords(sf::Vector2i(screenPosition.x, screenPosition.y), windowSpaceManager().getWindowView(window(), m_camera.viewRectangle()));
     return{worldPosition.x, worldPosition.y};
 }
 ls::Vec2I World::worldToScreen(const ls::Vec2F& worldPosition) const
 {
-    const sf::Vector2i screenPosition = m_root.window().mapCoordsToPixel(sf::Vector2f(worldPosition.x, worldPosition.y), windowSpaceManager().getRegionView(windowRegion(), m_camera.viewRectangle()));
+    const sf::Vector2i screenPosition = m_root.window().mapCoordsToPixel(sf::Vector2f(worldPosition.x, worldPosition.y), windowSpaceManager().getWindowView(window(), m_camera.viewRectangle()));
     return{screenPosition.x, screenPosition.y};
 }
 ls::Vec2I World::screenToTile(const ls::Vec2I& screenPosition) const
@@ -406,7 +406,7 @@ auto World::onMouseButtonPressed(sf::Event::MouseButtonEvent& event, EventContex
 {
 	if (event.button == sf::Mouse::Button::Right)
 	{
-		const Rectangle2I& worldViewRect = windowRegion().rect();
+		const Rectangle2I& worldViewRect = window().windowRect();
 		if (ls::intersect(worldViewRect, Vec2I(event.x, event.y)))
 		{
 			const Vec2I tilePosition = screenToTile(Vec2I(event.x, event.y));

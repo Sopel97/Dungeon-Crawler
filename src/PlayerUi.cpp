@@ -43,7 +43,7 @@ const Vec2I PlayerUi::m_windowScrollBarUpButtonSpritePosition = {0, 57};
 const Vec2I PlayerUi::m_windowScrollBarDownButtonSpritePosition = {12, 57};
 const Vec2I PlayerUi::m_windowScrollBarSliderSpritePosition = {24, 57};
 
-PlayerUi::PlayerUi(Player& player, const WindowSpaceManager::WindowRegionFullLocalization& loc) :
+PlayerUi::PlayerUi(Player& player, const WindowSpaceManager::WindowFullLocalization& loc) :
 	WindowSpaceUser(loc),
     m_player(player)
 {
@@ -64,13 +64,13 @@ void PlayerUi::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStat
     }
 }
 
-void PlayerUi::drawWindow(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, PanelWindow& window)
+void PlayerUi::drawWindow(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, PanelWindow& wnd)
 {
-    const Rectangle2I& playerUiPanelRect = windowRegion().rect();
-    const int& topBarHeight = window.hasHeader() ? m_windowHeaderHeight : m_windowTopBarHeight;
-    Rectangle2I windowRect = window.windowRect().translated(playerUiPanelRect.min);
+    const Rectangle2I& playerUiPanelRect = window().windowRect();
+    const int& topBarHeight = wnd.hasHeader() ? m_windowHeaderHeight : m_windowTopBarHeight;
+    Rectangle2I windowRect = wnd.windowRect().translated(playerUiPanelRect.min);
 
-    drawWindow(renderTarget, renderStates, window, windowRect);
+    drawWindow(renderTarget, renderStates, wnd, windowRect);
 }
 void PlayerUi::drawWindow(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, PanelWindow& window, const Rectangle2I& rect)
 {
@@ -194,13 +194,13 @@ void PlayerUi::drawWindow(sf::RenderTarget& renderTarget, sf::RenderStates& rend
     }
 }
 
-void PlayerUi::setContentViewOfWindow(PanelWindow& window)
+void PlayerUi::setContentViewOfWindow(PanelWindow& wnd)
 {
-    const Rectangle2I& playerUiPanelRect = windowRegion().rect();
+    const Rectangle2I& playerUiPanelRect = window().windowRect();
 
-    const Rectangle2I windowInteriorRect = window.contentRect().translated(playerUiPanelRect.min);
+    const Rectangle2I windowInteriorRect = wnd.contentRect().translated(playerUiPanelRect.min);
 
-    windowSpaceManager().setRectView(windowInteriorRect, Rectangle2F::withSize(Vec2F(0.0f, static_cast<float>(window.scroll())), static_cast<float>(window.contentWidth()), static_cast<float>(window.contentHeight())));
+    windowSpaceManager().setRectView(windowInteriorRect, Rectangle2F::withSize(Vec2F(0.0f, static_cast<float>(wnd.scroll())), static_cast<float>(wnd.contentWidth()), static_cast<float>(wnd.contentHeight())));
 }
 
 void PlayerUi::closeWindow(PanelWindow* window)

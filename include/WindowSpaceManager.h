@@ -19,7 +19,6 @@ class WindowSpaceUser;
 class WindowSpaceManager
 {
 public:
-    class WindowRegion;
     class Scene;
     class SubdivisionParams;
 
@@ -100,21 +99,18 @@ public:
         SubdivisionParams(Orientation orientation, Subject subject, float ratio);
     };
 
-    class WindowRegion
+   /* class WindowRegion
     {
     private:
         ls::Rectangle2I m_rect;
         std::string m_name;
-        Scene* m_parentScene;
         WindowSpaceUser* m_spaceUser;
 
     public:
-        WindowRegion(const ls::Rectangle2I& rect, const std::string& name, Scene& parentScene);
+        WindowRegion(const ls::Rectangle2I& rect, const std::string& name);
 
         const ls::Rectangle2I& rect() const;
         const std::string& name() const;
-        const Scene& parentScene() const;
-        Scene& parentScene();
 
         bool hasEventHandler() const;
         SfmlEventHandler& eventHandler();
@@ -125,48 +121,118 @@ public:
         ls::Vec2I localCoords(const ls::Vec2I& windowCoords) const;
 
         void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
-    };
+    };*/
 
-    template <class ParamsT>
     class Window
     {
-    public:
-        using ParamsType = ParamsT;
     private:
-        WindowRegion m_windowRegion;
-        ParamsType m_params;
+        ls::Rectangle2I m_windowRect;
+        std::string m_name;
+        WindowSpaceUser* m_spaceUser;
+
     public:
-        Window(const WindowRegion& windowRegion, const ParamsType& params) :
-            m_windowRegion(windowRegion),
-            m_params(params)
-        {
+        Window(const ls::Rectangle2I& windowRect, const std::string& name);
 
+        virtual ~Window();
+
+        virtual const ls::Rectangle2I& windowRect() const;
+        virtual ls::Rectangle2I contentRect() const;
+        virtual const std::string& title() const;
+
+        virtual void setWindowRect(const ls::Rectangle2I& newRect);
+        virtual void setWindowPosition(const ls::Vec2I& newPosition);
+        virtual void setWindowSize(const ls::Vec2I& newSize);
+
+        virtual ls::Vec2I minContentSize() const;
+        virtual bool hasMaxContentSize() const;
+        virtual ls::Vec2I maxContentSize() const;
+
+        virtual int verticalScroll() const;
+
+        virtual bool isMinimizable() const;
+        virtual bool isCloseable() const;
+        virtual bool isResizeable() const;
+        virtual bool isMovable() const;
+
+        virtual bool hasHeader() const;
+        virtual bool hasScrollBar() const;
+
+        virtual bool hasEventHandler() const;
+        virtual SfmlEventHandler& eventHandler();
+
+        virtual void setUser(WindowSpaceUser& newUser);
+
+        virtual ls::Vec2I localWindowCoords(const ls::Vec2I& globalCoords) const;
+        virtual ls::Vec2I localContentCoords(const ls::Vec2I& globalCoords) const;
+
+        virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
+
+    private:
+        static const int m_playerUiPanelWidth;
+        static const int m_windowTopBarHeight;
+        static const int m_windowHeaderHeight;
+        static const int m_windowLeftBarWidth;
+        static const int m_windowBottomBarHeight;
+        static const int m_windowRightBarWidth;
+        static const int m_windowScrollBarWidth;
+        static const ls::Vec2I m_windowHighTopLeftCornerSize;
+        static const ls::Vec2I m_windowLowTopLeftCornerSize;
+        static const ls::Vec2I m_windowHighTopRightCornerSize;
+        static const ls::Vec2I m_windowLowTopRightCornerSize;
+        static const ls::Vec2I m_windowBottomLeftCornerSize;
+        static const ls::Vec2I m_windowBottomRightCornerSize;
+        static const ls::Vec2I m_windowButtonSize;
+        static const ls::Vec2I m_windowScrollSliderSize;
+
+        static const ls::Vec2I m_windowTopBarSpritePosition;
+        static const ls::Vec2I m_windowHeaderSpritePosition;
+        static const ls::Vec2I m_windowLeftBarSpritePosition;
+        static const ls::Vec2I m_windowRightBarSpritePosition;
+        static const ls::Vec2I m_windowBottomBarSpritePosition;
+        static const ls::Vec2I m_windowHighTopLeftCornerSpritePosition;
+        static const ls::Vec2I m_windowLowTopLeftCornerSpritePosition;
+        static const ls::Vec2I m_windowHighTopRightCornerSpritePosition;
+        static const ls::Vec2I m_windowLowTopRightCornerSpritePosition;
+        static const ls::Vec2I m_windowBottomLeftCornerSpritePosition;
+        static const ls::Vec2I m_windowBottomRightCornerSpritePosition;
+        static const ls::Vec2I m_windowScrollBarSpritePosition;
+        static const ls::Vec2I m_windowScrollBarUpButtonSpritePosition;
+        static const ls::Vec2I m_windowScrollBarDownButtonSpritePosition;
+        static const ls::Vec2I m_windowScrollBarSliderSpritePosition;
+    };
+
+    // technically not a window
+    class BackgroundWindow : public Window
+    {
+    private:
+        std::optional<SubdivisionParams> m_params;
+    public:
+        BackgroundWindow(const ls::Rectangle2I& rect, const std::string& name) :
+            Window(rect, name),
+            m_params(std::nullopt)
+        {
         }
 
-        WindowRegion& windowRegion()
+        virtual ls::Rectangle2I contentRect() const
         {
-            return m_windowRegion;
+            return windowRect();
         }
-        const WindowRegion& windowRegion() const
-        {
-            return m_windowRegion;
-        }
-        const ParamsType& params() const
+
+        const std::optional<SubdivisionParams>& params() const
         {
             return m_params;
         }
-        ParamsType& params()
+        std::optional<SubdivisionParams>& params()
         {
             return m_params;
         }
 
-        void setParams(const ParamsType& params)
+        void setParams(const SubdivisionParams& params)
         {
             m_params = params;
         }
     };
 
-    using BackgroundWindow = Window<std::optional<SubdivisionParams>>;
     using BackgroundWindowsStorage = ls::BinaryTree<BackgroundWindow>;
     using BackgroundWindowHandle = typename BackgroundWindowsStorage::Iterator;
     using ConstBackgroundWindowHandle = typename BackgroundWindowsStorage::ConstIterator;
@@ -177,7 +243,8 @@ public:
         ls::Vec2I m_defaultSize;
         ls::Vec2I m_minSize;
         std::optional<ls::Vec2I> m_maxSize;
-        std::optional<ConstBackgroundWindowHandle> m_regionRestriction;
+        std::optional<const Window*> m_parentWindow;
+        bool m_showHeader;
 
     public:
         FreeWindowParams(const ls::Vec2I& defaultSize);
@@ -189,27 +256,67 @@ public:
 
         FreeWindowParams& withMinSize(const ls::Vec2I& minSize);
         FreeWindowParams& withMaxSize(const ls::Vec2I& maxSize);
-        FreeWindowParams& withRegionRestriction(ConstBackgroundWindowHandle h);
+        FreeWindowParams& withParentWindow(const Window& window);
+        FreeWindowParams& withHeader();
 
         const ls::Vec2I& defaultSize() const;
         const ls::Vec2I& minSize() const;
         bool hasMaxSize() const;
         const ls::Vec2I& maxSize() const;
-        bool hasRegionRestriction() const;
-        const ConstBackgroundWindowHandle& regionRestriction() const;
+        bool hasParentWindow() const;
+        const Window& parentWindow() const;
 
+        bool hasHeader() const;
     };
 
-    using FreeWindow = Window<FreeWindowParams>;
-    using FreeWindowStorage = std::vector<FreeWindow>;
+    class FreeWindow : public Window
+    {
+    private:
+        FreeWindowParams m_params;
+    public:
+        FreeWindow(const ls::Rectangle2I& rect, const std::string& name, const FreeWindowParams& params) :
+            Window(rect, name),
+            m_params(params)
+        {
+        }
+
+        const FreeWindowParams& params() const
+        {
+            return m_params;
+        }
+        FreeWindowParams& params()
+        {
+            return m_params;
+        }
+
+        virtual bool isCloseable() const
+        {
+            return true;
+        }
+        virtual bool isMovable() const
+        {
+            return true;
+        }
+
+        virtual bool hasHeader() const
+        {
+            return m_params.hasHeader();
+        }
+
+        void setParams(const FreeWindowParams& params)
+        {
+            m_params = params;
+        }
+    };
+
+    using FreeWindowStorage = std::list<FreeWindow>;
     using FreeWindowHandle = typename FreeWindowStorage::iterator;
     using ConstFreeWindowHandle = typename FreeWindowStorage::const_iterator;
 
-    struct WindowRegionFullLocalization
+    struct WindowFullLocalization
     {
         WindowSpaceManager* windowSpaceManager;
-        Scene* scene;
-        WindowRegion* windowRegion;
+        Window* window;
     };
 
     class Scene
@@ -217,6 +324,8 @@ public:
     private:
         WindowSpaceManager* m_windowSpaceManager;
         BackgroundWindowsStorage m_backgroundWindows;
+        //TODO: currently free windows can only be created, make it so they are also drawn and participate in event dispatch. 
+        // Also do more functions on free windows, rename current ones that work only on background windows so they are not mistook as generic
         FreeWindowStorage m_freeWindows;
         std::string m_name;
         std::vector<BackgroundWindowHandle> m_topmostRegions;
@@ -230,8 +339,8 @@ public:
         Scene& operator=(const Scene&) = delete;
         Scene& operator=(Scene&&) = default;
 
-        WindowRegion& windowRegion(BackgroundWindowHandle h);
-        const WindowRegion& windowRegion(ConstBackgroundWindowHandle h) const;
+        BackgroundWindow& window(BackgroundWindowHandle h);
+        const BackgroundWindow& window(ConstBackgroundWindowHandle h) const;
 
         bool isSubdivided(ConstBackgroundWindowHandle h) const;
 
@@ -254,10 +363,10 @@ public:
         BackgroundWindowHandle rootHandle();
         ConstBackgroundWindowHandle rootHandle() const;
 
-        BackgroundWindowHandle findBackgroundWindow(const std::string& name);
-        ConstBackgroundWindowHandle findBackgroundWindow(const std::string& name) const;
+        BackgroundWindowHandle findBackgroundWindow(const std::string& title);
+        ConstBackgroundWindowHandle findBackgroundWindow(const std::string& title) const;
 
-        WindowRegionFullLocalization fullLocalizationOf(BackgroundWindowHandle h);
+        WindowFullLocalization fullLocalizationOf(BackgroundWindowHandle h);
 
         void update(const ls::Rectangle2I& rect);
 
@@ -276,10 +385,10 @@ public:
         void dispatchEvent(EventType& event, SfmlEventHandler::EventResult(SfmlEventHandler::*handler)(EventType&, SfmlEventHandler::EventContext), const ls::Vec2I& mousePos)
         {
             BackgroundWindowHandle focusedRegionHandle = m_focusedRegionHandle; //stored because can be changed midway
-            WindowRegion& focused = windowRegion(focusedRegionHandle);
+            Window& focused = window(focusedRegionHandle);
             if (focused.hasEventHandler())
             {
-                const SfmlEventHandler::EventContext context{ true, ls::intersect(focused.rect(), mousePos) };
+                const SfmlEventHandler::EventContext context{ true, ls::intersect(focused.windowRect(), mousePos) };
                 const SfmlEventHandler::EventResult result = (focused.eventHandler().*handler)(event, context);
                 if (result.consumeEvent)
                 {
@@ -292,7 +401,7 @@ public:
             BackgroundWindowHandle mouseOverRegionHandle = queryRegion(mousePos);
             if (mouseOverRegionHandle.isValid() && mouseOverRegionHandle != m_focusedRegionHandle)
             {
-                WindowRegion& mouseOverRegion = windowRegion(mouseOverRegionHandle);
+                Window& mouseOverRegion = window(mouseOverRegionHandle);
                 if (mouseOverRegion.hasEventHandler())
                 {
                     const SfmlEventHandler::EventContext context{ false, true };
@@ -312,7 +421,7 @@ public:
             {
                 if (h == focusedRegionHandle || h == mouseOverRegionHandle) continue;
 
-                WindowRegion& region = windowRegion(h);
+                Window& region = window(h);
                 if (region.hasEventHandler())
                 {
                     const SfmlEventHandler::EventContext context{ false, false };
@@ -348,9 +457,9 @@ public:
     void onWindowResized();
 
     sf::View getRectView(const ls::Rectangle2I& viewport, const ls::Rectangle2F& worldRect) const;
-    sf::View getRegionView(const WindowRegion& region, const ls::Rectangle2F& worldRect) const;
+    sf::View getWindowView(const Window& window, const ls::Rectangle2F& worldRect) const;
     void setRectView(const ls::Rectangle2I& viewport, const ls::Rectangle2F& worldRect) const;
-    void setRegionView(const WindowRegion& region, const ls::Rectangle2F& worldRect) const;
+    void setWindowView(const Window& window, const ls::Rectangle2F& worldRect) const;
     void setView(const sf::View& view);
     void setDefaultView();
 

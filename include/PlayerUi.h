@@ -18,6 +18,8 @@ class Game;
 class PlayerUi : public WindowSpaceUser
 {
 public:
+    // TODO: implement it based on WindowSpaceManager::Window<>
+    // move drawing of the basic window shape to somewhere where it can be used by FreeWindow too
 	class PanelWindow
 	{
 	protected:
@@ -71,13 +73,13 @@ public:
         virtual void drawContent(PlayerUi& playerUi, sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) = 0;
     };
 
-    PlayerUi(Player& player, const WindowSpaceManager::WindowRegionFullLocalization& loc);
+    PlayerUi(Player& player, const WindowSpaceManager::WindowFullLocalization& loc);
     ~PlayerUi();
 
     void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
-    void drawWindow(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, PanelWindow& window); //later will somehow draw buttons.
+    void drawWindow(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, PanelWindow& wnd); //later will somehow draw buttons.
 
-    void setContentViewOfWindow(PanelWindow& window);
+    void setContentViewOfWindow(PanelWindow& wnd);
 
     void closeWindow(PanelWindow* window);
     void openWindow(PanelWindow* window); //does not take ownership

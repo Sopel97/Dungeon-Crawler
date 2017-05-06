@@ -184,54 +184,158 @@ SubdivisionParams(WindowSpaceManager::SubdivisionParams::Orientation orientation
     m_amount.ratio = ratio;
 }
 
-WindowSpaceManager::WindowRegion::
-WindowRegion(const ls::Rectangle2I& rect, const std::string& name, Scene& parentScene) :
-    m_rect(rect),
+WindowSpaceManager::Window::Window(const ls::Rectangle2I& windowRect, const std::string& name) :
+    m_windowRect(windowRect),
     m_name(name),
-    m_parentScene(&parentScene),
     m_spaceUser(nullptr)
 {
 
 }
 
-const ls::Rectangle2I& WindowSpaceManager::WindowRegion::rect() const
+WindowSpaceManager::Window::~Window()
 {
-    return m_rect;
+
 }
-const std::string& WindowSpaceManager::WindowRegion::name() const
+
+const int WindowSpaceManager::Window::m_playerUiPanelWidth = 230;
+const int WindowSpaceManager::Window::m_windowTopBarHeight = 4;
+const int WindowSpaceManager::Window::m_windowHeaderHeight = 15;
+const int WindowSpaceManager::Window::m_windowLeftBarWidth = 4;
+const int WindowSpaceManager::Window::m_windowBottomBarHeight = 4;
+const int WindowSpaceManager::Window::m_windowRightBarWidth = 4;
+const int WindowSpaceManager::Window::m_windowScrollBarWidth = 12;
+const Vec2I WindowSpaceManager::Window::m_windowHighTopLeftCornerSize = { m_windowLeftBarWidth, m_windowHeaderHeight };
+const Vec2I WindowSpaceManager::Window::m_windowLowTopLeftCornerSize = { m_windowLeftBarWidth, m_windowTopBarHeight };
+const Vec2I WindowSpaceManager::Window::m_windowHighTopRightCornerSize = { m_windowRightBarWidth, m_windowTopBarHeight };
+const Vec2I WindowSpaceManager::Window::m_windowLowTopRightCornerSize = { m_windowRightBarWidth, m_windowTopBarHeight };
+const Vec2I WindowSpaceManager::Window::m_windowBottomLeftCornerSize = { m_windowLeftBarWidth, m_windowBottomBarHeight };
+const Vec2I WindowSpaceManager::Window::m_windowBottomRightCornerSize = { m_windowRightBarWidth, m_windowBottomBarHeight };
+const Vec2I WindowSpaceManager::Window::m_windowButtonSize = { 12, 12 };
+const Vec2I WindowSpaceManager::Window::m_windowScrollSliderSize = { 12, 12 };
+
+const Vec2I WindowSpaceManager::Window::m_windowTopBarSpritePosition = { 0, 0 };
+const Vec2I WindowSpaceManager::Window::m_windowHeaderSpritePosition = { 0, 8 };
+const Vec2I WindowSpaceManager::Window::m_windowLeftBarSpritePosition = { 0, 0 };
+const Vec2I WindowSpaceManager::Window::m_windowRightBarSpritePosition = { 4, 0 };
+const Vec2I WindowSpaceManager::Window::m_windowBottomBarSpritePosition = { 0, 4 };
+const Vec2I WindowSpaceManager::Window::m_windowHighTopLeftCornerSpritePosition = { 206, 19 };
+const Vec2I WindowSpaceManager::Window::m_windowLowTopLeftCornerSpritePosition = { 198, 19 };
+const Vec2I WindowSpaceManager::Window::m_windowHighTopRightCornerSpritePosition = { 210, 19 };
+const Vec2I WindowSpaceManager::Window::m_windowLowTopRightCornerSpritePosition = { 202, 19 };
+const Vec2I WindowSpaceManager::Window::m_windowBottomLeftCornerSpritePosition = { 198, 23 };
+const Vec2I WindowSpaceManager::Window::m_windowBottomRightCornerSpritePosition = { 202, 23 };
+const Vec2I WindowSpaceManager::Window::m_windowScrollBarSpritePosition = { 8, 0 };
+const Vec2I WindowSpaceManager::Window::m_windowScrollBarUpButtonSpritePosition = { 0, 57 };
+const Vec2I WindowSpaceManager::Window::m_windowScrollBarDownButtonSpritePosition = { 12, 57 };
+const Vec2I WindowSpaceManager::Window::m_windowScrollBarSliderSpritePosition = { 24, 57 };
+
+const ls::Rectangle2I& WindowSpaceManager::Window::windowRect() const
+{
+    return m_windowRect;
+}
+ls::Rectangle2I WindowSpaceManager::Window::contentRect() const
+{
+    ls::Rectangle2I rect = m_windowRect;
+    ls::Vec2I offsetFromTopLeft(m_windowLeftBarWidth, m_windowTopBarHeight);
+    if (this->hasHeader())
+    {
+        offsetFromTopLeft.y = m_windowHeaderHeight;
+    }
+
+    ls::Vec2I offsetFromBottomRight(-m_windowRightBarWidth, -m_windowBottomBarHeight);
+    if (this->hasScrollBar())
+    {
+        offsetFromBottomRight.x = -m_windowScrollBarWidth;
+    }
+
+    return ls::Rectangle2I(rect.min + offsetFromTopLeft, rect.max + offsetFromBottomRight);
+}
+const std::string& WindowSpaceManager::Window::title() const
 {
     return m_name;
 }
-const WindowSpaceManager::Scene& WindowSpaceManager::WindowRegion::parentScene() const
+
+void WindowSpaceManager::Window::setWindowRect(const ls::Rectangle2I& newRect)
 {
-    return *m_parentScene;
+    m_windowRect = newRect;
 }
-WindowSpaceManager::Scene& WindowSpaceManager::WindowRegion::parentScene()
+void WindowSpaceManager::Window::setWindowPosition(const ls::Vec2I& newPosition)
 {
-    return *m_parentScene;
+    m_windowRect.translate(newPosition - m_windowRect.min);
 }
-bool WindowSpaceManager::WindowRegion::hasEventHandler() const
+void WindowSpaceManager::Window::setWindowSize(const ls::Vec2I& newSize)
+{
+    m_windowRect.max = m_windowRect.min + newSize;
+}
+
+ls::Vec2I WindowSpaceManager::Window::minContentSize() const
+{
+    return { 0, 0 };
+}
+bool WindowSpaceManager::Window::hasMaxContentSize() const
+{
+    return false;
+}
+ls::Vec2I WindowSpaceManager::Window::maxContentSize() const
+{
+    return { 0, 0 };
+}
+
+int WindowSpaceManager::Window::verticalScroll() const
+{
+    return 0;
+}
+
+bool WindowSpaceManager::Window::isMinimizable() const
+{
+    return false;
+}
+bool WindowSpaceManager::Window::isCloseable() const
+{
+    return false;
+}
+bool WindowSpaceManager::Window::isResizeable() const
+{
+    return false;
+}
+bool WindowSpaceManager::Window::isMovable() const
+{
+    return false;
+}
+
+bool WindowSpaceManager::Window::hasHeader() const
+{
+    return false;
+}
+bool WindowSpaceManager::Window::hasScrollBar() const
+{
+    return false;
+}
+
+bool WindowSpaceManager::Window::hasEventHandler() const
 {
     return m_spaceUser != nullptr;
 }
-SfmlEventHandler& WindowSpaceManager::WindowRegion::eventHandler()
+SfmlEventHandler& WindowSpaceManager::Window::eventHandler()
 {
     return *m_spaceUser;
 }
 
-void WindowSpaceManager::WindowRegion::setRect(const ls::Rectangle2I& newRect)
-{
-    m_rect = newRect;
-}
-void WindowSpaceManager::WindowRegion::setUser(WindowSpaceUser& newUser)
+void WindowSpaceManager::Window::setUser(WindowSpaceUser& newUser)
 {
     m_spaceUser = &newUser;
 }
-ls::Vec2I WindowSpaceManager::WindowRegion::localCoords(const ls::Vec2I& windowCoords) const
+
+ls::Vec2I WindowSpaceManager::Window::localWindowCoords(const ls::Vec2I& globalCoords) const
 {
-    return windowCoords - m_rect.min;
+    return globalCoords - m_windowRect.min;
 }
-void WindowSpaceManager::WindowRegion::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
+ls::Vec2I WindowSpaceManager::Window::localContentCoords(const ls::Vec2I& globalCoords) const
+{
+    return globalCoords - this->contentRect().min;
+}
+
+void WindowSpaceManager::Window::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
 {
     if (m_spaceUser != nullptr) m_spaceUser->draw(renderTarget, renderStates);
 }
@@ -240,7 +344,7 @@ WindowSpaceManager::FreeWindowParams::FreeWindowParams(const ls::Vec2I& defaultS
     m_defaultSize(defaultSize),
     m_minSize(0, 0),
     m_maxSize(std::nullopt),
-    m_regionRestriction(std::nullopt)
+    m_parentWindow(std::nullopt)
 {
 
 }
@@ -256,9 +360,14 @@ WindowSpaceManager::FreeWindowParams& WindowSpaceManager::FreeWindowParams::with
     m_maxSize = maxSize;
     return *this;
 }
-WindowSpaceManager::FreeWindowParams& WindowSpaceManager::FreeWindowParams::withRegionRestriction(ConstBackgroundWindowHandle h)
+WindowSpaceManager::FreeWindowParams& WindowSpaceManager::FreeWindowParams::withParentWindow(const Window& window)
 {
-    m_regionRestriction = h;
+    m_parentWindow = &window;
+    return *this;
+}
+WindowSpaceManager::FreeWindowParams& WindowSpaceManager::FreeWindowParams::withHeader()
+{
+    m_showHeader = true;
     return *this;
 }
 
@@ -270,7 +379,7 @@ const ls::Vec2I& WindowSpaceManager::FreeWindowParams::minSize() const
 {
     return m_minSize;
 }
-bool WindowSpaceManager::FreeWindowParams::hasMaxSize() const 
+bool WindowSpaceManager::FreeWindowParams::hasMaxSize() const
 {
     return m_maxSize.has_value();
 }
@@ -278,18 +387,22 @@ const ls::Vec2I& WindowSpaceManager::FreeWindowParams::maxSize() const
 {
     return m_maxSize.value();
 }
-bool WindowSpaceManager::FreeWindowParams::hasRegionRestriction() const
+bool WindowSpaceManager::FreeWindowParams::hasParentWindow() const
 {
-    return m_regionRestriction.has_value();
+    return m_parentWindow.has_value();
 }
-const WindowSpaceManager::ConstBackgroundWindowHandle& WindowSpaceManager::FreeWindowParams::regionRestriction() const
+const WindowSpaceManager::Window& WindowSpaceManager::FreeWindowParams::parentWindow() const
 {
-    return m_regionRestriction.value();
+    return *(m_parentWindow.value());
+}
+bool WindowSpaceManager::FreeWindowParams::hasHeader() const
+{
+    return m_showHeader;
 }
 
 WindowSpaceManager::Scene::Scene(WindowSpaceManager& windowSpaceManager, const ls::Rectangle2I& rect, const std::string& name) :
     m_windowSpaceManager(&windowSpaceManager),
-    m_backgroundWindows(BackgroundWindow(WindowRegion(rect, "Root", *this), std::nullopt)),
+    m_backgroundWindows(BackgroundWindow(rect, "Root")),
     m_name(name),
     m_topmostRegions({ m_backgroundWindows.root() }),
     m_focusedRegionHandle(m_backgroundWindows.root())
@@ -297,14 +410,14 @@ WindowSpaceManager::Scene::Scene(WindowSpaceManager& windowSpaceManager, const l
 
 }
 
-WindowSpaceManager::WindowRegion& WindowSpaceManager::Scene::windowRegion(BackgroundWindowHandle h)
+WindowSpaceManager::BackgroundWindow& WindowSpaceManager::Scene::window(BackgroundWindowHandle h)
 {
-    return h.data().windowRegion();
+    return h.data();
 }
 
-const WindowSpaceManager::WindowRegion& WindowSpaceManager::Scene::windowRegion(ConstBackgroundWindowHandle h) const
+const WindowSpaceManager::BackgroundWindow& WindowSpaceManager::Scene::window(ConstBackgroundWindowHandle h) const
 {
-    return h.data().windowRegion();
+    return h.data();
 }
 
 bool WindowSpaceManager::Scene::isSubdivided(ConstBackgroundWindowHandle h) const
@@ -324,12 +437,12 @@ const WindowSpaceManager::SubdivisionParams& WindowSpaceManager::Scene::subdivis
 std::pair<WindowSpaceManager::BackgroundWindowHandle, WindowSpaceManager::BackgroundWindowHandle> WindowSpaceManager::Scene::
 subdivide(BackgroundWindowHandle h, const SubdivisionParams& params, const std::string& nameFirst, const std::string& nameSecond)
 {
-    const ls::Rectangle2I& rect = windowRegion(h).rect();
+    const ls::Rectangle2I& rect = window(h).windowRect();
     setSubdivisionParams(h, params);
     auto subdividedRects = params.calculateSubRects(rect);
 
-    BackgroundWindowHandle left = m_backgroundWindows.emplaceLeft(h, WindowRegion(subdividedRects.first, nameFirst, *this), std::nullopt);
-    BackgroundWindowHandle right = m_backgroundWindows.emplaceRight(h, WindowRegion(subdividedRects.second, nameSecond, *this), std::nullopt);
+    BackgroundWindowHandle left = m_backgroundWindows.emplaceLeft(h, subdividedRects.first, nameFirst);
+    BackgroundWindowHandle right = m_backgroundWindows.emplaceRight(h, subdividedRects.second, nameSecond);
 
     auto it = std::find(m_topmostRegions.begin(), m_topmostRegions.end(), h);
     *it = left;	// it is guaranteed to exist
@@ -341,10 +454,10 @@ WindowSpaceManager::FreeWindowHandle WindowSpaceManager::Scene::createFreeWindow
 {
     const ls::Vec2I& size = params.defaultSize();
     const ls::Vec2I localCenter = [&]() {
-        if (params.hasRegionRestriction())
+        if (params.hasParentWindow())
         {
-            const auto& region = params.regionRestriction().data().windowRegion();
-            return center + region.rect().min;
+            const auto& parent = params.parentWindow();
+            return center + parent.windowRect().min;
         }
         else return center;
     }();
@@ -352,7 +465,7 @@ WindowSpaceManager::FreeWindowHandle WindowSpaceManager::Scene::createFreeWindow
     const ls::Vec2I topLeft = localCenter - size / 2;
     const ls::Rectangle2I rect(topLeft, topLeft + size);
 
-    m_freeWindows.emplace_back(WindowRegion(rect, name, *this), params);
+    m_freeWindows.emplace_back(rect, name, params);
     return std::prev(m_freeWindows.end());
 }
 
@@ -407,17 +520,17 @@ WindowSpaceManager::ConstBackgroundWindowHandle WindowSpaceManager::Scene::rootH
     return m_backgroundWindows.root();
 }
 
-WindowSpaceManager::BackgroundWindowHandle WindowSpaceManager::Scene::findBackgroundWindow(const std::string& name)
+WindowSpaceManager::BackgroundWindowHandle WindowSpaceManager::Scene::findBackgroundWindow(const std::string& title)
 {
-    return m_backgroundWindows.findIf([&name](const BackgroundWindow& window)->bool {return window.windowRegion().name() == name; });
+    return m_backgroundWindows.findIf([&title](const BackgroundWindow& window)->bool {return window.title() == title; });
 }
-WindowSpaceManager::ConstBackgroundWindowHandle WindowSpaceManager::Scene::findBackgroundWindow(const std::string& name) const
+WindowSpaceManager::ConstBackgroundWindowHandle WindowSpaceManager::Scene::findBackgroundWindow(const std::string& title) const
 {
-    return m_backgroundWindows.findIf([&name](const BackgroundWindow& window)->bool {return window.windowRegion().name() == name; });
+    return m_backgroundWindows.findIf([&title](const BackgroundWindow& window)->bool {return window.title() == title; });
 }
-WindowSpaceManager::WindowRegionFullLocalization WindowSpaceManager::Scene::fullLocalizationOf(BackgroundWindowHandle h)
+WindowSpaceManager::WindowFullLocalization WindowSpaceManager::Scene::fullLocalizationOf(BackgroundWindowHandle h)
 {
-    return { m_windowSpaceManager, this, &(h.data().windowRegion()) };
+    return { m_windowSpaceManager, &(h.data()) };
 }
 
 void WindowSpaceManager::Scene::update(const ls::Rectangle2I& rect)
@@ -426,7 +539,7 @@ void WindowSpaceManager::Scene::update(const ls::Rectangle2I& rect)
 }
 void WindowSpaceManager::Scene::update(BackgroundWindowHandle h, const ls::Rectangle2I& rect)
 {
-    windowRegion(h).setRect(rect);
+    window(h).setWindowRect(rect);
     if (!isSubdivided(h)) return;
 
     auto subdividedRects = subdivisionParams(h).calculateSubRects(rect);
@@ -456,7 +569,7 @@ WindowSpaceManager::ConstBackgroundWindowHandle WindowSpaceManager::Scene::query
     {
         // we know it has both left and right child
 
-        if (!ls::intersect(windowRegion(currentRegionHandle).rect(), pos))
+        if (!ls::intersect(window(currentRegionHandle).windowRect(), pos))
         {
             return {};
         }
@@ -467,11 +580,11 @@ WindowSpaceManager::ConstBackgroundWindowHandle WindowSpaceManager::Scene::query
         ConstBackgroundWindowHandle rightChildHandle = currentRegionHandle.right();
 
         //explore further the intersecting region
-        if (ls::intersect(windowRegion(leftChildHandle).rect(), pos))
+        if (ls::intersect(window(leftChildHandle).windowRect(), pos))
         {
             currentRegionHandle = leftChildHandle;
         }
-        else if (ls::intersect(windowRegion(rightChildHandle).rect(), pos))
+        else if (ls::intersect(window(rightChildHandle).windowRect(), pos))
         {
             currentRegionHandle = rightChildHandle;
         }
@@ -521,8 +634,8 @@ void WindowSpaceManager::Scene::draw(sf::RenderTarget& renderTarget, sf::RenderS
 {
     for (BackgroundWindowHandle h : m_topmostRegions)
     {
-        WindowRegion& region = windowRegion(h);
-        region.draw(renderTarget, renderStates);
+        Window& wnd = window(h);
+        wnd.draw(renderTarget, renderStates);
     }
 }
 
@@ -569,17 +682,17 @@ sf::View WindowSpaceManager::getRectView(const ls::Rectangle2I& viewport, const 
     view.setViewport(viewportConvertToRatio(viewport));
     return view;
 }
-sf::View WindowSpaceManager::getRegionView(const WindowSpaceManager::WindowRegion& region, const ls::Rectangle2F& worldRect) const
+sf::View WindowSpaceManager::getWindowView(const WindowSpaceManager::Window& window, const ls::Rectangle2F& worldRect) const
 {
-    return getRectView(region.rect(), worldRect);
+    return getRectView(window.windowRect(), worldRect);
 }
 void WindowSpaceManager::setRectView(const ls::Rectangle2I& viewport, const ls::Rectangle2F& worldRect) const
 {
     m_window.setView(getRectView(viewport, worldRect));
 }
-void WindowSpaceManager::setRegionView(const WindowSpaceManager::WindowRegion& region, const ls::Rectangle2F& worldRect) const
+void WindowSpaceManager::setWindowView(const WindowSpaceManager::Window& window, const ls::Rectangle2F& worldRect) const
 {
-    m_window.setView(getRegionView(region, worldRect));
+    m_window.setView(getWindowView(window, worldRect));
 }
 void WindowSpaceManager::setView(const sf::View& view)
 {
