@@ -14,7 +14,7 @@ class WindowSpaceUser : public SfmlEventHandler
 private:
 	WindowSpaceManager* m_windowSpaceManager;
 	WindowSpaceManager::Scene* m_scene;
-	WindowSpaceManager::WindowRegionHandle m_windowRegionHandle;
+	WindowSpaceManager::WindowRegion* m_windowRegion;
 
 protected:
 	WindowSpaceManager::Scene& scene();

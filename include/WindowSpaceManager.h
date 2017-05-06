@@ -127,80 +127,155 @@ public:
         void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
     };
 
+    template <class ParamsT>
+    class Window
+    {
+    public:
+        using ParamsType = ParamsT;
+    private:
+        WindowRegion m_windowRegion;
+        ParamsType m_params;
+    public:
+        Window(const WindowRegion& windowRegion, const ParamsType& params) :
+            m_windowRegion(windowRegion),
+            m_params(params)
+        {
 
-    using WindowRegionStorageNode = std::pair<WindowRegion, std::optional<SubdivisionParams>>;
-    using WindowRegionStorage = ls::BinaryTree<WindowRegionStorageNode>;
-    using WindowRegionHandle = typename WindowRegionStorage::Iterator;
-    using ConstWindowRegionHandle = typename WindowRegionStorage::ConstIterator;
+        }
+
+        WindowRegion& windowRegion()
+        {
+            return m_windowRegion;
+        }
+        const WindowRegion& windowRegion() const
+        {
+            return m_windowRegion;
+        }
+        const ParamsType& params() const
+        {
+            return m_params;
+        }
+        ParamsType& params()
+        {
+            return m_params;
+        }
+
+        void setParams(const ParamsType& params)
+        {
+            m_params = params;
+        }
+    };
+
+    using BackgroundWindow = Window<std::optional<SubdivisionParams>>;
+    using BackgroundWindowsStorage = ls::BinaryTree<BackgroundWindow>;
+    using BackgroundWindowHandle = typename BackgroundWindowsStorage::Iterator;
+    using ConstBackgroundWindowHandle = typename BackgroundWindowsStorage::ConstIterator;
+
+    class FreeWindowParams
+    {
+    private:
+        ls::Vec2I m_defaultSize;
+        ls::Vec2I m_minSize;
+        std::optional<ls::Vec2I> m_maxSize;
+        std::optional<ConstBackgroundWindowHandle> m_regionRestriction;
+
+    public:
+        FreeWindowParams(const ls::Vec2I& defaultSize);
+
+        FreeWindowParams(const FreeWindowParams& other) = default;
+        FreeWindowParams(FreeWindowParams&& other) = default;
+        FreeWindowParams& operator=(const FreeWindowParams& other) = default;
+        FreeWindowParams& operator=(FreeWindowParams&& other) = default;
+
+        FreeWindowParams& withMinSize(const ls::Vec2I& minSize);
+        FreeWindowParams& withMaxSize(const ls::Vec2I& maxSize);
+        FreeWindowParams& withRegionRestriction(ConstBackgroundWindowHandle h);
+
+        const ls::Vec2I& defaultSize() const;
+        const ls::Vec2I& minSize() const;
+        bool hasMaxSize() const;
+        const ls::Vec2I& maxSize() const;
+        bool hasRegionRestriction() const;
+        const ConstBackgroundWindowHandle& regionRestriction() const;
+
+    };
+
+    using FreeWindow = Window<FreeWindowParams>;
+    using FreeWindowStorage = std::vector<FreeWindow>;
+    using FreeWindowHandle = typename FreeWindowStorage::iterator;
+    using ConstFreeWindowHandle = typename FreeWindowStorage::const_iterator;
 
     struct WindowRegionFullLocalization
     {
         WindowSpaceManager* windowSpaceManager;
         Scene* scene;
-        WindowRegionHandle regionHandle;
+        WindowRegion* windowRegion;
     };
-
 
     class Scene
     {
     private:
         WindowSpaceManager* m_windowSpaceManager;
-        WindowRegionStorage m_windowRegions;
+        BackgroundWindowsStorage m_backgroundWindows;
+        FreeWindowStorage m_freeWindows;
         std::string m_name;
-        std::vector<WindowRegionHandle> m_topmostRegions;
-        WindowRegionHandle m_focusedRegionHandle;
+        std::vector<BackgroundWindowHandle> m_topmostRegions;
+        BackgroundWindowHandle m_focusedRegionHandle;
 
     public:
         Scene(WindowSpaceManager& windowSpaceManager, const ls::Rectangle2I& rect, const std::string& name);
 
-        Scene(Scene&& other);
-        Scene& operator=(Scene&& other);
+        Scene(const Scene&) = delete;
+        Scene(Scene&&) = default;
+        Scene& operator=(const Scene&) = delete;
+        Scene& operator=(Scene&&) = default;
 
-        WindowRegion& windowRegion(WindowRegionHandle h);
-        const WindowRegion& windowRegion(ConstWindowRegionHandle h) const;
+        WindowRegion& windowRegion(BackgroundWindowHandle h);
+        const WindowRegion& windowRegion(ConstBackgroundWindowHandle h) const;
 
-        bool isSubdivided(ConstWindowRegionHandle h) const;
+        bool isSubdivided(ConstBackgroundWindowHandle h) const;
 
-        SubdivisionParams& subdivisionParams(WindowRegionHandle h);
-        const SubdivisionParams& subdivisionParams(ConstWindowRegionHandle h) const;
+        SubdivisionParams& subdivisionParams(BackgroundWindowHandle h);
+        const SubdivisionParams& subdivisionParams(ConstBackgroundWindowHandle h) const;
 
-        std::pair<WindowRegionHandle, WindowRegionHandle> subdivide(WindowRegionHandle h, const SubdivisionParams& params, const std::string& nameFirst, const std::string& nameSecond);
+        std::pair<BackgroundWindowHandle, BackgroundWindowHandle> subdivide(BackgroundWindowHandle h, const SubdivisionParams& params, const std::string& nameFirst, const std::string& nameSecond);
+        FreeWindowHandle createFreeWindow(const FreeWindowParams& params, const std::string& name, const ls::Vec2I& center);
 
-        WindowRegionHandle firstChild(WindowRegionHandle h);
-        ConstWindowRegionHandle firstChild(ConstWindowRegionHandle h) const;
-        WindowRegionHandle secondChild(WindowRegionHandle h);
-        ConstWindowRegionHandle secondChild(ConstWindowRegionHandle h) const;
-        WindowRegionHandle parent(WindowRegionHandle h);
-        ConstWindowRegionHandle parent(ConstWindowRegionHandle h) const;
+        BackgroundWindowHandle firstChild(BackgroundWindowHandle h);
+        ConstBackgroundWindowHandle firstChild(ConstBackgroundWindowHandle h) const;
+        BackgroundWindowHandle secondChild(BackgroundWindowHandle h);
+        ConstBackgroundWindowHandle secondChild(ConstBackgroundWindowHandle h) const;
+        BackgroundWindowHandle parent(BackgroundWindowHandle h);
+        ConstBackgroundWindowHandle parent(ConstBackgroundWindowHandle h) const;
         const std::string& name() const;
-        bool hasChildren(ConstWindowRegionHandle h) const;
-        bool hasParent(ConstWindowRegionHandle h) const;
+        bool hasChildren(ConstBackgroundWindowHandle h) const;
+        bool hasParent(ConstBackgroundWindowHandle h) const;
 
-        WindowRegionHandle rootHandle();
-        ConstWindowRegionHandle rootHandle() const;
+        BackgroundWindowHandle rootHandle();
+        ConstBackgroundWindowHandle rootHandle() const;
 
-        WindowRegionHandle find(const std::string& name);
-        ConstWindowRegionHandle find(const std::string& name) const;
+        BackgroundWindowHandle findBackgroundWindow(const std::string& name);
+        ConstBackgroundWindowHandle findBackgroundWindow(const std::string& name) const;
 
-        WindowRegionFullLocalization fullLocalizationOf(WindowRegionHandle h);
+        WindowRegionFullLocalization fullLocalizationOf(BackgroundWindowHandle h);
 
         void update(const ls::Rectangle2I& rect);
 
-        WindowRegionHandle queryRegion(const ls::Vec2I& pos);
-        ConstWindowRegionHandle queryRegion(const ls::Vec2I& pos) const;
+        BackgroundWindowHandle queryRegion(const ls::Vec2I& pos);
+        ConstBackgroundWindowHandle queryRegion(const ls::Vec2I& pos) const;
 
         bool tryDispatchEvent(sf::Event& event, const ls::Vec2I& mousePos);
 
         void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
 
     private:
-        void setSubdivisionParams(WindowRegionHandle h, const SubdivisionParams& params);
-        void update(WindowRegionHandle h, const ls::Rectangle2I& rect);
+        void setSubdivisionParams(BackgroundWindowHandle h, const SubdivisionParams& params);
+        void update(BackgroundWindowHandle h, const ls::Rectangle2I& rect);
 
         template <class EventType>
         void dispatchEvent(EventType& event, SfmlEventHandler::EventResult(SfmlEventHandler::*handler)(EventType&, SfmlEventHandler::EventContext), const ls::Vec2I& mousePos)
         {
-            WindowRegionHandle focusedRegionHandle = m_focusedRegionHandle; //stored because can be changed midway
+            BackgroundWindowHandle focusedRegionHandle = m_focusedRegionHandle; //stored because can be changed midway
             WindowRegion& focused = windowRegion(focusedRegionHandle);
             if (focused.hasEventHandler())
             {
@@ -214,7 +289,7 @@ public:
 
             // other regions
 
-            WindowRegionHandle mouseOverRegionHandle = queryRegion(mousePos);
+            BackgroundWindowHandle mouseOverRegionHandle = queryRegion(mousePos);
             if (mouseOverRegionHandle.isValid() && mouseOverRegionHandle != m_focusedRegionHandle)
             {
                 WindowRegion& mouseOverRegion = windowRegion(mouseOverRegionHandle);
@@ -233,7 +308,7 @@ public:
                 }
             }
 
-            for (WindowRegionHandle h : m_topmostRegions)
+            for (BackgroundWindowHandle h : m_topmostRegions)
             {
                 if (h == focusedRegionHandle || h == mouseOverRegionHandle) continue;
 

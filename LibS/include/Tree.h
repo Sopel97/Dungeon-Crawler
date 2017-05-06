@@ -54,6 +54,10 @@ namespace ls
         {
             return m_node->parent != nullptr;
         }
+        bool isRoot() const
+        {
+            return !hasParent();
+        }
         bool isLeaf() const
         {
             return m_node->children.empty();
@@ -61,6 +65,10 @@ namespace ls
         DataType& data() const
         {
             return m_node->data;
+        }
+        const std::vector<Node*>& children() const
+        {
+            return m_node->children;
         }
         Node* node() const
         {
@@ -127,6 +135,10 @@ namespace ls
         {
             return m_node->parent != nullptr;
         }
+        bool isRoot() const
+        {
+            return !hasParent();
+        }
         bool isLeaf() const
         {
             return m_node->children.empty();
@@ -134,6 +146,10 @@ namespace ls
         const DataType& data() const
         {
             return m_node->data;
+        }
+        const std::vector<Node*>& children() const
+        {
+            return m_node->children;
         }
         const Node* node() const
         {
@@ -169,6 +185,14 @@ namespace ls
             {
 
             }
+            template <class... Args>
+            Node(Node* p, Args&&... args) :
+                parent(p),
+                data(std::forward<Args>(args)...)
+            {
+
+            }
+
             Node(const Node& other) = delete;
             Node(Node&& other) :
                 parent(other.parent),
@@ -268,7 +292,7 @@ namespace ls
         template <class... Args>
         Iterator emplaceChild(Iterator h, Args&&... args)
         {
-            Node* newNode = new Node( h.node(), DataType(std::forward<Args>(args)...) );
+            Node* newNode = new Node( h.node(), std::forward<Args>(args)... );
             h.node()->children.emplace_back(newNode);
 
             return { *this, newNode };

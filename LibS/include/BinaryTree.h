@@ -2,6 +2,7 @@
 
 #include <memory>
 #include <vector>
+#include <functional>
 
 //TODO: may require change to dynamically allocated nodes with NodeHandle being a pointer, currently there is no good way to erase a node
 namespace ls
@@ -40,6 +41,10 @@ namespace ls
         {
             return !this->operator==(rhs);
         }
+        bool operator<(const BinaryTreeIterator<T>& rhs) const
+        {
+            return std::less<>()(m_node, rhs, rhs.node());
+        }
 
         BinaryTreeIterator<T> left() const
         {
@@ -64,6 +69,10 @@ namespace ls
         bool hasParent() const
         {
             return m_node->parent != nullptr;
+        }
+        bool isRoot() const
+        {
+            return !hasParent();
         }
         bool isLeaf() const
         {
@@ -124,6 +133,10 @@ namespace ls
         {
             return !this->operator==(rhs);
         }
+        bool operator<(const ConstBinaryTreeIterator<T>& rhs) const
+        {
+            return std::less<>()(m_node, rhs.node());
+        }
 
         ConstBinaryTreeIterator<T> left() const
         {
@@ -148,6 +161,10 @@ namespace ls
         bool hasParent() const
         {
             return m_node->parent != nullptr;
+        }
+        bool isRoot() const
+        {
+            return !hasParent();
         }
         bool isLeaf() const
         {
@@ -195,6 +212,15 @@ namespace ls
             {
 
             }
+            template <class... Args>
+            Node(Node* l, Node* r, Node* p, Args&&... args) :
+                left(l),
+                right(r),
+                parent(p),
+                data(std::forward<Args>(args)...)
+            {
+
+            }
 
             Node(const Node& other) = delete;
             Node(Node&& other) :
@@ -218,6 +244,20 @@ namespace ls
                 other.right = nullptr;
 
                 return *this;
+            }
+
+            void removeChild(Node* toRemove)
+            {
+                if (left == node)
+                {
+                    delete left;
+                    left = nullptr;
+                }
+                else if (right == node)
+                {
+                    delete right;
+                    right = nullptr;
+                }
             }
 
             ~Node()
@@ -293,6 +333,15 @@ namespace ls
         Iterator emplaceRight(Iterator h, Args&&... args)
         {
             return { *this, emplace(h.node(), &Node::right, std::forward<Args>(args)...) };
+        }
+
+        // h must not be root iterator
+        void remove(Iterator h)
+        {
+            Node* node = h.node();
+            Node* parent = h.parent().node();
+
+            parent->removeChild(node);
         }
 
         Iterator find(const T& el)

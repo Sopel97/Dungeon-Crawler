@@ -4,9 +4,9 @@
 WindowSpaceUser::WindowSpaceUser(const WindowSpaceManager::WindowRegionFullLocalization& loc) :
 	m_windowSpaceManager(loc.windowSpaceManager),
 	m_scene(loc.scene),
-	m_windowRegionHandle(loc.regionHandle)
+	m_windowRegion(loc.windowRegion)
 {
-	m_scene->windowRegion(m_windowRegionHandle).setUser(*this);
+	m_windowRegion->setUser(*this);
 }
 WindowSpaceManager::Scene& WindowSpaceUser::scene()
 {
@@ -14,11 +14,11 @@ WindowSpaceManager::Scene& WindowSpaceUser::scene()
 }
 const WindowSpaceManager::WindowRegion& WindowSpaceUser::windowRegion() const
 {
-    return m_scene->windowRegion(m_windowRegionHandle);
+    return *m_windowRegion;
 }
 WindowSpaceManager::WindowRegion& WindowSpaceUser::windowRegion()
 {
-	return m_scene->windowRegion(m_windowRegionHandle);
+    return *m_windowRegion;
 }
 const WindowSpaceManager& WindowSpaceUser::windowSpaceManager() const
 {

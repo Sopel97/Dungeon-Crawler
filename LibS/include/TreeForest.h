@@ -22,7 +22,6 @@ namespace ls
         TreeForest(TreeForest&& other) :
             m_trees(std::move(other.m_trees))
         {
-            other.m_trees.clear();
         }
         TreeForest& operator=(const TreeForest& other) = delete;
         TreeForest& operator=(TreeForest&& other)
@@ -61,7 +60,7 @@ namespace ls
 
             return m_trees.end();
         }
-        TreeHandle findTree(const DataType& el)
+        TreeHandle findTreeWithRoot(const DataType& el)
         {
             for (auto iter = m_trees.begin(); iter != m_trees.end(); ++iter)
             {
@@ -70,7 +69,7 @@ namespace ls
 
             return m_trees.end();
         }
-        ConstTreeHandle findTree(const DataType& el) const
+        ConstTreeHandle findTreeWithRoot(const DataType& el) const
         {
             for (auto iter = m_trees.cbegin(); iter != m_trees.cend(); ++iter)
             {
@@ -119,7 +118,7 @@ namespace ls
             return {};
         }
 
-        bool isValidTree(ConstTreeHandle h) const
+        bool isValid(ConstTreeHandle h) const
         {
             return h != m_trees.cend();
         }

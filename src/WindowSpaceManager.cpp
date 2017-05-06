@@ -236,77 +236,100 @@ void WindowSpaceManager::WindowRegion::draw(sf::RenderTarget& renderTarget, sf::
     if (m_spaceUser != nullptr) m_spaceUser->draw(renderTarget, renderStates);
 }
 
-
-WindowSpaceManager::Scene::Scene(WindowSpaceManager& windowSpaceManager, const ls::Rectangle2I& rect, const std::string& name) :
-    m_windowSpaceManager(&windowSpaceManager),
-    m_windowRegions(std::make_pair(WindowRegion(rect, "Root", *this), std::nullopt)),
-    m_name(name),
-    m_topmostRegions({ m_windowRegions.root() }),
-    m_focusedRegionHandle(m_windowRegions.root())
+WindowSpaceManager::FreeWindowParams::FreeWindowParams(const ls::Vec2I& defaultSize) :
+    m_defaultSize(defaultSize),
+    m_minSize(0, 0),
+    m_maxSize(std::nullopt),
+    m_regionRestriction(std::nullopt)
 {
 
 }
-WindowSpaceManager::Scene::Scene(WindowSpaceManager::Scene&& other) :
-    m_windowSpaceManager(other.m_windowSpaceManager),
-    m_windowRegions(std::move(other.m_windowRegions)),
-    m_name(std::move(other.m_name)),
-    m_topmostRegions(std::move(other.m_topmostRegions)),
-    m_focusedRegionHandle(other.m_focusedRegionHandle)
-{
 
+
+WindowSpaceManager::FreeWindowParams& WindowSpaceManager::FreeWindowParams::withMinSize(const ls::Vec2I& minSize)
+{
+    m_minSize = minSize;
+    return *this;
 }
-WindowSpaceManager::Scene& WindowSpaceManager::Scene::operator=(WindowSpaceManager::Scene&& other)
+WindowSpaceManager::FreeWindowParams& WindowSpaceManager::FreeWindowParams::withMaxSize(const ls::Vec2I& maxSize)
 {
-    m_windowSpaceManager = other.m_windowSpaceManager;
-    m_windowRegions = std::move(other.m_windowRegions);
-    m_name = std::move(other.m_name);
-    m_topmostRegions = std::move(other.m_topmostRegions);
-    m_focusedRegionHandle = other.m_focusedRegionHandle;
-
+    m_maxSize = maxSize;
+    return *this;
+}
+WindowSpaceManager::FreeWindowParams& WindowSpaceManager::FreeWindowParams::withRegionRestriction(ConstBackgroundWindowHandle h)
+{
+    m_regionRestriction = h;
     return *this;
 }
 
-WindowSpaceManager::WindowRegion& WindowSpaceManager::Scene::windowRegion(WindowRegionHandle h)
+const ls::Vec2I& WindowSpaceManager::FreeWindowParams::defaultSize() const
 {
-    return h.data().first;
+    return m_defaultSize;
+}
+const ls::Vec2I& WindowSpaceManager::FreeWindowParams::minSize() const
+{
+    return m_minSize;
+}
+bool WindowSpaceManager::FreeWindowParams::hasMaxSize() const 
+{
+    return m_maxSize.has_value();
+}
+const ls::Vec2I& WindowSpaceManager::FreeWindowParams::maxSize() const
+{
+    return m_maxSize.value();
+}
+bool WindowSpaceManager::FreeWindowParams::hasRegionRestriction() const
+{
+    return m_regionRestriction.has_value();
+}
+const WindowSpaceManager::ConstBackgroundWindowHandle& WindowSpaceManager::FreeWindowParams::regionRestriction() const
+{
+    return m_regionRestriction.value();
 }
 
-const WindowSpaceManager::WindowRegion& WindowSpaceManager::Scene::windowRegion(ConstWindowRegionHandle h) const
+WindowSpaceManager::Scene::Scene(WindowSpaceManager& windowSpaceManager, const ls::Rectangle2I& rect, const std::string& name) :
+    m_windowSpaceManager(&windowSpaceManager),
+    m_backgroundWindows(BackgroundWindow(WindowRegion(rect, "Root", *this), std::nullopt)),
+    m_name(name),
+    m_topmostRegions({ m_backgroundWindows.root() }),
+    m_focusedRegionHandle(m_backgroundWindows.root())
 {
-    return h.data().first;
+
 }
 
-bool WindowSpaceManager::Scene::isSubdivided(ConstWindowRegionHandle h) const
+WindowSpaceManager::WindowRegion& WindowSpaceManager::Scene::windowRegion(BackgroundWindowHandle h)
 {
-    return h.data().second.has_value();
+    return h.data().windowRegion();
 }
 
-WindowSpaceManager::SubdivisionParams& WindowSpaceManager::Scene::subdivisionParams(WindowRegionHandle h)
+const WindowSpaceManager::WindowRegion& WindowSpaceManager::Scene::windowRegion(ConstBackgroundWindowHandle h) const
 {
-    return h.data().second.value();
-}
-const WindowSpaceManager::SubdivisionParams& WindowSpaceManager::Scene::subdivisionParams(ConstWindowRegionHandle h) const
-{
-    return h.data().second.value();
+    return h.data().windowRegion();
 }
 
-std::pair<WindowSpaceManager::WindowRegionHandle, WindowSpaceManager::WindowRegionHandle> WindowSpaceManager::Scene::
-subdivide(WindowRegionHandle h, const SubdivisionParams& params, const std::string& nameFirst, const std::string& nameSecond)
+bool WindowSpaceManager::Scene::isSubdivided(ConstBackgroundWindowHandle h) const
+{
+    return h.data().params().has_value();
+}
+
+WindowSpaceManager::SubdivisionParams& WindowSpaceManager::Scene::subdivisionParams(BackgroundWindowHandle h)
+{
+    return h.data().params().value();
+}
+const WindowSpaceManager::SubdivisionParams& WindowSpaceManager::Scene::subdivisionParams(ConstBackgroundWindowHandle h) const
+{
+    return h.data().params().value();
+}
+
+std::pair<WindowSpaceManager::BackgroundWindowHandle, WindowSpaceManager::BackgroundWindowHandle> WindowSpaceManager::Scene::
+subdivide(BackgroundWindowHandle h, const SubdivisionParams& params, const std::string& nameFirst, const std::string& nameSecond)
 {
     const ls::Rectangle2I& rect = windowRegion(h).rect();
     setSubdivisionParams(h, params);
     auto subdividedRects = params.calculateSubRects(rect);
 
-    WindowRegionHandle left = m_windowRegions.emplaceLeft(h,
-        std::piecewise_construct,
-        std::forward_as_tuple(subdividedRects.first, nameFirst, *this),
-        std::forward_as_tuple(std::nullopt)
-    );
-    WindowRegionHandle right = m_windowRegions.emplaceRight(h,
-        std::piecewise_construct,
-        std::forward_as_tuple(subdividedRects.second, nameSecond, *this),
-        std::forward_as_tuple(std::nullopt)
-    );
+    BackgroundWindowHandle left = m_backgroundWindows.emplaceLeft(h, WindowRegion(subdividedRects.first, nameFirst, *this), std::nullopt);
+    BackgroundWindowHandle right = m_backgroundWindows.emplaceRight(h, WindowRegion(subdividedRects.second, nameSecond, *this), std::nullopt);
 
     auto it = std::find(m_topmostRegions.begin(), m_topmostRegions.end(), h);
     *it = left;	// it is guaranteed to exist
@@ -314,34 +337,52 @@ subdivide(WindowRegionHandle h, const SubdivisionParams& params, const std::stri
 
     return { left, right };
 }
+WindowSpaceManager::FreeWindowHandle WindowSpaceManager::Scene::createFreeWindow(const FreeWindowParams& params, const std::string& name, const ls::Vec2I& center)
+{
+    const ls::Vec2I& size = params.defaultSize();
+    const ls::Vec2I localCenter = [&]() {
+        if (params.hasRegionRestriction())
+        {
+            const auto& region = params.regionRestriction().data().windowRegion();
+            return center + region.rect().min;
+        }
+        else return center;
+    }();
+
+    const ls::Vec2I topLeft = localCenter - size / 2;
+    const ls::Rectangle2I rect(topLeft, topLeft + size);
+
+    m_freeWindows.emplace_back(WindowRegion(rect, name, *this), params);
+    return std::prev(m_freeWindows.end());
+}
 
 void WindowSpaceManager::Scene::
-setSubdivisionParams(WindowSpaceManager::WindowRegionHandle h, const WindowSpaceManager::SubdivisionParams& params)
+setSubdivisionParams(WindowSpaceManager::BackgroundWindowHandle h, const WindowSpaceManager::SubdivisionParams& params)
 {
-    h.data().second.emplace(params);
+    h.data().setParams(params);
 }
 
-WindowSpaceManager::WindowRegionHandle WindowSpaceManager::Scene::firstChild(WindowRegionHandle h)
+WindowSpaceManager::BackgroundWindowHandle WindowSpaceManager::Scene::firstChild(BackgroundWindowHandle h)
 {
     return h.left();
 }
-WindowSpaceManager::ConstWindowRegionHandle WindowSpaceManager::Scene::firstChild(ConstWindowRegionHandle h) const
+WindowSpaceManager::ConstBackgroundWindowHandle WindowSpaceManager::Scene::firstChild(ConstBackgroundWindowHandle h) const
 {
     return h.left();
 }
-WindowSpaceManager::WindowRegionHandle WindowSpaceManager::Scene::secondChild(WindowRegionHandle h)
+WindowSpaceManager::BackgroundWindowHandle WindowSpaceManager::Scene::secondChild(BackgroundWindowHandle h)
 {
     return h.right();
 }
-WindowSpaceManager::ConstWindowRegionHandle WindowSpaceManager::Scene::secondChild(ConstWindowRegionHandle h) const
+WindowSpaceManager::ConstBackgroundWindowHandle WindowSpaceManager::Scene::secondChild(ConstBackgroundWindowHandle h) const
 {
     return h.right();
 }
-WindowSpaceManager::WindowRegionHandle WindowSpaceManager::Scene::parent(WindowRegionHandle h)
+WindowSpaceManager::BackgroundWindowHandle WindowSpaceManager::Scene::parent(BackgroundWindowHandle h)
 {
     return h.parent();
 }
-WindowSpaceManager::ConstWindowRegionHandle WindowSpaceManager::Scene::parent(ConstWindowRegionHandle h) const
+WindowSpaceManager::ConstBackgroundWindowHandle WindowSpaceManager::Scene::parent(ConstBackgroundWindowHandle h) const
 {
     return h.parent();
 }
@@ -349,41 +390,41 @@ const std::string& WindowSpaceManager::Scene::name() const
 {
     return m_name;
 }
-bool WindowSpaceManager::Scene::hasChildren(ConstWindowRegionHandle h) const
+bool WindowSpaceManager::Scene::hasChildren(ConstBackgroundWindowHandle h) const
 {
     return h.hasLeft();	// should always have right too
 }
-bool WindowSpaceManager::Scene::hasParent(ConstWindowRegionHandle h) const
+bool WindowSpaceManager::Scene::hasParent(ConstBackgroundWindowHandle h) const
 {
     return h.hasParent();
 }
-WindowSpaceManager::WindowRegionHandle WindowSpaceManager::Scene::rootHandle()
+WindowSpaceManager::BackgroundWindowHandle WindowSpaceManager::Scene::rootHandle()
 {
-    return m_windowRegions.root();
+    return m_backgroundWindows.root();
 }
-WindowSpaceManager::ConstWindowRegionHandle WindowSpaceManager::Scene::rootHandle() const
+WindowSpaceManager::ConstBackgroundWindowHandle WindowSpaceManager::Scene::rootHandle() const
 {
-    return m_windowRegions.root();
+    return m_backgroundWindows.root();
 }
 
-WindowSpaceManager::WindowRegionHandle WindowSpaceManager::Scene::find(const std::string& name)
+WindowSpaceManager::BackgroundWindowHandle WindowSpaceManager::Scene::findBackgroundWindow(const std::string& name)
 {
-    return m_windowRegions.findIf([&name](const WindowRegionStorageNode& node)->bool {return node.first.name() == name; });
+    return m_backgroundWindows.findIf([&name](const BackgroundWindow& window)->bool {return window.windowRegion().name() == name; });
 }
-WindowSpaceManager::ConstWindowRegionHandle WindowSpaceManager::Scene::find(const std::string& name) const
+WindowSpaceManager::ConstBackgroundWindowHandle WindowSpaceManager::Scene::findBackgroundWindow(const std::string& name) const
 {
-    return m_windowRegions.findIf([&name](const WindowRegionStorageNode& node)->bool {return node.first.name() == name; });
+    return m_backgroundWindows.findIf([&name](const BackgroundWindow& window)->bool {return window.windowRegion().name() == name; });
 }
-WindowSpaceManager::WindowRegionFullLocalization WindowSpaceManager::Scene::fullLocalizationOf(WindowRegionHandle h)
+WindowSpaceManager::WindowRegionFullLocalization WindowSpaceManager::Scene::fullLocalizationOf(BackgroundWindowHandle h)
 {
-    return { m_windowSpaceManager, this, h };
+    return { m_windowSpaceManager, this, &(h.data().windowRegion()) };
 }
 
 void WindowSpaceManager::Scene::update(const ls::Rectangle2I& rect)
 {
-    update(m_windowRegions.root(), rect);
+    update(m_backgroundWindows.root(), rect);
 }
-void WindowSpaceManager::Scene::update(WindowRegionHandle h, const ls::Rectangle2I& rect)
+void WindowSpaceManager::Scene::update(BackgroundWindowHandle h, const ls::Rectangle2I& rect)
 {
     windowRegion(h).setRect(rect);
     if (!isSubdivided(h)) return;
@@ -396,19 +437,19 @@ void WindowSpaceManager::Scene::update(WindowRegionHandle h, const ls::Rectangle
     }
 }
 
-WindowSpaceManager::WindowRegionHandle WindowSpaceManager::Scene::queryRegion(const ls::Vec2I& pos)
+WindowSpaceManager::BackgroundWindowHandle WindowSpaceManager::Scene::queryRegion(const ls::Vec2I& pos)
 {
     auto iter = const_cast<const Scene*>(this)->queryRegion(pos);
 
     //dirty hack for now TODO: this better
-    return WindowRegionHandle(
-        const_cast<WindowRegionStorage&>(iter.tree()),
-        const_cast<WindowRegionStorage::Node*>(iter.node())
+    return BackgroundWindowHandle(
+        const_cast<BackgroundWindowsStorage&>(iter.tree()),
+        const_cast<BackgroundWindowsStorage::Node*>(iter.node())
     );
 }
-WindowSpaceManager::ConstWindowRegionHandle WindowSpaceManager::Scene::queryRegion(const ls::Vec2I& pos) const
+WindowSpaceManager::ConstBackgroundWindowHandle WindowSpaceManager::Scene::queryRegion(const ls::Vec2I& pos) const
 {
-    ConstWindowRegionHandle currentRegionHandle = m_windowRegions.root();
+    ConstBackgroundWindowHandle currentRegionHandle = m_backgroundWindows.root();
 
     // only leaves can be returned
     for (;;)
@@ -422,8 +463,8 @@ WindowSpaceManager::ConstWindowRegionHandle WindowSpaceManager::Scene::queryRegi
 
         if (!hasChildren(currentRegionHandle)) break;
 
-        ConstWindowRegionHandle leftChildHandle = currentRegionHandle.left();
-        ConstWindowRegionHandle rightChildHandle = currentRegionHandle.right();
+        ConstBackgroundWindowHandle leftChildHandle = currentRegionHandle.left();
+        ConstBackgroundWindowHandle rightChildHandle = currentRegionHandle.right();
 
         //explore further the intersecting region
         if (ls::intersect(windowRegion(leftChildHandle).rect(), pos))
@@ -478,7 +519,7 @@ bool WindowSpaceManager::Scene::tryDispatchEvent(sf::Event& event, const Vec2I& 
 }
 void WindowSpaceManager::Scene::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
 {
-    for (WindowRegionHandle h : m_topmostRegions)
+    for (BackgroundWindowHandle h : m_topmostRegions)
     {
         WindowRegion& region = windowRegion(h);
         region.draw(renderTarget, renderStates);
