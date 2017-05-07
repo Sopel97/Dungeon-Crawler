@@ -187,6 +187,7 @@ SubdivisionParams(WindowSpaceManager::SubdivisionParams::Orientation orientation
 WindowSpaceManager::Window::Window(const ls::Rectangle2I& windowRect, const std::string& name) :
     m_windowRect(windowRect),
     m_name(name),
+    m_parent(nullptr),
     m_spaceUser(nullptr)
 {
 
@@ -228,13 +229,15 @@ const Vec2I WindowSpaceManager::Window::m_windowScrollBarUpButtonSpritePosition 
 const Vec2I WindowSpaceManager::Window::m_windowScrollBarDownButtonSpritePosition = { 12, 57 };
 const Vec2I WindowSpaceManager::Window::m_windowScrollBarSliderSpritePosition = { 24, 57 };
 
-const ls::Rectangle2I& WindowSpaceManager::Window::windowRect() const
+ls::Rectangle2I WindowSpaceManager::Window::windowRect() const
 {
+    if (m_parent != nullptr) return m_windowRect.translated(m_parent->contentRect().min);
+
     return m_windowRect;
 }
 ls::Rectangle2I WindowSpaceManager::Window::contentRect() const
 {
-    ls::Rectangle2I rect = m_windowRect;
+    ls::Rectangle2I rect = this->windowRect();
     ls::Vec2I offsetFromTopLeft(m_windowLeftBarWidth, m_windowTopBarHeight);
     if (this->hasHeader())
     {
@@ -358,10 +361,28 @@ SfmlEventHandler& WindowSpaceManager::Window::eventHandler()
 {
     return *m_spaceUser;
 }
+void WindowSpaceManager::Window::setParent(Window& parent)
+{
+    m_parent = &parent;
+}
+bool WindowSpaceManager::Window::hasParent() const
+{
+    return m_parent != nullptr;
+}
+void WindowSpaceManager::Window::removeParent()
+{
+    m_parent = nullptr;
+}
 
 void WindowSpaceManager::Window::setUser(WindowSpaceUser& newUser)
 {
+    if (m_spaceUser != nullptr) m_spaceUser->detach();
+
     m_spaceUser = &newUser;
+}
+void WindowSpaceManager::Window::removeUser()
+{
+    m_spaceUser = nullptr;
 }
 WindowSpaceUser* WindowSpaceManager::Window::user()
 {

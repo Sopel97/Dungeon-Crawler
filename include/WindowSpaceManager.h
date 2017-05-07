@@ -128,6 +128,7 @@ public:
     private:
         ls::Rectangle2I m_windowRect;
         std::string m_name;
+        Window* m_parent;
         WindowSpaceUser* m_spaceUser;
 
     public:
@@ -135,7 +136,7 @@ public:
 
         virtual ~Window();
 
-        virtual const ls::Rectangle2I& windowRect() const;
+        virtual ls::Rectangle2I windowRect() const;
         virtual ls::Rectangle2I contentRect() const;
         virtual const std::string& title() const;
 
@@ -168,7 +169,12 @@ public:
         virtual bool hasEventHandler() const;
         virtual SfmlEventHandler& eventHandler();
 
+        virtual void setParent(Window& parent);
+        virtual bool hasParent() const;
+        virtual void removeParent();
+
         virtual void setUser(WindowSpaceUser& newUser);
+        virtual void removeUser();
         virtual WindowSpaceUser* user();
 
         virtual ls::Vec2I localWindowCoords(const ls::Vec2I& globalCoords) const;

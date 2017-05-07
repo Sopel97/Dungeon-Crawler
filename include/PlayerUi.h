@@ -38,7 +38,7 @@ public:
     void setContentViewOfWindow(PanelWindow& wnd);
 
     void closeWindow(PanelWindow* window);
-    void openWindow(PanelWindow* window); //does not take ownership
+    void openWindow(PanelWindow* wnd); //does not take ownership
 
 	void onWindowUpdated(PanelWindow& window);
 

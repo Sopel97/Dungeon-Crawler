@@ -15,7 +15,7 @@ private:
 	WindowSpaceManager* m_windowSpaceManager;
 	WindowSpaceManager::Window* m_window;
 
-public:
+protected:
     const WindowSpaceManager::Window& window() const;
 	WindowSpaceManager::Window& window();
     const WindowSpaceManager& windowSpaceManager() const;
@@ -28,6 +28,8 @@ public:
     WindowSpaceUser(WindowSpaceUser&& other);
     WindowSpaceUser& operator=(const WindowSpaceUser&) = delete;
     WindowSpaceUser& operator=(WindowSpaceUser&& other);
+
+    void detach();
 
 	virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) {};
 };

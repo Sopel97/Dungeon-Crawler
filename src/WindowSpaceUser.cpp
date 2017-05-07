@@ -38,6 +38,12 @@ WindowSpaceManager& WindowSpaceUser::windowSpaceManager()
 {
     return *m_windowSpaceManager;
 }
+void WindowSpaceUser::detach()
+{
+    m_windowSpaceManager = nullptr;
+    m_window = nullptr;
+}
 WindowSpaceUser::~WindowSpaceUser()
 {
+    m_window->removeUser();
 }

@@ -68,8 +68,8 @@ void PlayerUi::drawWindow(sf::RenderTarget& renderTarget, sf::RenderStates& rend
 {
     const Rectangle2I& playerUiPanelRect = window().windowRect();
     const int& topBarHeight = wnd.hasHeader() ? m_windowHeaderHeight : m_windowTopBarHeight;
-    Rectangle2I windowRect = wnd.windowRect().translated(playerUiPanelRect.min);
-    Rectangle2I contentRect = wnd.contentRect().translated(playerUiPanelRect.min);
+    Rectangle2I windowRect = wnd.windowRect();
+    Rectangle2I contentRect = wnd.contentRect();
 
     drawWindow(renderTarget, renderStates, wnd, windowRect, contentRect);
 }
@@ -199,7 +199,7 @@ void PlayerUi::setContentViewOfWindow(PanelWindow& wnd)
     const Rectangle2I& playerUiPanelRect = window().windowRect();
 
     auto contentRect = wnd.contentRect();
-    const Rectangle2I windowInteriorRect = contentRect.translated(playerUiPanelRect.min);
+    const Rectangle2I windowInteriorRect = contentRect;
 
     windowSpaceManager().setRectView(windowInteriorRect, Rectangle2F::withSize(Vec2F(0.0f, static_cast<float>(wnd.verticalScroll())), static_cast<float>(contentRect.width()), static_cast<float>(contentRect.height())));
 }
@@ -210,9 +210,10 @@ void PlayerUi::closeWindow(PanelWindow* window)
 
 	updateWindowPositions();
 }
-void PlayerUi::openWindow(PanelWindow* window)
+void PlayerUi::openWindow(PanelWindow* wnd)
 {
-	m_windows.push_back(window);
+    wnd->setParent(window());
+	m_windows.push_back(wnd);
 
 	updateWindowPositions();
 }
