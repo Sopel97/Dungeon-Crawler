@@ -98,87 +98,116 @@ public:
         SubdivisionParams(Orientation orientation, Subject subject, int pixels);
         SubdivisionParams(Orientation orientation, Subject subject, float ratio);
     };
-
-   /* class WindowRegion
+    
+    struct WindowParams
     {
-    private:
-        ls::Rectangle2I m_rect;
-        std::string m_name;
-        WindowSpaceUser* m_spaceUser;
+        int minWindowWidth;
+        int minWindowHeight;
+        int minContentWidth;
+        int minContentHeight;
 
-    public:
-        WindowRegion(const ls::Rectangle2I& rect, const std::string& name);
+        std::optional<int> maxWindowWidth;
+        std::optional<int> maxWindowHeight;
+        std::optional<int> maxContentWidth;
+        std::optional<int> maxContentHeight;
 
-        const ls::Rectangle2I& rect() const;
-        const std::string& name() const;
-
-        bool hasEventHandler() const;
-        SfmlEventHandler& eventHandler();
-
-        void setRect(const ls::Rectangle2I& newRect);
-        void setUser(WindowSpaceUser& newUser);
-
-        ls::Vec2I localCoords(const ls::Vec2I& windowCoords) const;
-
-        void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
-    };*/
+        bool isMinimizable;
+        bool isCloseable;
+        bool isResizeable;
+        bool isMovable;
+        bool isContentOnly;
+        bool hasHeader;
+        bool hasScrollBar;
+    };
 
     class Window
     {
     private:
         ls::Rectangle2I m_windowRect;
+        WindowParams m_params;
         std::string m_name;
         Window* m_parent;
         WindowSpaceUser* m_spaceUser;
 
     public:
+        static WindowParams defaultParams();
+
         Window(const ls::Rectangle2I& windowRect, const std::string& name);
+        Window(const ls::Rectangle2I& windowRect, const std::string& name, const WindowParams& params);
+
+        Window(const Window&) = delete;
+        Window(Window&&) = default;
+        Window& operator=(const Window&) = delete;
+        Window& operator=(Window&&) = default;
 
         virtual ~Window();
 
-        virtual ls::Rectangle2I windowRect() const;
-        virtual ls::Rectangle2I contentRect() const;
-        virtual const std::string& title() const;
+        ls::Rectangle2I windowRect() const;
+        ls::Rectangle2I contentRect() const;
+        const std::string& title() const;
 
-        virtual void setWindowRect(const ls::Rectangle2I& newRect);
-        virtual void setWindowPosition(const ls::Vec2I& newPosition);
-        virtual void setWindowWidth(int newWidth);
-        virtual void setWindowHeight(int newHeight);
-        virtual void setWindowSize(const ls::Vec2I& newSize);
-        virtual void setContentSize(const ls::Vec2I& newSize);
-        virtual void setContentWidth(int newWidth);
-        virtual void setContentHeight(int newHeight);
+        void setWindowRect(const ls::Rectangle2I& newRect);
+        void setWindowPosition(const ls::Vec2I& newPosition);
+        void setWindowWidth(int newWidth);
+        void setWindowHeight(int newHeight);
+        void setWindowSize(const ls::Vec2I& newSize);
+        void setContentSize(const ls::Vec2I& newSize);
+        void setContentWidth(int newWidth);
+        void setContentHeight(int newHeight);
 
-        virtual ls::Vec2I minWindowSize() const;
-        virtual bool hasMaxWindowSize() const;
-        virtual ls::Vec2I maxWindowSize() const;
-        virtual ls::Vec2I minContentSize() const;
-        virtual bool hasMaxContentSize() const;
-        virtual ls::Vec2I maxContentSize() const;
+        int minWindowWidth() const;
+        int minWindowHeight() const;
+        int minContentWidth() const;
+        int minContentHeight() const;
+        bool hasMaxWindowWidth() const;
+        bool hasMaxWindowHeight() const;
+        bool hasMaxContentWidth() const;
+        bool hasMaxContentHeight() const;
+        int maxWindowWidth() const;
+        int maxWindowHeight() const;
+        int maxContentWidth() const;
+        int maxContentHeight() const;
+
+        void setMinWindowWidth(int val);
+        void setMinWindowHeight(int val);
+        void setMinContentWidth(int val);
+        void setMinContentHeight(int val);
+        void setMaxWindowWidth(int val);
+        void setMaxWindowHeight(int val);
+        void setMaxContentWidth(int val);
+        void setMaxContentHeight(int val);
 
         virtual int verticalScroll() const;
 
-        virtual bool isMinimizable() const;
-        virtual bool isCloseable() const;
-        virtual bool isResizeable() const;
-        virtual bool isMovable() const;
+        bool isMinimizable() const;
+        bool isCloseable() const;
+        bool isResizeable() const;
+        bool isMovable() const;
+        bool isContentOnly() const;
+        bool hasHeader() const;
+        bool hasScrollBar() const;
 
-        virtual bool hasHeader() const;
-        virtual bool hasScrollBar() const;
+        void setMinimizable(bool val);
+        void setCloseable(bool val);
+        void setResizeable(bool val);
+        void setMovable(bool val);
+        void setContentOnly(bool val);
+        void setHeaderEnabled(bool val);
+        void setScrollBarEnabled(bool val);
 
-        virtual bool hasEventHandler() const;
-        virtual SfmlEventHandler& eventHandler();
+        bool hasEventHandler() const;
+        SfmlEventHandler& eventHandler();
 
-        virtual void setParent(Window& parent);
-        virtual bool hasParent() const;
-        virtual void removeParent();
+        void setParent(Window& parent);
+        bool hasParent() const;
+        void removeParent();
 
-        virtual void setUser(WindowSpaceUser& newUser);
-        virtual void removeUser();
-        virtual WindowSpaceUser* user();
+        void setUser(WindowSpaceUser& newUser);
+        void removeUser();
+        WindowSpaceUser* user();
 
-        virtual ls::Vec2I localWindowCoords(const ls::Vec2I& globalCoords) const;
-        virtual ls::Vec2I localContentCoords(const ls::Vec2I& globalCoords) const;
+        ls::Vec2I localWindowCoords(const ls::Vec2I& globalCoords) const;
+        ls::Vec2I localContentCoords(const ls::Vec2I& globalCoords) const;
 
         virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
 
@@ -219,31 +248,29 @@ public:
     class BackgroundWindow : public Window
     {
     private:
-        std::optional<SubdivisionParams> m_params;
+        std::optional<SubdivisionParams> m_subdivisionParams;
     public:
-        BackgroundWindow(const ls::Rectangle2I& rect, const std::string& name) :
-            Window(rect, name),
-            m_params(std::nullopt)
-        {
-        }
 
-        virtual ls::Rectangle2I contentRect() const
+        static WindowParams defaultParams();
+
+        BackgroundWindow(const ls::Rectangle2I& rect, const std::string& name) :
+            Window(rect, name, defaultParams()),
+            m_subdivisionParams(std::nullopt)
         {
-            return windowRect();
         }
 
         const std::optional<SubdivisionParams>& params() const
         {
-            return m_params;
+            return m_subdivisionParams;
         }
         std::optional<SubdivisionParams>& params()
         {
-            return m_params;
+            return m_subdivisionParams;
         }
 
         void setParams(const SubdivisionParams& params)
         {
-            m_params = params;
+            m_subdivisionParams = params;
         }
     };
 
@@ -251,75 +278,15 @@ public:
     using BackgroundWindowHandle = typename BackgroundWindowsStorage::Iterator;
     using ConstBackgroundWindowHandle = typename BackgroundWindowsStorage::ConstIterator;
 
-    class FreeWindowParams
-    {
-    private:
-        ls::Vec2I m_defaultSize;
-        ls::Vec2I m_minSize;
-        std::optional<ls::Vec2I> m_maxSize;
-        std::optional<const Window*> m_parentWindow;
-        bool m_showHeader;
-
-    public:
-        FreeWindowParams(const ls::Vec2I& defaultSize);
-
-        FreeWindowParams(const FreeWindowParams& other) = default;
-        FreeWindowParams(FreeWindowParams&& other) = default;
-        FreeWindowParams& operator=(const FreeWindowParams& other) = default;
-        FreeWindowParams& operator=(FreeWindowParams&& other) = default;
-
-        FreeWindowParams& withMinSize(const ls::Vec2I& minSize);
-        FreeWindowParams& withMaxSize(const ls::Vec2I& maxSize);
-        FreeWindowParams& withParentWindow(const Window& window);
-        FreeWindowParams& withHeader();
-
-        const ls::Vec2I& defaultSize() const;
-        const ls::Vec2I& minSize() const;
-        bool hasMaxSize() const;
-        const ls::Vec2I& maxSize() const;
-        bool hasParentWindow() const;
-        const Window& parentWindow() const;
-
-        bool hasHeader() const;
-    };
-
     class FreeWindow : public Window
     {
-    private:
-        FreeWindowParams m_params;
     public:
-        FreeWindow(const ls::Rectangle2I& rect, const std::string& name, const FreeWindowParams& params) :
-            Window(rect, name),
-            m_params(params)
-        {
-        }
 
-        const FreeWindowParams& params() const
-        {
-            return m_params;
-        }
-        FreeWindowParams& params()
-        {
-            return m_params;
-        }
+        static WindowParams defaultParams();
 
-        virtual bool isCloseable() const
+        FreeWindow(const ls::Rectangle2I& rect, const std::string& name) :
+            Window(rect, name)
         {
-            return true;
-        }
-        virtual bool isMovable() const
-        {
-            return true;
-        }
-
-        virtual bool hasHeader() const
-        {
-            return m_params.hasHeader();
-        }
-
-        void setParams(const FreeWindowParams& params)
-        {
-            m_params = params;
         }
     };
 
@@ -362,7 +329,7 @@ public:
         const SubdivisionParams& subdivisionParams(ConstBackgroundWindowHandle h) const;
 
         std::pair<BackgroundWindowHandle, BackgroundWindowHandle> subdivide(BackgroundWindowHandle h, const SubdivisionParams& params, const std::string& nameFirst, const std::string& nameSecond);
-        FreeWindowHandle createFreeWindow(const FreeWindowParams& params, const std::string& name, const ls::Vec2I& center);
+        FreeWindowHandle createFreeWindow(const std::string& name, const ls::Vec2I& center, const ls::Vec2I& size);
 
         BackgroundWindowHandle firstChild(BackgroundWindowHandle h);
         ConstBackgroundWindowHandle firstChild(ConstBackgroundWindowHandle h) const;

@@ -71,8 +71,10 @@ std::unique_ptr<InventoryWindow> PlayerEquipmentInventory::createInventoryWindow
     window->setMinimizable(true);
     window->setCloseable(false);
     window->setResizeable(false);
-    window->setScrollBarEnabled(false);
+    window->setMovable(false);
+    window->setContentOnly(false);
     window->setHeaderEnabled(false);
+    window->setScrollBarEnabled(false);
     return window;
 }
 int PlayerEquipmentInventory::numberOfSlots() const

@@ -184,20 +184,6 @@ SubdivisionParams(WindowSpaceManager::SubdivisionParams::Orientation orientation
     m_amount.ratio = ratio;
 }
 
-WindowSpaceManager::Window::Window(const ls::Rectangle2I& windowRect, const std::string& name) :
-    m_windowRect(windowRect),
-    m_name(name),
-    m_parent(nullptr),
-    m_spaceUser(nullptr)
-{
-
-}
-
-WindowSpaceManager::Window::~Window()
-{
-
-}
-
 const int WindowSpaceManager::Window::m_windowTopBarHeight = 4;
 const int WindowSpaceManager::Window::m_windowHeaderHeight = 15;
 const int WindowSpaceManager::Window::m_windowLeftBarWidth = 4;
@@ -229,6 +215,51 @@ const Vec2I WindowSpaceManager::Window::m_windowScrollBarUpButtonSpritePosition 
 const Vec2I WindowSpaceManager::Window::m_windowScrollBarDownButtonSpritePosition = { 12, 57 };
 const Vec2I WindowSpaceManager::Window::m_windowScrollBarSliderSpritePosition = { 24, 57 };
 
+
+WindowSpaceManager::WindowParams WindowSpaceManager::Window::defaultParams()
+{
+    WindowParams params;
+
+    params.minWindowWidth = 0;
+    params.minWindowHeight = 0;
+    params.minContentWidth = 0;
+    params.minContentHeight = 0;
+
+    params.maxWindowWidth = std::nullopt;
+    params.maxWindowHeight = std::nullopt;
+    params.maxContentWidth = std::nullopt;
+    params.maxContentHeight = std::nullopt;
+
+    params.isMinimizable = false;
+    params.isCloseable = true;
+    params.isResizeable = false;
+    params.isMovable = false;
+    params.isContentOnly = false;
+    params.hasHeader = false;
+    params.hasScrollBar = false;
+
+    return params;
+}
+WindowSpaceManager::Window::Window(const ls::Rectangle2I& windowRect, const std::string& name) :
+    Window(windowRect, name, defaultParams())
+{
+
+}
+WindowSpaceManager::Window::Window(const ls::Rectangle2I& windowRect, const std::string& name, const WindowParams& params) :
+    m_windowRect(windowRect),
+    m_params(params),
+    m_name(name),
+    m_parent(nullptr),
+    m_spaceUser(nullptr)
+{
+
+}
+
+WindowSpaceManager::Window::~Window()
+{
+
+}
+
 ls::Rectangle2I WindowSpaceManager::Window::windowRect() const
 {
     if (m_parent != nullptr) return m_windowRect.translated(m_parent->contentRect().min);
@@ -237,15 +268,17 @@ ls::Rectangle2I WindowSpaceManager::Window::windowRect() const
 }
 ls::Rectangle2I WindowSpaceManager::Window::contentRect() const
 {
-    ls::Rectangle2I rect = this->windowRect();
+    if (m_params.isContentOnly) return windowRect();
+
+    ls::Rectangle2I rect = windowRect();
     ls::Vec2I offsetFromTopLeft(m_windowLeftBarWidth, m_windowTopBarHeight);
-    if (this->hasHeader())
+    if (m_params.hasHeader)
     {
         offsetFromTopLeft.y = m_windowHeaderHeight;
     }
 
     ls::Vec2I offsetFromBottomRight(-m_windowRightBarWidth, -m_windowBottomBarHeight);
-    if (this->hasScrollBar())
+    if (m_params.hasScrollBar)
     {
         offsetFromBottomRight.x = -m_windowScrollBarWidth;
     }
@@ -279,47 +312,105 @@ void WindowSpaceManager::Window::setWindowHeight(int newHeight)
 }
 void WindowSpaceManager::Window::setContentSize(const ls::Vec2I& newSize)
 {
-    auto rect = this->contentRect();
-    int widthDiff = m_windowRect.width() - rect.width();
-    int heightDiff = m_windowRect.height() - rect.height();
-    this->setWindowSize(newSize + ls::Vec2I(widthDiff, heightDiff));
+    const auto currentContentRect = contentRect();
+    // compute the padding
+    const int widthDiff = m_windowRect.width() - currentContentRect.width();
+    const int heightDiff = m_windowRect.height() - currentContentRect.height();
+    setWindowSize(newSize + ls::Vec2I(widthDiff, heightDiff));
 }
 void WindowSpaceManager::Window::setContentWidth(int newWidth)
 {
-    auto rect = this->contentRect();
-    int widthDiff = m_windowRect.width() - rect.width();
-    this->setWindowWidth(newWidth + widthDiff);
+    const auto currentContentRect = contentRect();
+    const int widthDiff = m_windowRect.width() - currentContentRect.width();
+    setWindowWidth(newWidth + widthDiff);
 }
 void WindowSpaceManager::Window::setContentHeight(int newHeight)
 {
-    auto rect = this->contentRect();
-    int heightDiff = m_windowRect.height() - rect.height();
-    this->setWindowHeight(newHeight + heightDiff);
+    const auto currentContentRect = contentRect();
+    const int heightDiff = m_windowRect.height() - currentContentRect.height();
+    setWindowHeight(newHeight + heightDiff);
 }
 
-ls::Vec2I WindowSpaceManager::Window::minWindowSize() const
+int WindowSpaceManager::Window::minWindowWidth() const
 {
-    return { 0, 0 };
+    return m_params.minWindowWidth;
 }
-bool WindowSpaceManager::Window::hasMaxWindowSize() const
+int WindowSpaceManager::Window::minWindowHeight() const
 {
-    return false;
+    return m_params.minWindowHeight;
 }
-ls::Vec2I WindowSpaceManager::Window::maxWindowSize() const
+int WindowSpaceManager::Window::minContentWidth() const
 {
-    return { 0, 0 };
+    return m_params.minContentWidth;
 }
-ls::Vec2I WindowSpaceManager::Window::minContentSize() const
+int WindowSpaceManager::Window::minContentHeight() const
 {
-    return { 0, 0 };
+    return m_params.minContentHeight;
 }
-bool WindowSpaceManager::Window::hasMaxContentSize() const
+bool WindowSpaceManager::Window::hasMaxWindowWidth() const
 {
-    return false;
+    return m_params.maxWindowWidth.has_value();
 }
-ls::Vec2I WindowSpaceManager::Window::maxContentSize() const
+bool WindowSpaceManager::Window::hasMaxWindowHeight() const
 {
-    return { 0, 0 };
+    return m_params.maxWindowHeight.has_value();
+}
+bool WindowSpaceManager::Window::hasMaxContentWidth() const
+{
+    return m_params.maxContentWidth.has_value();
+}
+bool WindowSpaceManager::Window::hasMaxContentHeight() const
+{
+    return m_params.maxContentHeight.has_value();
+}
+int WindowSpaceManager::Window::maxWindowWidth() const
+{
+    return m_params.maxWindowWidth.value();
+}
+int WindowSpaceManager::Window::maxWindowHeight() const
+{
+    return m_params.maxWindowHeight.value();
+}
+int WindowSpaceManager::Window::maxContentWidth() const
+{
+    return m_params.maxContentWidth.value();
+}
+int WindowSpaceManager::Window::maxContentHeight() const
+{
+    return m_params.maxContentHeight.value();
+}
+
+void WindowSpaceManager::Window::setMinWindowWidth(int val) 
+{
+    m_params.minWindowWidth = val;
+}
+void WindowSpaceManager::Window::setMinWindowHeight(int val)
+{
+    m_params.minWindowHeight = val;
+}
+void WindowSpaceManager::Window::setMinContentWidth(int val)
+{
+    m_params.minContentWidth = val;
+}
+void WindowSpaceManager::Window::setMinContentHeight(int val)
+{
+    m_params.minContentHeight = val;
+}
+void WindowSpaceManager::Window::setMaxWindowWidth(int val)
+{
+    m_params.maxWindowWidth = val;
+}
+void WindowSpaceManager::Window::setMaxWindowHeight(int val)
+{
+    m_params.maxWindowHeight = val;
+}
+void WindowSpaceManager::Window::setMaxContentWidth(int val)
+{
+    m_params.maxContentWidth = val;
+}
+void WindowSpaceManager::Window::setMaxContentHeight(int val)
+{
+    m_params.maxContentHeight = val;
 }
 
 int WindowSpaceManager::Window::verticalScroll() const
@@ -329,28 +420,60 @@ int WindowSpaceManager::Window::verticalScroll() const
 
 bool WindowSpaceManager::Window::isMinimizable() const
 {
-    return false;
+    return m_params.isMinimizable;
 }
 bool WindowSpaceManager::Window::isCloseable() const
 {
-    return false;
+    return m_params.isCloseable;
 }
 bool WindowSpaceManager::Window::isResizeable() const
 {
-    return false;
+    return m_params.isResizeable;
 }
 bool WindowSpaceManager::Window::isMovable() const
 {
-    return false;
+    return m_params.isMovable;
 }
-
+bool WindowSpaceManager::Window::isContentOnly() const
+{
+    return m_params.isContentOnly;
+}
 bool WindowSpaceManager::Window::hasHeader() const
 {
-    return false;
+    return m_params.hasHeader;
 }
 bool WindowSpaceManager::Window::hasScrollBar() const
 {
-    return false;
+    return m_params.hasScrollBar;
+}
+
+void WindowSpaceManager::Window::setMinimizable(bool val)
+{
+    m_params.isMinimizable = val;
+}
+void WindowSpaceManager::Window::setCloseable(bool val)
+{
+    m_params.isCloseable = val;
+}
+void WindowSpaceManager::Window::setResizeable(bool val)
+{
+    m_params.isResizeable = val;
+}
+void WindowSpaceManager::Window::setMovable(bool val)
+{
+    m_params.isMovable = val;
+}
+void WindowSpaceManager::Window::setContentOnly(bool val)
+{
+    m_params.isContentOnly = val;
+}
+void WindowSpaceManager::Window::setHeaderEnabled(bool val)
+{
+    m_params.hasHeader = val;
+}
+void WindowSpaceManager::Window::setScrollBarEnabled(bool val)
+{
+    m_params.hasScrollBar = val;
 }
 
 bool WindowSpaceManager::Window::hasEventHandler() const
@@ -403,64 +526,55 @@ void WindowSpaceManager::Window::draw(sf::RenderTarget& renderTarget, sf::Render
     if (m_spaceUser != nullptr) m_spaceUser->draw(renderTarget, renderStates);
 }
 
-WindowSpaceManager::FreeWindowParams::FreeWindowParams(const ls::Vec2I& defaultSize) :
-    m_defaultSize(defaultSize),
-    m_minSize(0, 0),
-    m_maxSize(std::nullopt),
-    m_parentWindow(std::nullopt)
-{
 
-}
+WindowSpaceManager::WindowParams WindowSpaceManager::BackgroundWindow::defaultParams()
+{
+    WindowParams params;
 
+    params.minWindowWidth = 0;
+    params.minWindowHeight = 0;
+    params.minContentWidth = 0;
+    params.minContentHeight = 0;
 
-WindowSpaceManager::FreeWindowParams& WindowSpaceManager::FreeWindowParams::withMinSize(const ls::Vec2I& minSize)
-{
-    m_minSize = minSize;
-    return *this;
-}
-WindowSpaceManager::FreeWindowParams& WindowSpaceManager::FreeWindowParams::withMaxSize(const ls::Vec2I& maxSize)
-{
-    m_maxSize = maxSize;
-    return *this;
-}
-WindowSpaceManager::FreeWindowParams& WindowSpaceManager::FreeWindowParams::withParentWindow(const Window& window)
-{
-    m_parentWindow = &window;
-    return *this;
-}
-WindowSpaceManager::FreeWindowParams& WindowSpaceManager::FreeWindowParams::withHeader()
-{
-    m_showHeader = true;
-    return *this;
+    params.maxWindowWidth = std::nullopt;
+    params.maxWindowHeight = std::nullopt;
+    params.maxContentWidth = std::nullopt;
+    params.maxContentHeight = std::nullopt;
+
+    params.isMinimizable = false;
+    params.isCloseable = false;
+    params.isResizeable = false;
+    params.isMovable = false;
+    params.isContentOnly = true;
+    params.hasHeader = false;
+    params.hasScrollBar = false;
+
+    return params;
 }
 
-const ls::Vec2I& WindowSpaceManager::FreeWindowParams::defaultSize() const
+WindowSpaceManager::WindowParams WindowSpaceManager::FreeWindow::defaultParams()
 {
-    return m_defaultSize;
-}
-const ls::Vec2I& WindowSpaceManager::FreeWindowParams::minSize() const
-{
-    return m_minSize;
-}
-bool WindowSpaceManager::FreeWindowParams::hasMaxSize() const
-{
-    return m_maxSize.has_value();
-}
-const ls::Vec2I& WindowSpaceManager::FreeWindowParams::maxSize() const
-{
-    return m_maxSize.value();
-}
-bool WindowSpaceManager::FreeWindowParams::hasParentWindow() const
-{
-    return m_parentWindow.has_value();
-}
-const WindowSpaceManager::Window& WindowSpaceManager::FreeWindowParams::parentWindow() const
-{
-    return *(m_parentWindow.value());
-}
-bool WindowSpaceManager::FreeWindowParams::hasHeader() const
-{
-    return m_showHeader;
+    WindowParams params;
+
+    params.minWindowWidth = 0;
+    params.minWindowHeight = 0;
+    params.minContentWidth = 0;
+    params.minContentHeight = 0;
+
+    params.maxWindowWidth = std::nullopt;
+    params.maxWindowHeight = std::nullopt;
+    params.maxContentWidth = std::nullopt;
+    params.maxContentHeight = std::nullopt;
+
+    params.isMinimizable = false;
+    params.isCloseable = true;
+    params.isResizeable = false;
+    params.isMovable = false;
+    params.isContentOnly = false;
+    params.hasHeader = true;
+    params.hasScrollBar = false;
+
+    return params;
 }
 
 WindowSpaceManager::Scene::Scene(WindowSpaceManager& windowSpaceManager, const ls::Rectangle2I& rect, const std::string& name) :
@@ -513,22 +627,12 @@ subdivide(BackgroundWindowHandle h, const SubdivisionParams& params, const std::
 
     return { left, right };
 }
-WindowSpaceManager::FreeWindowHandle WindowSpaceManager::Scene::createFreeWindow(const FreeWindowParams& params, const std::string& name, const ls::Vec2I& center)
+WindowSpaceManager::FreeWindowHandle WindowSpaceManager::Scene::createFreeWindow(const std::string& name, const ls::Vec2I& center, const ls::Vec2I& size)
 {
-    const ls::Vec2I& size = params.defaultSize();
-    const ls::Vec2I localCenter = [&]() {
-        if (params.hasParentWindow())
-        {
-            const auto& parent = params.parentWindow();
-            return center + parent.windowRect().min;
-        }
-        else return center;
-    }();
-
-    const ls::Vec2I topLeft = localCenter - size / 2;
+    const ls::Vec2I topLeft = center - size / 2;
     const ls::Rectangle2I rect(topLeft, topLeft + size);
 
-    m_freeWindows.emplace_back(rect, name, params);
+    m_freeWindows.emplace_back(rect, name);
     return std::prev(m_freeWindows.end());
 }
 

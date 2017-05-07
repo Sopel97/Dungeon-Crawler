@@ -58,6 +58,8 @@ std::unique_ptr<InventoryWindow> ContainerInventory::createInventoryWindow() con
     window->setMinimizable(true);
     window->setCloseable(true);
     window->setResizeable(true);
+    window->setMovable(true);
+    window->setContentOnly(false);
     window->setHeaderEnabled(true);
     window->setScrollBarEnabled(true);
     return window;

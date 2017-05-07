@@ -90,12 +90,16 @@ void PlayerUi::drawWindow(sf::RenderTarget& renderTarget, sf::RenderStates& rend
     const Vec2I& windowTopLeft = windowRect.min;
     const Vec2I& windowBottomRight = windowRect.max;
     const Vec2I& windowInteriorTopLeft = contentRect.min;
-    const Vec2I& windowInteriorBottomRight = contentRect.max;
 
     int windowWidth = windowRect.width();
     int windowHeight = windowRect.height();
-    int windowInteriorWidth = contentRect.width();
-    int windowInteriorHeight = contentRect.height();
+    int windowInteriorWidth = windowRect.width() - (m_windowLeftBarWidth + m_windowRightBarWidth);
+    int windowInteriorHeight = windowRect.height() - (m_windowBottomBarHeight + topBarHeight);
+    int windowContentWidth = windowInteriorWidth;
+    if (wnd.hasScrollBar()) windowContentWidth -= m_windowScrollBarWidth;
+    int windowContentHeight = windowInteriorHeight;
+
+    const Vec2I& windowInteriorBottomRight = windowInteriorTopLeft + ls::Vec2I(windowInteriorWidth, windowInteriorHeight);
 
     sf::Sprite topBarSprite;
     topBarSprite.setPosition(static_cast<float>(windowInteriorTopLeft.x), static_cast<float>(windowTopLeft.y));
@@ -148,14 +152,14 @@ void PlayerUi::drawWindow(sf::RenderTarget& renderTarget, sf::RenderStates& rend
     sf::Sprite backgroundSprite;
     backgroundSprite.setPosition(static_cast<float>(windowInteriorTopLeft.x), static_cast<float>(windowInteriorTopLeft.y));
     backgroundSprite.setTexture(backgroundTexture.get());
-    backgroundSprite.setTextureRect(sf::IntRect(sf::Vector2i(0, wnd.verticalScroll()), sf::Vector2i(windowInteriorWidth, windowInteriorHeight)));
+    backgroundSprite.setTextureRect(sf::IntRect(sf::Vector2i(0, wnd.verticalScroll()), sf::Vector2i(windowContentWidth, windowContentHeight)));
     renderTarget.draw(backgroundSprite, renderStates);
 
     if(wnd.hasScrollBar())
     {
         int scrollBarHeight = windowInteriorHeight;
 
-        const Vec2I scrollBarTopLeft(contentRect.max.x - m_windowScrollBarWidth, contentRect.min.y);
+        const Vec2I scrollBarTopLeft(contentRect.min.x + windowContentWidth, contentRect.min.y);
 
         sf::Sprite scrollBarSprite;
         scrollBarSprite.setPosition(static_cast<float>(scrollBarTopLeft.x), static_cast<float>(scrollBarTopLeft.y));
@@ -176,12 +180,12 @@ void PlayerUi::drawWindow(sf::RenderTarget& renderTarget, sf::RenderStates& rend
         renderTarget.draw(scrollBarDownButtonSprite, renderStates);
 
         auto contentRect = wnd.contentRect();
-        if(windowInteriorHeight < contentRect.height())
+        if(windowContentHeight < contentRect.height())
         {
             int sliderMin = static_cast<int>(scrollBarTopLeft.y) + m_windowButtonSize.y / 2 + m_windowButtonSize.y;
             int sliderMax = static_cast<int>(scrollBarTopLeft.y) + scrollBarHeight - m_windowButtonSize.y / 2 - 2 * m_windowButtonSize.y;
             int sliderRangeLength = sliderMax - sliderMin;
-            int scrollRangeLength = contentRect.height() - windowInteriorHeight;
+            int scrollRangeLength = contentRect.height() - windowContentHeight;
             float scrolled = static_cast<float>(wnd.verticalScroll()) / static_cast<float>(scrollRangeLength);
             int sliderPosition = static_cast<int>(sliderMin + sliderRangeLength * scrolled);
 

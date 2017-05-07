@@ -22,8 +22,8 @@ public:
     class PanelWindow : public WindowSpaceManager::Window
     {
     public:
-        PanelWindow(const std::string& name) :
-            Window(ls::Rectangle2I::withSize(ls::Vec2I(0, 0), m_playerUiPanelWidth, 0), name)
+        PanelWindow(const std::string& name, const WindowSpaceManager::WindowParams& params) :
+            Window(ls::Rectangle2I::withSize(ls::Vec2I(0, 0), m_playerUiPanelWidth, 0), name, params)
         {
 
         }

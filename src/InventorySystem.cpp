@@ -122,7 +122,7 @@ PlayerEquipmentInventory& InventorySystem::equipmentInventory()
 
 void InventorySystem::openTrackedInventory(TrackedInventoryHandle inventory)
 {
-	inventory.data().inventoryWindow->setContentSizeToMax();
+	inventory.data().inventoryWindow->setContentHeightToMax();
 	inventory.data().isOpened = true;
 
     m_playerUi.openWindow(inventory.data().inventoryWindow.get());
