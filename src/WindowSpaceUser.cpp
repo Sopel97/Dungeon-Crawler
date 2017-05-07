@@ -7,6 +7,21 @@ WindowSpaceUser::WindowSpaceUser(const WindowSpaceManager::WindowFullLocalizatio
 {
 	m_window->setUser(*this);
 }
+WindowSpaceUser::WindowSpaceUser(WindowSpaceUser&& other) :
+    m_windowSpaceManager(other.m_windowSpaceManager),
+    m_window(other.m_window)
+{
+    m_window->setUser(*this);
+}
+WindowSpaceUser& WindowSpaceUser::operator=(WindowSpaceUser&& other)
+{
+    m_windowSpaceManager = other.m_windowSpaceManager;
+    m_window = other.m_window;
+
+    m_window->setUser(*this);
+
+    return *this;
+}
 const WindowSpaceManager::Window& WindowSpaceUser::window() const
 {
     return *m_window;

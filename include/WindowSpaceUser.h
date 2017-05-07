@@ -24,10 +24,10 @@ public:
 	WindowSpaceUser(const WindowSpaceManager::WindowFullLocalization& loc);
 	virtual ~WindowSpaceUser();
 
-    WindowSpaceUser(const WindowSpaceUser&) = default;
-    WindowSpaceUser(WindowSpaceUser&&) = default;
-    WindowSpaceUser& operator=(const WindowSpaceUser&) = default;
-    WindowSpaceUser& operator=(WindowSpaceUser&&) = default;
+    WindowSpaceUser(const WindowSpaceUser&) = delete;
+    WindowSpaceUser(WindowSpaceUser&& other);
+    WindowSpaceUser& operator=(const WindowSpaceUser&) = delete;
+    WindowSpaceUser& operator=(WindowSpaceUser&& other);
 
 	virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) {};
 };
