@@ -726,12 +726,10 @@ void WindowSpaceManager::Scene::update(BackgroundWindowHandle h, const ls::Recta
 WindowSpaceManager::BackgroundWindowHandle WindowSpaceManager::Scene::queryRegion(const ls::Vec2I& pos)
 {
     auto iter = const_cast<const Scene*>(this)->queryRegion(pos);
+    if (!iter.isValid()) return {};
 
     //dirty hack for now TODO: this better
-    return BackgroundWindowHandle(
-        const_cast<BackgroundWindowsStorage&>(iter.tree()),
-        const_cast<BackgroundWindowsStorage::Node*>(iter.node())
-    );
+    return findBackgroundWindow(iter.data().title());
 }
 WindowSpaceManager::ConstBackgroundWindowHandle WindowSpaceManager::Scene::queryRegion(const ls::Vec2I& pos) const
 {

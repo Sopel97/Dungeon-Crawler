@@ -74,6 +74,7 @@ public:
 
     using TrackedInventoryTree = ls::Tree<TrackedInventory>;
     using TrackedInventoryForest = ls::TreeForest<TrackedInventoryTree>;
+    using TrackedInventoryTreeHandle = ls::TreeForest<TrackedInventoryTree>::TreeHandle;
     using TrackedInventoryHandle = typename TrackedInventoryTree::Iterator;
     using ConstTrackedInventoryHandle = typename TrackedInventoryTree::ConstIterator;
 
@@ -85,7 +86,7 @@ public:
     void closeInventory(Inventory& inventory);
     bool isInventoryOpened(Inventory& inventory);
     bool isInventoryTracked(Inventory& inventory);
-    TrackedInventoryHandle find(Inventory& inventory);
+    std::pair<TrackedInventoryTreeHandle, TrackedInventoryHandle> find(Inventory& inventory);
 
     bool tryInteractWithExternalInventory(Inventory& inventory, const TileLocation& location);
 
@@ -100,7 +101,7 @@ protected:
     TrackedInventoryForest m_trackedInventories;
 
     void openTrackedInventory(TrackedInventoryHandle inventory);
-    void abandonInventory(TrackedInventoryHandle inventory);
+    void abandonInventory(TrackedInventoryTreeHandle tree, TrackedInventoryHandle inventory);
 private:
 };
 

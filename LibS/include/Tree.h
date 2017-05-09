@@ -8,201 +8,29 @@ namespace ls
     template <class DataType>
     class Tree;
 
-    template <class DataType>
-    class TreeIterator
+    namespace detail
     {
-    private:
-        using Node = typename Tree<DataType>::Node;
-
-        Tree<DataType>* m_tree;
-        Node* m_node;
-    public:
-        TreeIterator() :
-            m_tree(nullptr),
-            m_node(nullptr)
+        template <class DataType>
+        struct TreeNode
         {
-
-        }
-        TreeIterator(Tree<DataType>& tree, Node* h) :
-            m_tree(&tree),
-            m_node(h)
-        {
-
-        }
-        bool operator==(const TreeIterator<DataType>& rhs) const
-        {
-            return m_tree == rhs.m_tree && m_node == rhs.m_node;
-        }
-        bool operator!=(const TreeIterator<DataType>& rhs) const
-        {
-            return !this->operator==(rhs);
-        }
-
-        TreeIterator<DataType> parent() const
-        {
-            return { *m_tree, m_node->parent };
-        }
-        TreeIterator<DataType> child(int i) const
-        {
-            return { *m_tree, m_node->children[i] };
-        }
-        int numberOfChildren() const
-        {
-            return m_node->children.size();
-        }
-        bool hasParent() const
-        {
-            return m_node->parent != nullptr;
-        }
-        bool isRoot() const
-        {
-            return !hasParent();
-        }
-        bool isLeaf() const
-        {
-            return m_node->children.empty();
-        }
-        DataType& data() const
-        {
-            return m_node->data;
-        }
-        const std::vector<Node*>& children() const
-        {
-            return m_node->children;
-        }
-        Node* node() const
-        {
-            return m_node;
-        }
-        Tree<DataType>& tree() const
-        {
-            return *m_tree;
-        }
-        bool isValid() const
-        {
-            return m_node != nullptr;
-        }
-    };
-    template <class DataType>
-    class ConstTreeIterator
-    {
-    private:
-        using Node = typename Tree<DataType>::Node;
-
-        const Tree<DataType>* m_tree;
-        const Node* m_node;
-    public:
-        ConstTreeIterator() :
-            m_tree(nullptr),
-            m_node(nullptr)
-        {
-
-        }
-        ConstTreeIterator(const Tree<DataType>& tree, const Node* h) :
-            m_tree(&tree),
-            m_node(h)
-        {
-
-        }
-        ConstTreeIterator(const TreeIterator<DataType>& other) :
-            m_tree(&(other.tree())),
-            m_node(other.node())
-        {
-
-        }
-        bool operator==(const ConstTreeIterator<DataType>& rhs) const
-        {
-            return m_tree == rhs.m_tree && m_node == rhs.m_node;
-        }
-        bool operator!=(const ConstTreeIterator<DataType>& rhs) const
-        {
-            return !this->operator==(rhs);
-        }
-
-        ConstTreeIterator<DataType> parent() const
-        {
-            return { *m_tree, m_node->parent };
-        }
-        ConstTreeIterator<DataType> child(int i) const
-        {
-            return { *m_tree, m_node->children[i] };
-        }
-        int numberOfChildren() const
-        {
-            return m_node->children.size();
-        }
-        bool hasParent() const
-        {
-            return m_node->parent != nullptr;
-        }
-        bool isRoot() const
-        {
-            return !hasParent();
-        }
-        bool isLeaf() const
-        {
-            return m_node->children.empty();
-        }
-        const DataType& data() const
-        {
-            return m_node->data;
-        }
-        const std::vector<Node*>& children() const
-        {
-            return m_node->children;
-        }
-        const Node* node() const
-        {
-            return m_node;
-        }
-        const Tree<DataType>& tree() const
-        {
-            return *m_tree;
-        }
-        bool isValid() const
-        {
-            return m_node != nullptr;
-        }
-    };
-
-    template <class T>
-    class Tree
-    {
-    public:
-        using DataType = T;
-
-        struct Node
-        {
-            Node(Node* p, const DataType& d) :
-                parent(p),
-                data(d)
-            {
-
-            }
-            Node(Node* p, DataType&& d) :
-                parent(p),
-                data(std::move(d))
-            {
-
-            }
             template <class... Args>
-            Node(Node* p, Args&&... args) :
+            TreeNode(TreeNode* p, Args&&... args) :
                 parent(p),
                 data(std::forward<Args>(args)...)
             {
 
             }
 
-            Node(const Node& other) = delete;
-            Node(Node&& other) :
+            TreeNode(const TreeNode& other) = delete;
+            TreeNode(TreeNode&& other) :
                 parent(other.parent),
                 children(std::move(other.children)),
                 data(std::move(other.data))
             {
                 other.children.clear();
             }
-            Node& operator=(const Node& other) = delete;
-            Node& operator=(Node&& other)
+            TreeNode& operator=(const TreeNode& other) = delete;
+            TreeNode& operator=(TreeNode&& other)
             {
                 parent = other.parent;
                 children = std::move(other.children);
@@ -213,20 +41,25 @@ namespace ls
                 return *this;
             }
 
-            void removeChild(Node* toRemove)
+            void detachChild(TreeNode* toDetach)
             {
                 for (auto& child : children)
                 {
-                    if (child == toRemove)
+                    if (child == toDetach)
                     {
                         child = children.back();
                         children.pop_back();
+                        break;
                     }
                 }
+            }
+            void removeChild(TreeNode* toRemove)
+            {
+                detachChild(toRemove);
                 delete toRemove;
             }
 
-            ~Node()
+            ~TreeNode()
             {
                 for (auto node : children)
                 {
@@ -234,124 +67,249 @@ namespace ls
                 }
             }
 
-            Node* parent;
-            std::vector<Node*> children;
+            TreeNode* parent;
+            std::vector<TreeNode*> children;
             DataType data;
         };
 
-        Node m_root;
+        template <class DataType, class NodeType>
+        class TreeIteratorPrototype
+        {
+        private:
+            template <class T>
+            friend class Tree;
 
+            NodeType* m_node;
+        public:
+            TreeIteratorPrototype() :
+                m_node(nullptr)
+            {
+
+            }
+            explicit TreeIteratorPrototype(NodeType* h) :
+                m_node(h)
+            {
+
+            }
+            bool operator==(const TreeIteratorPrototype<DataType, NodeType>& rhs) const
+            {
+                return m_node == rhs.m_node;
+            }
+            bool operator!=(const TreeIteratorPrototype<DataType, NodeType>& rhs) const
+            {
+                return !this->operator==(rhs);
+            }
+
+            TreeIteratorPrototype<DataType, NodeType> parent() const
+            {
+                return TreeIteratorPrototype<DataType, NodeType>(m_node->parent);
+            }
+            TreeIteratorPrototype<DataType, NodeType> child(int i) const
+            {
+                return TreeIteratorPrototype<DataType, NodeType>(m_node->children[i]);
+            }
+            int numberOfChildren() const
+            {
+                return m_node->children.size();
+            }
+            bool hasParent() const
+            {
+                return m_node->parent != nullptr;
+            }
+            bool isRoot() const
+            {
+                return !hasParent();
+            }
+            bool isLeaf() const
+            {
+                return m_node->children.empty();
+            }
+            DataType& data() const
+            {
+                return m_node->data;
+            }
+            bool isValid() const
+            {
+                return m_node != nullptr;
+            }
+        };
+
+        template <class DataType>
+        using TreeIterator = TreeIteratorPrototype<DataType, TreeNode<DataType>>;
+        template <class DataType>
+        using ConstTreeIterator = TreeIteratorPrototype<const DataType, const TreeNode<DataType>>;
+    }
+
+    template <class T>
+    class Tree
+    {
+    private:
+        using Node = detail::TreeNode<T>;
+
+        Node* m_root;
     public:
-        using Iterator = TreeIterator<T>;
-        using ConstIterator = ConstTreeIterator<T>;
+        using DataType = T;
+        
+        using Iterator = detail::TreeIterator<T>;
+        using ConstIterator = detail::ConstTreeIterator<T>;
     public:
 
-        Tree(const DataType& root) :
-            m_root{ nullptr, root }
+        Tree() :
+            m_root(nullptr)
         {
         }
-        Tree(DataType&& root) :
-            m_root{ nullptr, std::move(root) }
+        template <class... Args>
+        Tree(Args&&... args) :
+            m_root(new Node(nullptr, std::forward<Args>(args)...))
         {
         }
         Tree(const Tree<DataType>& other) = delete;
         Tree(Tree<DataType>&& other) :
-            m_root(std::move(other.m_root))
+            m_root(other.m_root)
         {
+            other.m_root = nullptr;
+        }
+        ~Tree()
+        {
+            if (m_root != nullptr) delete m_root;
         }
 
         Tree<DataType>& operator=(const Tree<DataType>& other) = delete;
         Tree<DataType>& operator=(Tree<DataType>&& other)
         {
-            m_root = std::move(other.m_root);
+            m_root = other.m_root;
+            other.m_root = nullptr;
 
             return *this;
         }
 
         Iterator root()
         {
-            return { *this, &m_root };
+            return Iterator(m_root);
         }
         ConstIterator root() const
         {
-            return { *this, &m_root };
+            return ConstIterator(m_root);
         }
         ConstIterator croot() const
         {
-            return { *this, &m_root };
+            return ConstIterator(m_root);
         }
 
-        template <class U>
-        Iterator insertChild(Iterator h, U&& newElement)
-        {
-            Node* newNode = new Node( h.node(), std::forward<U>(newElement) );
-            h.node()->children.emplace_back(newNode);
-
-            return { *this, newNode };
-        }
         template <class... Args>
         Iterator emplaceChild(Iterator h, Args&&... args)
         {
-            Node* newNode = new Node( h.node(), std::forward<Args>(args)... );
-            h.node()->children.emplace_back(newNode);
+            Node* newNode = new Node( h.m_node, std::forward<Args>(args)... );
+            h.m_node->children.emplace_back(newNode);
 
-            return { *this, newNode };
+            return Iterator(newNode);
         }
 
-        //also removes all children of h
-        // must not be the root
+        Tree<DataType> detach(Iterator h)
+        {
+            if (h.hasParent())
+            {
+                h.parent().m_node->detachChild(h.m_node);
+                h.m_node->parent = nullptr;
+            }
+            else
+            {
+                m_root = nullptr;
+            }
+
+            return Tree<DataType>(h.m_node);
+        }
+
+        Iterator attach(Iterator h, Tree<DataType>&& tree)
+        {
+            Node* treeRoot = tree.m_root;
+            tree.m_root = nullptr;
+
+            h.m_node->children.push_back(treeRoot);
+            treeRoot->parent = h.m_node;
+
+            return Iterator(treeRoot);
+        }
+
         void remove(Iterator h)
         {
-            h.parent().node()->removeChild(h.node());
+            if (h.hasParent())
+            {
+                h.parent().m_node->removeChild(h.m_node);
+            }
+            else
+            {
+                delete m_root;
+                m_root = nullptr;
+            }
+        }
+
+        bool isEmpty() const
+        {
+            return m_root == nullptr;
         }
 
         Iterator find(const DataType& el)
         {
-            return { *this, find(el, root().node()) };
+            return Iterator(find(el, m_root));
         }
         template <class Func>
         Iterator findIf(Func&& comparator)
         {
-            return { *this, findIf(std::forward<Func>(comparator), root().node()) };
+            return Iterator(findIf(std::forward<Func>(comparator), m_root));
         }
         ConstIterator find(const DataType& el) const
         {
-            return { *this, find(el, croot().node()) };
+            return ConstIterator(find(el, m_root));
         }
         template <class Func>
         ConstIterator findIf(Func&& comparator) const
         {
-            return { *this, findIf(std::forward<Func>(comparator), croot().node()) };
+            return ConstIterator(findIf(std::forward<Func>(comparator), m_root));
         }
 
         Iterator findChild(Iterator h, const DataType& el)
         {
-            return const_cast<Iterator>(const_cast<const Tree<DataType>*>(this)->findChild(h, el));
+            for (auto child : h.m_node->children)
+            {
+                if (child->data == el) return Iterator(child);
+            }
+            return Iterator(nullptr);
         }
         template <class Func>
         Iterator findIfChild(Iterator h, Func&& comparator)
         {
-            return const_cast<Iterator>(const_cast<const Tree<DataType>*>(this)->findIfChild(h, std::forward<Func>(comparator)));
+            for (auto child : h.m_node->children)
+            {
+                if (std::forward<Func>(comparator)(child->data)) return Iterator(child);
+            }
+            return Iterator(nullptr);
         }
         ConstIterator findChild(ConstIterator h, const DataType& el) const
         {
-            for (const auto child : h.node()->children)
+            for (const auto child : h.m_node->children)
             {
-                if (child->data == el) return { *this, child };
+                if (child->data == el) return ConstIterator(child);
             }
-            return {*this, nullptr};
+            return ConstIterator(nullptr);
         }
         template <class Func>
         ConstIterator findIfChild(ConstIterator h, Func&& comparator) const
         {
-            for (const auto child : h.node()->children)
+            for (const auto child : h.m_node->children)
             {
-                if (std::forward<Func>(comparator)(child->data)) return { *this, child };
+                if (std::forward<Func>(comparator)(child->data)) return ConstIterator(child);
             }
-            return { *this, nullptr };
+            return ConstIterator(nullptr);
         }
 
     private:
+        Tree(Node* root) :
+            m_root(root)
+        {
+
+        }
+
         Node* find(const DataType& el, Node* h)
         {
             return const_cast<Node*>(const_cast<const Tree<DataType>*>(this)->find(el, h));

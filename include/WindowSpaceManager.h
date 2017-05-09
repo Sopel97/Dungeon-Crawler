@@ -368,7 +368,7 @@ public:
     private:
         void setSubdivisionParams(BackgroundWindowHandle h, const SubdivisionParams& params);
         void update(BackgroundWindowHandle h, const ls::Rectangle2I& rect);
-
+        
         template <class EventType>
         void dispatchEvent(EventType& event, SfmlEventHandler::EventResult(SfmlEventHandler::*handler)(EventType&, SfmlEventHandler::EventContext), const ls::Vec2I& mousePos)
         {

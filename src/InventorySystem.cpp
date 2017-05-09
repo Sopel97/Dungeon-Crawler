@@ -17,11 +17,11 @@ InventorySystem::InventorySystem(Player& player) :
 
 bool InventorySystem::tryOpenExternalInventory(Inventory& inventory, const ls::Vec2I& pos)
 {
-    TrackedInventoryHandle h = find(inventory);
+    TrackedInventoryHandle h = find(inventory).second;
     if(!h.isValid())
     {
         auto treeIter = m_trackedInventories.emplaceTree(TrackedInventory::makeExternal(inventory, pos));
-        h = m_trackedInventories.tree(treeIter).root();
+        h = treeIter->root();
     }
 
     openTrackedInventory(h);
@@ -30,14 +30,16 @@ bool InventorySystem::tryOpenExternalInventory(Inventory& inventory, const ls::V
 }
 bool InventorySystem::tryOpenInternalInventory(Inventory& inventory, Inventory& parentInventory)
 {
-    TrackedInventoryHandle trackedParentHandle = find(parentInventory);
+    auto findResult = find(parentInventory);
+    TrackedInventoryTreeHandle treeHandle = findResult.first;
+    TrackedInventoryHandle trackedParentHandle = findResult.second;
     if (!trackedParentHandle.isValid() || !trackedParentHandle.data().isOpened) return false;
 
-    TrackedInventoryHandle h = find(inventory);
+    TrackedInventoryHandle h = find(inventory).second;
     if (!h.isValid())
     {
-        auto& tree = trackedParentHandle.tree();
-        h = tree.insertChild(trackedParentHandle, TrackedInventory::makeInternal(inventory));
+        auto& tree = *treeHandle;
+        h = tree.emplaceChild(trackedParentHandle, TrackedInventory::makeInternal(inventory));
     }
 
     openTrackedInventory(h);
@@ -46,18 +48,20 @@ bool InventorySystem::tryOpenInternalInventory(Inventory& inventory, Inventory& 
 }
 void InventorySystem::openPermanentInventory(Inventory& inventory)
 {
-    TrackedInventoryHandle h = find(inventory);
+    TrackedInventoryHandle h = find(inventory).second;
     if (!h.isValid())
     {
         auto treeIter = m_trackedInventories.emplaceTree(TrackedInventory::makePermanent(inventory));
-        h = m_trackedInventories.tree(treeIter).root();
+        h = treeIter->root();
     }
 
     openTrackedInventory(h);
 }
 void InventorySystem::closeInventory(Inventory& inventory)
 {
-    TrackedInventoryHandle inventoryHandle = find(inventory);
+    auto findResult = find(inventory);
+    TrackedInventoryTreeHandle treeHandle = findResult.first;
+    TrackedInventoryHandle inventoryHandle = findResult.second;
     if (!inventoryHandle.isValid() || !inventoryHandle.data().isOpened) return; //nothing to do
 
     m_playerUi.closeWindow(inventoryHandle.data().inventoryWindow.get());
@@ -68,33 +72,32 @@ void InventorySystem::closeInventory(Inventory& inventory)
     while(current.isValid() && !current.data().isOpened) //abandon all inventories that were just because this one was opened
     {
         auto parent = current.parent(); //we have to remember it here since abandon inventory deletes current
-        abandonInventory(current);
+        abandonInventory(treeHandle, current);
         current = parent;
     }
 }
-void InventorySystem::abandonInventory(TrackedInventoryHandle inventory)
+void InventorySystem::abandonInventory(TrackedInventoryTreeHandle tree, TrackedInventoryHandle inventory)
 {
     // has no children
 
     // is not root
     if (inventory.hasParent())
     {
-        inventory.tree().remove(inventory);
+        tree->remove(inventory);
     }
     else //if root then delete whole tree
     {
-        auto treeIter = m_trackedInventories.findTree(&(inventory.tree()));
-        m_trackedInventories.removeTree(treeIter);
+        m_trackedInventories.removeTree(tree);
     }
 }
 bool InventorySystem::isInventoryOpened(Inventory& inventory)
 {
-    auto h = find(inventory);
+    auto h = find(inventory).second;
     return h.isValid() && h.data().isOpened;
 }
 bool InventorySystem::isInventoryTracked(Inventory& inventory)
 {
-    return find(inventory).isValid();
+    return find(inventory).second.isValid();
 }
 
 bool InventorySystem::tryInteractWithExternalInventory(Inventory& inventory, const TileLocation& location)
@@ -110,7 +113,7 @@ bool InventorySystem::tryInteractWithExternalInventory(Inventory& inventory, con
     }
 }
 
-InventorySystem::TrackedInventoryHandle InventorySystem::find(Inventory& inventory)
+std::pair<InventorySystem::TrackedInventoryTreeHandle, InventorySystem::TrackedInventoryHandle> InventorySystem::find(Inventory& inventory)
 {
     return m_trackedInventories.findIf([&inventory](const TrackedInventory& inv) {return inv.inventory == &inventory; });
 }

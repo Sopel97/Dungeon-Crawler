@@ -31,24 +31,15 @@ namespace ls
             return *this;
         }
 
-        template <class U>
-        TreeHandle emplaceTree(U&& root)
+        template <class... Args>
+        TreeHandle emplaceTree(Args&&... args)
         {
-            m_trees.emplace_back(std::forward<U>(root));
+            m_trees.emplace_back(std::forward<Args>(args)...);
             return std::prev(m_trees.end());
         }
         void removeTree(TreeHandle h)
         {
             m_trees.erase(h);
-        }
-
-        TreeType& tree(TreeHandle h)
-        {
-            return *h;
-        }
-        const TreeType& tree(ConstTreeHandle h) const
-        {
-            return *h;
         }
 
         TreeHandle findTree(const TreeType* tree)
@@ -79,43 +70,43 @@ namespace ls
             return m_trees.cend();
         }
 
-        NodeIterator find(const DataType& el)
+        std::pair<TreeHandle, NodeIterator> find(const DataType& el)
         {
-            for (TreeType& tree : m_trees)
+            for (auto iter = m_trees.begin(); iter != m_trees.end(); ++iter)
             {
-                auto found = tree.find(el);
-                if (found.isValid()) return found;
+                auto found = iter->find(el);
+                if (found.isValid()) return { iter, found };
             }
-            return {};
+            return { m_trees.end(), NodeIterator(nullptr) };
         }
         template <class Func>
-        NodeIterator findIf(Func&& comparator)
+        std::pair<TreeHandle, NodeIterator> findIf(Func&& comparator)
         {
-            for (TreeType& tree : m_trees)
+            for (auto iter = m_trees.begin(); iter != m_trees.end(); ++iter)
             {
-                auto found = tree.findIf(std::forward<Func>(comparator));
-                if (found.isValid()) return found;
+                auto found = iter->findIf(std::forward<Func>(comparator));
+                if (found.isValid()) return { iter, found };
             }
-            return {};
+            return { m_trees.end(), NodeIterator(nullptr) };
         }
-        ConstNodeIterator find(const DataType& el) const
+        std::pair<ConstTreeHandle, ConstNodeIterator> find(const DataType& el) const
         {
-            for (const TreeType& tree : m_trees)
+            for (auto iter = m_trees.begin(); iter != m_trees.end(); ++iter)
             {
-                auto found = tree.find(el);
-                if (found.isValid()) return found;
+                auto found = iter->find(el);
+                if (found.isValid()) return { iter, found };
             }
-            return {};
+            return { m_trees.end(), ConstNodeIterator(nullptr) };
         }
         template <class Func>
-        ConstNodeIterator findIf(Func&& comparator) const
+        std::pair<ConstTreeHandle, ConstNodeIterator> findIf(Func&& comparator) const
         {
-            for (const TreeType& tree : m_trees)
+            for (auto iter = m_trees.begin(); iter != m_trees.end(); ++iter)
             {
-                auto found = tree.findIf(std::forward<Func>(comparator));
-                if (found.isValid()) return found;
+                auto found = iter->findIf(std::forward<Func>(comparator));
+                if (found.isValid()) return { iter, found };
             }
-            return {};
+            return { m_trees.end(), ConstNodeIterator(nullptr) };
         }
 
         bool isValid(ConstTreeHandle h) const
