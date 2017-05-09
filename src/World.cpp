@@ -193,8 +193,8 @@ void World::updateShaderUniforms()
     const Rectangle2F cameraRect = m_camera.viewRectangle();
 
     m_prettyStretchShader.setParameter("worldOffset", sf::Vector2f(cameraRect.min.x, cameraRect.min.y));
-    const auto& viewRect = window().windowRect();
-    m_prettyStretchShader.setParameter("viewOffset", sf::Vector2f(viewRect.min.x, viewRect.min.y)); //NOTE: probably should be windowheight - miny
+    const auto& viewRect = window().absoluteContentRect();
+    m_prettyStretchShader.setParameter("viewOffset", sf::Vector2f(viewRect.min.x, viewRect.min.y));
     m_prettyStretchShader.setParameter("destinationTextureSize", sf::Vector2f(viewRect.width(), viewRect.height()));
 }
 void World::drawMeta(sf::RenderStates& renderStates, const std::vector<TallDrawable*>& tallDrawables)
@@ -406,7 +406,7 @@ auto World::onMouseButtonPressed(sf::Event::MouseButtonEvent& event, EventContex
 {
 	if (event.button == sf::Mouse::Button::Right)
 	{
-		const Rectangle2I& worldViewRect = window().windowRect();
+		const Rectangle2I& worldViewRect = window().absoluteWindowRect();
 		if (ls::intersect(worldViewRect, Vec2I(event.x, event.y)))
 		{
 			const Vec2I tilePosition = screenToTile(Vec2I(event.x, event.y));

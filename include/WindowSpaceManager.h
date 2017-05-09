@@ -142,8 +142,9 @@ public:
 
         virtual ~Window();
 
-        ls::Rectangle2I windowRect() const;
-        ls::Rectangle2I contentRect() const;
+        const ls::Rectangle2I& windowRect() const;
+        ls::Rectangle2I absoluteWindowRect() const;
+        ls::Rectangle2I absoluteContentRect() const;
         const std::string& title() const;
 
         void setWindowRect(const ls::Rectangle2I& newRect);
@@ -258,6 +259,12 @@ public:
             m_subdivisionParams(std::nullopt)
         {
         }
+        BackgroundWindow(const ls::Rectangle2I& rect, const std::string& name, BackgroundWindow& parent) :
+            Window(rect, name, defaultParams()),
+            m_subdivisionParams(std::nullopt)
+        {
+            setParent(parent);
+        }
 
         const std::optional<SubdivisionParams>& params() const
         {
@@ -369,7 +376,7 @@ public:
             Window& focused = window(focusedRegionHandle);
             if (focused.hasEventHandler())
             {
-                const SfmlEventHandler::EventContext context{ true, ls::intersect(focused.windowRect(), mousePos) };
+                const SfmlEventHandler::EventContext context{ true, ls::intersect(focused.absoluteWindowRect(), mousePos) };
                 const SfmlEventHandler::EventResult result = (focused.eventHandler().*handler)(event, context);
                 if (result.consumeEvent)
                 {

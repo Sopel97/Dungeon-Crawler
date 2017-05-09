@@ -101,7 +101,7 @@ void InventoryWindow::setContentHeightToMax()
 }
 void InventoryWindow::update()
 {
-    m_scroll = std::min(std::max(m_scroll, 0), maxContentHeight() - contentRect().height());
+    m_scroll = std::min(std::max(m_scroll, 0), maxContentHeight() - absoluteContentRect().height());
 }
 
 void InventoryWindow::updateMaxContentHeight(const InventoryView& view)

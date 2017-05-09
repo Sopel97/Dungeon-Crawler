@@ -66,10 +66,10 @@ void PlayerUi::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStat
 
 void PlayerUi::drawWindow(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const PanelWindow& wnd)
 {
-    const Rectangle2I& playerUiPanelRect = window().windowRect();
+    const Rectangle2I& playerUiPanelRect = window().absoluteWindowRect();
     const int& topBarHeight = wnd.hasHeader() ? m_windowHeaderHeight : m_windowTopBarHeight;
-    Rectangle2I windowRect = wnd.windowRect();
-    Rectangle2I contentRect = wnd.contentRect();
+    Rectangle2I windowRect = wnd.absoluteWindowRect();
+    Rectangle2I contentRect = wnd.absoluteContentRect();
 
     drawWindow(renderTarget, renderStates, wnd, windowRect, contentRect);
 }
@@ -179,7 +179,7 @@ void PlayerUi::drawWindow(sf::RenderTarget& renderTarget, sf::RenderStates& rend
         scrollBarDownButtonSprite.setTextureRect(sf::IntRect(sf::Vector2i(m_windowScrollBarDownButtonSpritePosition.x, m_windowScrollBarDownButtonSpritePosition.y), sf::Vector2i(m_windowButtonSize.x, m_windowButtonSize.y)));
         renderTarget.draw(scrollBarDownButtonSprite, renderStates);
 
-        auto contentRect = wnd.contentRect();
+        auto contentRect = wnd.absoluteContentRect();
         if(windowContentHeight < contentRect.height())
         {
             int sliderMin = static_cast<int>(scrollBarTopLeft.y) + m_windowButtonSize.y / 2 + m_windowButtonSize.y;
@@ -200,9 +200,9 @@ void PlayerUi::drawWindow(sf::RenderTarget& renderTarget, sf::RenderStates& rend
 
 void PlayerUi::setContentViewOfWindow(PanelWindow& wnd)
 {
-    const Rectangle2I& playerUiPanelRect = window().windowRect();
+    const Rectangle2I& playerUiPanelRect = window().absoluteWindowRect();
 
-    auto contentRect = wnd.contentRect();
+    auto contentRect = wnd.absoluteContentRect();
     const Rectangle2I windowInteriorRect = contentRect;
 
     windowSpaceManager().setRectView(windowInteriorRect, Rectangle2F::withSize(Vec2F(0.0f, static_cast<float>(wnd.verticalScroll())), static_cast<float>(contentRect.width()), static_cast<float>(contentRect.height())));
@@ -228,7 +228,7 @@ void PlayerUi::updateWindowPositions()
 	for (PanelWindow* window : m_windows)
 	{
 		window->setWindowPosition(ls::Vec2I(0, currentPosition));
-		currentPosition += window->windowRect().height();
+		currentPosition += window->absoluteWindowRect().height();
 	}
 }
 

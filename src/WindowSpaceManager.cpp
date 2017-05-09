@@ -260,17 +260,21 @@ WindowSpaceManager::Window::~Window()
 
 }
 
-ls::Rectangle2I WindowSpaceManager::Window::windowRect() const
+const ls::Rectangle2I& WindowSpaceManager::Window::windowRect() const
 {
-    if (m_parent != nullptr) return m_windowRect.translated(m_parent->contentRect().min);
+    return m_windowRect;
+}
+ls::Rectangle2I WindowSpaceManager::Window::absoluteWindowRect() const
+{
+    if (m_parent != nullptr) return m_windowRect.translated(m_parent->absoluteContentRect().min);
 
     return m_windowRect;
 }
-ls::Rectangle2I WindowSpaceManager::Window::contentRect() const
+ls::Rectangle2I WindowSpaceManager::Window::absoluteContentRect() const
 {
-    if (m_params.isContentOnly) return windowRect();
+    if (m_params.isContentOnly) return absoluteWindowRect();
 
-    ls::Rectangle2I rect = windowRect();
+    ls::Rectangle2I rect = absoluteWindowRect();
     ls::Vec2I offsetFromTopLeft(m_windowLeftBarWidth, m_windowTopBarHeight);
     if (m_params.hasHeader)
     {
@@ -312,7 +316,7 @@ void WindowSpaceManager::Window::setWindowHeight(int newHeight)
 }
 void WindowSpaceManager::Window::setContentSize(const ls::Vec2I& newSize)
 {
-    const auto currentContentRect = contentRect();
+    const auto currentContentRect = absoluteContentRect();
     // compute the padding
     const int widthDiff = m_windowRect.width() - currentContentRect.width();
     const int heightDiff = m_windowRect.height() - currentContentRect.height();
@@ -320,13 +324,13 @@ void WindowSpaceManager::Window::setContentSize(const ls::Vec2I& newSize)
 }
 void WindowSpaceManager::Window::setContentWidth(int newWidth)
 {
-    const auto currentContentRect = contentRect();
+    const auto currentContentRect = absoluteContentRect();
     const int widthDiff = m_windowRect.width() - currentContentRect.width();
     setWindowWidth(newWidth + widthDiff);
 }
 void WindowSpaceManager::Window::setContentHeight(int newHeight)
 {
-    const auto currentContentRect = contentRect();
+    const auto currentContentRect = absoluteContentRect();
     const int heightDiff = m_windowRect.height() - currentContentRect.height();
     setWindowHeight(newHeight + heightDiff);
 }
@@ -514,11 +518,11 @@ WindowSpaceUser* WindowSpaceManager::Window::user()
 
 ls::Vec2I WindowSpaceManager::Window::localWindowCoords(const ls::Vec2I& globalCoords) const
 {
-    return globalCoords - m_windowRect.min;
+    return globalCoords - absoluteWindowRect().min;
 }
 ls::Vec2I WindowSpaceManager::Window::localContentCoords(const ls::Vec2I& globalCoords) const
 {
-    return globalCoords - this->contentRect().min;
+    return globalCoords - this->absoluteContentRect().min;
 }
 
 void WindowSpaceManager::Window::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
@@ -614,12 +618,13 @@ const WindowSpaceManager::SubdivisionParams& WindowSpaceManager::Scene::subdivis
 std::pair<WindowSpaceManager::BackgroundWindowHandle, WindowSpaceManager::BackgroundWindowHandle> WindowSpaceManager::Scene::
 subdivide(BackgroundWindowHandle h, const SubdivisionParams& params, const std::string& nameFirst, const std::string& nameSecond)
 {
-    const ls::Rectangle2I& rect = window(h).windowRect();
+    const ls::Rectangle2I& rect = window(h).absoluteContentRect();
     setSubdivisionParams(h, params);
-    auto subdividedRects = params.calculateSubRects(rect);
+    // they have to be tranlated to local coordinates, so (0,0) is the top left
+    auto subdividedRects = params.calculateSubRects(rect.translated(-rect.min));
 
-    BackgroundWindowHandle left = m_backgroundWindows.emplaceLeft(h, subdividedRects.first, nameFirst);
-    BackgroundWindowHandle right = m_backgroundWindows.emplaceRight(h, subdividedRects.second, nameSecond);
+    BackgroundWindowHandle left = m_backgroundWindows.emplaceLeft(h, subdividedRects.first, nameFirst, window(h));
+    BackgroundWindowHandle right = m_backgroundWindows.emplaceRight(h, subdividedRects.second, nameSecond, window(h));
 
     auto it = std::find(m_topmostRegions.begin(), m_topmostRegions.end(), h);
     *it = left;	// it is guaranteed to exist
@@ -709,7 +714,8 @@ void WindowSpaceManager::Scene::update(BackgroundWindowHandle h, const ls::Recta
     window(h).setWindowRect(rect);
     if (!isSubdivided(h)) return;
 
-    auto subdividedRects = subdivisionParams(h).calculateSubRects(rect);
+    // they have to be tranlated to local coordinates, so (0,0) is the top left
+    auto subdividedRects = subdivisionParams(h).calculateSubRects(rect.translated(-rect.min));
     if (hasChildren(h))
     {
         update(h.left(), subdividedRects.first);
@@ -736,7 +742,7 @@ WindowSpaceManager::ConstBackgroundWindowHandle WindowSpaceManager::Scene::query
     {
         // we know it has both left and right child
 
-        if (!ls::intersect(window(currentRegionHandle).windowRect(), pos))
+        if (!ls::intersect(window(currentRegionHandle).absoluteWindowRect(), pos))
         {
             return {};
         }
@@ -747,11 +753,11 @@ WindowSpaceManager::ConstBackgroundWindowHandle WindowSpaceManager::Scene::query
         ConstBackgroundWindowHandle rightChildHandle = currentRegionHandle.right();
 
         //explore further the intersecting region
-        if (ls::intersect(window(leftChildHandle).windowRect(), pos))
+        if (ls::intersect(window(leftChildHandle).absoluteWindowRect(), pos))
         {
             currentRegionHandle = leftChildHandle;
         }
-        else if (ls::intersect(window(rightChildHandle).windowRect(), pos))
+        else if (ls::intersect(window(rightChildHandle).absoluteWindowRect(), pos))
         {
             currentRegionHandle = rightChildHandle;
         }
@@ -851,7 +857,7 @@ sf::View WindowSpaceManager::getRectView(const ls::Rectangle2I& viewport, const 
 }
 sf::View WindowSpaceManager::getWindowView(const WindowSpaceManager::Window& window, const ls::Rectangle2F& worldRect) const
 {
-    return getRectView(window.windowRect(), worldRect);
+    return getRectView(window.absoluteWindowRect(), worldRect);
 }
 void WindowSpaceManager::setRectView(const ls::Rectangle2I& viewport, const ls::Rectangle2F& worldRect) const
 {
