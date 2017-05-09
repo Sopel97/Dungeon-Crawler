@@ -24,7 +24,7 @@ ls::Rectangle2I WindowSpaceManager::AspectRatio::fitRectCentered(const ls::Recta
         const int width = fullHeight * m_ratio;
         const int widthDiff = space.width() - width;
         if (widthDiff >= 0)
-            return ls::Rectangle2I::withSize(ls::Vec2I(widthDiff / 2, 0), width, fullHeight);
+            return ls::Rectangle2I::withSize(space.min + ls::Vec2I(widthDiff / 2, 0), width, fullHeight);
     }
 
     //go with full width
@@ -33,7 +33,7 @@ ls::Rectangle2I WindowSpaceManager::AspectRatio::fitRectCentered(const ls::Recta
         const int height = fullWidth / m_ratio;
         const int heightDiff = space.height() - height;
 
-        return ls::Rectangle2I::withSize(ls::Vec2I(0, heightDiff / 2), fullWidth, height);
+        return ls::Rectangle2I::withSize(space.min + ls::Vec2I(0, heightDiff / 2), fullWidth, height);
     }
 }
 
@@ -620,7 +620,7 @@ subdivide(BackgroundWindowHandle h, const SubdivisionParams& params, const std::
 {
     const ls::Rectangle2I& rect = window(h).absoluteContentRect();
     setSubdivisionParams(h, params);
-    // they have to be tranlated to local coordinates, so (0,0) is the top left
+    // they have to be translated to local coordinates, so (0,0) is the top left
     auto subdividedRects = params.calculateSubRects(rect.translated(-rect.min));
 
     BackgroundWindowHandle left = m_backgroundWindows.emplaceLeft(h, subdividedRects.first, nameFirst, window(h));
@@ -714,7 +714,7 @@ void WindowSpaceManager::Scene::update(BackgroundWindowHandle h, const ls::Recta
     window(h).setWindowRect(rect);
     if (!isSubdivided(h)) return;
 
-    // they have to be tranlated to local coordinates, so (0,0) is the top left
+    // they have to be translated to local coordinates, so (0,0) is the top left
     auto subdividedRects = subdivisionParams(h).calculateSubRects(rect.translated(-rect.min));
     if (hasChildren(h))
     {
