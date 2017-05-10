@@ -80,7 +80,7 @@ namespace ls
         {
         private:
             template <class T>
-            friend class BinaryTree;
+            friend class BinaryTree;            
             template <class DataType, class NodeType>
             friend class BinaryTreeIteratorPrototype;
 
@@ -92,6 +92,12 @@ namespace ls
             {
 
             }
+            BinaryTreeIteratorPrototype(const BinaryTreeIteratorPrototype<DataType, NodeType>& h) :
+                m_node(h.m_node)
+            {
+
+            }
+            template <class DataTypeSfinae = DataType, class = typename std::enable_if<std::is_const<DataTypeSfinae>::value>::type>
             BinaryTreeIteratorPrototype(const BinaryTreeIteratorPrototype<typename std::remove_const<DataType>::type, typename std::remove_const<NodeType>::type>& h) :
                 m_node(h.m_node)
             {

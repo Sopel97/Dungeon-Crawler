@@ -14,7 +14,7 @@
 
 #include "SfmlEventHandler.h"
 
-class WindowSpaceUser;
+class WindowContent;
 
 class WindowSpaceManager
 {
@@ -126,14 +126,15 @@ public:
         ls::Rectangle2I m_windowRect;
         WindowParams m_params;
         std::string m_name;
+        WindowSpaceManager* m_wsm;
         Window* m_parent;
-        WindowSpaceUser* m_spaceUser;
+        WindowContent* m_content;
 
     public:
         static WindowParams defaultParams();
 
-        Window(const ls::Rectangle2I& windowRect, const std::string& name);
-        Window(const ls::Rectangle2I& windowRect, const std::string& name, const WindowParams& params);
+        Window(WindowSpaceManager& wsm, const ls::Rectangle2I& windowRect, const std::string& name);
+        Window(WindowSpaceManager& wsm, const ls::Rectangle2I& windowRect, const std::string& name, const WindowParams& params);
 
         Window(const Window&) = delete;
         Window(Window&&) = default;
@@ -203,9 +204,11 @@ public:
         bool hasParent() const;
         void removeParent();
 
-        void setUser(WindowSpaceUser& newUser);
-        void removeUser();
-        WindowSpaceUser* user();
+        void setContent(WindowContent& newUser);
+        void removeContent();
+
+        WindowSpaceManager& windowSpaceManager();
+        const WindowSpaceManager& windowSpaceManager() const;
 
         ls::Vec2I localWindowCoords(const ls::Vec2I& globalCoords) const;
         ls::Vec2I localContentCoords(const ls::Vec2I& globalCoords) const;
@@ -213,6 +216,9 @@ public:
         virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
 
     private:
+
+        void drawSkeleton(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
+
         static const int m_windowTopBarHeight;
         static const int m_windowHeaderHeight;
         static const int m_windowLeftBarWidth;
@@ -254,13 +260,13 @@ public:
 
         static WindowParams defaultParams();
 
-        BackgroundWindow(const ls::Rectangle2I& rect, const std::string& name) :
-            Window(rect, name, defaultParams()),
+        BackgroundWindow(WindowSpaceManager& wsm, const ls::Rectangle2I& rect, const std::string& name) :
+            Window(wsm, rect, name, defaultParams()),
             m_subdivisionParams(std::nullopt)
         {
         }
-        BackgroundWindow(const ls::Rectangle2I& rect, const std::string& name, BackgroundWindow& parent) :
-            Window(rect, name, defaultParams()),
+        BackgroundWindow(WindowSpaceManager& wsm, const ls::Rectangle2I& rect, const std::string& name, BackgroundWindow& parent) :
+            Window(wsm, rect, name, defaultParams()),
             m_subdivisionParams(std::nullopt)
         {
             setParent(parent);
@@ -291,8 +297,8 @@ public:
 
         static WindowParams defaultParams();
 
-        FreeWindow(const ls::Rectangle2I& rect, const std::string& name) :
-            Window(rect, name)
+        FreeWindow(WindowSpaceManager& wsm, const ls::Rectangle2I& rect, const std::string& name) :
+            Window(wsm, rect, name)
         {
         }
     };
@@ -300,12 +306,6 @@ public:
     using FreeWindowStorage = std::list<FreeWindow>;
     using FreeWindowHandle = typename FreeWindowStorage::iterator;
     using ConstFreeWindowHandle = typename FreeWindowStorage::const_iterator;
-
-    struct WindowFullLocalization
-    {
-        WindowSpaceManager* windowSpaceManager;
-        Window* window;
-    };
 
     class Scene
     {
@@ -353,8 +353,6 @@ public:
 
         BackgroundWindowHandle findBackgroundWindow(const std::string& title);
         ConstBackgroundWindowHandle findBackgroundWindow(const std::string& title) const;
-
-        WindowFullLocalization fullLocalizationOf(BackgroundWindowHandle h);
 
         void update(const ls::Rectangle2I& rect);
 

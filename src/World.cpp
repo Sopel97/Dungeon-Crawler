@@ -33,9 +33,10 @@
 
 using namespace ls;
 
-World::World(Root& root, Player& player, const WindowSpaceManager::WindowFullLocalization& loc) :
-	WindowSpaceUser(loc),
+World::World(Root& root, Player& player, WindowSpaceManager::Window& wnd) :
+	WindowContent(wnd),
     m_root(root),
+    m_windowSpaceManager(root.windowSpaceManager()),
     m_width(m_worldWidth),
     m_height(m_worldHeight),
     m_mapLayer(std::make_unique<MapLayer>(*this, m_width, m_height)),
@@ -71,7 +72,7 @@ World::~World()
 
 void World::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
 {
-    windowSpaceManager().setWindowView(window(), Rectangle2F::withSize(Vec2F(0,0), m_intermidiateRenderTarget.getSize().x, m_intermidiateRenderTarget.getSize().y));
+    m_windowSpaceManager.setWindowView(window(), Rectangle2F::withSize(Vec2F(0,0), m_intermidiateRenderTarget.getSize().x, m_intermidiateRenderTarget.getSize().y));
     
     prepareIntermidiateRenderTarget();
     prepareLightMap();
@@ -361,12 +362,12 @@ Vec2I World::worldToTile(const Vec2F& worldPosition) const
 }
 ls::Vec2F World::screenToWorld(const ls::Vec2I& screenPosition) const
 {
-    const sf::Vector2f worldPosition = m_root.window().mapPixelToCoords(sf::Vector2i(screenPosition.x, screenPosition.y), windowSpaceManager().getWindowView(window(), m_camera.viewRectangle()));
+    const sf::Vector2f worldPosition = m_root.window().mapPixelToCoords(sf::Vector2i(screenPosition.x, screenPosition.y), m_windowSpaceManager.getWindowView(window(), m_camera.viewRectangle()));
     return{worldPosition.x, worldPosition.y};
 }
 ls::Vec2I World::worldToScreen(const ls::Vec2F& worldPosition) const
 {
-    const sf::Vector2i screenPosition = m_root.window().mapCoordsToPixel(sf::Vector2f(worldPosition.x, worldPosition.y), windowSpaceManager().getWindowView(window(), m_camera.viewRectangle()));
+    const sf::Vector2i screenPosition = m_root.window().mapCoordsToPixel(sf::Vector2f(worldPosition.x, worldPosition.y), m_windowSpaceManager.getWindowView(window(), m_camera.viewRectangle()));
     return{screenPosition.x, screenPosition.y};
 }
 ls::Vec2I World::screenToTile(const ls::Vec2I& screenPosition) const

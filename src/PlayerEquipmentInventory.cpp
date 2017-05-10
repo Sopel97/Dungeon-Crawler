@@ -44,7 +44,7 @@ const InventoryContentRequirement PlayerEquipmentInventory::slotContentRequireme
 {
     return m_contentRequirements[slotId];
 }
-std::unique_ptr<InventoryView> PlayerEquipmentInventory::createInventoryView(const WindowSpaceManager::WindowFullLocalization& loc)
+std::unique_ptr<InventoryView> PlayerEquipmentInventory::createInventoryView(WindowSpaceManager::Window& wnd)
 {
     std::vector<InventorySlotView> slotViews;
     slotViews.reserve(m_contents.size());
@@ -62,12 +62,12 @@ std::unique_ptr<InventoryView> PlayerEquipmentInventory::createInventoryView(con
     slotViews.emplace_back(this, 8, Vec2I(138, 17+43*1));
     slotViews.emplace_back(this, 9, Vec2I(138, 17+43*2));
 
-    return std::make_unique<InventoryView>(loc, *this, std::move(slotViews));
+    return std::make_unique<InventoryView>(wnd, *this, std::move(slotViews));
 }
 
-std::unique_ptr<InventoryWindow> PlayerEquipmentInventory::createInventoryWindow() const
+std::unique_ptr<InventoryWindow> PlayerEquipmentInventory::createInventoryWindow(WindowSpaceManager& wsm) const
 {
-    std::unique_ptr<InventoryWindow> window = std::make_unique<InventoryWindow>("");
+    std::unique_ptr<InventoryWindow> window = std::make_unique<InventoryWindow>(wsm, "");
     window->setMinimizable(true);
     window->setCloseable(false);
     window->setResizeable(false);

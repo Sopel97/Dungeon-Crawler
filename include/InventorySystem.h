@@ -37,33 +37,33 @@ public:
         bool operator==(const Inventory* inv) {return inv == inventory;}
         bool operator==(const TrackedInventory& inv) {return inv.inventory == inventory;}
 
-        static TrackedInventory makeExternal(Inventory& inventory, const ls::Vec2I& pos)
+        static TrackedInventory makeExternal(WindowSpaceManager& wsm, Inventory& inventory, const ls::Vec2I& pos)
         {
-            return TrackedInventory(inventory, pos);
+            return TrackedInventory(wsm, inventory, pos);
         }
-        static TrackedInventory makeInternal(Inventory& inventory)
+        static TrackedInventory makeInternal(WindowSpaceManager& wsm, Inventory& inventory)
         {
-            return TrackedInventory(inventory);
+            return TrackedInventory(wsm, inventory);
         }
-        static TrackedInventory makePermanent(Inventory& inventory)
+        static TrackedInventory makePermanent(WindowSpaceManager& wsm, Inventory& inventory)
         {
-            return TrackedInventory(inventory, true);
+            return TrackedInventory(wsm, inventory, true);
         }
     private:
-        TrackedInventory(Inventory& inv, bool perm = false) :
+        TrackedInventory(WindowSpaceManager& wsm, Inventory& inv, bool perm = false) :
             inventory(&inv),
-            inventoryWindow(inv.createInventoryWindow()),
-            inventoryView(inv.createInventoryView(inventoryWindow->fullLocalization())),
+            inventoryWindow(inv.createInventoryWindow(wsm)),
+            inventoryView(inv.createInventoryView(*inventoryWindow)),
             worldPosition(std::nullopt),
             isOpened(true),
             isPermanent(perm)
         {
             inventoryWindow->updateMaxContentHeight(*inventoryView);
         }
-        TrackedInventory(Inventory& inv, const ls::Vec2I& pos) :
+        TrackedInventory(WindowSpaceManager& wsm, Inventory& inv, const ls::Vec2I& pos) :
             inventory(&inv),
-            inventoryWindow(inv.createInventoryWindow()),
-            inventoryView(inv.createInventoryView(inventoryWindow->fullLocalization())),
+            inventoryWindow(inv.createInventoryWindow(wsm)),
+            inventoryView(inv.createInventoryView(*inventoryWindow)),
             worldPosition(pos),
             isOpened(true),
             isPermanent(false)
@@ -78,7 +78,7 @@ public:
     using TrackedInventoryHandle = typename TrackedInventoryTree::Iterator;
     using ConstTrackedInventoryHandle = typename TrackedInventoryTree::ConstIterator;
 
-    InventorySystem(Player& player);
+    InventorySystem(WindowSpaceManager& wsm, Player& player);
 
     bool tryOpenExternalInventory(Inventory& inventory, const ls::Vec2I& pos);
     bool tryOpenInternalInventory(Inventory& inventory, Inventory& parentInventory);
@@ -93,6 +93,7 @@ public:
     PlayerEquipmentInventory& equipmentInventory();
 
 protected:
+    WindowSpaceManager& m_wsm;
     Player& m_player;
     PlayerUi& m_playerUi;
 

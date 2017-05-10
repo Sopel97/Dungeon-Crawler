@@ -11,7 +11,7 @@
 
 #include "ResourceManager.h"
 
-#include "WindowSpaceUser.h"
+#include "WindowContent.h"
 
 #include "../LibS/Geometry.h"
 
@@ -23,10 +23,10 @@ class TileLocation;
 class Player;
 class TallDrawable;
 
-class World : public WindowSpaceUser
+class World : public WindowContent
 {
 public:
-    World(Root& root, Player& player, const WindowSpaceManager::WindowFullLocalization& loc);
+    World(Root& root, Player& player, WindowSpaceManager::Window& wnd);
     ~World();
 
     void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
@@ -59,6 +59,7 @@ public:
 
 protected:
     Root& m_root;
+    WindowSpaceManager& m_windowSpaceManager;
     int m_width;
     int m_height;
     std::unique_ptr<MapLayer> m_mapLayer;

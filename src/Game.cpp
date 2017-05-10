@@ -34,8 +34,8 @@ Game::Game(Root& root) :
     );
     wsm.changeScene("MainScene");
 
-    m_player = std::make_unique<Player>(*this, scene.fullLocalizationOf(regions.second));
-    m_world = std::make_unique<World>(root, *m_player, scene.fullLocalizationOf(regions.first));
+    m_player = std::make_unique<Player>(wsm, *this, regions.second.data());
+    m_world = std::make_unique<World>(root, *m_player, regions.first.data());
 }
 
 Player& Game::player()

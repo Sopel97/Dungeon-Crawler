@@ -16,10 +16,11 @@
 
 using namespace ls;
 
-Player::Player(Game& game, const WindowSpaceManager::WindowFullLocalization& loc) :
+Player::Player(WindowSpaceManager& wsm, Game& game, WindowSpaceManager::Window& wnd) :
+    m_wsm(&wsm),
     m_playerEntity(nullptr),
-    m_playerUi(*this, loc),
-    m_inventorySystem(*this)
+    m_playerUi(wsm, *this, wnd),
+    m_inventorySystem(wsm, *this)
 {
 
 }

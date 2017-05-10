@@ -7,7 +7,8 @@
 
 #include <algorithm>
 
-InventorySystem::InventorySystem(Player& player) :
+InventorySystem::InventorySystem(WindowSpaceManager& wsm, Player& player) :
+    m_wsm(wsm),
     m_player(player),
     m_playerUi(player.playerUi()),
     m_equipmentInventory()
@@ -20,7 +21,7 @@ bool InventorySystem::tryOpenExternalInventory(Inventory& inventory, const ls::V
     TrackedInventoryHandle h = find(inventory).second;
     if(!h.isValid())
     {
-        auto treeIter = m_trackedInventories.emplaceTree(TrackedInventory::makeExternal(inventory, pos));
+        auto treeIter = m_trackedInventories.emplaceTree(TrackedInventory::makeExternal(m_wsm, inventory, pos));
         h = treeIter->root();
     }
 
@@ -39,7 +40,7 @@ bool InventorySystem::tryOpenInternalInventory(Inventory& inventory, Inventory& 
     if (!h.isValid())
     {
         auto& tree = *treeHandle;
-        h = tree.emplaceChild(trackedParentHandle, TrackedInventory::makeInternal(inventory));
+        h = tree.emplaceChild(trackedParentHandle, TrackedInventory::makeInternal(m_wsm, inventory));
     }
 
     openTrackedInventory(h);
@@ -51,7 +52,7 @@ void InventorySystem::openPermanentInventory(Inventory& inventory)
     TrackedInventoryHandle h = find(inventory).second;
     if (!h.isValid())
     {
-        auto treeIter = m_trackedInventories.emplaceTree(TrackedInventory::makePermanent(inventory));
+        auto treeIter = m_trackedInventories.emplaceTree(TrackedInventory::makePermanent(m_wsm, inventory));
         h = treeIter->root();
     }
 

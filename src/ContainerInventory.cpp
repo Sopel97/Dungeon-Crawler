@@ -27,7 +27,7 @@ const InventoryContentRequirement ContainerInventory::slotContentRequirement(siz
 {
     return InventoryContentRequirement::None;
 }
-std::unique_ptr<InventoryView> ContainerInventory::createInventoryView(const WindowSpaceManager::WindowFullLocalization& loc)
+std::unique_ptr<InventoryView> ContainerInventory::createInventoryView(WindowSpaceManager::Window& wnd)
 {
     constexpr int margins = 4;
     constexpr int spacesBetweenSlots = 3;
@@ -50,11 +50,11 @@ std::unique_ptr<InventoryView> ContainerInventory::createInventoryView(const Win
         }
     }
 
-    return std::make_unique<InventoryView>(loc, *this, std::move(slotViews));
+    return std::make_unique<InventoryView>(wnd, *this, std::move(slotViews));
 }
-std::unique_ptr<InventoryWindow> ContainerInventory::createInventoryWindow() const
+std::unique_ptr<InventoryWindow> ContainerInventory::createInventoryWindow(WindowSpaceManager& wsm) const
 {
-    std::unique_ptr<InventoryWindow> window = std::make_unique<InventoryWindow>("");
+    std::unique_ptr<InventoryWindow> window = std::make_unique<InventoryWindow>(wsm, "");
     window->setMinimizable(true);
     window->setCloseable(true);
     window->setResizeable(true);

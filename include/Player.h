@@ -21,7 +21,7 @@ class TileLocation;
 class Player
 {
 public:
-    Player(Game& game, const WindowSpaceManager::WindowFullLocalization& loc);
+    Player(WindowSpaceManager& wsm, Game& game, WindowSpaceManager::Window& wnd);
 
     Entity* createPlayerEntity();
 
@@ -37,6 +37,7 @@ public:
     const InventorySystem& inventorySystem() const;
 
 protected:
+    WindowSpaceManager* m_wsm;
     Entity* m_playerEntity;
     PlayerUi m_playerUi;
     InventorySystem m_inventorySystem;

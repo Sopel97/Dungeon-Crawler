@@ -11,19 +11,19 @@
 
 using namespace ls;
 
-InventoryView::InventoryView(const WindowSpaceManager::WindowFullLocalization& loc, Inventory& inventory) :
-    WindowSpaceUser(loc),
+InventoryView::InventoryView(WindowSpaceManager::Window& wnd, Inventory& inventory) :
+    WindowContent(wnd),
     m_inventory(&inventory)
 {
 }
-InventoryView::InventoryView(const WindowSpaceManager::WindowFullLocalization& loc, Inventory& inventory, const std::vector<InventorySlotView>& slots) :
-    WindowSpaceUser(loc),
+InventoryView::InventoryView(WindowSpaceManager::Window& wnd, Inventory& inventory, const std::vector<InventorySlotView>& slots) :
+    WindowContent(wnd),
     m_inventory(&inventory),
     m_slotViews(slots)
 {
 }
-InventoryView::InventoryView(const WindowSpaceManager::WindowFullLocalization& loc, Inventory& inventory, std::vector<InventorySlotView>&& slots) :
-    WindowSpaceUser(loc),
+InventoryView::InventoryView(WindowSpaceManager::Window& wnd, Inventory& inventory, std::vector<InventorySlotView>&& slots) :
+    WindowContent(wnd),
     m_inventory(&inventory),
     m_slotViews(std::move(slots))
 {
@@ -78,13 +78,13 @@ WindowSpaceManager::WindowParams InventoryWindow::defaultParams()
     return params;
 }
 
-InventoryWindow::InventoryWindow(const std::string& name) :
-    PanelWindow(name, defaultParams()),
+InventoryWindow::InventoryWindow(WindowSpaceManager& wsm, const std::string& name) :
+    PanelWindow(wsm, name, defaultParams()),
     m_scroll(0)
 {
 }
-InventoryWindow::InventoryWindow(const std::string& name, const WindowSpaceManager::WindowParams& params) :
-    PanelWindow(name, params),
+InventoryWindow::InventoryWindow(WindowSpaceManager& wsm, const std::string& name, const WindowSpaceManager::WindowParams& params) :
+    PanelWindow(wsm, name, params),
     m_scroll(0)
 {
 }
@@ -116,9 +116,4 @@ void InventoryWindow::updateMaxContentHeight(const InventoryView& view)
     }
 
     setMaxContentHeight(newMaxContentHeight);
-}
-
-WindowSpaceManager::WindowFullLocalization InventoryWindow::fullLocalization()
-{
-    return { &(Root::instance().windowSpaceManager()), this };
 }
