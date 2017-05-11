@@ -1,11 +1,11 @@
 #include "ContainerInventory.h"
 
+#include "../LibS/Geometry.h"
+
 #include "tiles/TileStack.h"
 
 #include "InventorySlotView.h"
 #include "InventoryView.h"
-
-#include "../LibS/Geometry.h"
 
 using namespace ls;
 
@@ -27,7 +27,7 @@ const InventoryContentRequirement ContainerInventory::slotContentRequirement(siz
 {
     return InventoryContentRequirement::None;
 }
-std::unique_ptr<InventoryView> ContainerInventory::createInventoryView(WindowSpaceManager::Window& wnd)
+std::unique_ptr<InventoryView> ContainerInventory::createInventoryView(InternalWindow& wnd)
 {
     constexpr int margins = 4;
     constexpr int spacesBetweenSlots = 3;

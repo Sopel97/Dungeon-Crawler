@@ -1,7 +1,9 @@
 #include "Game.h"
 
 #include "Root.h"
-#include "WindowSpaceManager.h"
+#include "window/WindowSpaceManager.h"
+#include "window/InternalWindow.h"
+#include "RectSubdivision.h"
 #include "PlayerUi.h"
 
 #include "SFMLUtil.h"
@@ -21,13 +23,13 @@ Game::Game(Root& root) :
     auto& scene = wsm.createScene("MainScene");
     auto regions = scene.subdivide(
         scene.rootHandle(),
-        WindowSpaceManager::SubdivisionParams::withPixels(
-            WindowSpaceManager::SubdivisionParams::Orientation::Horizontal,
-            WindowSpaceManager::SubdivisionParams::Subject::Second,
+        RectSubdivision::withPixels(
+            RectSubdivision::Orientation::Horizontal,
+            RectSubdivision::Subject::Second,
             PlayerUi::playerUiPanelWidth()
         ).withAspectRatio(
-            WindowSpaceManager::AspectRatio(1.0f),
-            WindowSpaceManager::SubdivisionParams::Subject::First
+            AspectRatio(1.0f),
+            RectSubdivision::Subject::First
         ),
         "World",
         "PlayerUi"

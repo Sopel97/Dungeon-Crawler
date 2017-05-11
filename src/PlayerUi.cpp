@@ -5,7 +5,7 @@
 
 #include "Player.h"
 #include "Root.h"
-#include "WindowSpaceManager.h"
+#include "window/WindowSpaceManager.h"
 
 #include <algorithm>
 
@@ -13,7 +13,7 @@ using namespace ls;
 
 const int PlayerUi::m_playerUiPanelWidth = 230;
 
-PlayerUi::PlayerUi(WindowSpaceManager& wsm, Player& player, WindowSpaceManager::Window& wnd) :
+PlayerUi::PlayerUi(WindowSpaceManager& wsm, Player& player, InternalWindow& wnd) :
 	WindowContent(wnd),
     m_windowSpaceManager(wsm),
     m_player(player)

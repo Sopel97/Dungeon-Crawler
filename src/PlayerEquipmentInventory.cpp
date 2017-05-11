@@ -44,7 +44,7 @@ const InventoryContentRequirement PlayerEquipmentInventory::slotContentRequireme
 {
     return m_contentRequirements[slotId];
 }
-std::unique_ptr<InventoryView> PlayerEquipmentInventory::createInventoryView(WindowSpaceManager::Window& wnd)
+std::unique_ptr<InventoryView> PlayerEquipmentInventory::createInventoryView(InternalWindow& wnd)
 {
     std::vector<InventorySlotView> slotViews;
     slotViews.reserve(m_contents.size());

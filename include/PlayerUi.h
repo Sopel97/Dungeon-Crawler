@@ -3,7 +3,8 @@
 
 #include <vector>
 
-#include "WindowContent.h"
+#include "window/WindowContent.h"
+#include "window/InternalWindow.h"
 
 #include "../LibS/Shapes.h"
 
@@ -19,17 +20,17 @@ class PlayerUi : public WindowContent
 {
 public:
     // TODO: move drawing of the basic window shape to somewhere where it can be used by FreeWindow too
-    class PanelWindow : public WindowSpaceManager::Window
+    class PanelWindow : public InternalWindow
     {
     public:
-        PanelWindow(WindowSpaceManager& wsm, const std::string& name, const WindowSpaceManager::WindowParams& params) :
-            Window(wsm, ls::Rectangle2I::withSize(ls::Vec2I(0, 0), m_playerUiPanelWidth, 0), name, params)
+        PanelWindow(WindowSpaceManager& wsm, const std::string& name, const WindowParams& params) :
+            InternalWindow(wsm, ls::Rectangle2I::withSize(ls::Vec2I(0, 0), m_playerUiPanelWidth, 0), name, params)
         {
 
         }
     };
 
-    PlayerUi(WindowSpaceManager& wsm, Player& player, WindowSpaceManager::Window& wnd);
+    PlayerUi(WindowSpaceManager& wsm, Player& player, InternalWindow& wnd);
     ~PlayerUi();
 
     void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);

@@ -1,7 +1,6 @@
 #include "InventoryView.h"
 
 #include "Root.h"
-#include "WindowSpaceManager.h"
 
 #include "ResourceManager.h"
 
@@ -11,18 +10,18 @@
 
 using namespace ls;
 
-InventoryView::InventoryView(WindowSpaceManager::Window& wnd, Inventory& inventory) :
+InventoryView::InventoryView(InternalWindow& wnd, Inventory& inventory) :
     WindowContent(wnd),
     m_inventory(&inventory)
 {
 }
-InventoryView::InventoryView(WindowSpaceManager::Window& wnd, Inventory& inventory, const std::vector<InventorySlotView>& slots) :
+InventoryView::InventoryView(InternalWindow& wnd, Inventory& inventory, const std::vector<InventorySlotView>& slots) :
     WindowContent(wnd),
     m_inventory(&inventory),
     m_slotViews(slots)
 {
 }
-InventoryView::InventoryView(WindowSpaceManager::Window& wnd, Inventory& inventory, std::vector<InventorySlotView>&& slots) :
+InventoryView::InventoryView(InternalWindow& wnd, Inventory& inventory, std::vector<InventorySlotView>&& slots) :
     WindowContent(wnd),
     m_inventory(&inventory),
     m_slotViews(std::move(slots))
@@ -53,9 +52,9 @@ void InventoryView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& rende
     }
 }
 
-WindowSpaceManager::WindowParams InventoryWindow::defaultParams()
+WindowParams InventoryWindow::defaultParams()
 {
-    WindowSpaceManager::WindowParams params;
+    WindowParams params;
 
     params.minWindowWidth = PlayerUi::playerUiPanelWidth();
     params.minWindowHeight = 0;
@@ -83,7 +82,7 @@ InventoryWindow::InventoryWindow(WindowSpaceManager& wsm, const std::string& nam
     m_scroll(0)
 {
 }
-InventoryWindow::InventoryWindow(WindowSpaceManager& wsm, const std::string& name, const WindowSpaceManager::WindowParams& params) :
+InventoryWindow::InventoryWindow(WindowSpaceManager& wsm, const std::string& name, const WindowParams& params) :
     PanelWindow(wsm, name, params),
     m_scroll(0)
 {

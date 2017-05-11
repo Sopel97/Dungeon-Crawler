@@ -16,7 +16,7 @@
 
 using namespace ls;
 
-Player::Player(WindowSpaceManager& wsm, Game& game, WindowSpaceManager::Window& wnd) :
+Player::Player(WindowSpaceManager& wsm, Game& game, InternalWindow& wnd) :
     m_wsm(&wsm),
     m_playerEntity(nullptr),
     m_playerUi(wsm, *this, wnd),

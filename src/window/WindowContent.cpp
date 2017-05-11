@@ -1,10 +1,9 @@
-#include "..\include\WindowContent.h"
+#include "window/WindowContent.h"
 
-
-WindowContent::WindowContent(WindowSpaceManager::Window& wnd) :
-	m_window(&wnd)
+WindowContent::WindowContent(InternalWindow& wnd) :
+    m_window(&wnd)
 {
-	m_window->setContent(*this);
+    m_window->setContent(*this);
 }
 WindowContent::WindowContent(WindowContent&& other) :
     m_window(other.m_window)
@@ -19,11 +18,11 @@ WindowContent& WindowContent::operator=(WindowContent&& other)
 
     return *this;
 }
-const WindowSpaceManager::Window& WindowContent::window() const
+const InternalWindow& WindowContent::window() const
 {
     return *m_window;
 }
-WindowSpaceManager::Window& WindowContent::window()
+InternalWindow& WindowContent::window()
 {
     return *m_window;
 }

@@ -19,7 +19,7 @@
 #include "TileColumn.h"
 #include "MapLayer.h"
 
-#include "WindowSpaceManager.h"
+#include "window/WindowSpaceManager.h"
 
 #include "TallDrawable.h"
 #include "TallEntityDrawable.h"
@@ -33,7 +33,7 @@
 
 using namespace ls;
 
-World::World(Root& root, Player& player, WindowSpaceManager::Window& wnd) :
+World::World(Root& root, Player& player, InternalWindow& wnd) :
 	WindowContent(wnd),
     m_root(root),
     m_windowSpaceManager(root.windowSpaceManager()),

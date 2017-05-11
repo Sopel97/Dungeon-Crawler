@@ -1,8 +1,9 @@
 #pragma once
 
 #include "InventorySlotView.h"
-#include "WindowSpaceManager.h"
-#include "WindowContent.h"
+#include "window/WindowSpaceManager.h"
+#include "window/WindowContent.h"
+#include "window/InternalWindow.h"
 
 #include "PlayerUi.h"
 
@@ -17,9 +18,9 @@ private:
     std::vector<InventorySlotView> m_slotViews;
 
 public:
-    InventoryView(WindowSpaceManager::Window& wnd, Inventory& inventory);
-    InventoryView(WindowSpaceManager::Window& wnd, Inventory& inventory, const std::vector<InventorySlotView>& slots);
-    InventoryView(WindowSpaceManager::Window& wnd, Inventory& inventory, std::vector<InventorySlotView>&& slots);
+    InventoryView(InternalWindow& wnd, Inventory& inventory);
+    InventoryView(InternalWindow& wnd, Inventory& inventory, const std::vector<InventorySlotView>& slots);
+    InventoryView(InternalWindow& wnd, Inventory& inventory, std::vector<InventorySlotView>&& slots);
 
     InventoryView(const InventoryView& other) = delete;
     InventoryView(InventoryView&& other) = default;
@@ -38,10 +39,10 @@ public:
 class InventoryWindow : public PlayerUi::PanelWindow
 {
 public:
-    static WindowSpaceManager::WindowParams defaultParams();
+    static WindowParams defaultParams();
 
     InventoryWindow(WindowSpaceManager& wsm, const std::string& name);
-    InventoryWindow(WindowSpaceManager& wsm, const std::string& name, const WindowSpaceManager::WindowParams& params);
+    InventoryWindow(WindowSpaceManager& wsm, const std::string& name, const WindowParams& params);
 
     virtual int verticalScroll() const;
 

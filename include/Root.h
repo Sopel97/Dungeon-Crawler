@@ -1,7 +1,7 @@
 #ifndef ROOT_H
 #define ROOT_H
 
-#include "WindowSpaceManager.h"
+#include "window/WindowSpaceManager.h"
 
 #include <SFML/System.hpp>
 #include <SFML/Graphics.hpp>

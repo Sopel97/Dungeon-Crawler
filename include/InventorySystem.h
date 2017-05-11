@@ -16,6 +16,7 @@
 class Inventory;
 class AttemptToInteractWithExternalInventory;
 class TileLocation;
+class WindowSpaceManager;
 
 class InventorySystem
 {

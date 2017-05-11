@@ -11,7 +11,7 @@
 
 #include "ResourceManager.h"
 
-#include "WindowContent.h"
+#include "window/WindowContent.h"
 
 #include "../LibS/Geometry.h"
 
@@ -22,11 +22,12 @@ class MapLayer;
 class TileLocation;
 class Player;
 class TallDrawable;
+class IntenalWindow;
 
 class World : public WindowContent
 {
 public:
-    World(Root& root, Player& player, WindowSpaceManager::Window& wnd);
+    World(Root& root, Player& player, InternalWindow& wnd);
     ~World();
 
     void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);

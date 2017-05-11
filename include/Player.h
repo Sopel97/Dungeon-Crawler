@@ -17,11 +17,13 @@ class World;
 class Inventory;
 class AttemptToInteractWithExternalInventory;
 class TileLocation;
+class WindowSpaceManager;
+class InternalWindow;
 
 class Player
 {
 public:
-    Player(WindowSpaceManager& wsm, Game& game, WindowSpaceManager::Window& wnd);
+    Player(WindowSpaceManager& wsm, Game& game, InternalWindow& wnd);
 
     Entity* createPlayerEntity();
 

@@ -1,25 +1,25 @@
 #pragma once
 
-#include "WindowSpaceManager.h"
+#include "InternalWindow.h"
 #include "SfmlEventHandler.h"
 
 namespace sf
 {
-	class RenderTarget;
-	class RenderStates;
+    class RenderTarget;
+    class RenderStates;
 }
 
 class WindowContent : public SfmlEventHandler
 {
 private:
-	WindowSpaceManager::Window* m_window;
+    InternalWindow* m_window;
 
 protected:
-    const WindowSpaceManager::Window& window() const;
-	WindowSpaceManager::Window& window();
+    const InternalWindow& window() const;
+    InternalWindow& window();
 public:
-	WindowContent(WindowSpaceManager::Window& wnd);
-	virtual ~WindowContent();
+    WindowContent(InternalWindow& wnd);
+    virtual ~WindowContent();
 
     WindowContent(const WindowContent&) = delete;
     WindowContent(WindowContent&& other);
@@ -28,6 +28,5 @@ public:
 
     void detach();
 
-	virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) {};
+    virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) {};
 };
-
