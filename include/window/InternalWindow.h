@@ -11,7 +11,8 @@
 class WindowSpaceManager;
 class WindowContent;
 
-class InternalWindow
+// TODO: close, minimize (and custom) buttons, window handles events that relate to those buttons and sends callbacks that can be registered
+class InternalWindow : public SfmlEventHandler
 {
 private:
     ls::Rectangle2I m_windowRect;
@@ -21,6 +22,9 @@ private:
     InternalWindow* m_parent;
     WindowContent* m_content;
 
+protected:
+    bool m_isMinimized;
+
 public:
     static WindowParams defaultParams();
 
@@ -28,13 +32,13 @@ public:
     InternalWindow(WindowSpaceManager& wsm, const ls::Rectangle2I& windowRect, const std::string& name, const WindowParams& params);
 
     InternalWindow(const InternalWindow&) = delete;
-    InternalWindow(InternalWindow&&) = default;
+    InternalWindow(InternalWindow&&) = delete;
     InternalWindow& operator=(const InternalWindow&) = delete;
-    InternalWindow& operator=(InternalWindow&&) = default;
+    InternalWindow& operator=(InternalWindow&&) = delete;
 
     virtual ~InternalWindow();
 
-    const ls::Rectangle2I& windowRect() const;
+    ls::Rectangle2I windowRect() const;
     ls::Rectangle2I absoluteWindowRect() const;
     ls::Rectangle2I absoluteContentRect() const;
     const std::string& title() const;
@@ -79,6 +83,7 @@ public:
     bool isContentOnly() const;
     bool hasHeader() const;
     bool hasScrollBar() const;
+    bool isMinimized() const;
 
     void setMinimizable(bool val);
     void setCloseable(bool val);
@@ -88,8 +93,13 @@ public:
     void setHeaderEnabled(bool val);
     void setScrollBarEnabled(bool val);
 
-    bool hasEventHandler() const;
-    SfmlEventHandler& eventHandler();
+    EventResult onTextEntered(sf::Event::TextEvent& event, EventContext context) override;
+    EventResult onKeyPressed(sf::Event::KeyEvent& event, EventContext context) override;
+    EventResult onKeyReleased(sf::Event::KeyEvent& event, EventContext context) override;
+    EventResult onMouseWheelMoved(sf::Event::MouseWheelEvent& event, EventContext context) override;
+    EventResult onMouseButtonPressed(sf::Event::MouseButtonEvent& event, EventContext context) override;
+    EventResult onMouseButtonReleased(sf::Event::MouseButtonEvent& event, EventContext context) override;
+    EventResult onMouseMoved(sf::Event::MouseMoveEvent& event, EventContext context) override;
 
     void setParent(InternalWindow& parent);
     bool hasParent() const;
@@ -109,6 +119,7 @@ public:
 private:
 
     void drawSkeleton(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
+    void drawSkeletonMinimized(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
 
     static const int m_windowTopBarHeight;
     static const int m_windowHeaderHeight;

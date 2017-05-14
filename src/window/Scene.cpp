@@ -4,7 +4,7 @@ using namespace ls;
 
 Scene::Scene(WindowSpaceManager& windowSpaceManager, const ls::Rectangle2I& rect, const std::string& name) :
     m_windowSpaceManager(&windowSpaceManager),
-    m_backgroundWindows(BackgroundWindow(windowSpaceManager, rect, "Root")),
+    m_backgroundWindows(windowSpaceManager, rect, "Root"),
     m_name(name),
     m_topmostRegions({ m_backgroundWindows.root() }),
     m_focusedRegionHandle(m_backgroundWindows.root())
@@ -139,15 +139,15 @@ void Scene::update(BackgroundWindowHandle h, const ls::Rectangle2I& rect)
     }
 }
 
-Scene::BackgroundWindowHandle Scene::queryRegion(const ls::Vec2I& pos)
+Scene::BackgroundWindowHandle Scene::queryBackgroundWindow(const ls::Vec2I& pos)
 {
-    auto iter = const_cast<const Scene*>(this)->queryRegion(pos);
+    auto iter = const_cast<const Scene*>(this)->queryBackgroundWindow(pos);
     if (!iter.isValid()) return {};
 
     //dirty hack for now TODO: this better
     return findBackgroundWindow(iter.data().title());
 }
-Scene::ConstBackgroundWindowHandle Scene::queryRegion(const ls::Vec2I& pos) const
+Scene::ConstBackgroundWindowHandle Scene::queryBackgroundWindow(const ls::Vec2I& pos) const
 {
     ConstBackgroundWindowHandle currentRegionHandle = m_backgroundWindows.root();
 

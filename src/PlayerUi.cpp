@@ -53,7 +53,7 @@ void PlayerUi::updateWindowPositions()
 	for (PanelWindow* window : m_windows)
 	{
 		window->setWindowPosition(ls::Vec2I(0, currentPosition));
-		currentPosition += window->absoluteWindowRect().height();
+		currentPosition += window->windowRect().height();
 	}
 }
 

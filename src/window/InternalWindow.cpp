@@ -74,7 +74,8 @@ InternalWindow::InternalWindow(WindowSpaceManager& wsm, const ls::Rectangle2I& w
     m_name(name),
     m_wsm(&wsm),
     m_parent(nullptr),
-    m_content(nullptr)
+    m_content(nullptr),
+    m_isMinimized(false)
 {
 
 }
@@ -84,15 +85,20 @@ InternalWindow::~InternalWindow()
 
 }
 
-const ls::Rectangle2I& InternalWindow::windowRect() const
+ls::Rectangle2I InternalWindow::windowRect() const
 {
+    if (m_isMinimized)
+    {
+        return ls::Rectangle2I::withSize(m_windowRect.min, m_windowRect.width(), m_windowHeaderHeight);
+    }
+
     return m_windowRect;
 }
 ls::Rectangle2I InternalWindow::absoluteWindowRect() const
 {
     if (m_parent != nullptr) return m_windowRect.translated(m_parent->absoluteContentRect().min);
 
-    return m_windowRect;
+    return windowRect();
 }
 ls::Rectangle2I InternalWindow::absoluteContentRect() const
 {
@@ -274,6 +280,10 @@ bool InternalWindow::hasScrollBar() const
 {
     return m_params.hasScrollBar;
 }
+bool InternalWindow::isMinimized() const
+{
+    return m_isMinimized;
+}
 
 void InternalWindow::setMinimizable(bool val)
 {
@@ -304,14 +314,54 @@ void InternalWindow::setScrollBarEnabled(bool val)
     m_params.hasScrollBar = val;
 }
 
-bool InternalWindow::hasEventHandler() const
+SfmlEventHandler::EventResult InternalWindow::onTextEntered(sf::Event::TextEvent& event, EventContext context)
 {
-    return m_content != nullptr;
+    if (m_content == nullptr || m_isMinimized) return { false, false };
+    return m_content->onTextEntered(event, context);
 }
-SfmlEventHandler& InternalWindow::eventHandler()
+SfmlEventHandler::EventResult InternalWindow::onKeyPressed(sf::Event::KeyEvent& event, EventContext context)
 {
-    return *m_content;
+    if (m_content == nullptr || m_isMinimized) return { false, false };
+    return m_content->onKeyPressed(event, context);
 }
+SfmlEventHandler::EventResult InternalWindow::onKeyReleased(sf::Event::KeyEvent& event, EventContext context)
+{
+    if (m_content == nullptr || m_isMinimized) return { false, false };
+    return m_content->onKeyReleased(event, context);
+}
+SfmlEventHandler::EventResult InternalWindow::onMouseWheelMoved(sf::Event::MouseWheelEvent& event, EventContext context)
+{
+    const ls::Vec2I mousePos{ event.x, event.y };
+    if (!ls::intersect(mousePos, absoluteContentRect())) return { false, false };
+
+    if (m_content == nullptr || m_isMinimized) return { false, false };
+    return m_content->onMouseWheelMoved(event, context);
+}
+SfmlEventHandler::EventResult InternalWindow::onMouseButtonPressed(sf::Event::MouseButtonEvent& event, EventContext context)
+{
+    const ls::Vec2I mousePos{ event.x, event.y };
+    if (!ls::intersect(mousePos, absoluteContentRect())) return { false, false };
+
+    if (m_content == nullptr || m_isMinimized) return { false, false };
+    return m_content->onMouseButtonPressed(event, context);
+}
+SfmlEventHandler::EventResult InternalWindow::onMouseButtonReleased(sf::Event::MouseButtonEvent& event, EventContext context)
+{
+    const ls::Vec2I mousePos{ event.x, event.y };
+    if (!ls::intersect(mousePos, absoluteContentRect())) return { false, false };
+
+    if (m_content == nullptr || m_isMinimized) return { false, false };
+    return m_content->onMouseButtonReleased(event, context);
+}
+SfmlEventHandler::EventResult InternalWindow::onMouseMoved(sf::Event::MouseMoveEvent& event, EventContext context)
+{
+    const ls::Vec2I mousePos{ event.x, event.y };
+    if (!ls::intersect(mousePos, absoluteContentRect())) return { false, false };
+
+    if (m_content == nullptr || m_isMinimized) return { false, false };
+    return m_content->onMouseMoved(event, context);
+}
+
 void InternalWindow::setParent(InternalWindow& parent)
 {
     m_parent = &parent;
@@ -355,7 +405,16 @@ ls::Vec2I InternalWindow::localContentCoords(const ls::Vec2I& globalCoords) cons
 
 void InternalWindow::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
 {
-    drawSkeleton(renderTarget, renderStates);
+    if (m_isMinimized)
+    {
+        drawSkeletonMinimized(renderTarget, renderStates);
+        return;
+    }
+    else
+    {
+        drawSkeleton(renderTarget, renderStates);
+    }
+
     if (m_content != nullptr)
     {
         const auto contentRect = absoluteContentRect();
@@ -490,4 +549,42 @@ void InternalWindow::drawSkeleton(sf::RenderTarget& renderTarget, sf::RenderStat
             renderTarget.draw(scrollBarSliderButtonSprite, renderStates);
         }
     }
+}
+
+void InternalWindow::drawSkeletonMinimized(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
+{
+    ResourceHandle<sf::Texture> horizontalBarsSprites = ResourceManager::instance().get<sf::Texture>("UiHorizontalBars");
+    ResourceHandle<sf::Texture> nonRepeatingSprites = ResourceManager::instance().get<sf::Texture>("UiNonRepeating");
+
+    const auto windowRect = absoluteWindowRect();
+
+    m_wsm->setDefaultView();
+
+    const int& topBarHeight = m_windowHeaderHeight;
+    const Vec2I& topBarSpritePosition = m_windowHeaderSpritePosition;
+    const Vec2I& topLeftCornerSpritePosition = m_windowHighTopLeftCornerSpritePosition;
+    const Vec2I& topRightCornerSpritePosition = m_windowHighTopRightCornerSpritePosition;
+
+    const Vec2I& windowTopLeft = windowRect.min;
+    const Vec2I& windowBottomRight = windowRect.max;
+
+    int windowWidth = windowRect.width();
+    int windowHeight = windowRect.height();
+    sf::Sprite topBarSprite;
+    topBarSprite.setPosition(static_cast<float>(windowTopLeft.x + m_windowLeftBarWidth), static_cast<float>(windowTopLeft.y));
+    topBarSprite.setTexture(horizontalBarsSprites.get());
+    topBarSprite.setTextureRect(sf::IntRect(sf::Vector2i(topBarSpritePosition.x, topBarSpritePosition.y), sf::Vector2i(windowWidth - (m_windowLeftBarWidth + m_windowRightBarWidth), topBarHeight)));
+    renderTarget.draw(topBarSprite, renderStates);
+
+    sf::Sprite topLeftCornerSprite;
+    topLeftCornerSprite.setPosition(static_cast<float>(windowTopLeft.x), static_cast<float>(windowTopLeft.y));
+    topLeftCornerSprite.setTexture(nonRepeatingSprites.get());
+    topLeftCornerSprite.setTextureRect(sf::IntRect(sf::Vector2i(topLeftCornerSpritePosition.x, topLeftCornerSpritePosition.y), sf::Vector2i(m_windowHighTopLeftCornerSize.x, topBarHeight)));
+    renderTarget.draw(topLeftCornerSprite, renderStates);
+
+    sf::Sprite topRightCornerSprite;
+    topRightCornerSprite.setPosition(static_cast<float>(windowBottomRight.x - m_windowRightBarWidth), static_cast<float>(windowTopLeft.y));
+    topRightCornerSprite.setTexture(nonRepeatingSprites.get());
+    topRightCornerSprite.setTextureRect(sf::IntRect(sf::Vector2i(topRightCornerSpritePosition.x, topRightCornerSpritePosition.y), sf::Vector2i(m_windowHighTopRightCornerSize.x, topBarHeight)));
+    renderTarget.draw(topRightCornerSprite, renderStates);
 }

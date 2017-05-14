@@ -65,8 +65,8 @@ public:
 
     void update(const ls::Rectangle2I& rect);
 
-    BackgroundWindowHandle queryRegion(const ls::Vec2I& pos);
-    ConstBackgroundWindowHandle queryRegion(const ls::Vec2I& pos) const;
+    BackgroundWindowHandle queryBackgroundWindow(const ls::Vec2I& pos);
+    ConstBackgroundWindowHandle queryBackgroundWindow(const ls::Vec2I& pos) const;
 
     bool tryDispatchEvent(sf::Event& event, const ls::Vec2I& mousePos);
 
@@ -81,34 +81,29 @@ private:
     {
         BackgroundWindowHandle focusedRegionHandle = m_focusedRegionHandle; //stored because can be changed midway
         InternalWindow& focused = window(focusedRegionHandle);
-        if (focused.hasEventHandler())
+        const SfmlEventHandler::EventContext context{ true, ls::intersect(focused.absoluteWindowRect(), mousePos) };
+        const SfmlEventHandler::EventResult result = (focused.*handler)(event, context);
+        if (result.consumeEvent)
         {
-            const SfmlEventHandler::EventContext context{ true, ls::intersect(focused.absoluteWindowRect(), mousePos) };
-            const SfmlEventHandler::EventResult result = (focused.eventHandler().*handler)(event, context);
-            if (result.consumeEvent)
-            {
-                return;
-            }
+            return;
         }
 
         // other regions
 
-        BackgroundWindowHandle mouseOverRegionHandle = queryRegion(mousePos);
+        BackgroundWindowHandle mouseOverRegionHandle = queryBackgroundWindow(mousePos);
         if (mouseOverRegionHandle.isValid() && mouseOverRegionHandle != m_focusedRegionHandle)
         {
             InternalWindow& mouseOverRegion = window(mouseOverRegionHandle);
-            if (mouseOverRegion.hasEventHandler())
+
+            const SfmlEventHandler::EventContext context{ false, true };
+            const SfmlEventHandler::EventResult result = (mouseOverRegion.*handler)(event, context);
+            if (result.takeFocus)
             {
-                const SfmlEventHandler::EventContext context{ false, true };
-                const SfmlEventHandler::EventResult result = (mouseOverRegion.eventHandler().*handler)(event, context);
-                if (result.takeFocus)
-                {
-                    m_focusedRegionHandle = mouseOverRegionHandle;
-                }
-                if (result.consumeEvent)
-                {
-                    return;
-                }
+                m_focusedRegionHandle = mouseOverRegionHandle;
+            }
+            if (result.consumeEvent)
+            {
+                return;
             }
         }
 
@@ -117,18 +112,15 @@ private:
             if (h == focusedRegionHandle || h == mouseOverRegionHandle) continue;
 
             BackgroundWindow& region = window(h);
-            if (region.hasEventHandler())
+            const SfmlEventHandler::EventContext context{ false, false };
+            const SfmlEventHandler::EventResult result = (region.*handler)(event, context);
+            if (result.takeFocus)
             {
-                const SfmlEventHandler::EventContext context{ false, false };
-                const SfmlEventHandler::EventResult result = (region.eventHandler().*handler)(event, context);
-                if (result.takeFocus)
-                {
-                    m_focusedRegionHandle = h;
-                }
-                if (result.consumeEvent)
-                {
-                    return;
-                }
+                m_focusedRegionHandle = h;
+            }
+            if (result.consumeEvent)
+            {
+                return;
             }
         }
     }
