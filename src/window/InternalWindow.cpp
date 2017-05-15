@@ -7,6 +7,14 @@
 
 using namespace ls;
 
+const int InternalWindow::m_closeButtonId = 0;
+const int InternalWindow::m_minimizeButtonId = 1;
+const int InternalWindow::m_maximizeButtonId = 2;
+
+const ls::Rectangle2I InternalWindow::m_closeButtonSprite = ls::Rectangle2I::withSize(ls::Vec2I(12, 69), 12, 12);
+const ls::Rectangle2I InternalWindow::m_minimizeButtonSprite = ls::Rectangle2I::withSize(ls::Vec2I(0, 69), 12, 12);
+const ls::Rectangle2I InternalWindow::m_maximizeButtonSprite = ls::Rectangle2I::withSize(ls::Vec2I(0, 69), 12, 12);
+
 const int InternalWindow::m_windowTopBarHeight = 4;
 const int InternalWindow::m_windowHeaderHeight = 15;
 const int InternalWindow::m_windowLeftBarWidth = 4;
@@ -75,9 +83,12 @@ InternalWindow::InternalWindow(WindowSpaceManager& wsm, const ls::Rectangle2I& w
     m_wsm(&wsm),
     m_parent(nullptr),
     m_content(nullptr),
+    m_pressedButton(nullptr),
     m_isMinimized(false)
 {
-
+    addHeaderButton(*this, m_closeButtonId, m_closeButtonSprite, isCloseable());
+    addHeaderButton(*this, m_minimizeButtonId, m_minimizeButtonSprite, isMinimizable() && !isMinimized(), [this](InternalWindow&) { minimize(); });
+    addHeaderButton(*this, m_maximizeButtonId, m_maximizeButtonSprite, isMinimizable() && isMinimized(), [this](InternalWindow&) { maximize(); });
 }
 
 InternalWindow::~InternalWindow()
@@ -94,17 +105,11 @@ ls::Rectangle2I InternalWindow::windowRect() const
 
     return m_windowRect;
 }
-ls::Rectangle2I InternalWindow::absoluteWindowRect() const
+ls::Rectangle2I InternalWindow::contentRect() const
 {
-    if (m_parent != nullptr) return m_windowRect.translated(m_parent->absoluteContentRect().min);
+    if (isContentOnly()) return windowRect();
 
-    return windowRect();
-}
-ls::Rectangle2I InternalWindow::absoluteContentRect() const
-{
-    if (m_params.isContentOnly) return absoluteWindowRect();
-
-    ls::Rectangle2I rect = absoluteWindowRect();
+    ls::Rectangle2I rect = windowRect();
     ls::Vec2I offsetFromTopLeft(m_windowLeftBarWidth, m_windowTopBarHeight);
     if (m_params.hasHeader)
     {
@@ -118,6 +123,18 @@ ls::Rectangle2I InternalWindow::absoluteContentRect() const
     }
 
     return ls::Rectangle2I(rect.min + offsetFromTopLeft, rect.max + offsetFromBottomRight);
+}
+ls::Rectangle2I InternalWindow::absoluteWindowRect() const
+{
+    if (m_parent != nullptr) return windowRect().translated(m_parent->absoluteContentRect().min);
+
+    return windowRect();
+}
+ls::Rectangle2I InternalWindow::absoluteContentRect() const
+{
+    if (m_parent != nullptr) return contentRect().translated(m_parent->absoluteContentRect().min);
+
+    return contentRect();
 }
 const std::string& InternalWindow::title() const
 {
@@ -287,10 +304,13 @@ bool InternalWindow::isMinimized() const
 
 void InternalWindow::setMinimizable(bool val)
 {
+    headerButton(m_minimizeButtonId).setEnabled(val && !isMinimized());
+    headerButton(m_maximizeButtonId).setEnabled(val && isMinimized());
     m_params.isMinimizable = val;
 }
 void InternalWindow::setCloseable(bool val)
 {
+    headerButton(m_closeButtonId).setEnabled(val);
     m_params.isCloseable = val;
 }
 void InternalWindow::setResizeable(bool val)
@@ -313,6 +333,19 @@ void InternalWindow::setScrollBarEnabled(bool val)
 {
     m_params.hasScrollBar = val;
 }
+void InternalWindow::minimize()
+{
+    headerButton(m_minimizeButtonId).setEnabled(false);
+    headerButton(m_maximizeButtonId).setEnabled(true);
+    m_isMinimized = true;
+}
+void InternalWindow::maximize()
+{
+    headerButton(m_minimizeButtonId).setEnabled(true);
+    headerButton(m_maximizeButtonId).setEnabled(false);
+    m_isMinimized = false;
+}
+
 
 SfmlEventHandler::EventResult InternalWindow::onTextEntered(sf::Event::TextEvent& event, EventContext context)
 {
@@ -331,32 +364,72 @@ SfmlEventHandler::EventResult InternalWindow::onKeyReleased(sf::Event::KeyEvent&
 }
 SfmlEventHandler::EventResult InternalWindow::onMouseWheelMoved(sf::Event::MouseWheelEvent& event, EventContext context)
 {
-    const ls::Vec2I mousePos{ event.x, event.y };
-    if (!ls::intersect(mousePos, absoluteContentRect())) return { false, false };
+    if (!isContentOnly())
+    {
+        const ls::Vec2I mousePos{ event.x, event.y };
+        context.isMouseOver = ls::intersect(mousePos, absoluteContentRect());
+    }
 
     if (m_content == nullptr || m_isMinimized) return { false, false };
     return m_content->onMouseWheelMoved(event, context);
 }
 SfmlEventHandler::EventResult InternalWindow::onMouseButtonPressed(sf::Event::MouseButtonEvent& event, EventContext context)
 {
-    const ls::Vec2I mousePos{ event.x, event.y };
-    if (!ls::intersect(mousePos, absoluteContentRect())) return { false, false };
+    if (!isContentOnly())
+    {
+        const ls::Vec2I mousePos{ event.x, event.y };
 
-    if (m_content == nullptr || m_isMinimized) return { false, false };
+        if (hasHeader() && event.button == sf::Mouse::Button::Left)
+        {
+            m_pressedButton = queryButton(mousePos);
+            if (m_pressedButton != nullptr)
+            {
+                return { true, true };
+            }
+        }
+
+        context.isMouseOver = ls::intersect(mousePos, absoluteContentRect());
+    }
+
+    if (m_content == nullptr || m_isMinimized) return { true, false };
     return m_content->onMouseButtonPressed(event, context);
 }
 SfmlEventHandler::EventResult InternalWindow::onMouseButtonReleased(sf::Event::MouseButtonEvent& event, EventContext context)
 {
-    const ls::Vec2I mousePos{ event.x, event.y };
-    if (!ls::intersect(mousePos, absoluteContentRect())) return { false, false };
+    if (!isContentOnly())
+    {
+        const ls::Vec2I mousePos{ event.x, event.y };
+
+        if (hasHeader() && event.button == sf::Mouse::Button::Left)
+        {
+            if (m_pressedButton != nullptr)
+            {
+                auto button = queryButton(mousePos);
+
+                if (button == m_pressedButton)
+                {
+                    m_pressedButton = nullptr;
+                    button->makeCallback();
+                    return { true, true };
+                }
+
+                m_pressedButton = nullptr;
+            }
+        }
+
+        context.isMouseOver = ls::intersect(mousePos, absoluteContentRect());
+    }
 
     if (m_content == nullptr || m_isMinimized) return { false, false };
     return m_content->onMouseButtonReleased(event, context);
 }
 SfmlEventHandler::EventResult InternalWindow::onMouseMoved(sf::Event::MouseMoveEvent& event, EventContext context)
 {
-    const ls::Vec2I mousePos{ event.x, event.y };
-    if (!ls::intersect(mousePos, absoluteContentRect())) return { false, false };
+    if (!isContentOnly())
+    {
+        const ls::Vec2I mousePos{ event.x, event.y };
+        context.isMouseOver = ls::intersect(mousePos, absoluteContentRect());
+    }
 
     if (m_content == nullptr || m_isMinimized) return { false, false };
     return m_content->onMouseMoved(event, context);
@@ -385,6 +458,12 @@ void InternalWindow::removeContent()
 {
     m_content = nullptr;
 }
+
+InternalWindowHeaderButton& InternalWindow::headerButton(int id)
+{
+    return *std::find_if(m_headerButtons.begin(), m_headerButtons.end(), [id](const InternalWindowHeaderButton& button) {return button.id() == id; });
+}
+
 WindowSpaceManager& InternalWindow::windowSpaceManager()
 {
     return *m_wsm;
@@ -408,20 +487,37 @@ void InternalWindow::draw(sf::RenderTarget& renderTarget, sf::RenderStates& rend
     if (m_isMinimized)
     {
         drawSkeletonMinimized(renderTarget, renderStates);
-        return;
     }
     else
     {
         drawSkeleton(renderTarget, renderStates);
     }
 
-    if (m_content != nullptr)
+    if (hasHeader())
+    {
+        drawHeaderButtons(renderTarget, renderStates);
+    }
+
+    if (m_content != nullptr && !m_isMinimized)
     {
         const auto contentRect = absoluteContentRect();
         m_wsm->setRectView(contentRect, Rectangle2F::withSize(Vec2F(0.0f, static_cast<float>(this->verticalScroll())), static_cast<float>(contentRect.width()), static_cast<float>(contentRect.height())));
         m_content->draw(renderTarget, renderStates);
     }
 }
+int InternalWindow::closeButtonId()
+{
+    return m_closeButtonId;
+}
+int InternalWindow::minimizeButtonId()
+{
+    return m_minimizeButtonId;
+}
+int InternalWindow::maximizeButtonId()
+{
+    return m_maximizeButtonId;
+}
+
 void InternalWindow::drawSkeleton(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
 {
     if (isContentOnly()) return;
@@ -436,7 +532,7 @@ void InternalWindow::drawSkeleton(sf::RenderTarget& renderTarget, sf::RenderStat
 
     m_wsm->setDefaultView();
 
-    const int& topBarHeight = hasHeader() ? m_windowHeaderHeight : m_windowTopBarHeight;
+    const int topBarHeight = hasHeader() ? m_windowHeaderHeight : m_windowTopBarHeight;
     const Vec2I& topBarSpritePosition = hasHeader() ? m_windowHeaderSpritePosition : m_windowTopBarSpritePosition;
     const Vec2I& topLeftCornerSpritePosition = hasHeader() ? m_windowHighTopLeftCornerSpritePosition : m_windowLowTopLeftCornerSpritePosition;
     const Vec2I& topRightCornerSpritePosition = hasHeader() ? m_windowHighTopRightCornerSpritePosition : m_windowLowTopRightCornerSpritePosition;
@@ -560,7 +656,7 @@ void InternalWindow::drawSkeletonMinimized(sf::RenderTarget& renderTarget, sf::R
 
     m_wsm->setDefaultView();
 
-    const int& topBarHeight = m_windowHeaderHeight;
+    const int topBarHeight = m_windowHeaderHeight;
     const Vec2I& topBarSpritePosition = m_windowHeaderSpritePosition;
     const Vec2I& topLeftCornerSpritePosition = m_windowHighTopLeftCornerSpritePosition;
     const Vec2I& topRightCornerSpritePosition = m_windowHighTopRightCornerSpritePosition;
@@ -587,4 +683,65 @@ void InternalWindow::drawSkeletonMinimized(sf::RenderTarget& renderTarget, sf::R
     topRightCornerSprite.setTexture(nonRepeatingSprites.get());
     topRightCornerSprite.setTextureRect(sf::IntRect(sf::Vector2i(topRightCornerSpritePosition.x, topRightCornerSpritePosition.y), sf::Vector2i(m_windowHighTopRightCornerSize.x, topBarHeight)));
     renderTarget.draw(topRightCornerSprite, renderStates);
+}
+
+void InternalWindow::drawHeaderButtons(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
+{
+    m_wsm->setDefaultView();
+
+    const auto buttonsPositions = absoluteButtonsPositions();
+    const int numberOfButtons = m_headerButtons.size();
+    for (int i = 0; i < numberOfButtons; ++i)
+    {
+        if (m_headerButtons[i].isEnabled())
+        {
+            m_headerButtons[i].draw(renderTarget, renderStates, buttonsPositions[i]);
+        }
+    }
+}
+std::vector<ls::Vec2I> InternalWindow::absoluteButtonsPositions()
+{
+    constexpr int initialHorizontalPadding = 2;
+    constexpr int initialVerticalPadding = 2;
+    constexpr int horizontalPadding = 3;
+
+    std::vector<ls::Vec2I> positions;
+    positions.reserve(m_headerButtons.size());
+
+    const auto windowRect = absoluteWindowRect();
+
+    ls::Vec2I lastButtonPos(windowRect.max.x - initialHorizontalPadding, windowRect.min.y + initialVerticalPadding);
+
+    for (const auto& button : m_headerButtons)
+    {
+        ls::Vec2I currentPos = lastButtonPos;
+        if (button.isEnabled())
+        {
+            currentPos.x -= button.width();
+            lastButtonPos.x -= button.width() + horizontalPadding;
+        }
+
+        positions.push_back(currentPos);
+    }
+
+    return positions;
+}
+InternalWindowHeaderButton* InternalWindow::queryButton(const ls::Vec2I& pos)
+{
+    const auto positions = absoluteButtonsPositions();
+
+    const int numberOfButtons = m_headerButtons.size();
+    for (int i = 0; i < numberOfButtons; ++i)
+    {
+        auto& button = m_headerButtons[i];
+        if (button.isEnabled())
+        {
+            if (ls::intersect(pos, ls::Rectangle2I::withSize(positions[i], button.width(), button.height())))
+            {
+                return &button;
+            }
+        }
+    }
+
+    return nullptr;
 }

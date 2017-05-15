@@ -131,7 +131,8 @@ void Scene::update(BackgroundWindowHandle h, const ls::Rectangle2I& rect)
     if (!isSubdivided(h)) return;
 
     // they have to be translated to local coordinates, so (0,0) is the top left
-    auto subdividedRects = subdivisionParams(h).calculateSubRects(rect.translated(-rect.min));
+    auto contentRect = window(h).contentRect();
+    auto subdividedRects = subdivisionParams(h).calculateSubRects(contentRect.translated(-contentRect.min));
     if (hasChildren(h))
     {
         update(h.left(), subdividedRects.first);

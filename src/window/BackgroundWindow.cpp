@@ -22,5 +22,15 @@ WindowParams BackgroundWindow::defaultParams()
     params.hasHeader = false;
     params.hasScrollBar = false;
 
+    //*
+    params.isMinimizable = true;
+    params.isCloseable = false;
+    params.isResizeable = false;
+    params.isMovable = false;
+    params.isContentOnly = false;
+    params.hasHeader = true;
+    params.hasScrollBar = false;
+    //*/
+
     return params;
 }

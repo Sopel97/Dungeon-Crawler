@@ -72,8 +72,6 @@ World::~World()
 
 void World::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
 {
-    m_windowSpaceManager.setWindowView(window(), Rectangle2F::withSize(Vec2F(0,0), m_intermidiateRenderTarget.getSize().x, m_intermidiateRenderTarget.getSize().y));
-    
     prepareIntermidiateRenderTarget();
     prepareLightMap();
     prepareMetaTexture();
@@ -151,7 +149,7 @@ void World::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
         delete tallDrawable;
     }
 
-    drawLightMapToIntermidiate(renderStates);
+    //drawLightMapToIntermidiate(renderStates);
     drawIntermidiate(renderTarget, renderStates);
 }
 
@@ -195,6 +193,8 @@ void World::updateShaderUniforms()
 
     m_prettyStretchShader.setParameter("worldOffset", sf::Vector2f(cameraRect.min.x, cameraRect.min.y));
     const auto& viewRect = window().absoluteContentRect();
+    // TODO: for some complicated reason the shader does not work properly when windows have borders (not very problematic since they shouldn't)
+    // TODO: investigate
     m_prettyStretchShader.setParameter("viewOffset", sf::Vector2f(viewRect.min.x, viewRect.min.y));
     m_prettyStretchShader.setParameter("destinationTextureSize", sf::Vector2f(viewRect.width(), viewRect.height()));
 }
@@ -235,13 +235,12 @@ void World::drawMeta(sf::RenderStates& renderStates, const std::vector<TallDrawa
 }
 void World::drawIntermidiate(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
 {
-    //TODO: some calculations to preserve view aspect ratio, since it is no more done by window space manager
-    //TODO: or - make an option for SubdivisionParams to preserve certain aspect ratio - probably better
-
     sf::Sprite intermidiateFinal(m_intermidiateRenderTarget.getTexture());
     sf::RenderStates intermidiateRenderStates = renderStates;
     intermidiateRenderStates.shader = &m_prettyStretchShader;
 
+    m_windowSpaceManager.setContentView(window(), Rectangle2F::withSize(Vec2F(0,0), m_intermidiateRenderTarget.getSize().x, m_intermidiateRenderTarget.getSize().y));
+    
     renderTarget.draw(intermidiateFinal, intermidiateRenderStates);
 }
 void World::drawLightMapToIntermidiate(sf::RenderStates& renderStates)
@@ -362,12 +361,12 @@ Vec2I World::worldToTile(const Vec2F& worldPosition) const
 }
 ls::Vec2F World::screenToWorld(const ls::Vec2I& screenPosition) const
 {
-    const sf::Vector2f worldPosition = m_root.window().mapPixelToCoords(sf::Vector2i(screenPosition.x, screenPosition.y), m_windowSpaceManager.getWindowView(window(), m_camera.viewRectangle()));
+    const sf::Vector2f worldPosition = m_root.window().mapPixelToCoords(sf::Vector2i(screenPosition.x, screenPosition.y), m_windowSpaceManager.getContentView(window(), m_camera.viewRectangle()));
     return{worldPosition.x, worldPosition.y};
 }
 ls::Vec2I World::worldToScreen(const ls::Vec2F& worldPosition) const
 {
-    const sf::Vector2i screenPosition = m_root.window().mapCoordsToPixel(sf::Vector2f(worldPosition.x, worldPosition.y), m_windowSpaceManager.getWindowView(window(), m_camera.viewRectangle()));
+    const sf::Vector2i screenPosition = m_root.window().mapCoordsToPixel(sf::Vector2f(worldPosition.x, worldPosition.y), m_windowSpaceManager.getContentView(window(), m_camera.viewRectangle()));
     return{screenPosition.x, screenPosition.y};
 }
 ls::Vec2I World::screenToTile(const ls::Vec2I& screenPosition) const
@@ -405,9 +404,11 @@ std::vector<Rectangle2F> World::queryTileColliders(const Rectangle2F& queryRegio
 auto World::onMouseButtonPressed(sf::Event::MouseButtonEvent& event, EventContext context)
 -> EventResult
 {
+    if (!context.isMouseOver) return { false, false };
+
 	if (event.button == sf::Mouse::Button::Right)
 	{
-		const Rectangle2I& worldViewRect = window().absoluteWindowRect();
+		const Rectangle2I& worldViewRect = window().absoluteContentRect();
 		if (ls::intersect(worldViewRect, Vec2I(event.x, event.y)))
 		{
 			const Vec2I tilePosition = screenToTile(Vec2I(event.x, event.y));

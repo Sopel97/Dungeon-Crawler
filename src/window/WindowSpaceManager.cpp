@@ -43,17 +43,35 @@ sf::View WindowSpaceManager::getRectView(const ls::Rectangle2I& viewport, const 
     view.setViewport(viewportConvertToRatio(viewport));
     return view;
 }
+sf::View WindowSpaceManager::getRectView(const ls::Rectangle2F& viewport, const ls::Rectangle2F& worldRect) const
+{
+    sf::View view(sf::FloatRect(worldRect.min.x, worldRect.min.y, worldRect.width(), worldRect.height()));
+    view.setViewport(sf::FloatRect(viewport.min.x, viewport.min.y, viewport.width(), viewport.height()));
+    return view;
+}
 sf::View WindowSpaceManager::getWindowView(const InternalWindow& window, const ls::Rectangle2F& worldRect) const
 {
     return getRectView(window.absoluteWindowRect(), worldRect);
 }
+sf::View WindowSpaceManager::getContentView(const InternalWindow& window, const ls::Rectangle2F& worldRect) const
+{
+    return getRectView(window.absoluteContentRect(), worldRect);
+}
 void WindowSpaceManager::setRectView(const ls::Rectangle2I& viewport, const ls::Rectangle2F& worldRect) const
+{
+    m_window.setView(getRectView(viewport, worldRect));
+}
+void WindowSpaceManager::setRectView(const ls::Rectangle2F& viewport, const ls::Rectangle2F& worldRect) const
 {
     m_window.setView(getRectView(viewport, worldRect));
 }
 void WindowSpaceManager::setWindowView(const InternalWindow& window, const ls::Rectangle2F& worldRect) const
 {
     m_window.setView(getWindowView(window, worldRect));
+}
+void WindowSpaceManager::setContentView(const InternalWindow& window, const ls::Rectangle2F& worldRect) const
+{
+    m_window.setView(getContentView(window, worldRect));
 }
 void WindowSpaceManager::setView(const sf::View& view)
 {

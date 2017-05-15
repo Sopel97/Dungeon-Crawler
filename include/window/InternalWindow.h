@@ -4,9 +4,11 @@
 #include <SFML/Graphics.hpp>
 
 #include <string>
+#include <vector>
 
 #include "WindowParams.h"
 #include "SfmlEventHandler.h"
+#include "InternalWindowHeaderButton.h"
 
 class WindowSpaceManager;
 class WindowContent;
@@ -18,9 +20,11 @@ private:
     ls::Rectangle2I m_windowRect;
     WindowParams m_params;
     std::string m_name;
+    std::vector<InternalWindowHeaderButton> m_headerButtons; // TODO: consider sorting by id
     WindowSpaceManager* m_wsm;
     InternalWindow* m_parent;
     WindowContent* m_content;
+    InternalWindowHeaderButton* m_pressedButton;
 
 protected:
     bool m_isMinimized;
@@ -39,6 +43,7 @@ public:
     virtual ~InternalWindow();
 
     ls::Rectangle2I windowRect() const;
+    ls::Rectangle2I contentRect() const;
     ls::Rectangle2I absoluteWindowRect() const;
     ls::Rectangle2I absoluteContentRect() const;
     const std::string& title() const;
@@ -92,6 +97,8 @@ public:
     void setContentOnly(bool val);
     void setHeaderEnabled(bool val);
     void setScrollBarEnabled(bool val);
+    void minimize();
+    void maximize();
 
     EventResult onTextEntered(sf::Event::TextEvent& event, EventContext context) override;
     EventResult onKeyPressed(sf::Event::KeyEvent& event, EventContext context) override;
@@ -108,6 +115,13 @@ public:
     void setContent(WindowContent& newUser);
     void removeContent();
 
+    template <class... Args>
+    void addHeaderButton(Args&&... args)
+    {
+        m_headerButtons.emplace_back(std::forward<Args>(args)...);
+    }
+    InternalWindowHeaderButton& headerButton(int id);
+
     WindowSpaceManager& windowSpaceManager();
     const WindowSpaceManager& windowSpaceManager() const;
 
@@ -116,10 +130,25 @@ public:
 
     virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
 
+    static int closeButtonId();
+    static int minimizeButtonId();
+    static int maximizeButtonId();
+
 private:
 
     void drawSkeleton(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
     void drawSkeletonMinimized(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
+    void drawHeaderButtons(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
+    std::vector<ls::Vec2I> absoluteButtonsPositions();
+    InternalWindowHeaderButton* queryButton(const ls::Vec2I& pos);
+
+    static const int m_closeButtonId;
+    static const int m_minimizeButtonId;
+    static const int m_maximizeButtonId;
+
+    static const ls::Rectangle2I m_closeButtonSprite;
+    static const ls::Rectangle2I m_minimizeButtonSprite;
+    static const ls::Rectangle2I m_maximizeButtonSprite;
 
     static const int m_windowTopBarHeight;
     static const int m_windowHeaderHeight;

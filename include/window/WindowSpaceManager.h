@@ -26,9 +26,13 @@ public:
     void onWindowResized();
 
     sf::View getRectView(const ls::Rectangle2I& viewport, const ls::Rectangle2F& worldRect) const;
+    sf::View getRectView(const ls::Rectangle2F& viewport, const ls::Rectangle2F& worldRect) const;
     sf::View getWindowView(const InternalWindow& window, const ls::Rectangle2F& worldRect) const;
+    sf::View getContentView(const InternalWindow& window, const ls::Rectangle2F& worldRect) const;
     void setRectView(const ls::Rectangle2I& viewport, const ls::Rectangle2F& worldRect) const;
+    void setRectView(const ls::Rectangle2F& viewport, const ls::Rectangle2F& worldRect) const;
     void setWindowView(const InternalWindow& window, const ls::Rectangle2F& worldRect) const;
+    void setContentView(const InternalWindow& window, const ls::Rectangle2F& worldRect) const;
     void setView(const sf::View& view);
     void setDefaultView();
 
