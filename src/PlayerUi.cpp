@@ -61,3 +61,32 @@ void PlayerUi::onWindowUpdated(PanelWindow& window)
 {
 	updateWindowPositions();
 }
+
+SfmlEventHandler::EventResult PlayerUi::onTextEntered(sf::Event::TextEvent& event, EventContext context)
+{
+    return { false, false };
+}
+SfmlEventHandler::EventResult PlayerUi::onKeyPressed(sf::Event::KeyEvent& event, EventContext context)
+{
+    return { false, false };
+}
+SfmlEventHandler::EventResult PlayerUi::onKeyReleased(sf::Event::KeyEvent& event, EventContext context)
+{
+    return { false, false };
+}
+SfmlEventHandler::EventResult PlayerUi::onMouseWheelMoved(sf::Event::MouseWheelEvent& event, EventContext context)
+{
+    return { false, false };
+}
+SfmlEventHandler::EventResult PlayerUi::onMouseButtonPressed(sf::Event::MouseButtonEvent& event, EventContext context)
+{
+    return { false, false };
+}
+SfmlEventHandler::EventResult PlayerUi::onMouseButtonReleased(sf::Event::MouseButtonEvent& event, EventContext context)
+{
+    return { false, false };
+}
+SfmlEventHandler::EventResult PlayerUi::onMouseMoved(sf::Event::MouseMoveEvent& event, EventContext context)
+{
+    return { false, false };
+}

@@ -100,13 +100,10 @@ public:
     void minimize();
     void maximize();
 
-    EventResult onTextEntered(sf::Event::TextEvent& event, EventContext context) override;
-    EventResult onKeyPressed(sf::Event::KeyEvent& event, EventContext context) override;
-    EventResult onKeyReleased(sf::Event::KeyEvent& event, EventContext context) override;
-    EventResult onMouseWheelMoved(sf::Event::MouseWheelEvent& event, EventContext context) override;
+    EventResult dispatch(sf::Event& event, EventContext context, const ls::Vec2I& mousePos) override;
+
     EventResult onMouseButtonPressed(sf::Event::MouseButtonEvent& event, EventContext context) override;
     EventResult onMouseButtonReleased(sf::Event::MouseButtonEvent& event, EventContext context) override;
-    EventResult onMouseMoved(sf::Event::MouseMoveEvent& event, EventContext context) override;
 
     void setParent(InternalWindow& parent);
     bool hasParent() const;

@@ -139,6 +139,53 @@ void Scene::update(BackgroundWindowHandle h, const ls::Rectangle2I& rect)
         update(h.right(), subdividedRects.second);
     }
 }
+void Scene::dispatchEvent(sf::Event& event, const ls::Vec2I& mousePos)
+{
+    BackgroundWindowHandle focusedRegionHandle = m_focusedRegionHandle; //stored because can be changed midway
+    InternalWindow& focused = window(focusedRegionHandle);
+    const SfmlEventHandler::EventContext context{ true, ls::intersect(focused.absoluteWindowRect(), mousePos) };
+    const SfmlEventHandler::EventResult result = focused.dispatch(event, context, mousePos);
+    if (result.consumeEvent)
+    {
+        return;
+    }
+
+    // other regions
+
+    BackgroundWindowHandle mouseOverRegionHandle = queryBackgroundWindow(mousePos);
+    if (mouseOverRegionHandle.isValid() && mouseOverRegionHandle != m_focusedRegionHandle)
+    {
+        InternalWindow& mouseOverRegion = window(mouseOverRegionHandle);
+
+        const SfmlEventHandler::EventContext context{ false, true };
+        const SfmlEventHandler::EventResult result = mouseOverRegion.dispatch(event, context, mousePos);
+        if (result.takeFocus)
+        {
+            m_focusedRegionHandle = mouseOverRegionHandle;
+        }
+        if (result.consumeEvent)
+        {
+            return;
+        }
+    }
+
+    for (BackgroundWindowHandle h : m_topmostRegions)
+    {
+        if (h == focusedRegionHandle || h == mouseOverRegionHandle) continue;
+
+        BackgroundWindow& region = window(h);
+        const SfmlEventHandler::EventContext context{ false, false };
+        const SfmlEventHandler::EventResult result = region.dispatch(event, context, mousePos);
+        if (result.takeFocus)
+        {
+            m_focusedRegionHandle = h;
+        }
+        if (result.consumeEvent)
+        {
+            return;
+        }
+    }
+}
 
 Scene::BackgroundWindowHandle Scene::queryBackgroundWindow(const ls::Vec2I& pos)
 {
@@ -187,31 +234,13 @@ bool Scene::tryDispatchEvent(sf::Event& event, const Vec2I& mousePos)
     switch (event.type)
     {
     case sf::Event::TextEntered:
-        dispatchEvent(event.text, &SfmlEventHandler::onTextEntered, mousePos);
-        return true;
-
     case sf::Event::KeyPressed:
-        dispatchEvent(event.key, &SfmlEventHandler::onKeyPressed, mousePos);
-        return true;
-
     case sf::Event::KeyReleased:
-        dispatchEvent(event.key, &SfmlEventHandler::onKeyReleased, mousePos);
-        return true;
-
     case sf::Event::MouseWheelMoved:
-        dispatchEvent(event.mouseWheel, &SfmlEventHandler::onMouseWheelMoved, mousePos);
-        return true;
-
     case sf::Event::MouseButtonPressed:
-        dispatchEvent(event.mouseButton, &SfmlEventHandler::onMouseButtonPressed, mousePos);
-        return true;
-
     case sf::Event::MouseButtonReleased:
-        dispatchEvent(event.mouseButton, &SfmlEventHandler::onMouseButtonReleased, mousePos);
-        return true;
-
     case sf::Event::MouseMoved:
-        dispatchEvent(event.mouseMove, &SfmlEventHandler::onMouseMoved, mousePos);
+        dispatchEvent(event, mousePos);
         return true;
 
     default:

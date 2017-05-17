@@ -2,6 +2,8 @@
 
 #include <SFML/Window/Event.hpp>
 
+#include "../LibS/Shapes.h"
+
 class SfmlEventHandler
 {
 public:
@@ -20,6 +22,8 @@ public:
 public:
 	SfmlEventHandler() = default;
 	virtual ~SfmlEventHandler() = default;
+
+    virtual EventResult dispatch(sf::Event& event, EventContext context, const ls::Vec2I& mousePos);
 
 	virtual EventResult onTextEntered(sf::Event::TextEvent& event, EventContext context);
     virtual EventResult onKeyPressed(sf::Event::KeyEvent& event, EventContext context);

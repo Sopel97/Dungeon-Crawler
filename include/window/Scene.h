@@ -76,52 +76,5 @@ private:
     void setSubdivisionParams(BackgroundWindowHandle h, const RectSubdivision& params);
     void update(BackgroundWindowHandle h, const ls::Rectangle2I& rect);
 
-    template <class EventType>
-    void dispatchEvent(EventType& event, SfmlEventHandler::EventResult(SfmlEventHandler::*handler)(EventType&, SfmlEventHandler::EventContext), const ls::Vec2I& mousePos)
-    {
-        BackgroundWindowHandle focusedRegionHandle = m_focusedRegionHandle; //stored because can be changed midway
-        InternalWindow& focused = window(focusedRegionHandle);
-        const SfmlEventHandler::EventContext context{ true, ls::intersect(focused.absoluteWindowRect(), mousePos) };
-        const SfmlEventHandler::EventResult result = (focused.*handler)(event, context);
-        if (result.consumeEvent)
-        {
-            return;
-        }
-
-        // other regions
-
-        BackgroundWindowHandle mouseOverRegionHandle = queryBackgroundWindow(mousePos);
-        if (mouseOverRegionHandle.isValid() && mouseOverRegionHandle != m_focusedRegionHandle)
-        {
-            InternalWindow& mouseOverRegion = window(mouseOverRegionHandle);
-
-            const SfmlEventHandler::EventContext context{ false, true };
-            const SfmlEventHandler::EventResult result = (mouseOverRegion.*handler)(event, context);
-            if (result.takeFocus)
-            {
-                m_focusedRegionHandle = mouseOverRegionHandle;
-            }
-            if (result.consumeEvent)
-            {
-                return;
-            }
-        }
-
-        for (BackgroundWindowHandle h : m_topmostRegions)
-        {
-            if (h == focusedRegionHandle || h == mouseOverRegionHandle) continue;
-
-            BackgroundWindow& region = window(h);
-            const SfmlEventHandler::EventContext context{ false, false };
-            const SfmlEventHandler::EventResult result = (region.*handler)(event, context);
-            if (result.takeFocus)
-            {
-                m_focusedRegionHandle = h;
-            }
-            if (result.consumeEvent)
-            {
-                return;
-            }
-        }
-    }
+    void dispatchEvent(sf::Event& event, const ls::Vec2I& mousePos);
 };

@@ -346,33 +346,15 @@ void InternalWindow::maximize()
     m_isMinimized = false;
 }
 
+SfmlEventHandler::EventResult InternalWindow::dispatch(sf::Event& event, EventContext context, const ls::Vec2I& mousePos)
+{
+    auto result = SfmlEventHandler::dispatch(event, context, mousePos);
+    if (result.consumeEvent || m_content == nullptr || m_isMinimized) return result;
 
-SfmlEventHandler::EventResult InternalWindow::onTextEntered(sf::Event::TextEvent& event, EventContext context)
-{
-    if (m_content == nullptr || m_isMinimized) return { false, false };
-    return m_content->onTextEntered(event, context);
+    context.isMouseOver = ls::intersect(mousePos, absoluteContentRect());
+    return m_content->dispatch(event, context, mousePos);
 }
-SfmlEventHandler::EventResult InternalWindow::onKeyPressed(sf::Event::KeyEvent& event, EventContext context)
-{
-    if (m_content == nullptr || m_isMinimized) return { false, false };
-    return m_content->onKeyPressed(event, context);
-}
-SfmlEventHandler::EventResult InternalWindow::onKeyReleased(sf::Event::KeyEvent& event, EventContext context)
-{
-    if (m_content == nullptr || m_isMinimized) return { false, false };
-    return m_content->onKeyReleased(event, context);
-}
-SfmlEventHandler::EventResult InternalWindow::onMouseWheelMoved(sf::Event::MouseWheelEvent& event, EventContext context)
-{
-    if (!isContentOnly())
-    {
-        const ls::Vec2I mousePos{ event.x, event.y };
-        context.isMouseOver = ls::intersect(mousePos, absoluteContentRect());
-    }
 
-    if (m_content == nullptr || m_isMinimized) return { false, false };
-    return m_content->onMouseWheelMoved(event, context);
-}
 SfmlEventHandler::EventResult InternalWindow::onMouseButtonPressed(sf::Event::MouseButtonEvent& event, EventContext context)
 {
     if (!isContentOnly())
@@ -391,8 +373,7 @@ SfmlEventHandler::EventResult InternalWindow::onMouseButtonPressed(sf::Event::Mo
         context.isMouseOver = ls::intersect(mousePos, absoluteContentRect());
     }
 
-    if (m_content == nullptr || m_isMinimized) return { true, false };
-    return m_content->onMouseButtonPressed(event, context);
+    return { true, false };
 }
 SfmlEventHandler::EventResult InternalWindow::onMouseButtonReleased(sf::Event::MouseButtonEvent& event, EventContext context)
 {
@@ -420,19 +401,7 @@ SfmlEventHandler::EventResult InternalWindow::onMouseButtonReleased(sf::Event::M
         context.isMouseOver = ls::intersect(mousePos, absoluteContentRect());
     }
 
-    if (m_content == nullptr || m_isMinimized) return { false, false };
-    return m_content->onMouseButtonReleased(event, context);
-}
-SfmlEventHandler::EventResult InternalWindow::onMouseMoved(sf::Event::MouseMoveEvent& event, EventContext context)
-{
-    if (!isContentOnly())
-    {
-        const ls::Vec2I mousePos{ event.x, event.y };
-        context.isMouseOver = ls::intersect(mousePos, absoluteContentRect());
-    }
-
-    if (m_content == nullptr || m_isMinimized) return { false, false };
-    return m_content->onMouseMoved(event, context);
+    return { false, false };
 }
 
 void InternalWindow::setParent(InternalWindow& parent)
