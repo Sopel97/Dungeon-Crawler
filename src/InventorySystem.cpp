@@ -21,7 +21,7 @@ bool InventorySystem::tryOpenExternalInventory(Inventory& inventory, const ls::V
     TrackedInventoryHandle h = find(inventory).second;
     if(!h.isValid())
     {
-        auto treeIter = m_trackedInventories.emplaceTree(TrackedInventory::makeExternal(m_wsm, inventory, pos));
+        auto treeIter = m_trackedInventories.emplaceTree(TrackedInventory::makeExternal(m_wsm, *this, inventory, pos));
         h = treeIter->root();
     }
 
@@ -40,7 +40,7 @@ bool InventorySystem::tryOpenInternalInventory(Inventory& inventory, Inventory& 
     if (!h.isValid())
     {
         auto& tree = *treeHandle;
-        h = tree.emplaceChild(trackedParentHandle, TrackedInventory::makeInternal(m_wsm, inventory));
+        h = tree.emplaceChild(trackedParentHandle, TrackedInventory::makeInternal(m_wsm, *this, inventory));
     }
 
     openTrackedInventory(h);
@@ -52,7 +52,7 @@ void InventorySystem::openPermanentInventory(Inventory& inventory)
     TrackedInventoryHandle h = find(inventory).second;
     if (!h.isValid())
     {
-        auto treeIter = m_trackedInventories.emplaceTree(TrackedInventory::makePermanent(m_wsm, inventory));
+        auto treeIter = m_trackedInventories.emplaceTree(TrackedInventory::makePermanent(m_wsm, *this, inventory));
         h = treeIter->root();
     }
 
@@ -60,22 +60,7 @@ void InventorySystem::openPermanentInventory(Inventory& inventory)
 }
 void InventorySystem::closeInventory(Inventory& inventory)
 {
-    auto findResult = find(inventory);
-    TrackedInventoryTreeHandle treeHandle = findResult.first;
-    TrackedInventoryHandle inventoryHandle = findResult.second;
-    if (!inventoryHandle.isValid() || !inventoryHandle.data().isOpened) return; //nothing to do
-
-    m_playerUi.closeWindow(inventoryHandle.data().inventoryWindow.get());
-    inventoryHandle.data().isOpened = false;
-    if (inventoryHandle.hasParent()) return; // we can't abandon it since some inventories depent on it
-
-    TrackedInventoryHandle current = inventoryHandle;
-    while(current.isValid() && !current.data().isOpened) //abandon all inventories that were just because this one was opened
-    {
-        auto parent = current.parent(); //we have to remember it here since abandon inventory deletes current
-        abandonInventory(treeHandle, current);
-        current = parent;
-    }
+    closeInventory(find(inventory));
 }
 void InventorySystem::abandonInventory(TrackedInventoryTreeHandle tree, TrackedInventoryHandle inventory)
 {
@@ -130,4 +115,32 @@ void InventorySystem::openTrackedInventory(TrackedInventoryHandle inventory)
 	inventory.data().isOpened = true;
 
     m_playerUi.openWindow(inventory.data().inventoryWindow.get());
+}
+
+std::pair<InventorySystem::TrackedInventoryTreeHandle, InventorySystem::TrackedInventoryHandle> InventorySystem::find(InternalWindow& wnd)
+{
+    return m_trackedInventories.findIf([&wnd](const TrackedInventory& inv) {return &wnd == inv.inventoryWindow.get(); });
+}
+
+void InventorySystem::closeInventory(const std::pair<TrackedInventoryTreeHandle, TrackedInventoryHandle>& findResult)
+{
+    TrackedInventoryTreeHandle treeHandle = findResult.first;
+    TrackedInventoryHandle inventoryHandle = findResult.second;
+    if (!inventoryHandle.isValid() || !inventoryHandle.data().isOpened) return; //nothing to do
+
+    m_playerUi.closeWindow(inventoryHandle.data().inventoryWindow.get());
+    inventoryHandle.data().isOpened = false;
+    if (inventoryHandle.hasParent()) return; // we can't abandon it since some inventories depent on it
+
+    TrackedInventoryHandle current = inventoryHandle;
+    while (current.isValid() && !current.data().isOpened) //abandon all inventories that were just because this one was opened
+    {
+        auto parent = current.parent(); //we have to remember it here since abandon inventory deletes current
+        abandonInventory(treeHandle, current);
+        current = parent;
+    }
+}
+void InventorySystem::closeInventory(InternalWindow& wnd)
+{
+    closeInventory(find(wnd));
 }

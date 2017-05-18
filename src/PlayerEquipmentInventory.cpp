@@ -2,6 +2,7 @@
 
 #include "InventorySlotView.h"
 #include "InventoryView.h"
+#include "window/InventoryWindow.h"
 
 #include "tiles/Tile.h"
 #include "tiles/TileStack.h"
@@ -44,7 +45,7 @@ const InventoryContentRequirement PlayerEquipmentInventory::slotContentRequireme
 {
     return m_contentRequirements[slotId];
 }
-std::unique_ptr<InventoryView> PlayerEquipmentInventory::createInventoryView(InternalWindow& wnd)
+std::unique_ptr<InventoryView> PlayerEquipmentInventory::createInventoryView(InventorySystem& invSys, InternalWindow& wnd)
 {
     std::vector<InventorySlotView> slotViews;
     slotViews.reserve(m_contents.size());
@@ -62,7 +63,7 @@ std::unique_ptr<InventoryView> PlayerEquipmentInventory::createInventoryView(Int
     slotViews.emplace_back(this, 8, Vec2I(138, 17+43*1));
     slotViews.emplace_back(this, 9, Vec2I(138, 17+43*2));
 
-    return std::make_unique<InventoryView>(wnd, *this, std::move(slotViews));
+    return std::make_unique<InventoryView>(invSys, wnd, *this, std::move(slotViews));
 }
 
 std::unique_ptr<InventoryWindow> PlayerEquipmentInventory::createInventoryWindow(WindowSpaceManager& wsm) const

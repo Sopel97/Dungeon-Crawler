@@ -6,6 +6,7 @@
 
 #include "InventorySlotView.h"
 #include "InventoryView.h"
+#include "window/InventoryWindow.h"
 
 using namespace ls;
 
@@ -27,7 +28,7 @@ const InventoryContentRequirement ContainerInventory::slotContentRequirement(siz
 {
     return InventoryContentRequirement::None;
 }
-std::unique_ptr<InventoryView> ContainerInventory::createInventoryView(InternalWindow& wnd)
+std::unique_ptr<InventoryView> ContainerInventory::createInventoryView(InventorySystem& invSys, InternalWindow& wnd)
 {
     constexpr int margins = 4;
     constexpr int spacesBetweenSlots = 3;
@@ -50,7 +51,7 @@ std::unique_ptr<InventoryView> ContainerInventory::createInventoryView(InternalW
         }
     }
 
-    return std::make_unique<InventoryView>(wnd, *this, std::move(slotViews));
+    return std::make_unique<InventoryView>(invSys, wnd, *this, std::move(slotViews));
 }
 std::unique_ptr<InventoryWindow> ContainerInventory::createInventoryWindow(WindowSpaceManager& wsm) const
 {

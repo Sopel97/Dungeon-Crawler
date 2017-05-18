@@ -2,6 +2,7 @@
 #define CONTAINERINVENTORY_H
 
 #include <vector>
+#include <memory>
 
 #include "Inventory.h"
 
@@ -9,6 +10,8 @@ class Tile;
 class InventoryView;
 class WindowSpaceManager;
 class InternalWindow;
+class InventorySystem;
+class InventoryWindow;
 
 class ContainerInventory : public Inventory
 {
@@ -18,7 +21,7 @@ public:
 
     virtual std::vector<TileStack*>& contents();
     virtual const InventoryContentRequirement slotContentRequirement(size_t slotId) const;
-    virtual std::unique_ptr<InventoryView> createInventoryView(InternalWindow& wnd);
+    virtual std::unique_ptr<InventoryView> createInventoryView(InventorySystem& invSys, InternalWindow& wnd);
     virtual std::unique_ptr<InventoryWindow> createInventoryWindow(WindowSpaceManager& wsm) const;
 
     void setSize(int newSize);

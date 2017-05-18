@@ -10,17 +10,19 @@
 #include <vector>
 
 class Inventory;
+class InventorySystem;
 
 class InventoryView : public WindowContent
 {
 private:
+    InventorySystem* m_inventorySystem;
     Inventory* m_inventory;
     std::vector<InventorySlotView> m_slotViews;
 
 public:
-    InventoryView(InternalWindow& wnd, Inventory& inventory);
-    InventoryView(InternalWindow& wnd, Inventory& inventory, const std::vector<InventorySlotView>& slots);
-    InventoryView(InternalWindow& wnd, Inventory& inventory, std::vector<InventorySlotView>&& slots);
+    InventoryView(InventorySystem& invSys, InternalWindow& wnd, Inventory& inventory);
+    InventoryView(InventorySystem& invSys, InternalWindow& wnd, Inventory& inventory, const std::vector<InventorySlotView>& slots);
+    InventoryView(InventorySystem& invSys, InternalWindow& wnd, Inventory& inventory, std::vector<InventorySlotView>&& slots);
 
     InventoryView(const InventoryView& other) = delete;
     InventoryView(InventoryView&& other) = default;
@@ -34,26 +36,4 @@ public:
     Inventory& inventory() const;
 
     virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
-};
-
-class InventoryWindow : public PlayerUi::PanelWindow
-{
-public:
-    static WindowParams defaultParams();
-
-    InventoryWindow(WindowSpaceManager& wsm, const std::string& name);
-    InventoryWindow(WindowSpaceManager& wsm, const std::string& name, const WindowParams& params);
-
-    virtual int verticalScroll() const;
-
-    void setContentHeightToMax();
-
-    void update();
-
-    void updateMaxContentHeight(const InventoryView& view);
-
-protected:
-    static constexpr int m_minSensibleHeight = 46;
-
-    int m_scroll;
 };
