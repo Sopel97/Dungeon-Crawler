@@ -1,5 +1,6 @@
 #include "TileTransferMediator.h"
 
+#include "EventDispatcher.h"
 #include "Player.h"
 #include "World.h"
 #include "Inventory.h"
@@ -70,11 +71,10 @@ void TileTransferMediator::operator()(const FromWorld& from, const ToWorld& to)
     // perform move
     std::cout << "World -> World\n";
 
-    TileStack* fromTileStackDetached = fromTileColumn.releaseTop();
-    toTileColumn.push(fromTileStackDetached);
+    TileStack detachedTileStack = fromTileColumn.takeFromTop();
+    toTileColumn.placeOnTop(std::move(detachedTileStack));
 
-    //TODO: make this a global event
-    from.world->onTileMovedFromWorldToWorld(TileMovedFromWorldToWorld{from, to, fromTileStackDetached});
+    EventDispatcher::instance().broadcast<TileMovedFromWorldToWorld>(TileMovedFromWorldToWorld{from, to, &(toTileColumn.top()) });
 }
 void TileTransferMediator::operator()(const FromWorld& from, const ToInventory& to)
 {

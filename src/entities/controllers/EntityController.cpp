@@ -30,7 +30,7 @@ void EntityController::setOwner(Entity* newOwner)
     m_owner = newOwner;
 }
 
-void EntityController::update(World* world, float dt)
+void EntityController::update(World& world, float dt)
 {
 
 }

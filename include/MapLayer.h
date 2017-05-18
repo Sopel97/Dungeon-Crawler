@@ -13,7 +13,6 @@ class MapLayer
 {
 public:
     MapLayer(World& world, int width, int height);
-    ~MapLayer();
 
     const ls::Array2<TileColumn>& tileColumns() const;
     ls::Array2<TileColumn>& tileColumns();
@@ -28,9 +27,8 @@ public:
     const TileStack& at(int x, int y, int z) const;
     TileStack& at(int x, int y, int z);
 
-    void placeTile(TileStack* tile, int x, int y);
-    TileStack* takeTile(int x, int y);
-    void deleteTile(int x, int y);
+    void placeTile(TileStack&& tile, int x, int y);
+    TileStack takeTile(int x, int y);
 
 
     std::vector<ls::Rectangle2F> queryTileColliders(const ls::Rectangle2F& queryRegion) const;

@@ -5,6 +5,7 @@
 
 #include "World.h"
 #include "MapLayer.h"
+#include "Player.h"
 
 #include "entities/Entity.h"
 #include "entities/models/EntityModel.h"
@@ -23,16 +24,10 @@
 
 using namespace ls;
 
-EntitySystem::EntitySystem()
+EntitySystem::EntitySystem(Player& player) :
+    m_player(&player)
 {
 
-}
-EntitySystem::~EntitySystem()
-{
-    for(Entity* entity : m_entities)
-    {
-        delete entity;
-    }
 }
 
 std::vector<Entity*> EntitySystem::queryRegion(const Rectangle2F& rect)
@@ -43,52 +38,74 @@ std::vector<Entity*> EntitySystem::queryRegion(const Rectangle2F& rect)
     const float halfRectWidth = rect.width() / 2.0f;
     const float halfRectHeight = rect.height() / 2.0f;
 
-    for(Entity* entity : m_entities)
+    for(Entity& entity : m_entities)
     {
-        const Vec2F entityPosition = entity->model().position();
-        const float entityRadius = entity->model().colliderRadius();
-        float xDist = std::abs(rectCenter.x - entityPosition.x) - halfRectWidth;
-        float yDist = std::abs(rectCenter.y - entityPosition.y) - halfRectHeight;
+        const Vec2F entityPosition = entity.model().position();
+        const float entityRadius = entity.model().colliderRadius();
+        const float xDist = std::abs(rectCenter.x - entityPosition.x) - halfRectWidth;
+        const float yDist = std::abs(rectCenter.y - entityPosition.y) - halfRectHeight;
         if(xDist < entityRadius && yDist < entityRadius)
         {
-            entitiesInRegion.push_back(entity);
+            entitiesInRegion.push_back(&entity);
+        }
+    }
+
+    {
+        Entity& playerEntity = m_player->entity();
+        const Vec2F position = playerEntity.model().position();
+        const float radius = playerEntity.model().colliderRadius();
+        const float xDist = std::abs(rectCenter.x - position.x) - halfRectWidth;
+        const float yDist = std::abs(rectCenter.y - position.y) - halfRectHeight;
+        if (xDist < radius && yDist < radius)
+        {
+            entitiesInRegion.push_back(&playerEntity);
         }
     }
 
     return entitiesInRegion;
 }
-const std::vector<Entity*>& EntitySystem::entities() const
+const std::vector<Entity>& EntitySystem::entities() const
 {
     return m_entities;
 }
-
-void EntitySystem::addEntity(Entity* newEntity, const ls::Vec2F& position)
+Entity& EntitySystem::entity(int i)
 {
-    m_entities.push_back(newEntity);
-    newEntity->model().setPosition(position);
+    return m_entities[i];
 }
-void EntitySystem::removeEntity(Entity* entityToRemove)
+const Entity& EntitySystem::entity(int i) const
 {
-    m_entities.erase(std::remove(m_entities.begin(), m_entities.end(), entityToRemove), m_entities.end());
+    return m_entities[i];
 }
 
-void EntitySystem::updateEntities(World* world, float dt) //will also move them and resolve collisions
+void EntitySystem::addEntity(Entity&& newEntity, const ls::Vec2F& position)
 {
-    for(Entity* entity : m_entities)
+    m_entities.emplace_back(std::move(newEntity));
+    newEntity.model().setPosition(position);
+}
+void EntitySystem::removeEntity(Entity& entityToRemove)
+{
+    m_entities.erase(std::find_if(m_entities.begin(), m_entities.end(), [&entityToRemove](Entity& ent) {return &ent == &entityToRemove; }), m_entities.end());
+}
+
+void EntitySystem::updateEntities(World& world, float dt) //will also move them and resolve collisions
+{
+    for(Entity& entity : m_entities)
     {
-        entity->controller().update(world, dt);
+        entity.controller().update(world, dt);
     }
+    m_player->entity().controller().update(world, dt);
 
-    for(Entity* entity : m_entities)
+    for(Entity& entity : m_entities)
     {
         moveEntity(world, entity, dt);
     }
+    moveEntity(world, m_player->entity(), dt);
 
     //TODO: make entities push each other
 }
-void EntitySystem::moveEntity(World* world, Entity* entity, float dt)
+void EntitySystem::moveEntity(World& world, Entity& entity, float dt)
 {
-    auto& model = entity->model();
+    auto& model = entity.model();
     Vec2F displacementWhenMoved = model.displacementWhenMoved(dt);
     Vec2F position = model.position();
     Vec2F velocity = model.velocity();
@@ -110,7 +127,7 @@ void EntitySystem::moveEntity(World* world, Entity* entity, float dt)
         {
             for(int y = ymin; y <= ymax; ++y)
             {
-                const TileColumn& tileColumn = world->map().at(x, y);
+                const TileColumn& tileColumn = world.map().at(x, y);
                 if(tileColumn.hasCollider())
                 {
                     Rectangle2F tileCollider = tileColumn.collider().translated(Vec2F(static_cast<float>(x), static_cast<float>(y)) * static_cast<float>(GameConstants::tileSize));
@@ -146,7 +163,7 @@ void EntitySystem::moveEntity(World* world, Entity* entity, float dt)
         }
     }
 
-    entity->controller().move(moveFactor, dt);
+    entity.controller().move(moveFactor, dt);
     model.setVelocity(velocity);
 }
 

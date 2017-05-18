@@ -18,7 +18,8 @@ InventorySystem::InventorySystem(WindowSpaceManager& wsm, Player& player) :
     m_wsm(wsm),
     m_player(player),
     m_playerUi(player.playerUi()),
-    m_equipmentInventory()
+    m_equipmentInventory(),
+    m_tileMovedFromWorldToWorldEventSubscription(EventDispatcher::instance().subscribe<TileMovedFromWorldToWorld>([this](const TileMovedFromWorldToWorld& e) {onTileMovedFromWorldToWorld(e); }))
 {
     openPermanentInventory(m_equipmentInventory);
 }

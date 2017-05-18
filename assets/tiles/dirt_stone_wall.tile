@@ -18,7 +18,7 @@ tile = {
 	},
 
     drag = 1,
-    isMovableFrom = false,
+    isMovableFrom = true, -- for testing
     isMovableTo = false
     
 }

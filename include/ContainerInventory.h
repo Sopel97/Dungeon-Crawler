@@ -5,6 +5,7 @@
 #include <memory>
 
 #include "Inventory.h"
+#include "tiles/TileStack.h"
 
 class Tile;
 class InventoryView;
@@ -17,20 +18,20 @@ class ContainerInventory : public Inventory
 {
 public:
     ContainerInventory(int size);
-    virtual ~ContainerInventory();
 
-    virtual std::vector<TileStack*>& contents();
-    virtual const InventoryContentRequirement slotContentRequirement(size_t slotId) const;
-    virtual std::unique_ptr<InventoryView> createInventoryView(InventorySystem& invSys, InternalWindow& wnd);
-    virtual std::unique_ptr<InventoryWindow> createInventoryWindow(WindowSpaceManager& wsm) const;
+    std::vector<TileStack>& contents() override;
+    const std::vector<TileStack>& contents() const override;
+    const InventoryContentRequirement slotContentRequirement(size_t slotId) const override;
+    std::unique_ptr<InventoryView> createInventoryView(InventorySystem& invSys, InternalWindow& wnd) override;
+    std::unique_ptr<InventoryWindow> createInventoryWindow(WindowSpaceManager& wsm) const override;
 
     void setSize(int newSize);
 
-    virtual int numberOfSlots() const;
+    int size() const override;
 
 protected:
 private:
-    std::vector<TileStack*> m_contents;
+    std::vector<TileStack> m_contents;
 };
 
 #endif // CONTAINERINVENTORY_H

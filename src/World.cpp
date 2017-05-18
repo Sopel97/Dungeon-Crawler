@@ -41,13 +41,13 @@ World::World(Root& root, Player& player, InternalWindow& wnd) :
     m_width(m_worldWidth),
     m_height(m_worldHeight),
     m_mapLayer(std::make_unique<MapLayer>(*this, m_width, m_height)),
+    m_entitySystem(player),
     m_camera(Vec2F(m_width * GameConstants::tileSize / 2.0f, m_height * GameConstants::tileSize / 2.0f), m_viewWidth * GameConstants::tileSize, m_viewHeight * GameConstants::tileSize),
     m_mapGenerator(m_width, m_height),
     m_intermidiateRenderTarget()
 {
     m_mapGenerator.generate(*m_mapLayer);
-    m_playerEntity = player.createPlayerEntity();
-    m_entitySystem.addEntity(m_playerEntity, m_camera.center()); 
+    m_player.entity().model().setPosition(Vec2F(m_width * GameConstants::tileSize / 2.0f, m_height * GameConstants::tileSize / 2.0f));
 
     m_intermidiateRenderTarget.create(m_viewWidth * GameConstants::tileSize, m_viewHeight * GameConstants::tileSize);
     //light map stretches one more tile, because some of the visible tiles need lighting of the tiles not seen
@@ -95,31 +95,31 @@ void World::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
         {
             const TileColumn& tileColumn = m_mapLayer->at(x, y);
             int z = 0;
-            for(const TileStack* tileStack : tileColumn.tiles())
+            for(const TileStack& tileStack : tileColumn.tiles())
             {
                 TileLocation location(*m_mapLayer, x, y, z);
 
-                if(tileStack->tile().renderer().isTall())
+                if(tileStack.tile().renderer().isTall())
                 {
                     tallDrawables.push_back(new TallTileColumnDrawable(tileColumn, location));
                     break;
                 }
                 if(z == 0)
                 {
-                    if(tileStack->tile().renderer().coversOuterBorders())
+                    if(tileStack.tile().renderer().coversOuterBorders())
                     {
                         drawOuterBorder(m_intermidiateRenderTarget, renderStates, location);
-                        tileStack->tile().draw(m_intermidiateRenderTarget, renderStates, location);
+                        tileStack.tile().draw(m_intermidiateRenderTarget, renderStates, location);
                     }
                     else
                     {
-                        tileStack->tile().draw(m_intermidiateRenderTarget, renderStates, location);
+                        tileStack.tile().draw(m_intermidiateRenderTarget, renderStates, location);
                         drawOuterBorder(m_intermidiateRenderTarget, renderStates, location);
                     }
                 }
                 else
                 {
-                    tileStack->tile().draw(m_intermidiateRenderTarget, renderStates, location);
+                    tileStack.tile().draw(m_intermidiateRenderTarget, renderStates, location);
                 }
 
                 ++z;
@@ -216,11 +216,11 @@ void World::drawMeta(sf::RenderStates& renderStates, const std::vector<TallDrawa
         {
             const TileColumn& tileColumn = m_mapLayer->at(x, y);
             int z = 0;
-            for (const TileStack* tileStack : tileColumn.tiles())
+            for (const TileStack& tileStack : tileColumn.tiles())
             {
                 TileLocation location(*m_mapLayer, x, y, z);
 
-                tileStack->tile().drawMeta(m_metaTexture, renderStates, location);
+                tileStack.tile().drawMeta(m_metaTexture, renderStates, location);
 
                 ++z;
             }
@@ -266,7 +266,7 @@ void World::drawLightsToLightMap()
 {
     float lightScale = 0.7f;
     sf::Vector2u textureSize = m_lightTexture.get().getSize();
-    Vec2F center = m_playerEntity->model().position();
+    Vec2F center = m_player.entity().model().position();
 
     Vec2F topLeft = center - (Vec2F(textureSize.x, textureSize.y) * lightScale) / 2.0f;
 
@@ -388,9 +388,9 @@ void World::useTile(const ls::Vec2I& tilePosition)
 
 void World::update(float dt)
 {
-    m_entitySystem.updateEntities(this, dt);
+    m_entitySystem.updateEntities(*this, dt);
 
-    m_camera.setCenter(m_playerEntity->model().position());
+    m_camera.setCenter(m_player.entity().model().position());
 }
 
 float World::drag(const Vec2F& position) const
@@ -399,6 +399,11 @@ float World::drag(const Vec2F& position) const
     const TileColumn& tileColumn = m_mapLayer->at(tilePosition.x, tilePosition.y);
     const TileStack& tileStack = tileColumn.at(0);
     return tileStack.tile().model().drag();
+}
+
+bool World::isInsideWorldBounds(const ls::Vec2I& pos) const
+{
+    return pos.x >= 0 && pos.y >= 0 && pos.x < m_width && pos.y < m_height;
 }
 
 std::vector<Rectangle2F> World::queryTileColliders(const Rectangle2F& queryRegion) const
@@ -418,7 +423,11 @@ auto World::onMouseButtonPressed(sf::Event::MouseButtonEvent& event, EventContex
 		if (ls::intersect(worldViewRect, Vec2I(event.x, event.y))) //TODO: may be redundant
 		{
 			const Vec2I tilePosition = screenToTile(Vec2I(event.x, event.y));
-			useTile(tilePosition);
+
+            if (isInsideWorldBounds(tilePosition))
+            {
+                useTile(tilePosition);
+            }
 		}
 	} 
     else if (event.button == sf::Mouse::Button::Left)
@@ -427,7 +436,11 @@ auto World::onMouseButtonPressed(sf::Event::MouseButtonEvent& event, EventContex
         if (ls::intersect(worldViewRect, Vec2I(event.x, event.y))) //TODO: may be redundant
         {
             const Vec2I tilePosition = screenToTile(Vec2I(event.x, event.y));
-            m_tileTransferMediator.grabFromWorld(tilePosition, *this, m_player);
+
+            if (isInsideWorldBounds(tilePosition))
+            {
+                m_tileTransferMediator.grabFromWorld(tilePosition, *this, m_player);
+            }
         }
     }
 
@@ -449,14 +462,17 @@ auto World::onMouseButtonReleased(sf::Event::MouseButtonEvent& event, EventConte
         if (ls::intersect(worldViewRect, Vec2I(event.x, event.y))) //TODO: may be redundant
         {
             const Vec2I tilePosition = screenToTile(Vec2I(event.x, event.y));
-            m_tileTransferMediator.putToWorld(tilePosition);
+
+            if (isInsideWorldBounds(tilePosition))
+            {
+                m_tileTransferMediator.putToWorld(tilePosition);
+            }
+            else
+            {
+                m_tileTransferMediator.reset();
+            }
         }
     }
 
     return { true, true };
-}
-
-void World::onTileMovedFromWorldToWorld(const TileMovedFromWorldToWorld& event)
-{
-    m_player.inventorySystem().onTileMovedFromWorldToWorld(event); //TODO: maybe dispatch this globally???
 }

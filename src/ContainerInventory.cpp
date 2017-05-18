@@ -12,18 +12,18 @@ using namespace ls;
 
 ContainerInventory::ContainerInventory(int size)
 {
-    m_contents.resize(size, nullptr);
+    m_contents.resize(size);
 }
 
-ContainerInventory::~ContainerInventory()
-{
-    //dtor
-}
-
-std::vector<TileStack*>& ContainerInventory::contents()
+std::vector<TileStack>& ContainerInventory::contents()
 {
     return m_contents;
 }
+const std::vector<TileStack>& ContainerInventory::contents() const
+{
+    return m_contents;
+}
+
 const InventoryContentRequirement ContainerInventory::slotContentRequirement(size_t slotId) const
 {
     return InventoryContentRequirement::None;
@@ -68,11 +68,10 @@ std::unique_ptr<InventoryWindow> ContainerInventory::createInventoryWindow(Windo
 
 void ContainerInventory::setSize(int newSize)
 {
-    for(size_t i = newSize; i < m_contents.size(); ++i) delete m_contents[i];
-    m_contents.resize(newSize, nullptr);
+    m_contents.resize(newSize);
 }
 
-int ContainerInventory::numberOfSlots() const
+int ContainerInventory::size() const
 {
     return m_contents.size();
 }

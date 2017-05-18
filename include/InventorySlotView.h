@@ -29,7 +29,8 @@ public:
     InventorySlotView& operator=(const InventorySlotView&) = default;
     InventorySlotView& operator=(InventorySlotView&&) = default;
 
-    TileStack* content() const;
+    TileStack& content();
+    const TileStack& content() const;
     const ls::Vec2I& position() const;
 
     void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, InventoryContentRequirement contentRequirement);

@@ -39,7 +39,7 @@ void PlayerController::loadFromConfiguration(ConfigurationNode& config)
 
 }
 
-void PlayerController::update(World* world, float dt)
+void PlayerController::update(World& world, float dt)
 {
     auto& model = m_owner->model();
     Vec2F velocity = model.velocity();
@@ -56,7 +56,7 @@ void PlayerController::update(World* world, float dt)
     float deceleration = 200.0f;
     if(!m_acceleratedHorizontallyInLastFrame && !m_acceleratedVerticallyInLastFrame)
         deceleration /= 1.41f;
-    float d = deceleration * dt * world->drag(position);
+    float d = deceleration * dt * world.drag(position);
     if(!m_acceleratedHorizontallyInLastFrame)
     {
         float avx = std::abs(velocity.x);

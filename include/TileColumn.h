@@ -2,6 +2,7 @@
 #define TILECOLUMN_H
 
 #include <vector>
+#include <memory>
 
 #include "../LibS/Geometry.h"
 
@@ -10,26 +11,13 @@ class TileStack;
 class TileColumn
 {
 public:
-    TileColumn();
-    ~TileColumn();
-
     const TileStack& top() const;
     TileStack& top();
 
-    void push(TileStack* tile);
+    void placeOnTop(TileStack&& tile);
 
-    TileStack* releaseTop();
-
-    void deleteTop();
-    void deleteAt(size_t z);
-
-    //TODO: remove, this should be handled internally by TileStack
-    int insert(TileStack* tile, int count = -1); //returns number of inserted elements. -1 count means that it will insert all
-    int insert(TileStack* tile, size_t slotId, int count = -1); //same as above
-
-    int erase(TileStack* tile, int count = -1); //same as above
-    int erase(TileStack* tile, size_t slotId, int count = -1); //same as above
-
+    TileStack takeFromTop();
+        
     bool isValid(int z) const;
     //it is up to the user to ensure m_emptyTile is not modified
     const TileStack& at(int z) const;
@@ -41,13 +29,12 @@ public:
     bool hasCollider() const;
     const ls::Rectangle2F& collider() const;
 
-    const std::vector<TileStack*>& tiles() const;
+    const std::vector<TileStack>& tiles() const;
 
     int topZ() const;
 
 protected:
-    std::vector<TileStack*> m_tiles;
-    int m_lastTile;
+    std::vector<TileStack> m_tiles;
 
     static TileStack m_emptyTile;
 private:

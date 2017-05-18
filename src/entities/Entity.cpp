@@ -13,6 +13,14 @@
 
 int Entity::m_lastId = -1;
 
+Entity::Entity() :
+    m_model(nullptr),
+    m_renderer(nullptr),
+    m_controller(nullptr),
+    m_id(-1)
+{
+
+}
 Entity::Entity(std::unique_ptr<EntityModel>&& model, std::unique_ptr<EntityRenderer>&& renderer, std::unique_ptr<EntityController>&& controller) :
     m_model(std::move(model)),
     m_renderer(std::move(renderer)),

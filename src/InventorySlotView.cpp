@@ -36,7 +36,11 @@ InventorySlotView::InventorySlotView(Inventory* inventory, size_t slotId, const 
 {
     if(!m_texture) m_texture = ResourceManager::instance().get<sf::Texture>("UiNonRepeating");
 }
-TileStack* InventorySlotView::content() const
+TileStack& InventorySlotView::content()
+{
+    return m_inventory->at(m_slotId);
+}
+const TileStack& InventorySlotView::content() const
 {
     return m_inventory->at(m_slotId);
 }

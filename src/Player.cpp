@@ -1,10 +1,8 @@
 #include "Player.h"
 
-#include "entities/Entity.h"
 #include "entities/models/PlayerModel.h"
 #include "entities/renderers/PlayerRenderer.h"
 #include "entities/controllers/PlayerController.h"
-
 
 #include "World.h"
 
@@ -18,16 +16,11 @@ using namespace ls;
 
 Player::Player(WindowSpaceManager& wsm, Game& game, InternalWindow& wnd) :
     m_wsm(&wsm),
-    m_playerEntity(nullptr),
+    m_playerEntity(std::make_unique<PlayerModel>(nullptr, this), std::make_unique<PlayerRenderer>(nullptr, this), std::make_unique<PlayerController>(nullptr, this)),
     m_playerUi(wsm, *this, wnd),
     m_inventorySystem(wsm, *this)
 {
 
-}
-
-Entity* Player::createPlayerEntity()
-{
-    return m_playerEntity = new Entity(std::make_unique<PlayerModel>(nullptr, this), std::make_unique<PlayerRenderer>(nullptr, this), std::make_unique<PlayerController>(nullptr, this));
 }
 
 void Player::onKeyPressed(sf::Event::KeyEvent& keyEvent)
@@ -42,14 +35,12 @@ bool Player::tryInteractWithExternalInventory(Inventory& inventory, const TileLo
 
 void Player::processAsyncKeyboardInput(World& world, float dt) //TODO: make it update the player entity so it moves in the next update. Don't interact with world in this function.
 {
-    if(m_playerEntity == nullptr) return;
-
     constexpr float acc = 200.0f;
-    float drag = world.drag(m_playerEntity->model().position());
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) m_playerEntity->controller().accelerate(Vec2F(-acc * dt * drag, 0.0f));
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) m_playerEntity->controller().accelerate(Vec2F(acc * dt * drag, 0.0f));
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) m_playerEntity->controller().accelerate(Vec2F(0.0f, -acc * dt * drag));
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) m_playerEntity->controller().accelerate(Vec2F(0.0f, acc * dt * drag));
+    float drag = world.drag(m_playerEntity.model().position());
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) m_playerEntity.controller().accelerate(Vec2F(-acc * dt * drag, 0.0f));
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) m_playerEntity.controller().accelerate(Vec2F(acc * dt * drag, 0.0f));
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) m_playerEntity.controller().accelerate(Vec2F(0.0f, -acc * dt * drag));
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) m_playerEntity.controller().accelerate(Vec2F(0.0f, acc * dt * drag));
 }
 
 PlayerUi& Player::playerUi()
@@ -62,11 +53,11 @@ const PlayerUi& Player::playerUi() const
 }
 Entity& Player::entity()
 {
-    return *m_playerEntity;
+    return m_playerEntity;
 }
 const Entity& Player::entity() const
 {
-    return *m_playerEntity;
+    return m_playerEntity;
 }
 InventorySystem& Player::inventorySystem()
 {

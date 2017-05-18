@@ -20,7 +20,7 @@ public:
 
     virtual void loadFromConfiguration(ConfigurationNode& config);
 
-    virtual void update(World* world, float dt);
+    virtual void update(World& world, float dt);
 
     virtual void move(const ls::Vec2F& factor, float dt);
     virtual void accelerate(const ls::Vec2F& dv);

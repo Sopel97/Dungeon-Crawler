@@ -13,7 +13,7 @@ using namespace ls;
 
 PlayerEquipmentInventory::PlayerEquipmentInventory()
 {
-    m_contents.resize(10, nullptr);
+    m_contents.resize(10);
     m_contentRequirements.reserve(10);
     m_contentRequirements.push_back(InventoryContentRequirement::Necklace);
     m_contentRequirements.push_back(InventoryContentRequirement::Sword);
@@ -28,16 +28,12 @@ PlayerEquipmentInventory::PlayerEquipmentInventory()
     m_contentRequirements.push_back(InventoryContentRequirement::Shield);
     m_contentRequirements.push_back(InventoryContentRequirement::Ammo);
 }
-PlayerEquipmentInventory::~PlayerEquipmentInventory()
-{
-    for(TileStack* tileStack : m_contents)
-    {
-        if(tileStack != nullptr)
-            delete tileStack;
-    }
-}
 
-std::vector<TileStack*>& PlayerEquipmentInventory::contents()
+std::vector<TileStack>& PlayerEquipmentInventory::contents()
+{
+    return m_contents;
+}
+const std::vector<TileStack>& PlayerEquipmentInventory::contents() const
 {
     return m_contents;
 }
@@ -78,7 +74,7 @@ std::unique_ptr<InventoryWindow> PlayerEquipmentInventory::createInventoryWindow
     window->setScrollBarEnabled(false);
     return window;
 }
-int PlayerEquipmentInventory::numberOfSlots() const
+int PlayerEquipmentInventory::size() const
 {
     return m_contents.size();
 }

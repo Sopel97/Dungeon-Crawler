@@ -12,7 +12,7 @@ ContainerTileModel::ContainerTileModel() :
 ContainerTileModel::ContainerTileModel(const ContainerTileModel& other) :
     TileModel(other),
     m_commonData(other.m_commonData),
-    m_inventory(other.m_inventory)
+    m_inventory(other.m_inventory.size())
 {
 
 }

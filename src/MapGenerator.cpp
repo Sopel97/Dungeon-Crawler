@@ -403,17 +403,17 @@ void MapGenerator::generate(MapLayer& map)
             auto& floorTileToPlace = m_topologyMap.at(x, y) == TopologyMap::TopologyState::Wall || rand() / (float)RAND_MAX < 0.4f ? floorTile : floorTile2;
             //auto& floorTileToPlace = floorTile;
 
-            map.placeTile(new TileStack(floorTileToPlace.get().instantiate(), 1), x, y);
+            map.placeTile(TileStack(floorTileToPlace.get().instantiate(), 1), x, y);
 
             if(m_topologyMap.at(x, y) == TopologyMap::TopologyState::Wall)
             {
-                map.placeTile(new TileStack(wallTile.get().instantiate(), 1), x, y);
+                map.placeTile(TileStack(wallTile.get().instantiate(), 1), x, y);
             }
             else
             {
                 float r = rand() / (float)RAND_MAX;
-                if(r < 0.05f) map.placeTile(new TileStack(bagTile.get().instantiate(), 1), x, y);
-                else if(r < 0.10f) map.placeTile(new TileStack(backpackTile.get().instantiate(), 1), x, y);
+                if(r < 0.05f) map.placeTile(TileStack(bagTile.get().instantiate(), 1), x, y);
+                else if(r < 0.10f) map.placeTile(TileStack(backpackTile.get().instantiate(), 1), x, y);
             }
         }
     }

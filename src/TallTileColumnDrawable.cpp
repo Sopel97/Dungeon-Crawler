@@ -22,12 +22,12 @@ TallTileColumnDrawable::TallTileColumnDrawable(const TileColumn& tileColumn, con
     m_map(*tileLocation.map)
 {
     int i = 0;
-    for(const TileStack* tileStack : m_tileColumn.tiles())
+    for(const TileStack& tileStack : m_tileColumn.tiles())
     {
-        if (tileStack->tile().renderer().isTall())
+        if (tileStack.tile().renderer().isTall())
         {
             m_indexOfFirstTallTile = i;
-            m_boundingRectangle = tileStack->tile().model().collider().translated(Vec2F(static_cast<float>(tileLocation.x), static_cast<float>(tileLocation.y)) * static_cast<float>(GameConstants::tileSize));
+            m_boundingRectangle = tileStack.tile().model().collider().translated(Vec2F(static_cast<float>(tileLocation.x), static_cast<float>(tileLocation.y)) * static_cast<float>(GameConstants::tileSize));
             m_center = m_boundingRectangle.centerOfMass();
 
             break;

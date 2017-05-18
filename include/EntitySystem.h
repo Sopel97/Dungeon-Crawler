@@ -11,25 +11,29 @@ namespace sf
 class Entity;
 class Camera;
 class World;
+class Player;
 
 class EntitySystem
 {
 public:
-    EntitySystem();
-    ~EntitySystem();
+    EntitySystem(Player& player);
 
     std::vector<Entity*> queryRegion(const ls::Rectangle2F& rect);
-    const std::vector<Entity*>& entities() const;
+    const std::vector<Entity>& entities() const;
 
-    void addEntity(Entity* newEntity, const ls::Vec2F& position);
-    void removeEntity(Entity* entityToRemove);
+    Entity& entity(int i);
+    const Entity& entity(int i) const;
 
-    void updateEntities(World* world, float dt);
-    void moveEntity(World* world, Entity* entity, float dt);
+    void addEntity(Entity&& newEntity, const ls::Vec2F& position);
+    void removeEntity(Entity& entityToRemove);
+
+    void updateEntities(World& world, float dt);
+    void moveEntity(World& world, Entity& entity, float dt);
 
     std::vector<Entity*> getVisibleEntities(const Camera& camera);
 protected:
-    std::vector<Entity*> m_entities; //eventually will be some spatial storage
+    Player* m_player;
+    std::vector<Entity> m_entities; //eventually will be some spatial storage
 };
 
 #endif // ENTITYSYSTEM_H

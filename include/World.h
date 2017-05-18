@@ -58,12 +58,12 @@ public:
 
     float drag(const ls::Vec2F& position) const;
 
+    bool isInsideWorldBounds(const ls::Vec2I& pos) const;
+
     std::vector<ls::Rectangle2F> queryTileColliders(const ls::Rectangle2F& queryRegion) const;
 
     EventResult onMouseButtonPressed(sf::Event::MouseButtonEvent& event, EventContext context);
     EventResult onMouseButtonReleased(sf::Event::MouseButtonEvent& event, EventContext context);
-
-    void onTileMovedFromWorldToWorld(const TileMovedFromWorldToWorld& event);
 
 protected:
     Root& m_root;
@@ -75,7 +75,6 @@ protected:
     EntitySystem m_entitySystem;
     Camera m_camera;
     MapGenerator m_mapGenerator;
-    Entity* m_playerEntity;
     TileTransferMediator m_tileTransferMediator;
 
     sf::RenderTexture m_intermidiateRenderTarget;

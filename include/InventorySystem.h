@@ -5,6 +5,7 @@
 #include "../LibS/include/TreeForest.h"
 #include "../LibS/include/Vec2.h"
 
+#include "EventDispatcher.h"
 #include "InventoryView.h"
 #include "window/InventoryWindow.h"
 #include "PlayerEquipmentInventory.h"
@@ -104,9 +105,11 @@ protected:
     Player& m_player;
     PlayerUi& m_playerUi;
 
+    TrackedInventoryForest m_trackedInventories;
+
     PlayerEquipmentInventory m_equipmentInventory;
 
-    TrackedInventoryForest m_trackedInventories;
+    EventDispatcher::EventCallbackHandle<TileMovedFromWorldToWorld> m_tileMovedFromWorldToWorldEventSubscription;
 
     void openTrackedInventory(TrackedInventoryHandle inventory);
     void abandonInventory(TrackedInventoryTreeHandle tree, TrackedInventoryHandle inventory);

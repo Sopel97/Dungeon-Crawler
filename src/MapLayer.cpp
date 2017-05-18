@@ -28,11 +28,6 @@ MapLayer::MapLayer(World& world, int width, int height) :
 
 }
 
-MapLayer::~MapLayer()
-{
-
-}
-
 const Array2<TileColumn>& MapLayer::tileColumns() const
 {
     return m_tileColumns;
@@ -75,23 +70,19 @@ TileStack& MapLayer::at(int x, int y, int z)
     return at(x, y).at(z);
 }
 
-void MapLayer::placeTile(TileStack* tileStack, int x, int y)
+void MapLayer::placeTile(TileStack&& tileStack, int x, int y)
 {
     TileColumn& tileColumn = at(x, y);
-    tileColumn.push(tileStack);
-    tileStack->tile().onTilePlaced(TileLocation(*this, x, y, tileColumn.topZ()));
+    tileColumn.placeOnTop(std::move(tileStack));
+    tileColumn.top().tile().onTilePlaced(TileLocation(*this, x, y, tileColumn.topZ()));
 }
-TileStack* MapLayer::takeTile(int x, int y)
+TileStack MapLayer::takeTile(int x, int y)
 {
     TileColumn& tileColumn = at(x, y);
     int z = tileColumn.topZ();
-    TileStack* tileStack = tileColumn.releaseTop();
-    tileStack->tile().onTileRemoved(TileLocation(*this, x, y, z));
-    return tileStack;
-}
-void MapLayer::deleteTile(int x, int y)
-{
-    delete takeTile(x, y);
+    TileStack tileStack = tileColumn.takeFromTop();
+    tileStack.tile().onTileRemoved(TileLocation(*this, x, y, z));
+    return std::move(tileStack);
 }
 
 std::vector<Rectangle2F> MapLayer::queryTileColliders(const Rectangle2F& queryRegion) const
@@ -109,11 +100,11 @@ std::vector<Rectangle2F> MapLayer::queryTileColliders(const Rectangle2F& queryRe
         for(int y = firstTileY; y <= lastTileY; ++y)
         {
             const TileColumn& tileColumn = at(x, y);
-            for(const TileStack* tileStack : tileColumn.tiles())
+            for(const TileStack& tileStack : tileColumn.tiles())
             {
-                if(tileStack->tile().model().hasCollider())
+                if(tileStack.tile().model().hasCollider())
                 {
-                    colliders.emplace_back(tileStack->tile().model().collider());
+                    colliders.emplace_back(tileStack.tile().model().collider());
                 }
             }
         }

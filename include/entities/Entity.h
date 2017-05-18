@@ -18,8 +18,11 @@ class EntityController;
 class Entity
 {
 public:
+    Entity();
     Entity(std::unique_ptr<EntityModel>&& model, std::unique_ptr<EntityRenderer>&& renderer, std::unique_ptr<EntityController>&& controller);
     Entity(const Entity& other);
+    Entity(Entity&&) = default;
+    Entity& operator=(Entity&&) = default;
     virtual ~Entity();
 
     void loadFromConfiguration(ConfigurationNode& config);
