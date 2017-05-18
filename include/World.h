@@ -11,6 +11,8 @@
 
 #include "ResourceManager.h"
 
+#include "TileTransferMediator.h"
+
 #include "window/WindowContent.h"
 
 #include "../LibS/Geometry.h"
@@ -23,6 +25,7 @@ class TileLocation;
 class Player;
 class TallDrawable;
 class IntenalWindow;
+class TileMovedFromWorldToWorld;
 
 class World : public WindowContent
 {
@@ -39,6 +42,7 @@ public:
     int width() const;
     int height() const;
 
+    MapLayer& map();
     const MapLayer& map() const;
     const EntitySystem& entitySystem() const;
     const MapGenerator& mapGenerator() const;
@@ -57,9 +61,13 @@ public:
     std::vector<ls::Rectangle2F> queryTileColliders(const ls::Rectangle2F& queryRegion) const;
 
     EventResult onMouseButtonPressed(sf::Event::MouseButtonEvent& event, EventContext context);
+    EventResult onMouseButtonReleased(sf::Event::MouseButtonEvent& event, EventContext context);
+
+    void onTileMovedFromWorldToWorld(const TileMovedFromWorldToWorld& event);
 
 protected:
     Root& m_root;
+    Player& m_player;
     WindowSpaceManager& m_windowSpaceManager;
     int m_width;
     int m_height;
@@ -68,6 +76,7 @@ protected:
     Camera m_camera;
     MapGenerator m_mapGenerator;
     Entity* m_playerEntity;
+    TileTransferMediator m_tileTransferMediator;
 
     sf::RenderTexture m_intermidiateRenderTarget;
     sf::RenderTexture m_lightMap;

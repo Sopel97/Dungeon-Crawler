@@ -43,10 +43,12 @@ public:
     void onTilePlaced(const TileLocation& location);
     void onTileRemoved(const TileLocation& location);
     void onTileInstantiated();
+    void onTileCloned();
 
     int id() const;
 
     std::unique_ptr<Tile> clone() const;
+    std::unique_ptr<Tile> instantiate() const;
 
     void onTileQuantityChanged(int oldQuantity, int newQuantity);
 protected:

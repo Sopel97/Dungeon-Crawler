@@ -17,6 +17,8 @@ tile = {
 		{32.0, 32.0}
 	},
 
-    drag = 1
+    drag = 1,
+    isMovableFrom = false,
+    isMovableTo = false
     
 }

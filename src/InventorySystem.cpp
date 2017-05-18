@@ -3,7 +3,14 @@
 #include "PlayerEquipmentInventory.h"
 
 #include "Player.h"
+#include "entities/Entity.h"
+#include "entities/models/EntityModel.h"
 #include "TileLocation.h"
+#include "tiles/Tile.h"
+#include "tiles/TileStack.h"
+#include "tiles/models/TileModel.h"
+
+#include "events/TileMovedFromWorldToWorld.h"
 
 #include <algorithm>
 
@@ -76,12 +83,12 @@ void InventorySystem::abandonInventory(TrackedInventoryTreeHandle tree, TrackedI
         m_trackedInventories.removeTree(tree);
     }
 }
-bool InventorySystem::isInventoryOpened(Inventory& inventory)
+bool InventorySystem::isInventoryOpened(const Inventory& inventory)
 {
     auto h = find(inventory).second;
     return h.isValid() && h.data().isOpened;
 }
-bool InventorySystem::isInventoryTracked(Inventory& inventory)
+bool InventorySystem::isInventoryTracked(const Inventory& inventory)
 {
     return find(inventory).second.isValid();
 }
@@ -99,7 +106,7 @@ bool InventorySystem::tryInteractWithExternalInventory(Inventory& inventory, con
     }
 }
 
-std::pair<InventorySystem::TrackedInventoryTreeHandle, InventorySystem::TrackedInventoryHandle> InventorySystem::find(Inventory& inventory)
+std::pair<InventorySystem::TrackedInventoryTreeHandle, InventorySystem::TrackedInventoryHandle> InventorySystem::find(const Inventory& inventory)
 {
     return m_trackedInventories.findIf([&inventory](const TrackedInventory& inv) {return inv.inventory == &inventory; });
 }
@@ -107,6 +114,23 @@ std::pair<InventorySystem::TrackedInventoryTreeHandle, InventorySystem::TrackedI
 PlayerEquipmentInventory& InventorySystem::equipmentInventory()
 {
     return m_equipmentInventory;
+}
+void InventorySystem::onTileMovedFromWorldToWorld(const TileMovedFromWorldToWorld& event)
+{
+    const Tile& tile = event.tileAfterMove->tile();
+    const Inventory* inv = tile.model().inventory();
+    if (inv == nullptr) return;
+
+    auto trackedInvHandle = find(*inv).second;
+    if (!trackedInvHandle.isValid()) return;
+
+    auto& trackedInv = trackedInvHandle.data();
+    if (trackedInv.inventory == inv)
+    {
+        if (!trackedInv.worldPosition.has_value()) return;
+
+        trackedInv.worldPosition = ls::Vec2I(event.destination.pos.x, event.destination.pos.y);
+    }
 }
 
 void InventorySystem::openTrackedInventory(TrackedInventoryHandle inventory)
@@ -117,7 +141,7 @@ void InventorySystem::openTrackedInventory(TrackedInventoryHandle inventory)
     m_playerUi.openWindow(inventory.data().inventoryWindow.get());
 }
 
-std::pair<InventorySystem::TrackedInventoryTreeHandle, InventorySystem::TrackedInventoryHandle> InventorySystem::find(InternalWindow& wnd)
+std::pair<InventorySystem::TrackedInventoryTreeHandle, InventorySystem::TrackedInventoryHandle> InventorySystem::find(const InternalWindow& wnd)
 {
     return m_trackedInventories.findIf([&wnd](const TrackedInventory& inv) {return &wnd == inv.inventoryWindow.get(); });
 }

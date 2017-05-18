@@ -6,7 +6,7 @@ class MapLayer;
 class TileLocation
 {
 public:
-    const MapLayer& map;
+    const MapLayer* map;
     int x;
     int y;
     int z;

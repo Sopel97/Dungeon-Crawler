@@ -79,14 +79,14 @@ void MapLayer::placeTile(TileStack* tileStack, int x, int y)
 {
     TileColumn& tileColumn = at(x, y);
     tileColumn.push(tileStack);
-    tileStack->tile()->onTilePlaced(TileLocation(*this, x, y, tileColumn.topZ()));
+    tileStack->tile().onTilePlaced(TileLocation(*this, x, y, tileColumn.topZ()));
 }
 TileStack* MapLayer::takeTile(int x, int y)
 {
     TileColumn& tileColumn = at(x, y);
     int z = tileColumn.topZ();
     TileStack* tileStack = tileColumn.releaseTop();
-    tileStack->tile()->onTileRemoved(TileLocation(*this, x, y, z));
+    tileStack->tile().onTileRemoved(TileLocation(*this, x, y, z));
     return tileStack;
 }
 void MapLayer::deleteTile(int x, int y)
@@ -111,9 +111,9 @@ std::vector<Rectangle2F> MapLayer::queryTileColliders(const Rectangle2F& queryRe
             const TileColumn& tileColumn = at(x, y);
             for(const TileStack* tileStack : tileColumn.tiles())
             {
-                if(tileStack->tile()->model().hasCollider())
+                if(tileStack->tile().model().hasCollider())
                 {
-                    colliders.emplace_back(tileStack->tile()->model().collider());
+                    colliders.emplace_back(tileStack->tile().model().collider());
                 }
             }
         }

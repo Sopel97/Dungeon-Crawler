@@ -21,21 +21,19 @@ void TileStack::setQuantity(int newQuantity)
         m_quantity = newQuantity;
 
         m_tile->onTileQuantityChanged(m_quantity, newQuantity);
-
-        m_quantity = newQuantity;
     }
 }
 int TileStack::maxQuantity() const
 {
     return m_tile->maxQuantity();
 }
-Tile* TileStack::tile()
+Tile& TileStack::tile()
 {
-    return m_tile.get();
+    return *m_tile.get();
 }
-const Tile* TileStack::tile() const
+const Tile& TileStack::tile() const
 {
-    return m_tile.get();
+    return *m_tile.get();
 }
 std::unique_ptr<TileStack> TileStack::clone() const
 {

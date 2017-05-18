@@ -27,8 +27,11 @@ public:
 
     virtual bool hasCollider() const;
     virtual const ls::Rectangle2F& collider() const;
+    virtual bool isMovableFrom() const;
+    virtual bool isMovableTo() const;
 
     virtual Inventory* inventory();
+    virtual const Inventory* inventory() const;
 
     virtual float drag() const; //TODO: make it possible to specify that tile uses the drag of the tile lower
 
@@ -36,6 +39,7 @@ public:
     virtual void onTileRemoved(const TileLocation& location);
     virtual void onTileQuantityChanged(int oldQuantity, int newQuantity);
     virtual void onTileInstantiated();
+    virtual void onTileCloned();
 
     virtual std::unique_ptr<TileModel> clone() const;
 

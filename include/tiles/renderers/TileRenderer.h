@@ -40,6 +40,7 @@ public:
     virtual void onTileRemoved(const TileLocation& location);
     virtual void onTileQuantityChanged(int oldQuantity, int newQuantity);
     virtual void onTileInstantiated();
+    virtual void onTileCloned();
 
     virtual std::unique_ptr<TileRenderer> clone() const;
 };

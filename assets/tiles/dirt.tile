@@ -21,6 +21,8 @@ tile = {
 	
 	outerBorderPriority = 3,
 
-    drag = 0.90
+    drag = 0.90,
+    isMovableFrom = false,
+    isMovableTo = true
     
 }

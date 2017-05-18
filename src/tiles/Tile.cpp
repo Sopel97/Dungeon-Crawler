@@ -110,6 +110,12 @@ void Tile::onTileInstantiated()
     m_renderer->onTileInstantiated();
     m_controller->onTileInstantiated();
 }
+void Tile::onTileCloned()
+{
+    m_model->onTileCloned();
+    m_renderer->onTileCloned();
+    m_controller->onTileCloned();
+}
 
 
 int Tile::id() const
@@ -118,6 +124,14 @@ int Tile::id() const
 }
 
 std::unique_ptr<Tile> Tile::clone() const
+{
+    std::unique_ptr<Tile> tileClone = std::make_unique<Tile>(*this);
+
+    tileClone->onTileCloned();
+
+    return tileClone;
+}
+std::unique_ptr<Tile> Tile::instantiate() const
 {
     std::unique_ptr<Tile> tileClone = std::make_unique<Tile>(*this);
 

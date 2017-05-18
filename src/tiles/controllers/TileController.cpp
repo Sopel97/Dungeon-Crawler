@@ -35,6 +35,10 @@ void TileController::onTileInstantiated()
 {
 
 }
+void TileController::onTileCloned()
+{
+
+}
 
 std::unique_ptr<TileController> TileController::clone() const
 {

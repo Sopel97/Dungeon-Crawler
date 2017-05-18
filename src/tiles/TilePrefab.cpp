@@ -31,5 +31,5 @@ void TilePrefab::loadFromConfiguration(ConfigurationNode& config)
 
 std::unique_ptr<Tile> TilePrefab::instantiate() const
 {
-    return m_tile->clone();
+    return m_tile->instantiate();
 }

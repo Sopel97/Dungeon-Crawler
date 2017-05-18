@@ -36,6 +36,8 @@ void PlainTileModel::loadFromConfiguration(ConfigurationNode& config)
     }
 
     m_commonData->drag = config["drag"].get<float>();
+    m_commonData->isMovableFrom = config["isMovableFrom"].getDefault<bool>(false);
+    m_commonData->isMovableTo = config["isMovableTo"].getDefault<bool>(false);
 }
 
 bool PlainTileModel::hasCollider() const
@@ -45,6 +47,14 @@ bool PlainTileModel::hasCollider() const
 const Rectangle2F& PlainTileModel::collider() const
 {
     return m_commonData->collider;
+}
+bool PlainTileModel::isMovableFrom() const
+{
+    return m_commonData->isMovableFrom;
+}
+bool PlainTileModel::isMovableTo() const
+{
+    return m_commonData->isMovableTo;
 }
 
 float PlainTileModel::drag() const

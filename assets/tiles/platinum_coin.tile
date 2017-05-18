@@ -20,6 +20,8 @@ tile = {
 	
 	maxQuantity = 100,
 
-    drag = 0.85
+    drag = 0.85,
+    isMovableFrom = true,
+    isMovableTo = true
     
 }

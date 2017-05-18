@@ -18,8 +18,8 @@ public:
     void setQuantity(int newQuantity);
     int maxQuantity() const;
 
-    Tile* tile();
-    const Tile* tile() const;
+    Tile& tile();
+    const Tile& tile() const;
 
     std::unique_ptr<TileStack> clone() const;
 };

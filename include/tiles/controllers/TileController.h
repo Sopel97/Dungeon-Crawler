@@ -23,6 +23,7 @@ public:
     virtual void onTileQuantityChanged(int oldQuantity, int newQuantity);
     virtual void onTileInteracted(Player& player, const TileLocation& location);
     virtual void onTileInstantiated();
+    virtual void onTileCloned();
 
     virtual std::unique_ptr<TileController> clone() const;
 };

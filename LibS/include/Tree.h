@@ -268,7 +268,7 @@ namespace ls
             return ConstIterator(findIf(std::forward<Func>(comparator), m_root));
         }
 
-        Iterator findChild(Iterator h, const DataType& el)
+        Iterator findChild(Iterator h, const DataType& el) const
         {
             for (auto child : h.m_node->children)
             {
@@ -277,7 +277,7 @@ namespace ls
             return Iterator(nullptr);
         }
         template <class Func>
-        Iterator findIfChild(Iterator h, Func&& comparator)
+        Iterator findIfChild(Iterator h, Func&& comparator) const
         {
             for (auto child : h.m_node->children)
             {

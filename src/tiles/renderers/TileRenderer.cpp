@@ -71,6 +71,10 @@ void TileRenderer::onTileInstantiated()
 {
 
 }
+void TileRenderer::onTileCloned()
+{
+
+}
 
 std::unique_ptr<TileRenderer> TileRenderer::clone() const
 {

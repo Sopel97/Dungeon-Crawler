@@ -3,27 +3,33 @@
 #include <variant>
 #include <optional>
 
+#include "../LibS/Shapes.h"
+
 #include "TileLocation.h"
 
 class Player;
 class InventorySystem;
 class Inventory;
+class World;
 
 class TileTransferMediator
 {
 public:
     struct FromWorld
     {
-        TileLocation location;
+        ls::Vec2I pos;
+        World* world;
+        Player* player;
     };
     struct FromInventory
     {
+        InventorySystem* inventorySystem;
         Inventory* inventory;
         int slot;
     };
     struct ToWorld
     {
-        TileLocation location;
+        ls::Vec2I pos;
     };
     struct ToInventory
     {
@@ -31,18 +37,16 @@ public:
         int slot;
     };
 private:
-    InventorySystem* m_inventorySystem;
-    Player* m_player;
 
     std::optional<std::variant<FromWorld, FromInventory>> m_source;
 
 public:
-    TileTransferMediator(InventorySystem& inventorySystem, Player& player);
 
-    void grab(const FromWorld& from);
-    void grab(const FromInventory& from);
-    void put(const ToWorld& to);
-    void put(const ToInventory& to);
+    void grabFromWorld(const ls::Vec2I& loc, World& world, Player& player);
+    void grabFromInventory(InventorySystem& invSys, Inventory& inv, int slot);
+    void putToWorld(const ls::Vec2I& loc);
+    void putToInventory(Inventory& inv, int slot);
+    void reset();
 
     bool isAnyTileGrabbed() const;
 

@@ -45,7 +45,7 @@ void TileColumn::push(TileStack* tile)
 TileStack* TileColumn::releaseTop()
 {
     TileStack* tileStack = m_tiles[m_lastTile];
-    m_tiles.erase(m_tiles.begin() + m_lastTile);
+    m_tiles.pop_back();
     --m_lastTile;
     return tileStack;
 }
@@ -87,7 +87,7 @@ int TileColumn::insert(TileStack* tileStack, size_t slotId, int count)
         storedTile = tileStack->clone().release();
         storedTile->setQuantity(0); //after inserting it won't be 0
     }
-    else if(!storedTile->tile()->equals(*(tileStack->tile())))
+    else if(!storedTile->tile().equals(tileStack->tile()))
     {
         return 0;
     }
@@ -122,7 +122,7 @@ int TileColumn::erase(TileStack* tileStack, size_t slotId, int count)
 
     TileStack* storedTile = m_tiles[slotId];
     if(storedTile == nullptr) return 0;
-    if(!storedTile->tile()->equals(*(tileStack->tile()))) return 0;
+    if(!storedTile->tile().equals(tileStack->tile())) return 0;
     int storedTileQuantity = storedTile->quantity();
 
     if(count == -1) count = storedTileQuantity;
@@ -167,7 +167,7 @@ int TileColumn::size() const
 bool TileColumn::isTall() const
 {
     for(const TileStack* tileStack : m_tiles)
-        if(tileStack->tile()->renderer().isTall()) return true;
+        if(tileStack->tile().renderer().isTall()) return true;
 
     return false;
 }
@@ -176,7 +176,7 @@ bool TileColumn::hasCollider() const
 {
     for(const TileStack* tileStack : m_tiles)
     {
-        if(tileStack->tile()->model().hasCollider()) return true;
+        if(tileStack->tile().model().hasCollider()) return true;
     }
 
     return false;
@@ -185,7 +185,7 @@ const Rectangle2F& TileColumn::collider() const
 {
     for(const TileStack* tileStack : m_tiles)
     {
-        if(tileStack->tile()->model().hasCollider()) return tileStack->tile()->model().collider();
+        if(tileStack->tile().model().hasCollider()) return tileStack->tile().model().collider();
     }
 
     return m_defaultCollider;

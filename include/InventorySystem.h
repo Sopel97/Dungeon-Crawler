@@ -18,6 +18,7 @@ class Inventory;
 class AttemptToInteractWithExternalInventory;
 class TileLocation;
 class WindowSpaceManager;
+class TileMovedFromWorldToWorld;
 
 class InventorySystem
 {
@@ -88,13 +89,15 @@ public:
     bool tryOpenInternalInventory(Inventory& inventory, Inventory& parentInventory);
     void openPermanentInventory(Inventory& inventory);
     void closeInventory(Inventory& inventory);
-    bool isInventoryOpened(Inventory& inventory);
-    bool isInventoryTracked(Inventory& inventory);
-    std::pair<TrackedInventoryTreeHandle, TrackedInventoryHandle> find(Inventory& inventory);
+    bool isInventoryOpened(const Inventory& inventory);
+    bool isInventoryTracked(const Inventory& inventory);
+    std::pair<TrackedInventoryTreeHandle, TrackedInventoryHandle> find(const Inventory& inventory);
 
     bool tryInteractWithExternalInventory(Inventory& inventory, const TileLocation& location);
 
     PlayerEquipmentInventory& equipmentInventory();
+
+    void onTileMovedFromWorldToWorld(const TileMovedFromWorldToWorld& event);
 
 protected:
     WindowSpaceManager& m_wsm;
@@ -108,7 +111,7 @@ protected:
     void openTrackedInventory(TrackedInventoryHandle inventory);
     void abandonInventory(TrackedInventoryTreeHandle tree, TrackedInventoryHandle inventory);
 
-    std::pair<TrackedInventoryTreeHandle, TrackedInventoryHandle> find(InternalWindow& wnd);
+    std::pair<TrackedInventoryTreeHandle, TrackedInventoryHandle> find(const InternalWindow& wnd);
     void closeInventory(const std::pair<TrackedInventoryTreeHandle, TrackedInventoryHandle>& findResult);
     void closeInventory(InternalWindow& wnd);
 private:

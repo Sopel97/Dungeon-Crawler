@@ -38,6 +38,8 @@ void ContainerTileModel::loadFromConfiguration(ConfigurationNode& config)
     }
 
     m_commonData->drag = config["drag"].get<float>();
+    m_commonData->isMovableFrom = config["isMovableFrom"].getDefault<bool>(false);
+    m_commonData->isMovableTo = config["isMovableTo"].getDefault<bool>(false);
 
     m_inventory.setSize(config["inventorySize"].get<int>());
 }
@@ -50,11 +52,24 @@ const Rectangle2F& ContainerTileModel::collider() const
 {
     return m_commonData->collider;
 }
+bool ContainerTileModel::isMovableFrom() const
+{
+    return m_commonData->isMovableFrom;
+}
+bool ContainerTileModel::isMovableTo() const
+{
+    return m_commonData->isMovableTo;
+}
 
 Inventory* ContainerTileModel::inventory()
 {
     return &m_inventory;
 }
+const Inventory* ContainerTileModel::inventory() const
+{
+    return &m_inventory;
+}
+
 
 float ContainerTileModel::drag() const
 {

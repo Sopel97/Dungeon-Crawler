@@ -56,7 +56,7 @@ int Inventory::insert(TileStack* tileStack, size_t slotId, int count)
         storedTile = tileStack->clone().release();
         storedTile->setQuantity(0); //after inserting it won't be 0
     }
-    else if(!storedTile->tile()->equals(*(tileStack->tile())))
+    else if(!storedTile->tile().equals(tileStack->tile()))
     {
         return 0;
     }
@@ -93,7 +93,7 @@ int Inventory::erase(TileStack* tileStack, size_t slotId, int count)
 
     TileStack* storedTile = slots[slotId];
     if(storedTile == nullptr) return 0;
-    if(!storedTile->tile()->equals(*(tileStack->tile()))) return 0;
+    if(!storedTile->tile().equals(tileStack->tile())) return 0;
     int storedTileQuantity = storedTile->quantity();
 
     if(count == -1) count = storedTileQuantity;

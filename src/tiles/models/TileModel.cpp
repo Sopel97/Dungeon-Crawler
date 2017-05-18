@@ -31,8 +31,20 @@ const Rectangle2F& TileModel::collider() const
 {
     return m_emptyCollider;
 }
+bool TileModel::isMovableFrom() const
+{
+    return false;
+}
+bool TileModel::isMovableTo() const
+{
+    return false;
+}
 
 Inventory* TileModel::inventory()
+{
+    return nullptr;
+}
+const Inventory* TileModel::inventory() const
 {
     return nullptr;
 }
@@ -55,6 +67,10 @@ void TileModel::onTileQuantityChanged(int oldQuantity, int newQuantity)
 
 }
 void TileModel::onTileInstantiated()
+{
+
+}
+void TileModel::onTileCloned()
 {
 
 }

@@ -29,8 +29,11 @@ public:
 
     virtual bool hasCollider() const;
     virtual const ls::Rectangle2F& collider() const;
+    virtual bool isMovableFrom() const;
+    virtual bool isMovableTo() const;
 
     virtual Inventory* inventory();
+    virtual const Inventory* inventory() const;
 
     virtual float drag() const;
 
@@ -44,6 +47,8 @@ protected:
         bool hasCollider;
         ls::Rectangle2F collider;
         float drag;
+        bool isMovableFrom;
+        bool isMovableTo;
     };
     CommonData* m_commonData;
 

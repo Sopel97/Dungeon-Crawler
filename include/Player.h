@@ -35,6 +35,9 @@ public:
     PlayerUi& playerUi();
     const PlayerUi& playerUi() const;
 
+    Entity& entity();
+    const Entity& entity() const;
+
     InventorySystem& inventorySystem();
     const InventorySystem& inventorySystem() const;
 

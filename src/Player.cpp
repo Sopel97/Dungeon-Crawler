@@ -60,6 +60,14 @@ const PlayerUi& Player::playerUi() const
 {
     return m_playerUi;
 }
+Entity& Player::entity()
+{
+    return *m_playerEntity;
+}
+const Entity& Player::entity() const
+{
+    return *m_playerEntity;
+}
 InventorySystem& Player::inventorySystem()
 {
     return m_inventorySystem;

@@ -36,6 +36,7 @@ using namespace ls;
 World::World(Root& root, Player& player, InternalWindow& wnd) :
 	WindowContent(wnd),
     m_root(root),
+    m_player(player),
     m_windowSpaceManager(root.windowSpaceManager()),
     m_width(m_worldWidth),
     m_height(m_worldHeight),
@@ -98,27 +99,27 @@ void World::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
             {
                 TileLocation location(*m_mapLayer, x, y, z);
 
-                if(tileStack->tile()->renderer().isTall())
+                if(tileStack->tile().renderer().isTall())
                 {
                     tallDrawables.push_back(new TallTileColumnDrawable(tileColumn, location));
                     break;
                 }
                 if(z == 0)
                 {
-                    if(tileStack->tile()->renderer().coversOuterBorders())
+                    if(tileStack->tile().renderer().coversOuterBorders())
                     {
                         drawOuterBorder(m_intermidiateRenderTarget, renderStates, location);
-                        tileStack->tile()->draw(m_intermidiateRenderTarget, renderStates, location);
+                        tileStack->tile().draw(m_intermidiateRenderTarget, renderStates, location);
                     }
                     else
                     {
-                        tileStack->tile()->draw(m_intermidiateRenderTarget, renderStates, location);
+                        tileStack->tile().draw(m_intermidiateRenderTarget, renderStates, location);
                         drawOuterBorder(m_intermidiateRenderTarget, renderStates, location);
                     }
                 }
                 else
                 {
-                    tileStack->tile()->draw(m_intermidiateRenderTarget, renderStates, location);
+                    tileStack->tile().draw(m_intermidiateRenderTarget, renderStates, location);
                 }
 
                 ++z;
@@ -219,7 +220,7 @@ void World::drawMeta(sf::RenderStates& renderStates, const std::vector<TallDrawa
             {
                 TileLocation location(*m_mapLayer, x, y, z);
 
-                tileStack->tile()->drawMeta(m_metaTexture, renderStates, location);
+                tileStack->tile().drawMeta(m_metaTexture, renderStates, location);
 
                 ++z;
             }
@@ -282,15 +283,15 @@ void World::drawLightsToLightMap()
 
 void World::drawOuterBorder(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& tileLocation)
 {
-    auto areTilesEqual = [](const TileStack * lhs, const TileStack * rhs)->bool {return lhs->tile()->id() == rhs->tile()->id();};
-    auto borderPriorityCompare = [](const TileStack * lhs, const TileStack * rhs)->bool {return lhs->tile()->renderer().outerBorderPriority() < rhs->tile()->renderer().outerBorderPriority();};
+    auto areTilesEqual = [](const TileStack * lhs, const TileStack * rhs)->bool {return lhs->tile().id() == rhs->tile().id();};
+    auto borderPriorityCompare = [](const TileStack * lhs, const TileStack * rhs)->bool {return lhs->tile().renderer().outerBorderPriority() < rhs->tile().renderer().outerBorderPriority();};
 
     int x = tileLocation.x;
     int y = tileLocation.y;
-    const MapLayer& map = tileLocation.map;
+    const MapLayer& map = *tileLocation.map;
 
     std::vector<const TileStack*> differentNeigbourTiles;
-    int thisTileOuterBorderPriority = map.at(x, y, 0).tile()->renderer().outerBorderPriority();
+    int thisTileOuterBorderPriority = map.at(x, y, 0).tile().renderer().outerBorderPriority();
     for(int xoffset = -1; xoffset <= 1; ++xoffset)
     {
         for(int yoffset = -1; yoffset <= 1; ++yoffset)
@@ -299,7 +300,7 @@ void World::drawOuterBorder(sf::RenderTarget& renderTarget, sf::RenderStates& re
             int xx = x + xoffset;
             int yy = y + yoffset;
             const TileStack& tileStack = map.at(xx, yy, 0);
-            if(!tileStack.tile()->renderer().hasOuterBorder() || tileStack.tile()->renderer().outerBorderPriority() <= thisTileOuterBorderPriority) continue;
+            if(!tileStack.tile().renderer().hasOuterBorder() || tileStack.tile().renderer().outerBorderPriority() <= thisTileOuterBorderPriority) continue;
 
             bool firstSuchNeighbour = true;
             for(const auto& neighbour : differentNeigbourTiles)
@@ -320,7 +321,7 @@ void World::drawOuterBorder(sf::RenderTarget& renderTarget, sf::RenderStates& re
 
     for(const auto& neighbour : differentNeigbourTiles)
     {
-        neighbour->tile()->drawOutside(renderTarget, renderStates, tileLocation);
+        neighbour->tile().drawOutside(renderTarget, renderStates, tileLocation);
     }
 }
 
@@ -342,10 +343,15 @@ int World::height() const
     return m_height;
 }
 
+MapLayer& World::map()
+{
+    return *m_mapLayer;
+}
 const MapLayer& World::map() const
 {
     return *m_mapLayer;
 }
+
 const EntitySystem& World::entitySystem() const
 {
     return m_entitySystem;
@@ -377,7 +383,7 @@ ls::Vec2I World::screenToTile(const ls::Vec2I& screenPosition) const
 void World::useTile(const ls::Vec2I& tilePosition)
 {
     TileColumn& tileColumn = m_mapLayer->at(tilePosition.x, tilePosition.y);
-    tileColumn.top().tile()->controller().onTileInteracted(m_root.game().player(), TileLocation(*m_mapLayer, tilePosition.x, tilePosition.y, tileColumn.topZ()));
+    tileColumn.top().tile().controller().onTileInteracted(m_root.game().player(), TileLocation(*m_mapLayer, tilePosition.x, tilePosition.y, tileColumn.topZ()));
 }
 
 void World::update(float dt)
@@ -392,7 +398,7 @@ float World::drag(const Vec2F& position) const
     Vec2I tilePosition = worldToTile(position);
     const TileColumn& tileColumn = m_mapLayer->at(tilePosition.x, tilePosition.y);
     const TileStack& tileStack = tileColumn.at(0);
-    return tileStack.tile()->model().drag();
+    return tileStack.tile().model().drag();
 }
 
 std::vector<Rectangle2F> World::queryTileColliders(const Rectangle2F& queryRegion) const
@@ -409,12 +415,48 @@ auto World::onMouseButtonPressed(sf::Event::MouseButtonEvent& event, EventContex
 	if (event.button == sf::Mouse::Button::Right)
 	{
 		const Rectangle2I& worldViewRect = window().absoluteContentRect();
-		if (ls::intersect(worldViewRect, Vec2I(event.x, event.y)))
+		if (ls::intersect(worldViewRect, Vec2I(event.x, event.y))) //TODO: may be redundant
 		{
 			const Vec2I tilePosition = screenToTile(Vec2I(event.x, event.y));
 			useTile(tilePosition);
 		}
-	}
+	} 
+    else if (event.button == sf::Mouse::Button::Left)
+    {
+        const Rectangle2I& worldViewRect = window().absoluteContentRect();
+        if (ls::intersect(worldViewRect, Vec2I(event.x, event.y))) //TODO: may be redundant
+        {
+            const Vec2I tilePosition = screenToTile(Vec2I(event.x, event.y));
+            m_tileTransferMediator.grabFromWorld(tilePosition, *this, m_player);
+        }
+    }
 
     return {true, true};
+}
+
+auto World::onMouseButtonReleased(sf::Event::MouseButtonEvent& event, EventContext context)
+-> EventResult
+{
+    if (!context.isMouseOver)
+    {
+        if (event.button == sf::Mouse::Button::Left) m_tileTransferMediator.reset();
+        return { false, false };
+    }
+
+    if (event.button == sf::Mouse::Button::Left)
+    {
+        const Rectangle2I& worldViewRect = window().absoluteContentRect();
+        if (ls::intersect(worldViewRect, Vec2I(event.x, event.y))) //TODO: may be redundant
+        {
+            const Vec2I tilePosition = screenToTile(Vec2I(event.x, event.y));
+            m_tileTransferMediator.putToWorld(tilePosition);
+        }
+    }
+
+    return { true, true };
+}
+
+void World::onTileMovedFromWorldToWorld(const TileMovedFromWorldToWorld& event)
+{
+    m_player.inventorySystem().onTileMovedFromWorldToWorld(event); //TODO: maybe dispatch this globally???
 }

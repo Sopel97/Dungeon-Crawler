@@ -108,19 +108,19 @@ void InnerBorderedWallTileRenderer::draw(sf::RenderTarget& renderTarget, sf::Ren
     int x = location.x;
     int y = location.y;
     int z = location.z;
-    const MapLayer& map = location.map;
+    const MapLayer& map = *location.map;
 
-    isGroupSame[TopLeft] = (map.at(x - 1, y - 1, z).tile()->renderer().innerBorderGroup() == group);
-    isGroupSame[Top] = (map.at(x + 0, y - 1, z).tile()->renderer().innerBorderGroup() == group);
-    isGroupSame[TopRight] = (map.at(x + 1, y - 1, z).tile()->renderer().innerBorderGroup() == group);
+    isGroupSame[TopLeft] = (map.at(x - 1, y - 1, z).tile().renderer().innerBorderGroup() == group);
+    isGroupSame[Top] = (map.at(x + 0, y - 1, z).tile().renderer().innerBorderGroup() == group);
+    isGroupSame[TopRight] = (map.at(x + 1, y - 1, z).tile().renderer().innerBorderGroup() == group);
 
-    isGroupSame[Left] = (map.at(x - 1, y + 0, z).tile()->renderer().innerBorderGroup() == group);
-    isGroupSame[Center] = (map.at(x + 0, y + 0, z).tile()->renderer().innerBorderGroup() == group);
-    isGroupSame[Right] = (map.at(x + 1, y + 0, z).tile()->renderer().innerBorderGroup() == group);
+    isGroupSame[Left] = (map.at(x - 1, y + 0, z).tile().renderer().innerBorderGroup() == group);
+    isGroupSame[Center] = (map.at(x + 0, y + 0, z).tile().renderer().innerBorderGroup() == group);
+    isGroupSame[Right] = (map.at(x + 1, y + 0, z).tile().renderer().innerBorderGroup() == group);
 
-    isGroupSame[BottomLeft] = (map.at(x - 1, y + 1, z).tile()->renderer().innerBorderGroup() == group);
-    isGroupSame[Bottom] = (map.at(x + 0, y + 1, z).tile()->renderer().innerBorderGroup() == group);
-    isGroupSame[BottomRight] = (map.at(x + 1, y + 1, z).tile()->renderer().innerBorderGroup() == group);
+    isGroupSame[BottomLeft] = (map.at(x - 1, y + 1, z).tile().renderer().innerBorderGroup() == group);
+    isGroupSame[Bottom] = (map.at(x + 0, y + 1, z).tile().renderer().innerBorderGroup() == group);
+    isGroupSame[BottomRight] = (map.at(x + 1, y + 1, z).tile().renderer().innerBorderGroup() == group);
 
     {
         //on x, y
