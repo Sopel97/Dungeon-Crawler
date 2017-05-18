@@ -16,7 +16,8 @@ const int PlayerUi::m_playerUiPanelWidth = 230;
 PlayerUi::PlayerUi(WindowSpaceManager& wsm, Player& player, InternalWindow& wnd) :
 	WindowContent(wnd),
     m_windowSpaceManager(wsm),
-    m_player(player)
+    m_player(player),
+    m_focusedWindow(nullptr)
 {
 }
 
@@ -62,31 +63,22 @@ void PlayerUi::onWindowUpdated(PanelWindow& window)
 	updateWindowPositions();
 }
 
-SfmlEventHandler::EventResult PlayerUi::onTextEntered(sf::Event::TextEvent& event, EventContext context)
+SfmlEventHandler::EventResult PlayerUi::dispatch(sf::Event& event, EventContext context, const ls::Vec2I& mousePos)
 {
-    return { false, false };
-}
-SfmlEventHandler::EventResult PlayerUi::onKeyPressed(sf::Event::KeyEvent& event, EventContext context)
-{
-    return { false, false };
-}
-SfmlEventHandler::EventResult PlayerUi::onKeyReleased(sf::Event::KeyEvent& event, EventContext context)
-{
-    return { false, false };
-}
-SfmlEventHandler::EventResult PlayerUi::onMouseWheelMoved(sf::Event::MouseWheelEvent& event, EventContext context)
-{
-    return { false, false };
-}
-SfmlEventHandler::EventResult PlayerUi::onMouseButtonPressed(sf::Event::MouseButtonEvent& event, EventContext context)
-{
-    return { false, false };
-}
-SfmlEventHandler::EventResult PlayerUi::onMouseButtonReleased(sf::Event::MouseButtonEvent& event, EventContext context)
-{
-    return { false, false };
-}
-SfmlEventHandler::EventResult PlayerUi::onMouseMoved(sf::Event::MouseMoveEvent& event, EventContext context)
-{
-    return { false, false };
+    auto result = SfmlEventHandler::dispatch(event, context, mousePos);
+    if (result.consumeEvent) return result;
+
+    for (auto& wnd : m_windows)
+    {
+        context.isMouseOver = context.isMouseOver && ls::intersect(mousePos, wnd->absoluteContentRect());
+        context.isFocused = context.isFocused && (m_focusedWindow == wnd);
+        result = wnd->dispatch(event, context, mousePos);
+
+        if (result.takeFocus) m_focusedWindow = wnd;
+        if (result.consumeEvent) break;
+    }
+
+    updateWindowPositions();
+
+    return result;
 }

@@ -351,7 +351,7 @@ SfmlEventHandler::EventResult InternalWindow::dispatch(sf::Event& event, EventCo
     auto result = SfmlEventHandler::dispatch(event, context, mousePos);
     if (result.consumeEvent || m_content == nullptr || m_isMinimized) return result;
 
-    context.isMouseOver = ls::intersect(mousePos, absoluteContentRect());
+    context.isMouseOver = context.isMouseOver && ls::intersect(mousePos, absoluteContentRect());
     return m_content->dispatch(event, context, mousePos);
 }
 

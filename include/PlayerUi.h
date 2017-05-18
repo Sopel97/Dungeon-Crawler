@@ -40,14 +40,7 @@ public:
 
 	void onWindowUpdated(PanelWindow& window);
 
-    // TODO: elegant dispatcher and storing a focused window (separate from Scene's one)
-    EventResult onTextEntered(sf::Event::TextEvent& event, EventContext context) override;
-    EventResult onKeyPressed(sf::Event::KeyEvent& event, EventContext context) override;
-    EventResult onKeyReleased(sf::Event::KeyEvent& event, EventContext context) override;
-    EventResult onMouseWheelMoved(sf::Event::MouseWheelEvent& event, EventContext context) override;
-    EventResult onMouseButtonPressed(sf::Event::MouseButtonEvent& event, EventContext context) override;
-    EventResult onMouseButtonReleased(sf::Event::MouseButtonEvent& event, EventContext context) override;
-    EventResult onMouseMoved(sf::Event::MouseMoveEvent& event, EventContext context) override;
+    EventResult dispatch(sf::Event& event, EventContext context, const ls::Vec2I& mousePos) override;
 
 	static constexpr int playerUiPanelWidth() { return m_playerUiPanelWidth; }
 protected:
@@ -57,6 +50,7 @@ protected:
     WindowSpaceManager& m_windowSpaceManager;
     Player& m_player;
 	std::vector<PanelWindow*> m_windows;
+    PanelWindow* m_focusedWindow;
 
 	void updateWindowPositions();
 };
