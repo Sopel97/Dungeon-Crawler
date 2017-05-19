@@ -11,8 +11,6 @@
 
 #include "ResourceManager.h"
 
-#include "TileTransferMediator.h"
-
 #include "window/WindowContent.h"
 
 #include "../LibS/Geometry.h"
@@ -26,11 +24,12 @@ class Player;
 class TallDrawable;
 class IntenalWindow;
 class TileMovedFromWorldToWorld;
+class TileTransferMediator;
 
 class World : public WindowContent
 {
 public:
-    World(Root& root, Player& player, InternalWindow& wnd);
+    World(Root& root, Player& player, TileTransferMediator& tileTransferMediator, InternalWindow& wnd);
     ~World();
 
     void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
@@ -70,13 +69,13 @@ protected:
     Root& m_root;
     Player& m_player;
     WindowSpaceManager& m_windowSpaceManager;
+    TileTransferMediator& m_tileTransferMediator;
     int m_width;
     int m_height;
     std::unique_ptr<MapLayer> m_mapLayer;
     EntitySystem m_entitySystem;
     Camera m_camera;
     MapGenerator m_mapGenerator;
-    TileTransferMediator m_tileTransferMediator;
 
     sf::RenderTexture m_intermidiateRenderTarget;
     sf::RenderTexture m_lightMap;

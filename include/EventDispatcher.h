@@ -17,12 +17,12 @@ public:
     {
     public:
         EventCallbackHandle(std::list<std::function<void(const EventType& event)>>& allCallbacks, typename std::list<std::function<void(const EventType& event)>>::iterator callback);
-
+        ~EventCallbackHandle();
         void unsubscribe();
 
     protected:
         std::list<std::function<void(const EventType& event)>>& m_allCallbacks;
-        const typename std::list<std::function<void(const EventType& event)>>::iterator m_callback; //iterator to where the callback is strored
+        typename std::list<std::function<void(const EventType& event)>>::iterator m_callback; //iterator to where the callback is strored
     };
 
     static EventDispatcher& instance();
@@ -90,9 +90,16 @@ EventDispatcher::EventCallbackHandle<EventType>::EventCallbackHandle(std::list<s
 }
 
 template <class EventType>
+EventDispatcher::EventCallbackHandle<EventType>::~EventCallbackHandle()
+{
+    unsubscribe();
+}
+template <class EventType>
 void EventDispatcher::EventCallbackHandle<EventType>::unsubscribe()
 {
+    if (m_callback == m_allCallbacks.end()) return;
     m_allCallbacks.erase(m_callback);
+    m_callback = m_allCallbacks.end();
 }
 
 

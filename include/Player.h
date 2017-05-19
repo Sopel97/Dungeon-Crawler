@@ -21,11 +21,12 @@ class AttemptToInteractWithExternalInventory;
 class TileLocation;
 class WindowSpaceManager;
 class InternalWindow;
+class TileTransferMediator;
 
 class Player
 {
 public:
-    Player(WindowSpaceManager& wsm, Game& game, InternalWindow& wnd);
+    Player(WindowSpaceManager& wsm, Game& game, TileTransferMediator& tileTransferMediator, InternalWindow& wnd);
 
     void onKeyPressed(sf::Event::KeyEvent& keyEvent);
     void processAsyncKeyboardInput(World& world, float dt);
@@ -43,6 +44,7 @@ public:
 
 protected:
     WindowSpaceManager* m_wsm;
+    TileTransferMediator* m_tileTransferMediator;
     Entity m_playerEntity;
     PlayerUi m_playerUi;
     InventorySystem m_inventorySystem;

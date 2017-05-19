@@ -39,6 +39,7 @@ public:
     InventorySlotView* querySlot(const ls::Vec2I& pos);
 
     EventResult onMouseButtonPressed(sf::Event::MouseButtonEvent& event, EventContext context) override;
+    EventResult onMouseButtonReleased(sf::Event::MouseButtonEvent& event, EventContext context) override;
 
     virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
 };

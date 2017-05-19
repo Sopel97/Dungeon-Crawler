@@ -36,8 +36,8 @@ Game::Game(Root& root) :
     );
     wsm.changeScene("MainScene");
 
-    m_player = std::make_unique<Player>(wsm, *this, regions.second.data());
-    m_world = std::make_unique<World>(root, *m_player, regions.first.data());
+    m_player = std::make_unique<Player>(wsm, *this, m_tileTransferMediator, regions.second.data());
+    m_world = std::make_unique<World>(root, *m_player, m_tileTransferMediator, regions.first.data());
 }
 
 Player& Game::player()

@@ -20,6 +20,7 @@ class AttemptToInteractWithExternalInventory;
 class TileLocation;
 class WindowSpaceManager;
 class TileMovedFromWorldToWorld;
+class TileTransferMediator;
 
 class InventorySystem
 {
@@ -84,7 +85,7 @@ public:
     using TrackedInventoryHandle = typename TrackedInventoryTree::Iterator;
     using ConstTrackedInventoryHandle = typename TrackedInventoryTree::ConstIterator;
 
-    InventorySystem(WindowSpaceManager& wsm, Player& player);
+    InventorySystem(WindowSpaceManager& wsm, Player& player, TileTransferMediator& tileTransferMediator);
 
     bool tryOpenExternalInventory(Inventory& inventory, const ls::Vec2I& pos);
     bool tryOpenInternalInventory(Inventory& inventory, Inventory& parentInventory);
@@ -98,12 +99,15 @@ public:
 
     PlayerEquipmentInventory& equipmentInventory();
 
+    TileTransferMediator& tileTransferMediator();
+
     void onTileMovedFromWorldToWorld(const TileMovedFromWorldToWorld& event);
 
 protected:
     WindowSpaceManager& m_wsm;
     Player& m_player;
     PlayerUi& m_playerUi;
+    TileTransferMediator& m_tileTransferMediator;
 
     TrackedInventoryForest m_trackedInventories;
 

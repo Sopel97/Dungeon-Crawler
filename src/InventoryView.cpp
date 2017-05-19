@@ -5,6 +5,7 @@
 #include "ResourceManager.h"
 
 #include "InventorySystem.h"
+#include "TileTransferMediator.h"
 
 #include "../LibS/Geometry.h"
 
@@ -74,7 +75,42 @@ SfmlEventHandler::EventResult InventoryView::onMouseButtonPressed(sf::Event::Mou
     InventorySlotView* slot = querySlot(pos);
     if (slot != nullptr)
     {
-        std::cout << m_inventory << ' ' << slot->slotId() << '\n';
+        if(event.button == sf::Mouse::Button::Left)
+        {
+            std::cout << m_inventory << ' ' << slot->slotId() << '\n';
+
+            m_inventorySystem->tileTransferMediator().grabFromInventory(*m_inventorySystem, *m_inventory, slot->slotId());
+
+            return EventResult{}.setTakeFocus().setConsumeEvent();
+        }
+    }
+    return EventResult{}.setTakeFocus().setConsumeEvent();
+}
+SfmlEventHandler::EventResult InventoryView::onMouseButtonReleased(sf::Event::MouseButtonEvent& event, EventContext context)
+{
+    if (!context.isMouseOver)
+    {
+        if (event.button == sf::Mouse::Button::Left)
+        {
+            std::cout << "reset from inventory view\n";
+            m_inventorySystem->tileTransferMediator().reset();
+        }
+
+        return EventResult{}.setTakeFocus(false).setConsumeEvent(false);
+    }
+
+    const ls::Vec2I pos = window().localContentCoords(ls::Vec2I(event.x, event.y));
+    InventorySlotView* slot = querySlot(pos);
+    if (slot != nullptr)
+    {
+        if (event.button == sf::Mouse::Button::Left)
+        {
+            std::cout << m_inventory << ' ' << slot->slotId() << '\n';
+
+            m_inventorySystem->tileTransferMediator().putToInventory(*m_inventory, slot->slotId());
+
+            return EventResult{}.setTakeFocus().setConsumeEvent();
+        }
     }
     return EventResult{}.setTakeFocus().setConsumeEvent();
 }

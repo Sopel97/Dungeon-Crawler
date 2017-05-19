@@ -12,12 +12,15 @@
 
 #include "events/TileMovedFromWorldToWorld.h"
 
+#include "TileTransferMediator.h"
+
 #include <algorithm>
 
-InventorySystem::InventorySystem(WindowSpaceManager& wsm, Player& player) :
+InventorySystem::InventorySystem(WindowSpaceManager& wsm, Player& player, TileTransferMediator& tileTransferMediator) :
     m_wsm(wsm),
     m_player(player),
     m_playerUi(player.playerUi()),
+    m_tileTransferMediator(tileTransferMediator),
     m_equipmentInventory(),
     m_tileMovedFromWorldToWorldEventSubscription(EventDispatcher::instance().subscribe<TileMovedFromWorldToWorld>([this](const TileMovedFromWorldToWorld& e) {onTileMovedFromWorldToWorld(e); }))
 {
@@ -115,6 +118,10 @@ std::pair<InventorySystem::TrackedInventoryTreeHandle, InventorySystem::TrackedI
 PlayerEquipmentInventory& InventorySystem::equipmentInventory()
 {
     return m_equipmentInventory;
+}
+TileTransferMediator& InventorySystem::tileTransferMediator()
+{
+    return m_tileTransferMediator;
 }
 void InventorySystem::onTileMovedFromWorldToWorld(const TileMovedFromWorldToWorld& event)
 {

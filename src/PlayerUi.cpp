@@ -37,7 +37,7 @@ void PlayerUi::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStat
 void PlayerUi::closeWindow(PanelWindow* window)
 {
     m_windows.erase(std::remove(m_windows.begin(), m_windows.end(), window), m_windows.end());
-
+    if (window == m_focusedWindow) m_focusedWindow = nullptr;
 	updateWindowPositions();
 }
 void PlayerUi::openWindow(PanelWindow* wnd)
@@ -68,15 +68,49 @@ SfmlEventHandler::EventResult PlayerUi::dispatch(sf::Event& event, EventContext 
     auto result = SfmlEventHandler::dispatch(event, context, mousePos);
     if (result.consumeEvent) return result;
 
-    for (auto& wnd : m_windows)
+    // TODO: instead of looping here twice make a query function
+    PanelWindow* windowUnderMouse = nullptr;
+    if (context.isMouseOver)
     {
-        EventContext currentContext = EventContext{}
-            .setIsFocused(context.isFocused && (m_focusedWindow == wnd))
-            .setIsMouseOver(context.isMouseOver && ls::intersect(mousePos, wnd->absoluteContentRect()));
-        result = wnd->dispatch(event, currentContext, mousePos);
+        for (auto& wnd : m_windows)
+        {
+            if (!ls::intersect(mousePos, wnd->absoluteContentRect())) continue;
 
-        if (result.takeFocus) m_focusedWindow = wnd;
-        if (result.consumeEvent) break;
+            bool isFocused = wnd == m_focusedWindow;
+            EventContext currentContext = EventContext{}
+                .setIsFocused(isFocused)
+                .setIsMouseOver(true);
+            result = wnd->dispatch(event, currentContext, mousePos);
+
+            if (result.takeFocus) m_focusedWindow = wnd;
+            if (result.consumeEvent) break;
+        }
+    }
+
+    if (!result.consumeEvent)
+    {
+        if (m_focusedWindow != nullptr && m_focusedWindow != windowUnderMouse)
+        {
+            EventContext currentContext = EventContext{}
+                .setIsFocused()
+                .setIsMouseOver(false);
+            result = m_focusedWindow->dispatch(event, currentContext, mousePos);
+        }
+    }
+        
+    if (!result.consumeEvent)
+    {
+        for (auto& wnd : m_windows)
+        {
+            if (wnd == windowUnderMouse || wnd == m_focusedWindow) continue;
+            EventContext currentContext = EventContext{}
+                .setIsFocused(false)
+                .setIsMouseOver(false);
+            result = wnd->dispatch(event, currentContext, mousePos);
+
+            if (result.takeFocus) m_focusedWindow = wnd;
+            if (result.consumeEvent) break;
+        }
     }
 
     updateWindowPositions();

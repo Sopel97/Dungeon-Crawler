@@ -6,6 +6,7 @@
 #include "Player.h"
 #include "PlayerUi.h"
 #include "World.h"
+#include "TileTransferMediator.h"
 
 #include <SFML/Window/Event.hpp>
 
@@ -35,6 +36,7 @@ public:
 
 protected:
     Root& m_root;
+    TileTransferMediator m_tileTransferMediator;
 
     std::unique_ptr<Player> m_player;
     std::unique_ptr<World> m_world;

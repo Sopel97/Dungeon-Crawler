@@ -40,7 +40,6 @@ void TileTransferMediator::putToInventory(Inventory& inv, int slot)
 }
 void TileTransferMediator::reset()
 {
-    std::cout << "Reset\n";
     m_source.reset();
 }
 

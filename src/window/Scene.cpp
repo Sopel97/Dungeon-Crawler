@@ -141,25 +141,13 @@ void Scene::update(BackgroundWindowHandle h, const ls::Rectangle2I& rect)
 }
 void Scene::dispatchEvent(sf::Event& event, const ls::Vec2I& mousePos)
 {
-    BackgroundWindowHandle focusedRegionHandle = m_focusedRegionHandle; //stored because can be changed midway
-    InternalWindow& focused = window(focusedRegionHandle);
-    const SfmlEventHandler::EventContext context = SfmlEventHandler::EventContext{}
-        .setIsFocused()
-        .setIsMouseOver(ls::intersect(focused.absoluteWindowRect(), mousePos));
-    const SfmlEventHandler::EventResult result = focused.dispatch(event, context, mousePos);
-    if (result.consumeEvent)
-    {
-        return;
-    }
-
-    // other regions
-
     BackgroundWindowHandle mouseOverRegionHandle = queryBackgroundWindow(mousePos);
-    if (mouseOverRegionHandle.isValid() && mouseOverRegionHandle != m_focusedRegionHandle)
+    if (mouseOverRegionHandle.isValid())
     {
         InternalWindow& mouseOverRegion = window(mouseOverRegionHandle);
+        bool isFocused = mouseOverRegionHandle == m_focusedRegionHandle;
 
-        const SfmlEventHandler::EventContext context = SfmlEventHandler::EventContext{}.setIsFocused(false).setIsMouseOver();
+        const SfmlEventHandler::EventContext context = SfmlEventHandler::EventContext{}.setIsFocused(isFocused).setIsMouseOver();
         const SfmlEventHandler::EventResult result = mouseOverRegion.dispatch(event, context, mousePos);
         if (result.takeFocus)
         {
@@ -170,6 +158,23 @@ void Scene::dispatchEvent(sf::Event& event, const ls::Vec2I& mousePos)
             return;
         }
     }
+
+    BackgroundWindowHandle focusedRegionHandle = m_focusedRegionHandle; //stored because can be changed midway
+    if (mouseOverRegionHandle != m_focusedRegionHandle)
+    {
+        InternalWindow& focused = window(focusedRegionHandle);
+        const SfmlEventHandler::EventContext context = SfmlEventHandler::EventContext{}
+            .setIsFocused()
+            .setIsMouseOver(false);
+        const SfmlEventHandler::EventResult result = focused.dispatch(event, context, mousePos);
+        if (result.consumeEvent)
+        {
+            return;
+        }
+    }
+
+    // other regions
+
 
     for (BackgroundWindowHandle h : m_topmostRegions)
     {

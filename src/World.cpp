@@ -25,6 +25,8 @@
 #include "TallEntityDrawable.h"
 #include "TallTileColumnDrawable.h"
 
+#include "TileTransferMediator.h"
+
 #include <SFML/System.hpp>
 
 #include "../LibS/Util.h"
@@ -33,11 +35,12 @@
 
 using namespace ls;
 
-World::World(Root& root, Player& player, InternalWindow& wnd) :
+World::World(Root& root, Player& player, TileTransferMediator& tileTransferMediator, InternalWindow& wnd) :
     WindowContent(wnd),
     m_root(root),
     m_player(player),
     m_windowSpaceManager(root.windowSpaceManager()),
+    m_tileTransferMediator(tileTransferMediator),
     m_width(m_worldWidth),
     m_height(m_worldHeight),
     m_mapLayer(std::make_unique<MapLayer>(*this, m_width, m_height)),
@@ -519,7 +522,12 @@ auto World::onMouseButtonReleased(sf::Event::MouseButtonEvent& event, EventConte
 {
     if (!context.isMouseOver)
     {
-        if (event.button == sf::Mouse::Button::Left) m_tileTransferMediator.reset();
+        if (event.button == sf::Mouse::Button::Left)
+        {
+            m_tileTransferMediator.reset();
+            std::cout << "reset from world\n";
+        }
+
         return EventResult{}.setTakeFocus(false).setConsumeEvent(false);
     }
 
