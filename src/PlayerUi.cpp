@@ -70,9 +70,10 @@ SfmlEventHandler::EventResult PlayerUi::dispatch(sf::Event& event, EventContext 
 
     for (auto& wnd : m_windows)
     {
-        context.isMouseOver = context.isMouseOver && ls::intersect(mousePos, wnd->absoluteContentRect());
-        context.isFocused = context.isFocused && (m_focusedWindow == wnd);
-        result = wnd->dispatch(event, context, mousePos);
+        EventContext currentContext = EventContext{}
+            .setIsFocused(context.isFocused && (m_focusedWindow == wnd))
+            .setIsMouseOver(context.isMouseOver && ls::intersect(mousePos, wnd->absoluteContentRect()));
+        result = wnd->dispatch(event, currentContext, mousePos);
 
         if (result.takeFocus) m_focusedWindow = wnd;
         if (result.consumeEvent) break;

@@ -1,5 +1,21 @@
 #include "..\include\SfmlEventHandler.h"
 
+SfmlEventHandler::EventResult SfmlEventHandler::EventResult::setTakeFocus(bool opt) const
+{
+    return EventResult{ opt, consumeEvent };
+}
+SfmlEventHandler::EventResult SfmlEventHandler::EventResult::setConsumeEvent(bool opt) const
+{
+    return EventResult{ takeFocus, opt };
+}
+SfmlEventHandler::EventContext SfmlEventHandler::EventContext::setIsFocused(bool opt) const
+{
+    return EventContext{ opt, isMouseOver };
+}
+SfmlEventHandler::EventContext SfmlEventHandler::EventContext::setIsMouseOver(bool opt) const
+{
+    return EventContext{ isFocused, opt };
+}
 
 SfmlEventHandler::EventResult SfmlEventHandler::dispatch(sf::Event& event, SfmlEventHandler::EventContext context, const ls::Vec2I& mousePos)
 {

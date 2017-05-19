@@ -11,12 +11,18 @@ public:
 	{
 		bool takeFocus;
 		bool consumeEvent;
+        
+        EventResult setTakeFocus(bool opt = true) const;
+        EventResult setConsumeEvent(bool opt = true) const;
 	};
 
 	struct EventContext
 	{
 		bool isFocused;
 		bool isMouseOver;
+
+        EventContext setIsFocused(bool opt = true) const;
+        EventContext setIsMouseOver(bool opt = true) const;
 	};
 
 public:

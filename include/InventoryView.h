@@ -35,5 +35,10 @@ public:
     const std::vector<InventorySlotView>& slotViews() const;
     Inventory& inventory() const;
 
+    const InventorySlotView* querySlot(const ls::Vec2I& pos) const;
+    InventorySlotView* querySlot(const ls::Vec2I& pos);
+
+    EventResult onMouseButtonPressed(sf::Event::MouseButtonEvent& event, EventContext context) override;
+
     virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
 };

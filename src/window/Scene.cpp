@@ -143,7 +143,9 @@ void Scene::dispatchEvent(sf::Event& event, const ls::Vec2I& mousePos)
 {
     BackgroundWindowHandle focusedRegionHandle = m_focusedRegionHandle; //stored because can be changed midway
     InternalWindow& focused = window(focusedRegionHandle);
-    const SfmlEventHandler::EventContext context{ true, ls::intersect(focused.absoluteWindowRect(), mousePos) };
+    const SfmlEventHandler::EventContext context = SfmlEventHandler::EventContext{}
+        .setIsFocused()
+        .setIsMouseOver(ls::intersect(focused.absoluteWindowRect(), mousePos));
     const SfmlEventHandler::EventResult result = focused.dispatch(event, context, mousePos);
     if (result.consumeEvent)
     {
@@ -157,7 +159,7 @@ void Scene::dispatchEvent(sf::Event& event, const ls::Vec2I& mousePos)
     {
         InternalWindow& mouseOverRegion = window(mouseOverRegionHandle);
 
-        const SfmlEventHandler::EventContext context{ false, true };
+        const SfmlEventHandler::EventContext context = SfmlEventHandler::EventContext{}.setIsFocused(false).setIsMouseOver();
         const SfmlEventHandler::EventResult result = mouseOverRegion.dispatch(event, context, mousePos);
         if (result.takeFocus)
         {
@@ -174,7 +176,7 @@ void Scene::dispatchEvent(sf::Event& event, const ls::Vec2I& mousePos)
         if (h == focusedRegionHandle || h == mouseOverRegionHandle) continue;
 
         BackgroundWindow& region = window(h);
-        const SfmlEventHandler::EventContext context{ false, false };
+        const SfmlEventHandler::EventContext context = SfmlEventHandler::EventContext{}.setIsFocused(false).setIsMouseOver(false);
         const SfmlEventHandler::EventResult result = region.dispatch(event, context, mousePos);
         if (result.takeFocus)
         {

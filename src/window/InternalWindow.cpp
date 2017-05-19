@@ -366,14 +366,14 @@ SfmlEventHandler::EventResult InternalWindow::onMouseButtonPressed(sf::Event::Mo
             m_pressedButton = queryButton(mousePos);
             if (m_pressedButton != nullptr)
             {
-                return { true, true };
+                return EventResult{}.setTakeFocus().setConsumeEvent();
             }
         }
 
         context.isMouseOver = ls::intersect(mousePos, absoluteContentRect());
     }
 
-    return { true, false };
+    return EventResult{}.setTakeFocus(true).setConsumeEvent(false);
 }
 SfmlEventHandler::EventResult InternalWindow::onMouseButtonReleased(sf::Event::MouseButtonEvent& event, EventContext context)
 {
@@ -391,7 +391,7 @@ SfmlEventHandler::EventResult InternalWindow::onMouseButtonReleased(sf::Event::M
                 {
                     m_pressedButton = nullptr;
                     button->makeCallback();
-                    return { true, true };
+                    return EventResult{}.setTakeFocus().setConsumeEvent();
                 }
 
                 m_pressedButton = nullptr;
@@ -401,7 +401,7 @@ SfmlEventHandler::EventResult InternalWindow::onMouseButtonReleased(sf::Event::M
         context.isMouseOver = ls::intersect(mousePos, absoluteContentRect());
     }
 
-    return { false, false };
+    return EventResult{}.setTakeFocus(false).setConsumeEvent(false);
 }
 
 void InternalWindow::setParent(InternalWindow& parent)

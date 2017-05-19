@@ -482,7 +482,7 @@ std::vector<ls::Vec2I> World::queryGridPoints(const ls::LineSegment2F& line) con
 auto World::onMouseButtonPressed(sf::Event::MouseButtonEvent& event, EventContext context)
 -> EventResult
 {
-    if (!context.isMouseOver) return { false, false };
+    if (!context.isMouseOver) return EventResult{}.setTakeFocus(false).setConsumeEvent(false);
 
     if (event.button == sf::Mouse::Button::Right)
     {
@@ -511,7 +511,7 @@ auto World::onMouseButtonPressed(sf::Event::MouseButtonEvent& event, EventContex
         }
     }
 
-    return { true, true };
+    return EventResult{}.setTakeFocus().setConsumeEvent();
 }
 
 auto World::onMouseButtonReleased(sf::Event::MouseButtonEvent& event, EventContext context)
@@ -520,7 +520,7 @@ auto World::onMouseButtonReleased(sf::Event::MouseButtonEvent& event, EventConte
     if (!context.isMouseOver)
     {
         if (event.button == sf::Mouse::Button::Left) m_tileTransferMediator.reset();
-        return { false, false };
+        return EventResult{}.setTakeFocus(false).setConsumeEvent(false);
     }
 
     if (event.button == sf::Mouse::Button::Left)
@@ -541,5 +541,5 @@ auto World::onMouseButtonReleased(sf::Event::MouseButtonEvent& event, EventConte
         }
     }
 
-    return { true, true };
+    return EventResult{}.setTakeFocus().setConsumeEvent();
 }

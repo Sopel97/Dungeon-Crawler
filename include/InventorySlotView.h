@@ -32,6 +32,7 @@ public:
     TileStack& content();
     const TileStack& content() const;
     const ls::Vec2I& position() const;
+    size_t slotId() const;
 
     void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, InventoryContentRequirement contentRequirement);
 

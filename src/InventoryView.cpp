@@ -48,6 +48,37 @@ Inventory& InventoryView::inventory() const
     return *m_inventory;
 }
 
+const InventorySlotView* InventoryView::querySlot(const ls::Vec2I& pos) const
+{
+    const ls::Vec2I slotSize = InventorySlotView::slotSize();
+
+    for (const auto& slot : m_slotViews)
+    {
+        if (ls::intersect(ls::Rectangle2I::withSize(slot.position(), slotSize.x, slotSize.y), pos))
+        {
+            return &slot;
+        }
+    }
+
+    return nullptr;
+}
+InventorySlotView* InventoryView::querySlot(const ls::Vec2I& pos)
+{
+    return const_cast<InventorySlotView*>(const_cast<const InventoryView*>(this)->querySlot(pos));
+}
+SfmlEventHandler::EventResult InventoryView::onMouseButtonPressed(sf::Event::MouseButtonEvent& event, EventContext context)
+{
+    if (!context.isMouseOver) return EventResult{}.setTakeFocus(false).setConsumeEvent(false);
+
+    const ls::Vec2I pos = window().localContentCoords(ls::Vec2I(event.x, event.y));
+    InventorySlotView* slot = querySlot(pos);
+    if (slot != nullptr)
+    {
+        std::cout << m_inventory << ' ' << slot->slotId() << '\n';
+    }
+    return EventResult{}.setTakeFocus().setConsumeEvent();
+}
+
 void InventoryView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
 {
     int numberOfSlots = m_slotViews.size();

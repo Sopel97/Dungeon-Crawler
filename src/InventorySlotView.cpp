@@ -48,6 +48,10 @@ const Vec2I& InventorySlotView::position() const
 {
     return m_position;
 }
+size_t InventorySlotView::slotId() const
+{
+    return m_slotId;
+}
 void InventorySlotView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, InventoryContentRequirement contentRequirement)
 {
     sf::Sprite slotSprite;
