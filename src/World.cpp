@@ -540,7 +540,7 @@ auto World::onMouseButtonReleased(sf::Event::MouseButtonEvent& event, EventConte
 
             if (isInsideWorldBounds(tilePosition))
             {
-                m_tileTransferMediator.putToWorld(tilePosition);
+                m_tileTransferMediator.putToWorld(tilePosition, *this, m_player);
             }
             else
             {

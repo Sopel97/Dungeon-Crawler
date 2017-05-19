@@ -11,6 +11,7 @@
 #include "TileColumn.h"
 #include "MapLayer.h"
 #include "events/TileMovedFromWorldToWorld.h"
+#include "events/TileMovedFromWorldToInventory.h"
 
 void TileTransferMediator::grabFromWorld(const ls::Vec2I& loc, World& world, Player& player)
 {
@@ -20,20 +21,20 @@ void TileTransferMediator::grabFromInventory(InventorySystem& invSys, Inventory&
 {
     m_source.emplace(FromInventory{ &invSys, &inv, slot });
 }
-void TileTransferMediator::putToWorld(const ls::Vec2I& loc)
+void TileTransferMediator::putToWorld(const ls::Vec2I& loc, World& world, Player& player)
 {
     if (!m_source.has_value()) return;
 
-    std::variant<ToWorld, ToInventory> destination(ToWorld{ loc });
+    std::variant<ToWorld, ToInventory> destination(ToWorld{ loc, &world, &player });
     std::visit(*this, m_source.value(), destination);
 
     m_source.reset();
 }
-void TileTransferMediator::putToInventory(Inventory& inv, int slot)
+void TileTransferMediator::putToInventory(InventorySystem& invSys, Inventory& inv, int slot)
 {
     if (!m_source.has_value()) return;
 
-    std::variant<ToWorld, ToInventory> destination(ToInventory{ &inv, slot });
+    std::variant<ToWorld, ToInventory> destination(ToInventory{ &invSys, &inv, slot });
     std::visit(*this, m_source.value(), destination);
 
     m_source.reset();
@@ -59,8 +60,8 @@ void TileTransferMediator::operator()(const FromWorld& from, const ToWorld& to)
     int fromX = from.pos.x;
     int fromY = from.pos.y;
     TileColumn& fromTileColumn = map.at(fromX, fromY);
-    TileStack& tromTileStack = fromTileColumn.top();
-    if (!tromTileStack.tile().model().isMovableFrom()) return;
+    TileStack& fromTileStack = fromTileColumn.top();
+    if (!fromTileStack.tile().model().isMovableFrom()) return;
 
     int toX = to.pos.x;
     int toY = to.pos.y;
@@ -87,7 +88,29 @@ void TileTransferMediator::operator()(const FromWorld& from, const ToWorld& to)
 }
 void TileTransferMediator::operator()(const FromWorld& from, const ToInventory& to)
 {
+    World& world = *from.world;
+    MapLayer& map = world.map();
+
+    int fromX = from.pos.x;
+    int fromY = from.pos.y;
+    TileColumn& fromTileColumn = map.at(fromX, fromY);
+    TileStack& fromTileStack = fromTileColumn.top();
+    if (!fromTileStack.tile().model().isMovableFrom()) return; // item can't be moved
+
+    Inventory& inventory = *to.inventory;
+    const int slot = to.slot;
+    if (!inventory.at(slot).isEmpty()) return; // no space to place the tile
+
+    InventorySystem& inventorySystem = *to.inventorySystem;
+    if (!inventorySystem.canStore(inventory, fromTileStack.tile())) return;
+
+    // perform move
     std::cout << "World -> Inventory\n";
+
+    TileStack detachedTileStack = fromTileColumn.takeFromTop();
+    inventory.at(slot) = std::move(detachedTileStack);
+
+    EventDispatcher::instance().broadcast<TileMovedFromWorldToInventory>(TileMovedFromWorldToInventory{ from, to, &(inventory.at(slot)) });
 }
 void TileTransferMediator::operator()(const FromInventory& from, const ToWorld& to)
 {

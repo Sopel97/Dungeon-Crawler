@@ -43,6 +43,10 @@ bool TileModel::isMovableTo() const
 {
     return false;
 }
+bool TileModel::canBeStored() const
+{
+    return false;
+}
 
 Inventory* TileModel::inventory()
 {

@@ -11,6 +11,7 @@
 #include "tiles/models/TileModel.h"
 
 #include "events/TileMovedFromWorldToWorld.h"
+#include "events/TileMovedFromWorldToInventory.h"
 
 #include "TileTransferMediator.h"
 
@@ -22,7 +23,8 @@ InventorySystem::InventorySystem(WindowSpaceManager& wsm, Player& player, TileTr
     m_playerUi(player.playerUi()),
     m_tileTransferMediator(tileTransferMediator),
     m_equipmentInventory(),
-    m_tileMovedFromWorldToWorldEventSubscription(EventDispatcher::instance().subscribe<TileMovedFromWorldToWorld>([this](const TileMovedFromWorldToWorld& e) {onTileMovedFromWorldToWorld(e); }))
+    m_tileMovedFromWorldToWorldEventSubscription(EventDispatcher::instance().subscribe<TileMovedFromWorldToWorld>([this](const TileMovedFromWorldToWorld& e) {onTileMovedFromWorldToWorld(e); })),
+    m_tileMovedFromWorldToInventoryEventSubscription(EventDispatcher::instance().subscribe<TileMovedFromWorldToInventory>([this](const TileMovedFromWorldToInventory& e) {onTileMovedFromWorldToInventory(e); }))
 {
     openPermanentInventory(m_equipmentInventory);
 }
@@ -110,7 +112,31 @@ bool InventorySystem::tryInteractWithExternalInventory(Inventory& inventory, con
     }
 }
 
+bool InventorySystem::canStore(const Inventory& inventory, const Tile& tile) const
+{
+    if (!tile.model().canBeStored()) return false;
+
+    const Inventory* tileInventory = tile.model().inventory();
+    if (tileInventory == nullptr) return true;
+
+    ConstTrackedInventoryHandle current = find(inventory).second;
+    if (!current.isValid()) return false; // inventory is not tracked
+
+    for (;;)
+    {
+        if (current.data().inventory == tileInventory) return false; // cycle found
+        if (current.hasParent()) current = current.parent();
+        else break;
+    }
+
+    return true; // no cycle found
+}
+
 std::pair<InventorySystem::TrackedInventoryTreeHandle, InventorySystem::TrackedInventoryHandle> InventorySystem::find(const Inventory& inventory)
+{
+    return m_trackedInventories.findIf([&inventory](const TrackedInventory& inv) {return inv.inventory == &inventory; });
+}
+std::pair<InventorySystem::ConstTrackedInventoryTreeHandle, InventorySystem::ConstTrackedInventoryHandle> InventorySystem::find(const Inventory& inventory) const
 {
     return m_trackedInventories.findIf([&inventory](const TrackedInventory& inv) {return inv.inventory == &inventory; });
 }
@@ -140,6 +166,26 @@ void InventorySystem::onTileMovedFromWorldToWorld(const TileMovedFromWorldToWorl
         trackedInv.worldPosition = ls::Vec2I(event.destination.pos.x, event.destination.pos.y);
     }
 }
+void InventorySystem::onTileMovedFromWorldToInventory(const TileMovedFromWorldToInventory& event)
+{
+    const Tile& tile = event.tileAfterMove->tile();
+    const Inventory* tileInventory = tile.model().inventory();
+    if (tileInventory == nullptr) return;
+
+    auto foundTileInventory = find(*tileInventory);
+    auto tileInventoryHandle = foundTileInventory.second;
+    if (!tileInventoryHandle.isValid()) return;
+
+    tileInventoryHandle.data().worldPosition.reset(); // no longer in the world
+    auto tileInventoryTreeHandle = foundTileInventory.first;
+    auto detachedTileInventoryTree = tileInventoryTreeHandle->detach(tileInventoryHandle);
+    m_trackedInventories.removeTree(tileInventoryTreeHandle); // if we moved from world then it had to be the root
+
+    auto foundDestinationInventory = find(*event.destination.inventory);
+    auto destinationTreeHandle = foundDestinationInventory.first;
+    auto destinationInventoryHandle = foundDestinationInventory.second;
+    destinationTreeHandle->attach(destinationInventoryHandle, std::move(detachedTileInventoryTree));
+}
 
 void InventorySystem::openTrackedInventory(TrackedInventoryHandle inventory)
 {
@@ -162,7 +208,7 @@ void InventorySystem::closeInventory(const std::pair<TrackedInventoryTreeHandle,
 
     m_playerUi.closeWindow(inventoryHandle.data().inventoryWindow.get());
     inventoryHandle.data().isOpened = false;
-    if (inventoryHandle.hasParent()) return; // we can't abandon it since some inventories depent on it
+    if (inventoryHandle.numberOfChildren() > 0) return; // we can't abandon it since some inventories depent on it
 
     TrackedInventoryHandle current = inventoryHandle;
     while (current.isValid() && !current.data().isOpened) //abandon all inventories that were just because this one was opened

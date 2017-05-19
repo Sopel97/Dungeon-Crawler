@@ -41,6 +41,7 @@ void ContainerTileModel::loadFromConfiguration(ConfigurationNode& config)
     m_commonData->isMovableFrom = config["isMovableFrom"].getDefault<bool>(false);
     m_commonData->isThrowableThrough = config["isThrowableThrough"].getDefault<bool>(false);
     m_commonData->isMovableTo = config["isMovableTo"].getDefault<bool>(false);
+    m_commonData->canBeStored = config["canBeStored"].getDefault<bool>(false);
 
     m_inventory.setSize(config["inventorySize"].get<int>());
 }
@@ -64,6 +65,10 @@ bool ContainerTileModel::isThrowableThrough() const
 bool ContainerTileModel::isMovableTo() const
 {
     return m_commonData->isMovableTo;
+}
+bool ContainerTileModel::canBeStored() const
+{
+    return m_commonData->canBeStored;
 }
 
 Inventory* ContainerTileModel::inventory()

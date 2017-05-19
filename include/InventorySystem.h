@@ -20,6 +20,7 @@ class AttemptToInteractWithExternalInventory;
 class TileLocation;
 class WindowSpaceManager;
 class TileMovedFromWorldToWorld;
+class TileMovedFromWorldToInventory;
 class TileTransferMediator;
 
 class InventorySystem
@@ -82,6 +83,7 @@ public:
     using TrackedInventoryTree = ls::Tree<TrackedInventory>;
     using TrackedInventoryForest = ls::TreeForest<TrackedInventoryTree>;
     using TrackedInventoryTreeHandle = ls::TreeForest<TrackedInventoryTree>::TreeHandle;
+    using ConstTrackedInventoryTreeHandle = ls::TreeForest<TrackedInventoryTree>::ConstTreeHandle;
     using TrackedInventoryHandle = typename TrackedInventoryTree::Iterator;
     using ConstTrackedInventoryHandle = typename TrackedInventoryTree::ConstIterator;
 
@@ -94,14 +96,18 @@ public:
     bool isInventoryOpened(const Inventory& inventory);
     bool isInventoryTracked(const Inventory& inventory);
     std::pair<TrackedInventoryTreeHandle, TrackedInventoryHandle> find(const Inventory& inventory);
+    std::pair<ConstTrackedInventoryTreeHandle, ConstTrackedInventoryHandle> find(const Inventory& inventory) const;
 
     bool tryInteractWithExternalInventory(Inventory& inventory, const TileLocation& location);
+
+    bool canStore(const Inventory& inventory, const Tile& tile) const;
 
     PlayerEquipmentInventory& equipmentInventory();
 
     TileTransferMediator& tileTransferMediator();
 
     void onTileMovedFromWorldToWorld(const TileMovedFromWorldToWorld& event);
+    void onTileMovedFromWorldToInventory(const TileMovedFromWorldToInventory& event);
 
 protected:
     WindowSpaceManager& m_wsm;
@@ -114,6 +120,7 @@ protected:
     PlayerEquipmentInventory m_equipmentInventory;
 
     EventDispatcher::EventCallbackHandle<TileMovedFromWorldToWorld> m_tileMovedFromWorldToWorldEventSubscription;
+    EventDispatcher::EventCallbackHandle<TileMovedFromWorldToInventory> m_tileMovedFromWorldToInventoryEventSubscription;
 
     void openTrackedInventory(TrackedInventoryHandle inventory);
     void abandonInventory(TrackedInventoryTreeHandle tree, TrackedInventoryHandle inventory);

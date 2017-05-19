@@ -39,6 +39,7 @@ void PlainTileModel::loadFromConfiguration(ConfigurationNode& config)
     m_commonData->isMovableFrom = config["isMovableFrom"].getDefault<bool>(false);
     m_commonData->isThrowableThrough = config["isThrowableThrough"].getDefault<bool>(false);
     m_commonData->isMovableTo = config["isMovableTo"].getDefault<bool>(false);
+    m_commonData->canBeStored = config["canBeStored"].getDefault<bool>(false);
 }
 
 bool PlainTileModel::hasCollider() const
@@ -60,6 +61,10 @@ bool PlainTileModel::isThrowableThrough() const
 bool PlainTileModel::isMovableTo() const
 {
     return m_commonData->isMovableTo;
+}
+bool PlainTileModel::canBeStored() const
+{
+    return m_commonData->canBeStored;
 }
 
 float PlainTileModel::drag() const

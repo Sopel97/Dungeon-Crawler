@@ -30,9 +30,12 @@ public:
     struct ToWorld
     {
         ls::Vec2I pos;
+        World* world;
+        Player* player;
     };
     struct ToInventory
     {
+        InventorySystem* inventorySystem;
         Inventory* inventory;
         int slot;
     };
@@ -44,8 +47,8 @@ public:
 
     void grabFromWorld(const ls::Vec2I& loc, World& world, Player& player);
     void grabFromInventory(InventorySystem& invSys, Inventory& inv, int slot);
-    void putToWorld(const ls::Vec2I& loc);
-    void putToInventory(Inventory& inv, int slot);
+    void putToWorld(const ls::Vec2I& loc, World& world, Player& player);
+    void putToInventory(InventorySystem& invSys, Inventory& inv, int slot);
     void reset();
 
     bool isAnyTileGrabbed() const;

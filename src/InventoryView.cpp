@@ -107,7 +107,7 @@ SfmlEventHandler::EventResult InventoryView::onMouseButtonReleased(sf::Event::Mo
         {
             std::cout << m_inventory << ' ' << slot->slotId() << '\n';
 
-            m_inventorySystem->tileTransferMediator().putToInventory(*m_inventory, slot->slotId());
+            m_inventorySystem->tileTransferMediator().putToInventory(*m_inventorySystem, *m_inventory, slot->slotId());
 
             return EventResult{}.setTakeFocus().setConsumeEvent();
         }

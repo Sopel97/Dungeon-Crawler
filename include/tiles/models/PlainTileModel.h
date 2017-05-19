@@ -27,6 +27,7 @@ public:
     virtual bool isMovableFrom() const;
     virtual bool isThrowableThrough() const;
     virtual bool isMovableTo() const;
+    virtual bool canBeStored() const;
 
     virtual float drag() const;
 
@@ -43,6 +44,7 @@ protected:
         bool isMovableFrom;
         bool isThrowableThrough;
         bool isMovableTo;
+        bool canBeStored;
     };
     CommonData* m_commonData;
 };

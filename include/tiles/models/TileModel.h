@@ -30,6 +30,7 @@ public:
     virtual bool isMovableFrom() const;
     virtual bool isThrowableThrough() const;
     virtual bool isMovableTo() const;
+    virtual bool canBeStored() const;
 
     virtual Inventory* inventory();
     virtual const Inventory* inventory() const;
