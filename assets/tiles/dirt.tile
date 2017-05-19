@@ -23,6 +23,7 @@ tile = {
 
     drag = 0.90,
     isMovableFrom = false,
+    isThrowableThrough = true,
     isMovableTo = true
     
 }

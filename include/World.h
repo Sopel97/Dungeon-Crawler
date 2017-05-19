@@ -61,6 +61,7 @@ public:
     bool isInsideWorldBounds(const ls::Vec2I& pos) const;
 
     std::vector<ls::Rectangle2F> queryTileColliders(const ls::Rectangle2F& queryRegion) const;
+    std::vector<ls::Vec2I> queryGridPoints(const ls::Vec2I& from, const ls::Vec2I& to) const;
 
     EventResult onMouseButtonPressed(sf::Event::MouseButtonEvent& event, EventContext context);
     EventResult onMouseButtonReleased(sf::Event::MouseButtonEvent& event, EventContext context);
@@ -99,6 +100,8 @@ protected:
     void drawIntermidiate(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
     void drawLightMapToIntermidiate(sf::RenderStates& renderStates);
     void drawLightsToLightMap();
+
+    std::vector<ls::Vec2I> queryGridPoints(const ls::LineSegment2F& line) const;
 };
 
 #endif // WORLD_H

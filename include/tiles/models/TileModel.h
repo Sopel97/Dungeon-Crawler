@@ -28,6 +28,7 @@ public:
     virtual bool hasCollider() const;
     virtual const ls::Rectangle2F& collider() const;
     virtual bool isMovableFrom() const;
+    virtual bool isThrowableThrough() const;
     virtual bool isMovableTo() const;
 
     virtual Inventory* inventory();

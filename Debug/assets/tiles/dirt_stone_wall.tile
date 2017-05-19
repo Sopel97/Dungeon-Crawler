@@ -19,6 +19,7 @@ tile = {
 
     drag = 1,
     isMovableFrom = true, -- for testing
+    isThrowableThrough = false,
     isMovableTo = false
     
 }

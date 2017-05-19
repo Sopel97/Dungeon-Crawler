@@ -35,6 +35,10 @@ bool TileModel::isMovableFrom() const
 {
     return false;
 }
+bool TileModel::isThrowableThrough() const
+{
+    return false;
+}
 bool TileModel::isMovableTo() const
 {
     return false;

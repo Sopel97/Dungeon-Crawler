@@ -54,7 +54,8 @@ void TileTransferMediator::operator()(const FromWorld& from, const ToWorld& to)
 
     if (from.pos.x == to.pos.x && from.pos.y == to.pos.y) return;
 
-    MapLayer& map = from.world->map();
+    World& world = *from.world;
+    MapLayer& map = world.map();
 
     int fromX = from.pos.x;
     int fromY = from.pos.y;
@@ -67,6 +68,15 @@ void TileTransferMediator::operator()(const FromWorld& from, const ToWorld& to)
     TileColumn& toTileColumn = map.at(toX, toY);
     TileStack& toTileStack = toTileColumn.top();
     if (!toTileStack.tile().model().isMovableTo()) return;
+
+    // check line of sight
+
+    auto pointsThrough = world.queryGridPoints(from.pos, to.pos);
+    for (auto& p : pointsThrough)
+    {
+        Tile& tile = map.at(p.x, p.y).top().tile();
+        if (!tile.model().isThrowableThrough()) return;
+    }
 
     // perform move
     std::cout << "World -> World\n";

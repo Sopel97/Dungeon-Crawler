@@ -39,6 +39,7 @@ void ContainerTileModel::loadFromConfiguration(ConfigurationNode& config)
 
     m_commonData->drag = config["drag"].get<float>();
     m_commonData->isMovableFrom = config["isMovableFrom"].getDefault<bool>(false);
+    m_commonData->isThrowableThrough = config["isThrowableThrough"].getDefault<bool>(false);
     m_commonData->isMovableTo = config["isMovableTo"].getDefault<bool>(false);
 
     m_inventory.setSize(config["inventorySize"].get<int>());
@@ -55,6 +56,10 @@ const Rectangle2F& ContainerTileModel::collider() const
 bool ContainerTileModel::isMovableFrom() const
 {
     return m_commonData->isMovableFrom;
+}
+bool ContainerTileModel::isThrowableThrough() const
+{
+    return m_commonData->isThrowableThrough;
 }
 bool ContainerTileModel::isMovableTo() const
 {

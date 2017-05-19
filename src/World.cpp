@@ -34,7 +34,7 @@
 using namespace ls;
 
 World::World(Root& root, Player& player, InternalWindow& wnd) :
-	WindowContent(wnd),
+    WindowContent(wnd),
     m_root(root),
     m_player(player),
     m_windowSpaceManager(root.windowSpaceManager()),
@@ -79,7 +79,7 @@ void World::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
     updateShaderUniforms();
 
     const Rectangle2F cameraRect = m_camera.viewRectangle();
-    const Vec2F& cameraTopLeft     = cameraRect.min;
+    const Vec2F& cameraTopLeft = cameraRect.min;
     const Vec2F& cameraBottomRight = cameraRect.max;
     int firstTileX = std::max(Util::fastFloor(cameraTopLeft.x / GameConstants::tileSize), 0);
     int firstTileY = std::max(Util::fastFloor(cameraTopLeft.y / GameConstants::tileSize), 0);
@@ -89,24 +89,24 @@ void World::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
     std::vector<TallDrawable*> tallDrawables;
 
     //x,y are inverted here because we want to draw top down
-    for(int y = firstTileY; y <= lastTileY; ++y)
+    for (int y = firstTileY; y <= lastTileY; ++y)
     {
-        for(int x = firstTileX; x <= lastTileX; ++x)
+        for (int x = firstTileX; x <= lastTileX; ++x)
         {
             const TileColumn& tileColumn = m_mapLayer->at(x, y);
             int z = 0;
-            for(const TileStack& tileStack : tileColumn.tiles())
+            for (const TileStack& tileStack : tileColumn.tiles())
             {
                 TileLocation location(*m_mapLayer, x, y, z);
 
-                if(tileStack.tile().renderer().isTall())
+                if (tileStack.tile().renderer().isTall())
                 {
                     tallDrawables.push_back(new TallTileColumnDrawable(tileColumn, location));
                     break;
                 }
-                if(z == 0)
+                if (z == 0)
                 {
-                    if(tileStack.tile().renderer().coversOuterBorders())
+                    if (tileStack.tile().renderer().coversOuterBorders())
                     {
                         drawOuterBorder(m_intermidiateRenderTarget, renderStates, location);
                         tileStack.tile().draw(m_intermidiateRenderTarget, renderStates, location);
@@ -127,7 +127,7 @@ void World::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
         }
     }
 
-    for(Entity* visibleEntity : m_entitySystem.getVisibleEntities(m_camera))
+    for (Entity* visibleEntity : m_entitySystem.getVisibleEntities(m_camera))
     {
         tallDrawables.push_back(new TallEntityDrawable(visibleEntity));
     }
@@ -136,7 +136,7 @@ void World::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
     //      Fixing this may be impossible in compare method and may require other methods.
     std::sort(tallDrawables.begin(), tallDrawables.end(), TallDrawable::ptrCompare);
 
-    for(auto& tallDrawable : tallDrawables)
+    for (auto& tallDrawable : tallDrawables)
     {
         tallDrawable->draw(m_intermidiateRenderTarget, renderStates);
     }
@@ -145,7 +145,7 @@ void World::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
     drawMeta(renderStates, tallDrawables);
     drawLightsToLightMap();
 
-    for(auto& tallDrawable : tallDrawables)
+    for (auto& tallDrawable : tallDrawables)
     {
         delete tallDrawable;
     }
@@ -240,8 +240,8 @@ void World::drawIntermidiate(sf::RenderTarget& renderTarget, sf::RenderStates& r
     sf::RenderStates intermidiateRenderStates = renderStates;
     intermidiateRenderStates.shader = &m_prettyStretchShader;
 
-    m_windowSpaceManager.setContentView(window(), Rectangle2F::withSize(Vec2F(0,0), m_intermidiateRenderTarget.getSize().x, m_intermidiateRenderTarget.getSize().y));
-    
+    m_windowSpaceManager.setContentView(window(), Rectangle2F::withSize(Vec2F(0, 0), m_intermidiateRenderTarget.getSize().x, m_intermidiateRenderTarget.getSize().y));
+
     renderTarget.draw(intermidiateFinal, intermidiateRenderStates);
 }
 void World::drawLightMapToIntermidiate(sf::RenderStates& renderStates)
@@ -253,7 +253,7 @@ void World::drawLightMapToIntermidiate(sf::RenderStates& renderStates)
     lightMapSprite.setTexture(&(m_lightMap.getTexture()));
     lightMapSprite.setSize(sf::Vector2f(cameraRect.width(), cameraRect.height()));
     //converts to world coordinates
-    lightMapSprite.setPosition(sf::Vector2f(cameraCenter.x - cameraRect.width()/2, cameraCenter.y - cameraRect.height() / 2));
+    lightMapSprite.setPosition(sf::Vector2f(cameraCenter.x - cameraRect.width() / 2, cameraCenter.y - cameraRect.height() / 2));
     lightMapSprite.setTextureRect(sf::IntRect(GameConstants::tileSize, GameConstants::tileSize, cameraRect.width(), cameraRect.height()));
 
     sf::RenderStates lightMapRenderStates = renderStates;
@@ -283,8 +283,8 @@ void World::drawLightsToLightMap()
 
 void World::drawOuterBorder(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& tileLocation)
 {
-    auto areTilesEqual = [](const TileStack * lhs, const TileStack * rhs)->bool {return lhs->tile().id() == rhs->tile().id();};
-    auto borderPriorityCompare = [](const TileStack * lhs, const TileStack * rhs)->bool {return lhs->tile().renderer().outerBorderPriority() < rhs->tile().renderer().outerBorderPriority();};
+    auto areTilesEqual = [](const TileStack * lhs, const TileStack * rhs)->bool {return lhs->tile().id() == rhs->tile().id(); };
+    auto borderPriorityCompare = [](const TileStack * lhs, const TileStack * rhs)->bool {return lhs->tile().renderer().outerBorderPriority() < rhs->tile().renderer().outerBorderPriority(); };
 
     int x = tileLocation.x;
     int y = tileLocation.y;
@@ -292,26 +292,26 @@ void World::drawOuterBorder(sf::RenderTarget& renderTarget, sf::RenderStates& re
 
     std::vector<const TileStack*> differentNeigbourTiles;
     int thisTileOuterBorderPriority = map.at(x, y, 0).tile().renderer().outerBorderPriority();
-    for(int xoffset = -1; xoffset <= 1; ++xoffset)
+    for (int xoffset = -1; xoffset <= 1; ++xoffset)
     {
-        for(int yoffset = -1; yoffset <= 1; ++yoffset)
+        for (int yoffset = -1; yoffset <= 1; ++yoffset)
         {
-            if(xoffset == 0 && yoffset == 0) continue;
+            if (xoffset == 0 && yoffset == 0) continue;
             int xx = x + xoffset;
             int yy = y + yoffset;
             const TileStack& tileStack = map.at(xx, yy, 0);
-            if(!tileStack.tile().renderer().hasOuterBorder() || tileStack.tile().renderer().outerBorderPriority() <= thisTileOuterBorderPriority) continue;
+            if (!tileStack.tile().renderer().hasOuterBorder() || tileStack.tile().renderer().outerBorderPriority() <= thisTileOuterBorderPriority) continue;
 
             bool firstSuchNeighbour = true;
-            for(const auto& neighbour : differentNeigbourTiles)
+            for (const auto& neighbour : differentNeigbourTiles)
             {
-                if(areTilesEqual(&tileStack, neighbour))
+                if (areTilesEqual(&tileStack, neighbour))
                 {
                     firstSuchNeighbour = false;
                     break;
                 }
             }
-            if(firstSuchNeighbour)
+            if (firstSuchNeighbour)
             {
                 differentNeigbourTiles.push_back(&tileStack);
             }
@@ -319,7 +319,7 @@ void World::drawOuterBorder(sf::RenderTarget& renderTarget, sf::RenderStates& re
     }
     std::sort(differentNeigbourTiles.begin(), differentNeigbourTiles.end(), borderPriorityCompare);
 
-    for(const auto& neighbour : differentNeigbourTiles)
+    for (const auto& neighbour : differentNeigbourTiles)
     {
         neighbour->tile().drawOutside(renderTarget, renderStates, tileLocation);
     }
@@ -368,12 +368,12 @@ Vec2I World::worldToTile(const Vec2F& worldPosition) const
 ls::Vec2F World::screenToWorld(const ls::Vec2I& screenPosition) const
 {
     const sf::Vector2f worldPosition = m_root.window().mapPixelToCoords(sf::Vector2i(screenPosition.x, screenPosition.y), m_windowSpaceManager.getContentView(window(), m_camera.viewRectangle()));
-    return{worldPosition.x, worldPosition.y};
+    return{ worldPosition.x, worldPosition.y };
 }
 ls::Vec2I World::worldToScreen(const ls::Vec2F& worldPosition) const
 {
     const sf::Vector2i screenPosition = m_root.window().mapCoordsToPixel(sf::Vector2f(worldPosition.x, worldPosition.y), m_windowSpaceManager.getContentView(window(), m_camera.viewRectangle()));
-    return{screenPosition.x, screenPosition.y};
+    return{ screenPosition.x, screenPosition.y };
 }
 ls::Vec2I World::screenToTile(const ls::Vec2I& screenPosition) const
 {
@@ -410,26 +410,93 @@ std::vector<Rectangle2F> World::queryTileColliders(const Rectangle2F& queryRegio
 {
     return m_mapLayer->queryTileColliders(queryRegion);
 }
+std::vector<ls::Vec2I> World::queryGridPoints(const ls::Vec2I& from, const ls::Vec2I& to) const
+{
+    return queryGridPoints(ls::LineSegment2F(ls::Vec2F(from.x + 0.5f, from.y + 0.5f), ls::Vec2F(to.x + 0.5f, to.y + 0.5f)));
+}
+std::vector<ls::Vec2I> World::queryGridPoints(const ls::LineSegment2F& line) const
+{
+    constexpr float eps = 0.01f; //tolerance for diagonal moves
 
+    // we have to convert the line so (end - begin) has positive x and y
+    ls::Vec2F begin = line.begin;
+    ls::Vec2F end = line.end;
+    if (std::abs(end.x - begin.x) < eps && std::abs(end.y - begin.y) < eps) return { { ls::Util::fastFloor(begin.x), ls::Util::fastFloor(begin.y) } };
+
+    if (begin.x > end.x) std::swap(begin, end);
+
+    // begin.x < end.x always
+    const int mirror = end.y > begin.y ? 1 : -1;
+    const int displacement = end.y > begin.y ? 0 : -1;
+    begin.y *= mirror;
+    end.y *= mirror;
+    const ls::Vec2F direction = (end - begin).normalized();
+
+    ls::Vec2F currentPos = begin;
+    ls::Vec2I currentGridPos(ls::Util::fastFloor(begin.x), ls::Util::fastFloor(begin.y));
+    ls::Vec2F nextGridLines(currentGridPos.x + 1.0f, currentGridPos.y + 1.0f);
+
+    std::vector<ls::Vec2I> points;
+    points.reserve(ls::Util::fastFloor(end.x - begin.x) + ls::Util::fastFloor(end.y - begin.y) + 3); // little overestimation
+    for (;;)
+    {
+        points.emplace_back(currentGridPos.x, currentGridPos.y * mirror + displacement);
+
+        const float distX = nextGridLines.x - currentPos.x;
+        const float distY = nextGridLines.y - currentPos.y;
+
+        const float dtx = distX / direction.x;
+        const float dty = distY / direction.y;
+
+        float dt;
+        if (std::abs(dtx - dty) < eps) //move diagonal
+        {
+            ++currentGridPos.x;
+            ++currentGridPos.y;
+            nextGridLines.x += 1.0f;
+            nextGridLines.y += 1.0f;
+            dt = std::max(dtx, dty);
+        }
+        else if (dtx < dty) // move right
+        {
+            ++currentGridPos.x;
+            nextGridLines.x += 1.0f;
+            dt = dtx;
+        }
+        else // move up
+        {
+            ++currentGridPos.y;
+            nextGridLines.y += 1.0f;
+            dt = dty;
+        }
+
+        currentPos.x += dt * direction.x;
+        currentPos.y += dt * direction.y;
+
+        if (end.x - currentPos.x < eps && end.y - currentPos.y < eps) break;
+    }
+
+    return points;
+}
 
 auto World::onMouseButtonPressed(sf::Event::MouseButtonEvent& event, EventContext context)
 -> EventResult
 {
     if (!context.isMouseOver) return { false, false };
 
-	if (event.button == sf::Mouse::Button::Right)
-	{
-		const Rectangle2I& worldViewRect = window().absoluteContentRect();
-		if (ls::intersect(worldViewRect, Vec2I(event.x, event.y))) //TODO: may be redundant
-		{
-			const Vec2I tilePosition = screenToTile(Vec2I(event.x, event.y));
+    if (event.button == sf::Mouse::Button::Right)
+    {
+        const Rectangle2I& worldViewRect = window().absoluteContentRect();
+        if (ls::intersect(worldViewRect, Vec2I(event.x, event.y))) //TODO: may be redundant
+        {
+            const Vec2I tilePosition = screenToTile(Vec2I(event.x, event.y));
 
             if (isInsideWorldBounds(tilePosition))
             {
                 useTile(tilePosition);
             }
-		}
-	} 
+        }
+    }
     else if (event.button == sf::Mouse::Button::Left)
     {
         const Rectangle2I& worldViewRect = window().absoluteContentRect();
@@ -444,7 +511,7 @@ auto World::onMouseButtonPressed(sf::Event::MouseButtonEvent& event, EventContex
         }
     }
 
-    return {true, true};
+    return { true, true };
 }
 
 auto World::onMouseButtonReleased(sf::Event::MouseButtonEvent& event, EventContext context)
