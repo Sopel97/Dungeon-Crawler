@@ -58,6 +58,11 @@ void Tile::drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStat
     m_renderer->drawMeta(renderTarget, renderStates, location);
 }
 
+void Tile::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const InventorySlotView& slot) const
+{
+    m_renderer->draw(renderTarget, renderStates, slot);
+}
+
 const TileModel& Tile::model() const
 {
     return *m_model;

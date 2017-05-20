@@ -31,6 +31,10 @@ void TileRenderer::drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& re
 {
 
 }
+void TileRenderer::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const InventorySlotView& slot) const
+{
+
+}
 
 int TileRenderer::innerBorderGroup() const
 {

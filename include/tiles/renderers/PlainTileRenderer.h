@@ -23,6 +23,7 @@ namespace sf
 class MapLayer;
 class Tile;
 class TileLocation;
+class InventorySlotView;
 
 class PlainTileRenderer : public TileRenderer
 {
@@ -35,6 +36,8 @@ public:
 
     virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const;
     virtual void drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const;
+
+    virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const InventorySlotView& slot) const;
 
     const sf::Texture& texture() const;
 

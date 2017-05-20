@@ -15,6 +15,7 @@ class TileModel;
 class TileRenderer;
 class TileController;
 class TileLocation;
+class InventorySlotView;
 
 class Tile
 {
@@ -28,6 +29,8 @@ public:
     void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const;
     void drawOutside(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const;
     void drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const;
+
+    void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const InventorySlotView& slot) const;
 
     const TileModel& model() const;
     TileModel& model();

@@ -3,6 +3,7 @@
 #include "Root.h"
 
 #include "TileLocation.h"
+#include "InventorySlotView.h"
 
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
@@ -76,6 +77,18 @@ void PlainTileRenderer::draw(sf::RenderTarget& renderTarget, sf::RenderStates& r
     spr.setPosition(sf::Vector2f(static_cast<float>(location.x) * GameConstants::tileSize, static_cast<float>(location.y) * GameConstants::tileSize));
     spr.setTexture(texture());
     spr.setTextureRect(sf::IntRect(sf::Vector2i(sprite.x, sprite.y), sf::Vector2i(GameConstants::tileSize, GameConstants::tileSize)));
+    renderTarget.draw(spr, renderStates);
+}
+void PlainTileRenderer::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const InventorySlotView& slot) const
+{
+    const Vec2I& spritePos = m_commonData->spriteSet.at(m_spriteId);
+    const ls::Vec2I slotCenter = slot.center();
+    const float x = slotCenter.x - GameConstants::tileSize / 2;
+    const float y = slotCenter.y - GameConstants::tileSize / 2;
+    sf::Sprite spr;
+    spr.setPosition(sf::Vector2f(x, y));
+    spr.setTexture(texture());
+    spr.setTextureRect(sf::IntRect(sf::Vector2i(spritePos.x, spritePos.y), sf::Vector2i(GameConstants::tileSize, GameConstants::tileSize)));
     renderTarget.draw(spr, renderStates);
 }
 

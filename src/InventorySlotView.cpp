@@ -48,6 +48,10 @@ const Vec2I& InventorySlotView::position() const
 {
     return m_position;
 }
+ls::Vec2I InventorySlotView::center() const
+{
+    return m_position + m_slotTextureSize / 2;
+}
 size_t InventorySlotView::slotId() const
 {
     return m_slotId;
@@ -60,7 +64,8 @@ void InventorySlotView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& r
     slotSprite.setTextureRect(sf::IntRect(sf::Vector2i(m_slotTexture.x, m_slotTexture.y), sf::Vector2i(m_slotTextureSize.x, m_slotTextureSize.y)));
     renderTarget.draw(slotSprite, renderStates);
 
-    if(contentRequirement != InventoryContentRequirement::None)
+    const TileStack& tileStack = m_inventory->at(m_slotId);
+    if(contentRequirement != InventoryContentRequirement::None && tileStack.isEmpty())
     {
         Vec2I iconSpritePosition = m_requirementIcons[contentRequirement];
         Vec2I iconOffset = (m_slotTextureSize - m_requirementIconSize) / 2;
@@ -70,6 +75,11 @@ void InventorySlotView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& r
         requirementIconSprite.setTexture(m_texture.get());
         requirementIconSprite.setTextureRect(sf::IntRect(sf::Vector2i(iconSpritePosition.x, iconSpritePosition.y), sf::Vector2i(m_requirementIconSize.x, m_requirementIconSize.y)));
         renderTarget.draw(requirementIconSprite, renderStates);
+    }
+    
+    if (!tileStack.isEmpty())
+    {
+        tileStack.tile().draw(renderTarget, renderStates, *this);
     }
 }
 
