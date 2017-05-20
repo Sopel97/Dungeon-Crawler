@@ -41,7 +41,7 @@ protected:
         bool hasCollider;
         ls::Rectangle2F collider;
         float drag;
-        bool isMovableFrom;
+        int maxThrowDistance;
         bool isThrowableThrough;
         bool isMovableTo;
         bool canBeStored;

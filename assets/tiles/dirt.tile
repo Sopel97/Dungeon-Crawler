@@ -22,9 +22,9 @@ tile = {
 	outerBorderPriority = 3,
 
     drag = 0.90,
-    isMovableFrom = false,
     isThrowableThrough = true,
     isMovableTo = true,
-    canBeStored = false
+    canBeStored = false,
+    maxThrowDistance = 0
     
 }

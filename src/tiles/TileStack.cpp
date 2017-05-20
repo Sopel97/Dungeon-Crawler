@@ -10,7 +10,7 @@ TileStack::TileStack(std::unique_ptr<Tile>&& tile, int quantity) :
     m_tile(std::move(tile)),
     m_quantity(quantity)
 {
-
+    if (m_quantity != 1) m_tile->onTileQuantityChanged(1, quantity);
 }
 
 bool TileStack::isEmpty() const

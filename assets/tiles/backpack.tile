@@ -16,9 +16,9 @@ tile = {
 	maxQuantity = 1,
 
     drag = 0.85,
-    isMovableFrom = true,
     isThrowableThrough = true,
     isMovableTo = true,
-    canBeStored = true
+    canBeStored = true,
+    maxThrowDistance = 10
     
 }
