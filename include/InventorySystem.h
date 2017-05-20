@@ -90,7 +90,7 @@ public:
     InventorySystem(WindowSpaceManager& wsm, Player& player, TileTransferMediator& tileTransferMediator);
 
     bool tryOpenExternalInventory(Inventory& inventory, const ls::Vec2I& pos);
-    bool tryOpenInternalInventory(Inventory& inventory, Inventory& parentInventory);
+    bool tryOpenInternalInventory(Inventory& inventory, const Inventory& parentInventory);
     void openPermanentInventory(Inventory& inventory);
     void closeInventory(Inventory& inventory);
     bool isInventoryOpened(const Inventory& inventory);
@@ -99,12 +99,15 @@ public:
     std::pair<ConstTrackedInventoryTreeHandle, ConstTrackedInventoryHandle> find(const Inventory& inventory) const;
 
     bool tryInteractWithExternalInventory(Inventory& inventory, const TileLocation& location);
+    bool tryInteractWithInternalInventory(Inventory& inventory, const InventorySlotView& slot);
 
     bool canStore(const Inventory& inventory, const Tile& tile) const;
 
     PlayerEquipmentInventory& equipmentInventory();
 
     TileTransferMediator& tileTransferMediator();
+
+    Player& player();
 
     void onTileMovedFromWorldToWorld(const TileMovedFromWorldToWorld& event);
     void onTileMovedFromWorldToInventory(const TileMovedFromWorldToInventory& event);

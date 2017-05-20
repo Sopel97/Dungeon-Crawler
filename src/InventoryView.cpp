@@ -7,6 +7,9 @@
 #include "InventorySystem.h"
 #include "TileTransferMediator.h"
 
+#include "tiles/Tile.h"
+#include "tiles/controllers/TileController.h"
+
 #include "../LibS/Geometry.h"
 
 #include <cmath>
@@ -82,6 +85,14 @@ SfmlEventHandler::EventResult InventoryView::onMouseButtonPressed(sf::Event::Mou
             m_inventorySystem->tileTransferMediator().grabFromInventory(*m_inventorySystem, *m_inventory, slot->slotId());
 
             return EventResult{}.setTakeFocus().setConsumeEvent();
+        }
+        else if (event.button == sf::Mouse::Button::Right)
+        {
+            if (!slot->content().isEmpty())
+            {
+                Tile& tile = slot->content().tile();
+                tile.controller().onTileInteracted(m_inventorySystem->player(), *slot);
+            }
         }
     }
     return EventResult{}.setTakeFocus().setConsumeEvent();

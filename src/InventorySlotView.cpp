@@ -56,6 +56,15 @@ size_t InventorySlotView::slotId() const
 {
     return m_slotId;
 }
+Inventory& InventorySlotView::inventory()
+{
+    return *m_inventory;
+}
+const Inventory& InventorySlotView::inventory() const
+{
+    return *m_inventory;
+}
+
 void InventorySlotView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, InventoryContentRequirement contentRequirement)
 {
     sf::Sprite slotSprite;

@@ -32,6 +32,10 @@ bool Player::tryInteractWithExternalInventory(Inventory& inventory, const TileLo
 {
     return m_inventorySystem.tryInteractWithExternalInventory(inventory, location);
 }
+bool Player::tryInteractWithInternalInventory(Inventory& inventory, const InventorySlotView& slot)
+{
+    return m_inventorySystem.tryInteractWithInternalInventory(inventory, slot);
+}
 
 void Player::processAsyncKeyboardInput(World& world, float dt) //TODO: make it update the player entity so it moves in the next update. Don't interact with world in this function.
 {

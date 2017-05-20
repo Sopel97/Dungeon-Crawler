@@ -47,6 +47,10 @@ void PlayerUi::openWindow(PanelWindow* wnd)
 
 	updateWindowPositions();
 }
+bool PlayerUi::isOpened(PanelWindow* wnd) const
+{
+    return std::find(m_windows.begin(), m_windows.end(), wnd) != m_windows.end();
+}
 
 void PlayerUi::updateWindowPositions()
 {
@@ -82,6 +86,7 @@ SfmlEventHandler::EventResult PlayerUi::dispatch(sf::Event& event, EventContext 
                 .setIsMouseOver(true);
             result = wnd->dispatch(event, currentContext, mousePos);
 
+            if (!isOpened(wnd)) break; //window closed
             if (result.takeFocus) m_focusedWindow = wnd;
             if (result.consumeEvent) break;
         }
@@ -107,8 +112,9 @@ SfmlEventHandler::EventResult PlayerUi::dispatch(sf::Event& event, EventContext 
                 .setIsFocused(false)
                 .setIsMouseOver(false);
             result = wnd->dispatch(event, currentContext, mousePos);
-
-            if (result.takeFocus) m_focusedWindow = wnd;
+            
+            if (!isOpened(wnd)) break; //window closed
+            if (result.takeFocus && isOpened(wnd)) m_focusedWindow = wnd;
             if (result.consumeEvent) break;
         }
     }

@@ -34,6 +34,8 @@ public:
     const ls::Vec2I& position() const;
     ls::Vec2I center() const;
     size_t slotId() const;
+    Inventory& inventory();
+    const Inventory& inventory() const;
 
     void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, InventoryContentRequirement contentRequirement);
 

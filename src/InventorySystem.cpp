@@ -42,7 +42,7 @@ bool InventorySystem::tryOpenExternalInventory(Inventory& inventory, const ls::V
 
     return true;
 }
-bool InventorySystem::tryOpenInternalInventory(Inventory& inventory, Inventory& parentInventory)
+bool InventorySystem::tryOpenInternalInventory(Inventory& inventory, const Inventory& parentInventory)
 {
     auto findResult = find(parentInventory);
     TrackedInventoryTreeHandle treeHandle = findResult.first;
@@ -111,6 +111,18 @@ bool InventorySystem::tryInteractWithExternalInventory(Inventory& inventory, con
         return tryOpenExternalInventory(inventory, ls::Vec2I(location.x, location.y));
     }
 }
+bool InventorySystem::tryInteractWithInternalInventory(Inventory& inventory, const InventorySlotView& slot)
+{
+    if (isInventoryOpened(inventory))
+    {
+        closeInventory(inventory);
+        return true;
+    }
+    else
+    {
+        return tryOpenInternalInventory(inventory, slot.inventory());
+    }
+}
 
 bool InventorySystem::canStore(const Inventory& inventory, const Tile& tile) const
 {
@@ -148,6 +160,10 @@ PlayerEquipmentInventory& InventorySystem::equipmentInventory()
 TileTransferMediator& InventorySystem::tileTransferMediator()
 {
     return m_tileTransferMediator;
+}
+Player& InventorySystem::player()
+{
+    return m_player;
 }
 void InventorySystem::onTileMovedFromWorldToWorld(const TileMovedFromWorldToWorld& event)
 {
@@ -208,10 +224,9 @@ void InventorySystem::closeInventory(const std::pair<TrackedInventoryTreeHandle,
 
     m_playerUi.closeWindow(inventoryHandle.data().inventoryWindow.get());
     inventoryHandle.data().isOpened = false;
-    if (inventoryHandle.numberOfChildren() > 0) return; // we can't abandon it since some inventories depent on it
 
     TrackedInventoryHandle current = inventoryHandle;
-    while (current.isValid() && !current.data().isOpened) //abandon all inventories that were just because this one was opened
+    while (current.isValid() && current.numberOfChildren() == 0 && !current.data().isOpened) //abandon all inventories that were just because this one was opened
     {
         auto parent = current.parent(); //we have to remember it here since abandon inventory deletes current
         abandonInventory(treeHandle, current);

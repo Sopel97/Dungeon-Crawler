@@ -3,6 +3,7 @@
 #include "EventDispatcher.h"
 
 #include "TileLocation.h"
+#include "InventorySlotView.h"
 
 #include "tiles/Tile.h"
 #include "tiles/models/TileModel.h"
@@ -25,6 +26,11 @@ ContainerTileController::~ContainerTileController()
 void ContainerTileController::onTileInteracted(Player& player, const TileLocation& location)
 {
     player.tryInteractWithExternalInventory(*(m_owner->model().inventory()), location);
+}
+
+void ContainerTileController::onTileInteracted(Player& player, const InventorySlotView& slot)
+{
+    player.tryInteractWithInternalInventory(*(m_owner->model().inventory()), slot);
 }
 
 std::unique_ptr<TileController> ContainerTileController::clone() const

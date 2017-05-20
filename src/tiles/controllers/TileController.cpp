@@ -31,6 +31,10 @@ void TileController::onTileInteracted(Player& player, const TileLocation& locati
 {
 
 }
+void TileController::onTileInteracted(Player& player, const InventorySlotView& location)
+{
+
+}
 void TileController::onTileInstantiated()
 {
 

@@ -13,7 +13,8 @@ public:
     ContainerTileController(const ContainerTileController& other);
     virtual ~ContainerTileController();
 
-    virtual void onTileInteracted(Player& player, const TileLocation& location);
+    void onTileInteracted(Player& player, const TileLocation& location) override;
+    void onTileInteracted(Player& player, const InventorySlotView& slot) override;
 
     virtual std::unique_ptr<TileController> clone() const;
 };

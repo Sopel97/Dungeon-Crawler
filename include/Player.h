@@ -32,6 +32,7 @@ public:
     void processAsyncKeyboardInput(World& world, float dt);
 
     bool tryInteractWithExternalInventory(Inventory& inventory, const TileLocation& location);
+    bool tryInteractWithInternalInventory(Inventory& inventory, const InventorySlotView& slot);
 
     PlayerUi& playerUi();
     const PlayerUi& playerUi() const;

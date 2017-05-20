@@ -37,6 +37,7 @@ public:
 
     void closeWindow(PanelWindow* window);
     void openWindow(PanelWindow* wnd); //does not take ownership
+    bool isOpened(PanelWindow* wnd) const;
 
 	void onWindowUpdated(PanelWindow& window);
 
