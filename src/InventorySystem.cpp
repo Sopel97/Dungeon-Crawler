@@ -12,6 +12,7 @@
 
 #include "events/TileMovedFromWorldToWorld.h"
 #include "events/TileMovedFromWorldToInventory.h"
+#include "events/TileMovedFromInventoryToInventory.h"
 
 #include "TileTransferMediator.h"
 
@@ -24,7 +25,8 @@ InventorySystem::InventorySystem(WindowSpaceManager& wsm, Player& player, TileTr
     m_tileTransferMediator(tileTransferMediator),
     m_equipmentInventory(),
     m_tileMovedFromWorldToWorldEventSubscription(EventDispatcher::instance().subscribe<TileMovedFromWorldToWorld>([this](const TileMovedFromWorldToWorld& e) {onTileMovedFromWorldToWorld(e); })),
-    m_tileMovedFromWorldToInventoryEventSubscription(EventDispatcher::instance().subscribe<TileMovedFromWorldToInventory>([this](const TileMovedFromWorldToInventory& e) {onTileMovedFromWorldToInventory(e); }))
+    m_tileMovedFromWorldToInventoryEventSubscription(EventDispatcher::instance().subscribe<TileMovedFromWorldToInventory>([this](const TileMovedFromWorldToInventory& e) {onTileMovedFromWorldToInventory(e); })),
+    m_tileMovedFromInventoryToInventoryEventSubscription(EventDispatcher::instance().subscribe<TileMovedFromInventoryToInventory>([this](const TileMovedFromInventoryToInventory& e) {onTileMovedFromInventoryToInventory(e); }))
 {
     openPermanentInventory(m_equipmentInventory);
 }
@@ -196,6 +198,26 @@ void InventorySystem::onTileMovedFromWorldToInventory(const TileMovedFromWorldTo
     auto tileInventoryTreeHandle = foundTileInventory.first;
     auto detachedTileInventoryTree = tileInventoryTreeHandle->detach(tileInventoryHandle);
     m_trackedInventories.removeTree(tileInventoryTreeHandle); // if we moved from world then it had to be the root
+
+    auto foundDestinationInventory = find(*event.destination.inventory);
+    auto destinationTreeHandle = foundDestinationInventory.first;
+    auto destinationInventoryHandle = foundDestinationInventory.second;
+    destinationTreeHandle->attach(destinationInventoryHandle, std::move(detachedTileInventoryTree));
+}
+void InventorySystem::onTileMovedFromInventoryToInventory(const TileMovedFromInventoryToInventory& event)
+{
+    if (event.source.inventory == event.destination.inventory) return;
+
+    const Tile& tile = event.tileAfterMove->tile();
+    const Inventory* tileInventory = tile.model().inventory();
+    if (tileInventory == nullptr) return;
+
+    auto foundTileInventory = find(*tileInventory);
+    auto tileInventoryHandle = foundTileInventory.second;
+    if (!tileInventoryHandle.isValid()) return;
+
+    auto tileInventoryTreeHandle = foundTileInventory.first;
+    auto detachedTileInventoryTree = tileInventoryTreeHandle->detach(tileInventoryHandle);
 
     auto foundDestinationInventory = find(*event.destination.inventory);
     auto destinationTreeHandle = foundDestinationInventory.first;

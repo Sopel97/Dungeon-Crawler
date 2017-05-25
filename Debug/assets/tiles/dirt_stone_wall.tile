@@ -18,7 +18,7 @@ tile = {
 	},
 
     drag = 1,
-    isThrowableThrough = false,
+    isThrowableThrough = true, -- for testing
     isMovableTo = false,
     canBeStored = false,
     maxThrowDistance = 10 -- for testing

@@ -12,6 +12,7 @@
 #include "MapLayer.h"
 #include "events/TileMovedFromWorldToWorld.h"
 #include "events/TileMovedFromWorldToInventory.h"
+#include "events/TileMovedFromInventoryToInventory.h"
 
 void TileTransferMediator::grabFromWorld(const ls::Vec2I& loc, World& world, Player& player)
 {
@@ -118,5 +119,25 @@ void TileTransferMediator::operator()(const FromInventory& from, const ToWorld& 
 }
 void TileTransferMediator::operator()(const FromInventory& from, const ToInventory& to)
 {
+    if (from.inventory == to.inventory && from.slot == to.slot) return;
+
+    InventorySystem& inventorySystem = *from.inventorySystem;
+
+    Inventory* fromInventory = from.inventory;
+    const int fromSlot = from.slot;
+    TileStack& fromTileStack = fromInventory->at(fromSlot);
+    if (!fromTileStack.tile().model().isMovableFrom()) return; // item can't be moved
+
+    Inventory& toInventory = *to.inventory;
+    const int toSlot = to.slot;
+    if (!toInventory.at(toSlot).isEmpty()) return; // no space to place the tile
+
+    if (!inventorySystem.canStore(toInventory, fromTileStack.tile())) return;
+
+    // perform move
     std::cout << "Inventory -> Inventory\n";
+
+    toInventory.at(toSlot) = std::move(fromTileStack);
+
+    EventDispatcher::instance().broadcast<TileMovedFromInventoryToInventory>(TileMovedFromInventoryToInventory{ from, to, &(toInventory.at(toSlot)) });
 }

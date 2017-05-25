@@ -21,6 +21,7 @@ class TileLocation;
 class WindowSpaceManager;
 class TileMovedFromWorldToWorld;
 class TileMovedFromWorldToInventory;
+class TileMovedFromInventoryToInventory;
 class TileTransferMediator;
 
 class InventorySystem
@@ -111,6 +112,7 @@ public:
 
     void onTileMovedFromWorldToWorld(const TileMovedFromWorldToWorld& event);
     void onTileMovedFromWorldToInventory(const TileMovedFromWorldToInventory& event);
+    void onTileMovedFromInventoryToInventory(const TileMovedFromInventoryToInventory& event);
 
 protected:
     WindowSpaceManager& m_wsm;
@@ -124,6 +126,7 @@ protected:
 
     EventDispatcher::EventCallbackHandle<TileMovedFromWorldToWorld> m_tileMovedFromWorldToWorldEventSubscription;
     EventDispatcher::EventCallbackHandle<TileMovedFromWorldToInventory> m_tileMovedFromWorldToInventoryEventSubscription;
+    EventDispatcher::EventCallbackHandle<TileMovedFromInventoryToInventory> m_tileMovedFromInventoryToInventoryEventSubscription;
 
     void openTrackedInventory(TrackedInventoryHandle inventory);
     void abandonInventory(TrackedInventoryTreeHandle tree, TrackedInventoryHandle inventory);
