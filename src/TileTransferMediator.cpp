@@ -102,16 +102,28 @@ void TileTransferMediator::operator()(const FromWorld& from, const ToInventory& 
 
     Inventory& inventory = *to.inventory;
     const int slot = to.slot;
-    if (!inventory.at(slot).isEmpty()) return; // no space to place the tile
-
     InventorySystem& inventorySystem = *to.inventorySystem;
     if (!inventorySystem.canStore(inventory, fromTileStack.tile())) return;
 
-    // perform move
-    std::cout << "World -> Inventory\n";
+    TileStack& toTileStack = inventory.at(slot);
+    if (toTileStack.isEmpty())
+    {
+        toTileStack = fromTileColumn.takeFromTop();
+    }
+    else if (toTileStack.tile().equals(fromTileStack.tile()))
+    {
+        const int toMove = std::min(fromTileStack.quantity(), toTileStack.maxQuantity() - toTileStack.quantity());
+        fromTileStack.erase(toMove);
+        toTileStack.insert(toMove);
 
-    TileStack detachedTileStack = fromTileColumn.takeFromTop();
-    inventory.at(slot) = std::move(detachedTileStack);
+        if (fromTileStack.isEmpty())
+        {
+            fromTileColumn.takeFromTop();
+        }
+    }
+    else return; // cant perform move
+
+    std::cout << "World -> Inventory\n";
 
     EventDispatcher::instance().broadcast<TileMovedFromWorldToInventory>(TileMovedFromWorldToInventory{ from, to, &(inventory.at(slot)) });
 }
@@ -154,14 +166,23 @@ void TileTransferMediator::operator()(const FromInventory& from, const ToInvento
 
     Inventory& toInventory = *to.inventory;
     const int toSlot = to.slot;
-    if (!toInventory.at(toSlot).isEmpty()) return; // no space to place the tile
-
     if (!inventorySystem.canStore(toInventory, fromTileStack.tile())) return;
+
+    TileStack& toTileStack = toInventory.at(toSlot);
+    if (toTileStack.isEmpty())
+    {
+        toTileStack = std::move(fromTileStack);
+    }
+    else if (toTileStack.tile().equals(fromTileStack.tile()))
+    {
+        const int toMove = std::min(fromTileStack.quantity(), toTileStack.maxQuantity() - toTileStack.quantity());
+        fromTileStack.erase(toMove);
+        toTileStack.insert(toMove);
+    }
+    else return; // cant perform move
 
     // perform move
     std::cout << "Inventory -> Inventory\n";
-
-    toInventory.at(toSlot) = std::move(fromTileStack);
 
     EventDispatcher::instance().broadcast<TileMovedFromInventoryToInventory>(TileMovedFromInventoryToInventory{ from, to, &(toInventory.at(toSlot)) });
 }
