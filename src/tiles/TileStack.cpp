@@ -28,7 +28,12 @@ int TileStack::maxQuantity() const
 }
 void TileStack::setQuantity(int newQuantity)
 {
-    if (newQuantity < 1) m_tile = nullptr;
+    if (newQuantity < 1)
+    {
+        m_quantity = 0;
+        m_tile = nullptr;
+        return;
+    }
     if (newQuantity > m_tile->maxQuantity()) newQuantity = m_tile->maxQuantity();
 
     if (m_quantity != newQuantity)

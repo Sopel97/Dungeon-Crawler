@@ -11,6 +11,8 @@ class Player;
 class InventorySystem;
 class Inventory;
 class World;
+class TileStack;
+class TileColumn;
 
 class TileTransferMediator
 {
@@ -58,4 +60,5 @@ public:
     void operator()(const FromInventory& from, const ToWorld& to);
     void operator()(const FromInventory& from, const ToInventory& to);
 private:
+    void move(TileStack& from, TileColumn& to, int max);
 };

@@ -84,8 +84,8 @@ void TileTransferMediator::operator()(const FromWorld& from, const ToWorld& to)
 
     // perform move
     std::cout << "World -> World\n";
-
-    toTileColumn.placeOnTop(fromTileColumn.takeFromTop());
+    move(fromTileStack, toTileColumn, fromTileStack.quantity());
+    if (fromTileStack.isEmpty()) fromTileColumn.takeFromTop();
 
     EventDispatcher::instance().broadcast<TileMovedFromWorldToWorld>(TileMovedFromWorldToWorld{ from, to, &(toTileColumn.top()) });
 }
@@ -136,7 +136,7 @@ void TileTransferMediator::operator()(const FromInventory& from, const ToWorld& 
     // perform move
     std::cout << "Inventory -> World\n";
 
-    toTileColumn.placeOnTop(std::move(fromTileStack));
+    move(fromTileStack, toTileColumn, fromTileStack.quantity());
 
     EventDispatcher::instance().broadcast<TileMovedFromInventoryToWorld>(TileMovedFromInventoryToWorld{ from, to, &(toTileColumn.top()) });
 }
@@ -164,4 +164,24 @@ void TileTransferMediator::operator()(const FromInventory& from, const ToInvento
     toInventory.at(toSlot) = std::move(fromTileStack);
 
     EventDispatcher::instance().broadcast<TileMovedFromInventoryToInventory>(TileMovedFromInventoryToInventory{ from, to, &(toInventory.at(toSlot)) });
+}
+void TileTransferMediator::move(TileStack& from, TileColumn& to, int max)
+{
+    const int maxQuantity = from.maxQuantity();
+    if(maxQuantity != 1)
+    {
+        TileStack& currentTop = to.top();
+        if (from.tile().equals(currentTop.tile()))
+        {
+            const int toMove = std::min(max, currentTop.maxQuantity() - currentTop.quantity());
+            
+            currentTop.insert(toMove);
+            from.erase(toMove);
+        }
+    }
+
+    if (!from.isEmpty())
+    {
+        to.placeOnTop(std::move(from));
+    }
 }
