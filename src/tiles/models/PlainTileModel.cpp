@@ -62,6 +62,10 @@ bool PlainTileModel::isMovableTo() const
 {
     return m_commonData->isMovableTo;
 }
+int PlainTileModel::maxThrowDistance() const
+{
+    return m_commonData->maxThrowDistance;
+}
 bool PlainTileModel::canBeStored() const
 {
     return m_commonData->canBeStored;

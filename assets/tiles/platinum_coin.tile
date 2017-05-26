@@ -25,6 +25,6 @@ tile = {
     isThrowableThrough = true,
     isMovableTo = true,
     canBeStored = true,
-    maxThrowDistance = 10
+    maxThrowDistance = 2 -- test
     
 }

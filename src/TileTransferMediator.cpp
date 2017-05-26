@@ -52,6 +52,7 @@ bool TileTransferMediator::isAnyTileGrabbed() const
 }
 void TileTransferMediator::operator()(const FromWorld& from, const ToWorld& to)
 {
+    constexpr float maxPlayerDistFromTile = 48.0f;
     // check validity
 
     if (from.pos.x == to.pos.x && from.pos.y == to.pos.y) return;
@@ -59,11 +60,16 @@ void TileTransferMediator::operator()(const FromWorld& from, const ToWorld& to)
     World& world = *from.world;
     MapLayer& map = world.map();
 
+    if (world.playerDistanceToTile(from.pos) > maxPlayerDistFromTile) return;
+
     int fromX = from.pos.x;
     int fromY = from.pos.y;
     TileColumn& fromTileColumn = map.at(fromX, fromY);
     TileStack& fromTileStack = fromTileColumn.top();
     if (!fromTileStack.tile().model().isMovableFrom()) return;
+    
+    int maxTileThrowDist = fromTileStack.tile().model().maxThrowDistance();
+    if (world.tileManhattanDistance(from.pos, to.pos) > maxTileThrowDist) return;
 
     int toX = to.pos.x;
     int toY = to.pos.y;
@@ -71,21 +77,17 @@ void TileTransferMediator::operator()(const FromWorld& from, const ToWorld& to)
     TileStack& toTileStack = toTileColumn.top();
     if (!toTileStack.tile().model().isMovableTo()) return;
 
-    // check line of sight
+    if (!world.lineOfSightBetweenPlayerAndTile(from.pos)) return;
 
-    auto pointsThrough = world.queryGridPoints(from.pos, to.pos);
-    for (auto& p : pointsThrough)
-    {
-        Tile& tile = map.at(p.x, p.y).top().tile();
-        if (!tile.model().isThrowableThrough()) return;
-    }
+    // check line of sight between tiles
+    if (!world.lineOfSightBetweenTiles(from.pos, to.pos)) return;
 
     // perform move
     std::cout << "World -> World\n";
 
     toTileColumn.placeOnTop(fromTileColumn.takeFromTop());
 
-    EventDispatcher::instance().broadcast<TileMovedFromWorldToWorld>(TileMovedFromWorldToWorld{from, to, &(toTileColumn.top()) });
+    EventDispatcher::instance().broadcast<TileMovedFromWorldToWorld>(TileMovedFromWorldToWorld{ from, to, &(toTileColumn.top()) });
 }
 void TileTransferMediator::operator()(const FromWorld& from, const ToInventory& to)
 {

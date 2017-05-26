@@ -382,6 +382,12 @@ ls::Vec2I World::screenToTile(const ls::Vec2I& screenPosition) const
 {
     return worldToTile(screenToWorld(screenPosition));
 }
+ls::Vec2F World::tileCenterToWorld(const ls::Vec2I& tilePosition) const
+{
+    const ls::Vec2F tileSize{ static_cast<float>(GameConstants::tileSize), static_cast<float>(GameConstants::tileSize) };
+    const ls::Vec2F tilePos = static_cast<ls::Vec2F>(tilePosition) * tileSize + tileSize / 2.0f;
+    return tilePos;
+}
 
 void World::useTile(const ls::Vec2I& tilePosition)
 {
@@ -413,9 +419,39 @@ std::vector<Rectangle2F> World::queryTileColliders(const Rectangle2F& queryRegio
 {
     return m_mapLayer->queryTileColliders(queryRegion);
 }
-std::vector<ls::Vec2I> World::queryGridPoints(const ls::Vec2I& from, const ls::Vec2I& to) const
+std::vector<ls::Vec2I> World::queryGridPointsBetweenTiles(const ls::Vec2I& from, const ls::Vec2I& to) const
 {
     return queryGridPoints(ls::LineSegment2F(ls::Vec2F(from.x + 0.5f, from.y + 0.5f), ls::Vec2F(to.x + 0.5f, to.y + 0.5f)));
+}
+std::vector<ls::Vec2I> World::queryGridPointsBetweenPlayerAndTile(const ls::Vec2I& to) const
+{
+    return queryGridPoints(ls::LineSegment2F(m_player.entity().model().position() / static_cast<float>(GameConstants::tileSize), ls::Vec2F(to.x + 0.5f, to.y + 0.5f)));
+}
+bool World::lineOfSightBetweenTiles(const ls::Vec2I& from, const ls::Vec2I& to) const
+{
+    for (auto pos : queryGridPointsBetweenTiles(from, to))
+    {
+        if (!m_mapLayer->at(pos.x, pos.y).top().tile().model().isThrowableThrough()) return false;
+    }
+    return true;
+}
+bool World::lineOfSightBetweenPlayerAndTile(const ls::Vec2I& to) const
+{
+    for (auto pos : queryGridPointsBetweenPlayerAndTile(to))
+    {
+        if (!m_mapLayer->at(pos.x, pos.y).top().tile().model().isThrowableThrough()) return false;
+    }
+    return true;
+}
+float World::playerDistanceToTile(const ls::Vec2I& tile) const
+{
+    const ls::Vec2F playerPos = m_player.entity().model().position();
+    const ls::Vec2F tilePos = tileCenterToWorld(tile);
+    return playerPos.distance(tilePos);
+}
+int World::tileManhattanDistance(const ls::Vec2I& from, const ls::Vec2I& to) const
+{
+    return std::abs(from.x - to.x) + std::abs(from.y - to.y);
 }
 std::vector<ls::Vec2I> World::queryGridPoints(const ls::LineSegment2F& line) const
 {

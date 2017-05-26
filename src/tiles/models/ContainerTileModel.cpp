@@ -66,6 +66,10 @@ bool ContainerTileModel::isMovableTo() const
 {
     return m_commonData->isMovableTo;
 }
+int ContainerTileModel::maxThrowDistance() const
+{
+    return m_commonData->maxThrowDistance;
+}
 bool ContainerTileModel::canBeStored() const
 {
     return m_commonData->canBeStored;

@@ -50,6 +50,7 @@ public:
     ls::Vec2F screenToWorld(const ls::Vec2I& screenPosition) const; //screenPosition is relative to top left of the window
     ls::Vec2I worldToScreen(const ls::Vec2F& worldPosition) const;
     ls::Vec2I screenToTile(const ls::Vec2I& screenPosition) const;
+    ls::Vec2F tileCenterToWorld(const ls::Vec2I& tilePosition) const;
 
     void useTile(const ls::Vec2I& tilePosition);
 
@@ -60,7 +61,12 @@ public:
     bool isInsideWorldBounds(const ls::Vec2I& pos) const;
 
     std::vector<ls::Rectangle2F> queryTileColliders(const ls::Rectangle2F& queryRegion) const;
-    std::vector<ls::Vec2I> queryGridPoints(const ls::Vec2I& from, const ls::Vec2I& to) const;
+    std::vector<ls::Vec2I> queryGridPointsBetweenTiles(const ls::Vec2I& from, const ls::Vec2I& to) const;
+    std::vector<ls::Vec2I> queryGridPointsBetweenPlayerAndTile(const ls::Vec2I& to) const;
+    bool lineOfSightBetweenTiles(const ls::Vec2I& from, const ls::Vec2I& to) const;
+    bool lineOfSightBetweenPlayerAndTile(const ls::Vec2I& to) const;
+    float playerDistanceToTile(const ls::Vec2I& tile) const;
+    int tileManhattanDistance(const ls::Vec2I& from, const ls::Vec2I& to) const;
 
     EventResult onMouseButtonPressed(sf::Event::MouseButtonEvent& event, EventContext context);
     EventResult onMouseButtonReleased(sf::Event::MouseButtonEvent& event, EventContext context);

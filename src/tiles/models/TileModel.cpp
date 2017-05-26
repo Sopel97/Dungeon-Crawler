@@ -43,6 +43,10 @@ bool TileModel::isMovableTo() const
 {
     return false;
 }
+int TileModel::maxThrowDistance() const
+{
+    return 0;
+}
 bool TileModel::canBeStored() const
 {
     return false;
