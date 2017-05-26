@@ -13,6 +13,7 @@
 #include "events/TileMovedFromWorldToWorld.h"
 #include "events/TileMovedFromWorldToInventory.h"
 #include "events/TileMovedFromInventoryToInventory.h"
+#include "events/TileMovedFromInventoryToWorld.h"
 
 void TileTransferMediator::grabFromWorld(const ls::Vec2I& loc, World& world, Player& player)
 {
@@ -82,8 +83,7 @@ void TileTransferMediator::operator()(const FromWorld& from, const ToWorld& to)
     // perform move
     std::cout << "World -> World\n";
 
-    TileStack detachedTileStack = fromTileColumn.takeFromTop();
-    toTileColumn.placeOnTop(std::move(detachedTileStack));
+    toTileColumn.placeOnTop(fromTileColumn.takeFromTop());
 
     EventDispatcher::instance().broadcast<TileMovedFromWorldToWorld>(TileMovedFromWorldToWorld{from, to, &(toTileColumn.top()) });
 }
@@ -115,7 +115,28 @@ void TileTransferMediator::operator()(const FromWorld& from, const ToInventory& 
 }
 void TileTransferMediator::operator()(const FromInventory& from, const ToWorld& to)
 {
+    InventorySystem& inventorySystem = *from.inventorySystem;
+    Inventory& fromInventory = *from.inventory;
+    int fromSlot = from.slot;
+    TileStack& fromTileStack = fromInventory.at(fromSlot);
+
+    if (fromTileStack.isEmpty()) return; // nothing to move
+
+    int toX = to.pos.x;
+    int toY = to.pos.y;
+    World& world = *to.world;
+    MapLayer& map = world.map();
+    TileColumn& toTileColumn = map.at(toX, toY);
+    TileStack& toTileStack = toTileColumn.top();
+
+    if (!toTileStack.tile().model().isMovableTo()) return; // cant be moved to this tile
+
+    // perform move
     std::cout << "Inventory -> World\n";
+
+    toTileColumn.placeOnTop(std::move(fromTileStack));
+
+    EventDispatcher::instance().broadcast<TileMovedFromInventoryToWorld>(TileMovedFromInventoryToWorld{ from, to, &(toTileColumn.top()) });
 }
 void TileTransferMediator::operator()(const FromInventory& from, const ToInventory& to)
 {
@@ -123,9 +144,10 @@ void TileTransferMediator::operator()(const FromInventory& from, const ToInvento
 
     InventorySystem& inventorySystem = *from.inventorySystem;
 
-    Inventory* fromInventory = from.inventory;
+    Inventory& fromInventory = *from.inventory;
     const int fromSlot = from.slot;
-    TileStack& fromTileStack = fromInventory->at(fromSlot);
+    TileStack& fromTileStack = fromInventory.at(fromSlot);
+    if (fromTileStack.isEmpty()) return; // nothing to move
     if (!fromTileStack.tile().model().isMovableFrom()) return; // item can't be moved
 
     Inventory& toInventory = *to.inventory;
