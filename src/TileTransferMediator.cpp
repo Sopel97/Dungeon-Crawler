@@ -91,6 +91,8 @@ void TileTransferMediator::operator()(const FromWorld& from, const ToWorld& to)
 }
 void TileTransferMediator::operator()(const FromWorld& from, const ToInventory& to)
 {
+    constexpr float maxPlayerDistFromTile = 48.0f;
+
     World& world = *from.world;
     MapLayer& map = world.map();
 
@@ -98,7 +100,10 @@ void TileTransferMediator::operator()(const FromWorld& from, const ToInventory& 
     int fromY = from.pos.y;
     TileColumn& fromTileColumn = map.at(fromX, fromY);
     TileStack& fromTileStack = fromTileColumn.top();
+
+    if (world.playerDistanceToTile(from.pos) > maxPlayerDistFromTile) return; // out of range
     if (!fromTileStack.tile().model().isMovableFrom()) return; // item can't be moved
+    if (!world.lineOfSightBetweenPlayerAndTile(from.pos)) return; // no line of sight
 
     Inventory& inventory = *to.inventory;
     const int slot = to.slot;
@@ -106,22 +111,8 @@ void TileTransferMediator::operator()(const FromWorld& from, const ToInventory& 
     if (!inventorySystem.canStore(inventory, fromTileStack.tile())) return;
 
     TileStack& toTileStack = inventory.at(slot);
-    if (toTileStack.isEmpty())
-    {
-        toTileStack = fromTileColumn.takeFromTop();
-    }
-    else if (toTileStack.tile().equals(fromTileStack.tile()))
-    {
-        const int toMove = std::min(fromTileStack.quantity(), toTileStack.maxQuantity() - toTileStack.quantity());
-        fromTileStack.erase(toMove);
-        toTileStack.insert(toMove);
-
-        if (fromTileStack.isEmpty())
-        {
-            fromTileColumn.takeFromTop();
-        }
-    }
-    else return; // cant perform move
+    move(fromTileStack, toTileStack, fromTileStack.quantity());
+    if (fromTileStack.isEmpty()) fromTileColumn.takeFromTop();
 
     std::cout << "World -> Inventory\n";
 
@@ -144,6 +135,11 @@ void TileTransferMediator::operator()(const FromInventory& from, const ToWorld& 
     TileStack& toTileStack = toTileColumn.top();
 
     if (!toTileStack.tile().model().isMovableTo()) return; // cant be moved to this tile
+
+    int maxTileThrowDist = fromTileStack.tile().model().maxThrowDistance();
+    if (world.tileManhattanDistanceFromPlayer(to.pos) > maxTileThrowDist) return; // out of range
+
+    if (!world.lineOfSightBetweenPlayerAndTile(to.pos)) return; // out of sight
 
     // perform move
     std::cout << "Inventory -> World\n";
@@ -169,17 +165,7 @@ void TileTransferMediator::operator()(const FromInventory& from, const ToInvento
     if (!inventorySystem.canStore(toInventory, fromTileStack.tile())) return;
 
     TileStack& toTileStack = toInventory.at(toSlot);
-    if (toTileStack.isEmpty())
-    {
-        toTileStack = std::move(fromTileStack);
-    }
-    else if (toTileStack.tile().equals(fromTileStack.tile()))
-    {
-        const int toMove = std::min(fromTileStack.quantity(), toTileStack.maxQuantity() - toTileStack.quantity());
-        fromTileStack.erase(toMove);
-        toTileStack.insert(toMove);
-    }
-    else return; // cant perform move
+    move(fromTileStack, toTileStack, fromTileStack.quantity());
 
     // perform move
     std::cout << "Inventory -> Inventory\n";
@@ -198,11 +184,26 @@ void TileTransferMediator::move(TileStack& from, TileColumn& to, int max)
             
             currentTop.insert(toMove);
             from.erase(toMove);
+            max -= toMove;
         }
     }
 
-    if (!from.isEmpty())
+    if (!from.isEmpty() && max > 0)
     {
-        to.placeOnTop(std::move(from));
+        to.placeOnTop(from.split(std::min(from.quantity(), max)));
     }
+}
+void TileTransferMediator::move(TileStack& from, TileStack& to, int max)
+{
+    if (to.isEmpty())
+    {
+        to = from.split(std::min(from.quantity(), max));
+    }
+    else if (to.tile().equals(from.tile()))
+    {
+        const int toMove = std::min(from.quantity(), to.maxQuantity() - to.quantity());
+        from.erase(toMove);
+        to.insert(toMove);
+    }
+    else return; // cant perform move
 }

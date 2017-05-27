@@ -67,6 +67,7 @@ public:
     bool lineOfSightBetweenPlayerAndTile(const ls::Vec2I& to) const;
     float playerDistanceToTile(const ls::Vec2I& tile) const;
     int tileManhattanDistance(const ls::Vec2I& from, const ls::Vec2I& to) const;
+    int tileManhattanDistanceFromPlayer(const ls::Vec2I& to) const;
 
     EventResult onMouseButtonPressed(sf::Event::MouseButtonEvent& event, EventContext context);
     EventResult onMouseButtonReleased(sf::Event::MouseButtonEvent& event, EventContext context);

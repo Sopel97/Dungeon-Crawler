@@ -153,7 +153,7 @@ void World::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
         delete tallDrawable;
     }
 
-    drawLightMapToIntermidiate(renderStates);
+    //drawLightMapToIntermidiate(renderStates);
     drawIntermidiate(renderTarget, renderStates);
 }
 
@@ -452,6 +452,10 @@ float World::playerDistanceToTile(const ls::Vec2I& tile) const
 int World::tileManhattanDistance(const ls::Vec2I& from, const ls::Vec2I& to) const
 {
     return std::abs(from.x - to.x) + std::abs(from.y - to.y);
+}
+int World::tileManhattanDistanceFromPlayer(const ls::Vec2I& to) const
+{
+    return tileManhattanDistance(worldToTile(m_player.entity().model().position()), to);
 }
 std::vector<ls::Vec2I> World::queryGridPoints(const ls::LineSegment2F& line) const
 {

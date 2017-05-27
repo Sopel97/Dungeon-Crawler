@@ -61,4 +61,5 @@ public:
     void operator()(const FromInventory& from, const ToInventory& to);
 private:
     void move(TileStack& from, TileColumn& to, int max);
+    void move(TileStack& from, TileStack& to, int max);
 };

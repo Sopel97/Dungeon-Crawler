@@ -65,11 +65,19 @@ const Tile& TileStack::tile() const
 }
 TileStack TileStack::split(int newStackSize)
 {
-    TileStack newStack = clone();
-    newStack.setQuantity(newStackSize);
-    setQuantity(m_quantity - newStackSize);
-
-    return std::move(newStack);
+    if (newStackSize == m_quantity)
+    {
+        TileStack newStack(std::move(m_tile), m_quantity);
+        setQuantity(0);
+        return std::move(newStack);
+    }
+    else
+    {
+        TileStack newStack = clone();
+        newStack.setQuantity(newStackSize);
+        setQuantity(m_quantity - newStackSize);
+        return std::move(newStack);
+    }
 }
 TileStack TileStack::clone() const
 {
