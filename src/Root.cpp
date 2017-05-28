@@ -101,30 +101,35 @@ void Root::processAsyncKeyboardInput(float dt)
     m_game->player().processAsyncKeyboardInput(m_game->world(), dt);
 }
 
-void Root::loadAssets() // TODO: should be done dynamically
+void Root::loadAssets()
 {
-    ResourceManager::instance().load<sf::Texture>("assets\\gfx\\spritesheet.png", "Spritesheet");
-    if(ResourceHandle<sf::Texture> texture = ResourceManager::instance().load<sf::Texture>("assets\\gfx\\ui_background.png", "UiBackground"))
-    {
-        texture->setRepeated(true);
-    }
-    if(ResourceHandle<sf::Texture> texture = ResourceManager::instance().load<sf::Texture>("assets\\gfx\\ui_vertical_bars.png", "UiVerticalBars"))
-    {
-        texture->setRepeated(true);
-    }
-    if(ResourceHandle<sf::Texture> texture = ResourceManager::instance().load<sf::Texture>("assets\\gfx\\ui_horizontal_bars.png", "UiHorizontalBars"))
-    {
-        texture->setRepeated(true);
-    }
-    ResourceManager::instance().load<sf::Texture>("assets\\gfx\\ui_non_repeating.png", "UiNonRepeating");
-    ResourceManager::instance().load<sf::Texture>("assets\\gfx\\light_disc.png", "LightDisc");
+    loadTextures();
+    loadTiles();
 
-    for(const auto& tilePath : scanForFiles("assets\\tiles\\", "*.tile"))
+    ResourceManager::instance().load<sf::Font>("assets\\fonts\\standard_font.ttf", "Font");
+}
+void Root::loadTextures()
+{
+    Configuration config("assets/gfx/textures.meta");
+    ConfigurationNode textureList = config["textures"];
+    const int numEntries = textureList.length();
+    for (int i = 1; i <= numEntries; ++i)
+    {
+        const std::string path = textureList[i]["path"].get<std::string>();
+        const std::string name = textureList[i]["name"].get<std::string>();
+        const bool isRepeated = textureList[i]["repeated"].getDefault<bool>(false);
+        if (ResourceHandle<sf::Texture> texture = ResourceManager::instance().load<sf::Texture>(std::string("assets/gfx/") + path, name))
+        {
+            texture->setRepeated(isRepeated);
+        }
+    }
+}
+void Root::loadTiles()
+{
+    for (const auto& tilePath : scanForFiles("assets\\tiles\\", "*.tile"))
     {
         ResourceManager::instance().load<TilePrefab>(tilePath);
     }
-
-    ResourceManager::instance().load<sf::Font>("assets\\fonts\\standard_font.ttf", "Font");
 }
 
 void Root::onWindowResized(sf::Event& event)

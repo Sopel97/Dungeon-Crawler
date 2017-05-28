@@ -1,0 +1,9 @@
+textures = {
+    { path = "light_disc.png", name = "LightDisc", repeated = false },   
+    { path = "spritesheet.png", name = "Spritesheet", repeated = false },   
+    { path = "spritesheet_meta.png", name = "SpritesheetMeta", repeated = false },  
+    { path = "ui_background.png", name = "UiBackground", repeated = true },   
+    { path = "ui_vertical_bars.png", name = "UiVerticalBars", repeated = true },   
+    { path = "ui_horizontal_bars.png", name = "UiHorizontalBars", repeated = true },   
+    { path = "ui_non_repeating.png", name = "UiNonRepeating", repeated = false },   
+}

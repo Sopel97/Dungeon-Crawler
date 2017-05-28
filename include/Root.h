@@ -29,7 +29,6 @@ public:
     static Root& instance();
 
     void run();
-    void loadAssets();
 
     void processAsyncKeyboardInput(float dt); //TODO: replace this with usage of standard events
     void onWindowResized(sf::Event& event);
@@ -41,8 +40,6 @@ public:
     Game& game();
 
     std::mt19937& rng();
-
-    std::vector<std::string> scanForFiles(const std::string& path, const std::string& query) const;
 
 protected:
     sf::RenderWindow m_window;
@@ -68,6 +65,11 @@ private:
     {
         return std::string(s.begin(), s.end());
     }
+
+    std::vector<std::string> scanForFiles(const std::string& path, const std::string& query) const;
+    void loadTextures();
+    void loadTiles();
+    void loadAssets();
 };
 
 #endif // ROOT_H
