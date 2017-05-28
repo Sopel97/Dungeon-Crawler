@@ -9,8 +9,7 @@ tile = {
     texture = "Spritesheet",
     metaTexture = "SpritesheetMeta",
     
-    mainSpriteSet = {34, 0},
-    metaSpriteSet = {0, 272},
+    spriteSet = {34, 0},
 
     innerBorderGroup = 1,
 	

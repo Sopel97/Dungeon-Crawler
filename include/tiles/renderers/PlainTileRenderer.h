@@ -54,8 +54,8 @@ protected:
     struct CommonData : public ComponentCommonData
     {
         ResourceHandle<sf::Texture> texture;
+        ResourceHandle<sf::Texture> metaTexture;
         WeightedSpriteSet spriteSet;
-        std::vector<ls::Vec2I> respectiveMetaSprites;
 
         int outerBorderPriority;
         bool coversOuterBorders;
@@ -63,7 +63,7 @@ protected:
     CommonData* m_commonData;
     int m_spriteId;
 
-    void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location, const ls::Vec2I& sprite) const;
+    void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location, const sf::Texture& texture) const;
 };
 
 REGISTER_TILE_RENDERER_TYPE(PlainTileRenderer)

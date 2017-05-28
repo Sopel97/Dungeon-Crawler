@@ -37,8 +37,9 @@ OuterBorderedTileRenderer::~OuterBorderedTileRenderer()
 
 void OuterBorderedTileRenderer::loadFromConfiguration(ConfigurationNode& config)
 {
-    std::string texturePath = config["texture"].get<std::string>();
-    m_commonData->texture = ResourceManager::instance().get<sf::Texture>(texturePath);
+    std::string textureName = config["texture"].get<std::string>();
+    m_commonData->texture = ResourceManager::instance().get<sf::Texture>(textureName);
+
     ConfigurationNode sprites = config["sprites"];
     m_commonData->spriteSet.loadFromConfiguration(sprites);
 

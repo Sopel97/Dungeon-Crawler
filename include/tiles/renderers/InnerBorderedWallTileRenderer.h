@@ -62,14 +62,16 @@ protected:
             ls::Vec2I outerTopLeft;
             ls::Vec2I innerBottomRight;
 
-        }mainSprites, metaSprites;
+        }spriteSet;
+
         ResourceHandle<sf::Texture> texture;
+        ResourceHandle<sf::Texture> metaTexture;
 
         int innerBorderGroup;
     };
     CommonData* m_commonData;
 
-    virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location, const CommonData::SpriteSet& spriteSet) const;
+    virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location, const sf::Texture& texture) const;
 };
 
 REGISTER_TILE_RENDERER_TYPE(InnerBorderedWallTileRenderer)

@@ -7,9 +7,7 @@ tile = {
     controller = "ContainerTileController",
 
     texture = "Spritesheet",
-    metaTexture = "SpritesheetMeta",
-
-    texture = "Spritesheet",
+    
     sprites = {
         {340, 204},
     },

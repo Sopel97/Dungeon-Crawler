@@ -7,7 +7,6 @@ tile = {
     controller = "PlainTileController",
 
     texture = "Spritesheet",
-    metaTexture = "SpritesheetMeta",
     
     sprites = {
         {0+34*0, 238},
