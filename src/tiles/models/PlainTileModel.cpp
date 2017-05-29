@@ -40,6 +40,7 @@ void PlainTileModel::loadFromConfiguration(ConfigurationNode& config)
     m_commonData->isThrowableThrough = config["isThrowableThrough"].getDefault<bool>(false);
     m_commonData->isMovableTo = config["isMovableTo"].getDefault<bool>(false);
     m_commonData->canBeStored = config["canBeStored"].getDefault<bool>(false);
+    m_commonData->maxQuantity = config["maxQuantity"].getDefault<int>(1);
 }
 
 bool PlainTileModel::hasCollider() const
@@ -69,6 +70,10 @@ int PlainTileModel::maxThrowDistance() const
 bool PlainTileModel::canBeStored() const
 {
     return m_commonData->canBeStored;
+}
+int PlainTileModel::maxQuantity() const
+{
+    return m_commonData->maxQuantity;
 }
 
 float PlainTileModel::drag() const

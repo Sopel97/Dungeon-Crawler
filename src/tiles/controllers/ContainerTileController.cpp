@@ -23,12 +23,12 @@ ContainerTileController::~ContainerTileController()
 {
 }
 
-void ContainerTileController::onTileInteracted(Player& player, const TileLocation& location)
+void ContainerTileController::use(Player& player, const TileLocation& location)
 {
     player.tryInteractWithExternalInventory(*(m_owner->model().inventory()), location);
 }
 
-void ContainerTileController::onTileInteracted(Player& player, const InventorySlotView& slot)
+void ContainerTileController::use(Player& player, const InventorySlotView& slot)
 {
     player.tryInteractWithInternalInventory(*(m_owner->model().inventory()), slot);
 }

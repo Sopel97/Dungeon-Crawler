@@ -12,7 +12,7 @@ ContainerTileModel::ContainerTileModel() :
 ContainerTileModel::ContainerTileModel(const ContainerTileModel& other) :
     TileModel(other),
     m_commonData(other.m_commonData),
-    m_inventory(other.m_inventory.size())
+    m_inventory(other.m_inventory)
 {
 
 }
@@ -73,6 +73,10 @@ int ContainerTileModel::maxThrowDistance() const
 bool ContainerTileModel::canBeStored() const
 {
     return m_commonData->canBeStored;
+}
+int ContainerTileModel::maxQuantity() const
+{
+    return 1;
 }
 
 Inventory* ContainerTileModel::inventory()

@@ -81,5 +81,6 @@ TileStack TileStack::split(int newStackSize)
 }
 TileStack TileStack::clone() const
 {
+    if (m_tile == nullptr) return TileStack();
     return TileStack(m_tile->clone(), m_quantity);
 }

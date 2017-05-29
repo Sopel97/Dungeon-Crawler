@@ -43,8 +43,7 @@ public:
 
     int maxQuantity() const;
 
-    void onTilePlaced(const TileLocation& location);
-    void onTileRemoved(const TileLocation& location);
+    void onTileQuantityChanged(int oldQuantity, int newQuantity);
     void onTileInstantiated();
     void onTileCloned();
 
@@ -53,13 +52,11 @@ public:
     std::unique_ptr<Tile> clone() const;
     std::unique_ptr<Tile> instantiate() const;
 
-    void onTileQuantityChanged(int oldQuantity, int newQuantity);
 protected:
     std::unique_ptr<TileModel> m_model;
     std::unique_ptr<TileRenderer> m_renderer;
     std::unique_ptr<TileController> m_controller;
-    int m_id; //NOTE: if memory is an issue these 3 can be changed to other types
-    int m_maxQuantity;
+    int m_id;
 };
 
 #endif // TILE_H

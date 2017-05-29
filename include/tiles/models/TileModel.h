@@ -9,13 +9,13 @@
 
 #include <memory>
 
-#include "Component.h"
+#include "tiles/TileComponent.h"
 
 class Tile;
 class TileLocation;
 class Inventory;
 
-class TileModel : public Component<TileModel, Tile>
+class TileModel : public TileComponent<TileModel, Tile>
 	//must be functional (ie. all methods return resonable values and there is no pure virtual member functions)
 {
 public:
@@ -32,17 +32,12 @@ public:
     virtual bool isMovableTo() const;
     virtual int maxThrowDistance() const;
     virtual bool canBeStored() const;
+    virtual int maxQuantity() const;
 
     virtual Inventory* inventory();
     virtual const Inventory* inventory() const;
 
     virtual float drag() const; //TODO: make it possible to specify that tile uses the drag of the tile lower
-
-    virtual void onTilePlaced(const TileLocation& location);
-    virtual void onTileRemoved(const TileLocation& location);
-    virtual void onTileQuantityChanged(int oldQuantity, int newQuantity);
-    virtual void onTileInstantiated();
-    virtual void onTileCloned();
 
     virtual std::unique_ptr<TileModel> clone() const;
 

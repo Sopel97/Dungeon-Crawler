@@ -91,7 +91,7 @@ SfmlEventHandler::EventResult InventoryView::onMouseButtonPressed(sf::Event::Mou
             if (!slot->content().isEmpty())
             {
                 Tile& tile = slot->content().tile();
-                tile.controller().onTileInteracted(m_inventorySystem->player(), *slot);
+                tile.controller().use(m_inventorySystem->player(), *slot);
             }
         }
     }

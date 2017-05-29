@@ -14,8 +14,6 @@ tile = {
 	
     inventorySize = 15,
 
-	maxQuantity = 1,
-
     drag = 0.85,
     isThrowableThrough = true,
     isMovableTo = true,

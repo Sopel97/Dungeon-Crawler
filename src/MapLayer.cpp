@@ -72,17 +72,11 @@ TileStack& MapLayer::at(int x, int y, int z)
 
 void MapLayer::placeTile(TileStack&& tileStack, int x, int y)
 {
-    TileColumn& tileColumn = at(x, y);
-    tileColumn.placeOnTop(std::move(tileStack));
-    tileColumn.top().tile().onTilePlaced(TileLocation(*this, x, y, tileColumn.topZ()));
+    at(x, y).placeOnTop(std::move(tileStack));
 }
 TileStack MapLayer::takeTile(int x, int y)
 {
-    TileColumn& tileColumn = at(x, y);
-    int z = tileColumn.topZ();
-    TileStack tileStack = tileColumn.takeFromTop();
-    tileStack.tile().onTileRemoved(TileLocation(*this, x, y, z));
-    return std::move(tileStack);
+    return at(x, y).takeFromTop();
 }
 
 std::vector<Rectangle2F> MapLayer::queryTileColliders(const Rectangle2F& queryRegion) const

@@ -5,12 +5,12 @@
 #include "GameConstants.h"
 
 TileRenderer::TileRenderer() :
-    Component()
+    TileComponent()
 {
 
 }
 TileRenderer::TileRenderer(const TileRenderer& other) :
-	Component(other)
+    TileComponent(other)
 {
 
 }
@@ -57,27 +57,6 @@ bool TileRenderer::coversOuterBorders() const
 bool TileRenderer::isTall() const
 {
     return false;
-}
-
-void TileRenderer::onTilePlaced(const TileLocation& location)
-{
-
-}
-void TileRenderer::onTileRemoved(const TileLocation& location)
-{
-
-}
-void TileRenderer::onTileQuantityChanged(int oldQuantity, int newQuantity)
-{
-
-}
-void TileRenderer::onTileInstantiated()
-{
-
-}
-void TileRenderer::onTileCloned()
-{
-
 }
 
 std::unique_ptr<TileRenderer> TileRenderer::clone() const

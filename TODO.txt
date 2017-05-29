@@ -3,23 +3,23 @@
 0.9. consider passing tilestack to the render function
 0.99. consider making a sprite selector class that can be dynamically specified during creation of tiles.
     - it would handle sprite selection based on desired tile aspects or some other source (quantity based, weighted)
-    - think of a way to make it performant and VERY generic
+    - relies on events that tile gets, for example when instantiated, or quantity changed.
+    - must also take current sprite so in case it does not know what to do (or wants to do nothing) it can return current sprite
 1. consider moving maxQuantity to model
 2. Mimic tile classes design for entities
 2.5. rename commondata to shareddata
 
 3. Do prefabs for entities too and use Component for entities
 
+4. Make inventories copyable such that they clone tiles that are inside
+5. Remove events - onTilePlaced, onTileRemoved
+6. Call tile moving events for each tile stack that is altered, pass moved quantity
+
 7. Clear world generation code
-9. in entity manager pass world by reference
 11. Do proper logging.
-12. Clean some files - make more classes (for example scanForFiles from Root should not be there)
 13. Clean member ordering and use automatic objects wherever possible.
 15. Pass RenderStates by CONST reference
-17. Make a system that handles moving items between world and inventory (inv->inv, inv->world, world->inv, world->world).
-18. Look around for names that can be made more meaningful because the project evolved and some names should mean different things than earlier
 19. Make camera like the one in Carcassone. Move there everything involving camera (for example conversion between coordinates)
-20. Direction class similar to one in Carcassone
 
 22. Simplified sprite system
     - AnimatedSprite class that holds instances of Sprite (x, y, width, height, later also spritesheet id if needed) and table of frame time sums (for binary search)

@@ -13,8 +13,7 @@ Tile::Tile(int id, std::unique_ptr<TileModel>&& model, std::unique_ptr<TileRende
     m_model(std::move(model)),
     m_renderer(std::move(renderer)),
     m_controller(std::move(controller)),
-    m_id(id),
-    m_maxQuantity(1)
+    m_id(id)
 {
     m_model->setOwner(this);
     m_renderer->setOwner(this);
@@ -24,8 +23,7 @@ Tile::Tile(const Tile& other) :
     m_model(other.m_model->clone()),
     m_renderer(other.m_renderer->clone()),
     m_controller(other.m_controller->clone()),
-    m_id(other.m_id),
-    m_maxQuantity(other.m_maxQuantity)
+    m_id(other.m_id)
 {
     m_model->setOwner(this);
     m_renderer->setOwner(this);
@@ -41,8 +39,6 @@ void Tile::loadFromConfiguration(ConfigurationNode& config)
     m_model->loadFromConfiguration(config);
     m_renderer->loadFromConfiguration(config);
     m_controller->loadFromConfiguration(config);
-
-    m_maxQuantity = config["maxQuantity"].getDefault<int>(1);
 }
 
 void Tile::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const
@@ -95,19 +91,14 @@ bool Tile::equals(const Tile& other) const
 
 int Tile::maxQuantity() const
 {
-    return m_maxQuantity;
+    return m_model->maxQuantity();
 }
-void Tile::onTilePlaced(const TileLocation& location)
+
+void Tile::onTileQuantityChanged(int oldQuantity, int newQuantity)
 {
-    m_model->onTilePlaced(location);
-    m_renderer->onTilePlaced(location);
-    m_controller->onTilePlaced(location);
-}
-void Tile::onTileRemoved(const TileLocation& location)
-{
-    m_model->onTileRemoved(location);
-    m_renderer->onTileRemoved(location);
-    m_controller->onTileRemoved(location);
+    m_model->onTileQuantityChanged(oldQuantity, newQuantity);
+    m_renderer->onTileQuantityChanged(oldQuantity, newQuantity);
+    m_controller->onTileQuantityChanged(oldQuantity, newQuantity);
 }
 void Tile::onTileInstantiated()
 {
@@ -143,11 +134,4 @@ std::unique_ptr<Tile> Tile::instantiate() const
     tileClone->onTileInstantiated();
 
     return tileClone;
-}
-
-void Tile::onTileQuantityChanged(int oldQuantity, int newQuantity)
-{
-    m_model->onTileQuantityChanged(oldQuantity, newQuantity);
-    m_renderer->onTileQuantityChanged(oldQuantity, newQuantity);
-    m_controller->onTileQuantityChanged(oldQuantity, newQuantity);
 }

@@ -29,6 +29,7 @@ public:
     virtual bool isMovableTo() const;
     virtual int maxThrowDistance() const;
     virtual bool canBeStored() const;
+    virtual int maxQuantity() const;
 
     virtual float drag() const;
 
@@ -46,6 +47,7 @@ protected:
         bool isThrowableThrough;
         bool isMovableTo;
         bool canBeStored;
+        int maxQuantity;
     };
     CommonData* m_commonData;
 };

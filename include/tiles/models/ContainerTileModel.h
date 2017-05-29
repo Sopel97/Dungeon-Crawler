@@ -34,6 +34,7 @@ public:
     virtual bool isMovableTo() const;
     virtual int maxThrowDistance() const;
     virtual bool canBeStored() const;
+    virtual int maxQuantity() const;
 
     virtual Inventory* inventory();
     virtual const Inventory* inventory() const;

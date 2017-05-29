@@ -392,7 +392,7 @@ ls::Vec2F World::tileCenterToWorld(const ls::Vec2I& tilePosition) const
 void World::useTile(const ls::Vec2I& tilePosition)
 {
     TileColumn& tileColumn = m_mapLayer->at(tilePosition.x, tilePosition.y);
-    tileColumn.top().tile().controller().onTileInteracted(m_root.game().player(), TileLocation(*m_mapLayer, tilePosition.x, tilePosition.y, tileColumn.topZ()));
+    tileColumn.top().tile().controller().use(m_root.game().player(), TileLocation(*m_mapLayer, tilePosition.x, tilePosition.y, tileColumn.topZ()));
 }
 
 void World::update(float dt)

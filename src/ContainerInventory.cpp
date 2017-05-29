@@ -10,9 +10,18 @@
 
 using namespace ls;
 
-ContainerInventory::ContainerInventory(int size)
+ContainerInventory::ContainerInventory(int size) :
+    m_contents(size)
 {
-    m_contents.resize(size);
+
+}
+ContainerInventory::ContainerInventory(const ContainerInventory& other) :
+    ContainerInventory(other.size())
+{
+    for (int i = 0; i < other.size(); ++i)
+    {
+        m_contents.at(i) = other.at(i).clone();
+    }
 }
 
 std::vector<TileStack>& ContainerInventory::contents()

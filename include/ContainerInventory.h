@@ -18,6 +18,7 @@ class ContainerInventory : public Inventory
 {
 public:
     ContainerInventory(int size);
+    ContainerInventory(const ContainerInventory& other);
 
     std::vector<TileStack>& contents() override;
     const std::vector<TileStack>& contents() const override;

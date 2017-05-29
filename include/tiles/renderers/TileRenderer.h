@@ -3,7 +3,7 @@
 #include "Configuration.h"
 
 #include "ComponentCommonData.h"
-#include "Component.h"
+#include "tiles/TileComponent.h"
 
 #include <memory>
 
@@ -17,7 +17,7 @@ class Tile;
 class TileLocation;
 class InventorySlotView;
 
-class TileRenderer : public Component<TileRenderer, Tile>
+class TileRenderer : public TileComponent<TileRenderer, Tile>
 	//must be functional (ie. all methods must return resonable values and there is no pure virtual member functions)
 {
 public:
@@ -38,12 +38,6 @@ public:
     virtual bool coversOuterBorders() const;
 
     virtual bool isTall() const; //tall tiles are required to have colliders
-
-    virtual void onTilePlaced(const TileLocation& location);
-    virtual void onTileRemoved(const TileLocation& location);
-    virtual void onTileQuantityChanged(int oldQuantity, int newQuantity);
-    virtual void onTileInstantiated();
-    virtual void onTileCloned();
 
     virtual std::unique_ptr<TileRenderer> clone() const;
 };
