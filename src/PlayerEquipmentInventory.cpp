@@ -15,18 +15,18 @@ PlayerEquipmentInventory::PlayerEquipmentInventory()
 {
     m_contents.resize(10);
     m_contentRequirements.reserve(10);
-    m_contentRequirements.push_back(InventoryContentRequirement::Necklace);
-    m_contentRequirements.push_back(InventoryContentRequirement::Sword);
-    m_contentRequirements.push_back(InventoryContentRequirement::Ring);
+    m_contentRequirements.push_back(SlotContentRequirement::Necklace);
+    m_contentRequirements.push_back(SlotContentRequirement::RightHand);
+    m_contentRequirements.push_back(SlotContentRequirement::Ring);
 
-    m_contentRequirements.push_back(InventoryContentRequirement::Helmet);
-    m_contentRequirements.push_back(InventoryContentRequirement::Chestplate);
-    m_contentRequirements.push_back(InventoryContentRequirement::Pants);
-    m_contentRequirements.push_back(InventoryContentRequirement::Boots);
+    m_contentRequirements.push_back(SlotContentRequirement::Helmet);
+    m_contentRequirements.push_back(SlotContentRequirement::Chestplate);
+    m_contentRequirements.push_back(SlotContentRequirement::Pants);
+    m_contentRequirements.push_back(SlotContentRequirement::Boots);
 
-    m_contentRequirements.push_back(InventoryContentRequirement::Container);
-    m_contentRequirements.push_back(InventoryContentRequirement::Shield);
-    m_contentRequirements.push_back(InventoryContentRequirement::Ammo);
+    m_contentRequirements.push_back(SlotContentRequirement::Container);
+    m_contentRequirements.push_back(SlotContentRequirement::LeftHand);
+    m_contentRequirements.push_back(SlotContentRequirement::Ammo);
 }
 
 std::vector<TileStack>& PlayerEquipmentInventory::contents()
@@ -37,7 +37,7 @@ const std::vector<TileStack>& PlayerEquipmentInventory::contents() const
 {
     return m_contents;
 }
-const InventoryContentRequirement PlayerEquipmentInventory::slotContentRequirement(size_t slotId) const
+const SlotContentRequirement PlayerEquipmentInventory::slotContentRequirement(size_t slotId) const
 {
     return m_contentRequirements[slotId];
 }

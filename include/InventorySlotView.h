@@ -8,7 +8,7 @@
 
 class TileStack;
 class Inventory;
-enum class InventoryContentRequirement;
+enum class SlotContentRequirement;
 
 namespace sf
 {
@@ -37,7 +37,7 @@ public:
     Inventory& inventory();
     const Inventory& inventory() const;
 
-    void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, InventoryContentRequirement contentRequirement);
+    void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, SlotContentRequirement contentRequirement);
 
     static const ls::Vec2I& slotSize();
 
@@ -46,7 +46,7 @@ protected:
     static ls::Vec2I m_slotTexture;
     static ls::Vec2I m_slotTextureSize;
     static ls::Vec2I m_requirementIconSize;
-    static std::map<InventoryContentRequirement, ls::Vec2I> m_requirementIcons;
+    static std::map<SlotContentRequirement, ls::Vec2I> m_requirementIcons;
 
     Inventory* m_inventory; //inventory will always outlive the views of its slots
     size_t m_slotId;

@@ -35,6 +35,7 @@ public:
     virtual int maxThrowDistance() const;
     virtual bool canBeStored() const;
     virtual int maxQuantity() const;
+    virtual bool meetsRequirements(SlotContentRequirement req) const;
 
     virtual Inventory* inventory();
     virtual const Inventory* inventory() const;

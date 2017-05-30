@@ -55,6 +55,12 @@ int TileModel::maxQuantity() const
 {
     return 1;
 }
+bool TileModel::meetsRequirements(SlotContentRequirement req) const
+{
+    return req == SlotContentRequirement::None
+        || req == SlotContentRequirement::LeftHand
+        || req == SlotContentRequirement::RightHand;
+}
 
 Inventory* TileModel::inventory()
 {

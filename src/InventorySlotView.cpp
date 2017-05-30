@@ -14,19 +14,19 @@ ResourceHandle<sf::Texture> InventorySlotView::m_texture {nullptr};
 Vec2I InventorySlotView::m_slotTexture {0, 19};
 Vec2I InventorySlotView::m_slotTextureSize {38, 38};
 Vec2I InventorySlotView::m_requirementIconSize {32, 32};
-std::map<InventoryContentRequirement, ls::Vec2I> InventorySlotView::m_requirementIcons
+std::map<SlotContentRequirement, ls::Vec2I> InventorySlotView::m_requirementIcons
 {
-    {InventoryContentRequirement::Necklace, Vec2I(38 + 32 * 0, 19)},
-    {InventoryContentRequirement::Helmet, Vec2I(38 + 32 * 1, 19)},
-    {InventoryContentRequirement::Container, Vec2I(38 + 32 * 2, 19)},
-    {InventoryContentRequirement::Sword, Vec2I(38 + 32 * 3, 19)},
-    {InventoryContentRequirement::Shield, Vec2I(38 + 32 * 4, 19)},
+    {SlotContentRequirement::Necklace, Vec2I(38 + 32 * 0, 19)},
+    {SlotContentRequirement::Helmet, Vec2I(38 + 32 * 1, 19)},
+    {SlotContentRequirement::Container, Vec2I(38 + 32 * 2, 19)},
+    {SlotContentRequirement::RightHand, Vec2I(38 + 32 * 3, 19)},
+    {SlotContentRequirement::LeftHand, Vec2I(38 + 32 * 4, 19)},
 
-    {InventoryContentRequirement::Chestplate, Vec2I(38 + 32 * 0, 19 + 32)},
-    {InventoryContentRequirement::Pants, Vec2I(38 + 32 * 1, 19 + 32)},
-    {InventoryContentRequirement::Ring, Vec2I(38 + 32 * 2, 19 + 32)},
-    {InventoryContentRequirement::Ammo, Vec2I(38 + 32 * 3, 19 + 32)},
-    {InventoryContentRequirement::Boots, Vec2I(38 + 32 * 4, 19 + 32)}
+    {SlotContentRequirement::Chestplate, Vec2I(38 + 32 * 0, 19 + 32)},
+    {SlotContentRequirement::Pants, Vec2I(38 + 32 * 1, 19 + 32)},
+    {SlotContentRequirement::Ring, Vec2I(38 + 32 * 2, 19 + 32)},
+    {SlotContentRequirement::Ammo, Vec2I(38 + 32 * 3, 19 + 32)},
+    {SlotContentRequirement::Boots, Vec2I(38 + 32 * 4, 19 + 32)}
 };
 
 InventorySlotView::InventorySlotView(Inventory* inventory, size_t slotId, const ls::Vec2I& position) :
@@ -65,7 +65,7 @@ const Inventory& InventorySlotView::inventory() const
     return *m_inventory;
 }
 
-void InventorySlotView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, InventoryContentRequirement contentRequirement)
+void InventorySlotView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, SlotContentRequirement contentRequirement)
 {
     sf::Sprite slotSprite;
     slotSprite.setPosition(static_cast<float>(m_position.x), static_cast<float>(m_position.y));
@@ -74,7 +74,7 @@ void InventorySlotView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& r
     renderTarget.draw(slotSprite, renderStates);
 
     const TileStack& tileStack = m_inventory->at(m_slotId);
-    if(contentRequirement != InventoryContentRequirement::None && tileStack.isEmpty())
+    if(contentRequirement != SlotContentRequirement::None && tileStack.isEmpty())
     {
         Vec2I iconSpritePosition = m_requirementIcons[contentRequirement];
         Vec2I iconOffset = (m_slotTextureSize - m_requirementIconSize) / 2;

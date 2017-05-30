@@ -109,6 +109,7 @@ void TileTransferMediator::operator()(const FromWorld& from, const ToInventory& 
     const int slot = to.slot;
     InventorySystem& inventorySystem = *to.inventorySystem;
     if (!inventorySystem.canStore(inventory, fromTileStack.tile())) return;
+    if (!inventory.meetsRequirements(fromTileStack.tile(), slot)) return;
 
     TileStack& toTileStack = inventory.at(slot);
     move(fromTileStack, toTileStack, fromTileStack.quantity());
@@ -163,6 +164,7 @@ void TileTransferMediator::operator()(const FromInventory& from, const ToInvento
     Inventory& toInventory = *to.inventory;
     const int toSlot = to.slot;
     if (!inventorySystem.canStore(toInventory, fromTileStack.tile())) return;
+    if (!toInventory.meetsRequirements(fromTileStack.tile(), toSlot)) return;
 
     TileStack& toTileStack = toInventory.at(toSlot);
     move(fromTileStack, toTileStack, fromTileStack.quantity());

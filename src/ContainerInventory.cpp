@@ -33,9 +33,9 @@ const std::vector<TileStack>& ContainerInventory::contents() const
     return m_contents;
 }
 
-const InventoryContentRequirement ContainerInventory::slotContentRequirement(size_t slotId) const
+const SlotContentRequirement ContainerInventory::slotContentRequirement(size_t slotId) const
 {
-    return InventoryContentRequirement::None;
+    return SlotContentRequirement::None;
 }
 std::unique_ptr<InventoryView> ContainerInventory::createInventoryView(InventorySystem& invSys, InternalWindow& wnd)
 {

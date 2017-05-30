@@ -11,11 +11,13 @@
 
 3. Do prefabs for entities too and use Component for entities
 
-4. Make inventories copyable such that they clone tiles that are inside
-5. Remove events - onTilePlaced, onTileRemoved
 6. Call tile moving events for each tile stack that is altered, pass moved quantity
 
 7. Clear world generation code
+
+8. EquipmentPecieModel with AttributeSet of attributes
+8.1 AttributeSet is a sorted flat map of pairs (attrid, value)
+
 11. Do proper logging.
 13. Clean member ordering and use automatic objects wherever possible.
 15. Pass RenderStates by CONST reference
