@@ -27,7 +27,7 @@ PlayerUi::~PlayerUi()
 
 void PlayerUi::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
 {
-    for(auto wnd : m_windows)
+    for(auto& wnd : m_windows)
     {
         wnd->draw(renderTarget, renderStates);
     }
@@ -35,26 +35,34 @@ void PlayerUi::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStat
 
 void PlayerUi::closeWindow(PanelWindow* window)
 {
-    m_windows.erase(std::remove(m_windows.begin(), m_windows.end(), window), m_windows.end());
-    if (window == m_focusedWindow) m_focusedWindow = nullptr;
-	updateWindowPositions();
+    window->close();
+    removeClosingWindows();
 }
-void PlayerUi::openWindow(PanelWindow* wnd)
+void PlayerUi::openWindow(std::unique_ptr<PanelWindow>&& wnd)
 {
     if(hasWindow()) wnd->setParent(window());
-	m_windows.push_back(wnd);
+	m_windows.emplace_back(std::move(wnd));
 
 	updateWindowPositions();
 }
 bool PlayerUi::isOpened(PanelWindow* wnd) const
 {
-    return std::find(m_windows.begin(), m_windows.end(), wnd) != m_windows.end();
+    return std::find_if(m_windows.begin(), m_windows.end(), [wnd](const std::unique_ptr<PanelWindow>& w)->bool {return w.get() == wnd; }) != m_windows.end();
 }
 
+void PlayerUi::removeClosingWindows()
+{
+    m_windows.erase(std::remove_if(m_windows.begin(), m_windows.end(), [](const std::unique_ptr<PanelWindow>& wnd)->bool {return wnd->isClosing(); }), m_windows.end());
+    if (std::none_of(m_windows.begin(), m_windows.end(), [this](const std::unique_ptr<PanelWindow>& wnd)->bool {return wnd.get() == this->m_focusedWindow; }))
+    {
+        m_focusedWindow = nullptr;
+    }
+    updateWindowPositions();
+}
 void PlayerUi::updateWindowPositions()
 {
 	int currentPosition = 0;
-	for (PanelWindow* window : m_windows)
+	for (auto& window : m_windows)
 	{
 		window->setWindowPosition(ls::Vec2I(0, currentPosition));
 		currentPosition += window->windowRect().height();
@@ -105,14 +113,13 @@ SfmlEventHandler::EventResult PlayerUi::dispatch(sf::Event& event, EventContext 
         {
             if (!ls::intersect(mousePos, wnd->absoluteContentRect())) continue;
 
-            bool isFocused = wnd == m_focusedWindow;
+            bool isFocused = wnd.get() == m_focusedWindow;
             EventContext currentContext = EventContext{}
                 .setIsFocused(isFocused)
                 .setIsMouseOver(true);
             result = wnd->dispatch(event, currentContext, mousePos);
 
-            if (!isOpened(wnd)) break; //window closed
-            if (result.takeFocus) m_focusedWindow = wnd;
+            if (result.takeFocus) m_focusedWindow = wnd.get();
             if (result.consumeEvent) break;
         }
     }
@@ -132,19 +139,18 @@ SfmlEventHandler::EventResult PlayerUi::dispatch(sf::Event& event, EventContext 
     {
         for (auto& wnd : m_windows)
         {
-            if (wnd == windowUnderMouse || wnd == m_focusedWindow) continue;
+            if (wnd.get() == windowUnderMouse || wnd.get() == m_focusedWindow) continue;
             EventContext currentContext = EventContext{}
                 .setIsFocused(false)
                 .setIsMouseOver(false);
             result = wnd->dispatch(event, currentContext, mousePos);
             
-            if (!isOpened(wnd)) break; //window closed
-            if (result.takeFocus && isOpened(wnd)) m_focusedWindow = wnd;
+            if (result.takeFocus && isOpened(wnd.get())) m_focusedWindow = wnd.get();
             if (result.consumeEvent) break;
         }
     }
 
-    updateWindowPositions();
+    removeClosingWindows();
 
     return result;
 }

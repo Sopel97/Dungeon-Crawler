@@ -77,7 +77,7 @@ void InventorySystem::openPermanentInventory(Inventory& inventory)
 }
 void InventorySystem::closeInventory(Inventory& inventory)
 {
-    closeInventory(find(inventory));
+    closeInventory(find(inventory).second);
 }
 void InventorySystem::abandonInventory(TrackedInventoryTreeHandle tree, TrackedInventoryHandle inventory)
 {
@@ -242,28 +242,13 @@ void InventorySystem::onTileMovedFromInventoryToWorld(const TileMovedFromInvento
 
     m_trackedInventories.emplaceTree(std::move(detachedTileInventoryTree));
 }
-
-void InventorySystem::openTrackedInventory(TrackedInventoryHandle inventory)
+void InventorySystem::onInventoryWindowClosed(Inventory& inventory)
 {
-	inventory.data().inventoryWindow->setContentHeightToMax();
-	inventory.data().isOpened = true;
-
-    m_playerUi.openWindow(inventory.data().inventoryWindow.get());
-}
-
-std::pair<InventorySystem::TrackedInventoryTreeHandle, InventorySystem::TrackedInventoryHandle> InventorySystem::find(const InternalWindow& wnd)
-{
-    return m_trackedInventories.findIf([&wnd](const TrackedInventory& inv) {return &wnd == inv.inventoryWindow.get(); });
-}
-
-void InventorySystem::closeInventory(const std::pair<TrackedInventoryTreeHandle, TrackedInventoryHandle>& findResult)
-{
+    auto findResult = find(inventory);
     TrackedInventoryTreeHandle treeHandle = findResult.first;
     TrackedInventoryHandle inventoryHandle = findResult.second;
-    if (!inventoryHandle.isValid() || !inventoryHandle.data().isOpened) return; //nothing to do
 
-    m_playerUi.closeWindow(inventoryHandle.data().inventoryWindow.get());
-    inventoryHandle.data().isOpened = false;
+    inventoryHandle.data().resetWindow();
 
     TrackedInventoryHandle current = inventoryHandle;
     while (current.isValid() && current.numberOfChildren() == 0 && !current.data().isOpened) //abandon all inventories that were just because this one was opened
@@ -273,7 +258,22 @@ void InventorySystem::closeInventory(const std::pair<TrackedInventoryTreeHandle,
         current = parent;
     }
 }
-void InventorySystem::closeInventory(InternalWindow& wnd)
+
+void InventorySystem::openTrackedInventory(TrackedInventoryHandle inventory)
 {
-    closeInventory(find(wnd));
+    auto inventoryWindow = inventory.data().inventory->createInventoryWindow(m_wsm);
+    inventoryWindow->updateMaxContentHeight(*((inventory.data()).inventoryView));
+    inventoryWindow->setContentHeightToMax();
+    inventoryWindow->attachContent(*((inventory.data()).inventoryView));
+
+    inventory.data().setWindow(inventoryWindow.get());
+
+    m_playerUi.openWindow(std::move(inventoryWindow));
+}
+
+void InventorySystem::closeInventory(TrackedInventoryHandle& inventoryHandle)
+{
+    if (!inventoryHandle.isValid() || !inventoryHandle.data().isOpened) return; //nothing to do
+
+    m_playerUi.closeWindow(inventoryHandle.data().inventoryWindow); // eventually invokes onInventoryWindowClosed(...)
 }

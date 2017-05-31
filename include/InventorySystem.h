@@ -31,8 +31,8 @@ public:
     struct TrackedInventory
     {
         Inventory* inventory;
-        std::unique_ptr<InventoryWindow> inventoryWindow;
         std::unique_ptr<InventoryView> inventoryView;
+        InventoryWindow* inventoryWindow;
         std::optional<ls::Vec2I> worldPosition;
         bool isOpened;
         bool isPermanent;
@@ -57,30 +57,34 @@ public:
         {
             return TrackedInventory(wsm, invSys, inventory, true);
         }
+        void setWindow(InventoryWindow* wnd)
+        {
+            inventoryWindow = wnd;
+            isOpened = true;
+        }
+        void resetWindow()
+        {
+            inventoryWindow = nullptr;
+            isOpened = false;
+        }
     private:
         TrackedInventory(WindowSpaceManager& wsm, InventorySystem& invSys, Inventory& inv, bool perm = false) :
             inventory(&inv),
-            inventoryWindow(inv.createInventoryWindow(wsm)),
             inventoryView(inv.createInventoryView(invSys)),
+            inventoryWindow(nullptr),
             worldPosition(std::nullopt),
             isOpened(true),
             isPermanent(perm)
         {
-            inventoryWindow->updateMaxContentHeight(*inventoryView);
-            inventoryWindow->headerButton(InternalWindow::closeButtonId()).setCallback([&invSys](InternalWindow& wnd) { invSys.closeInventory(wnd); });
-            inventoryWindow->attachContent(*inventoryView);
         }
         TrackedInventory(WindowSpaceManager& wsm, InventorySystem& invSys, Inventory& inv, const ls::Vec2I& pos) :
             inventory(&inv),
-            inventoryWindow(inv.createInventoryWindow(wsm)),
             inventoryView(inv.createInventoryView(invSys)),
+            inventoryWindow(nullptr),
             worldPosition(pos),
             isOpened(true),
             isPermanent(false)
         {
-            inventoryWindow->updateMaxContentHeight(*inventoryView);
-            inventoryWindow->headerButton(InternalWindow::closeButtonId()).setCallback([&invSys](InternalWindow& wnd) { invSys.closeInventory(wnd); });
-            inventoryWindow->attachContent(*inventoryView);
         }
     };
 
@@ -118,6 +122,8 @@ public:
     void onTileMovedFromInventoryToInventory(const TileMovedFromInventoryToInventory& event);
     void onTileMovedFromInventoryToWorld(const TileMovedFromInventoryToWorld& event);
 
+    void onInventoryWindowClosed(Inventory& inventory);
+
 protected:
     WindowSpaceManager& m_wsm;
     Player& m_player;
@@ -136,9 +142,7 @@ protected:
     void openTrackedInventory(TrackedInventoryHandle inventory);
     void abandonInventory(TrackedInventoryTreeHandle tree, TrackedInventoryHandle inventory);
 
-    std::pair<TrackedInventoryTreeHandle, TrackedInventoryHandle> find(const InternalWindow& wnd);
-    void closeInventory(const std::pair<TrackedInventoryTreeHandle, TrackedInventoryHandle>& findResult);
-    void closeInventory(InternalWindow& wnd);
+    void closeInventory(TrackedInventoryHandle& inventoryHandle);
 private:
 };
 

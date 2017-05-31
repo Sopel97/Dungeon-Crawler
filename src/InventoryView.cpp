@@ -123,6 +123,13 @@ SfmlEventHandler::EventResult InventoryView::onMouseButtonReleased(sf::Event::Mo
     return EventResult{}.setTakeFocus().setConsumeEvent();
 }
 
+void InventoryView::onDetachedAndWindowClosing(InternalWindow& wnd)
+{
+    WindowContent::onDetachedAndWindowClosing(wnd);
+
+    m_inventorySystem->onInventoryWindowClosed(*m_inventory);
+}
+
 void InventoryView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
 {
     int numberOfSlots = m_slotViews.size();

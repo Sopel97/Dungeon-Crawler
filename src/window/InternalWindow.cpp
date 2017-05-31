@@ -84,9 +84,10 @@ InternalWindow::InternalWindow(WindowSpaceManager& wsm, const ls::Rectangle2I& w
     m_parent(nullptr),
     m_content(nullptr),
     m_pressedButton(nullptr),
+    m_isClosing(false),
     m_isMinimized(false)
 {
-    addHeaderButton(*this, m_closeButtonId, m_closeButtonSprite, isCloseable());
+    addHeaderButton(*this, m_closeButtonId, m_closeButtonSprite, isCloseable(), [this](InternalWindow&) { close(); });
     addHeaderButton(*this, m_minimizeButtonId, m_minimizeButtonSprite, isMinimizable() && !isMinimized(), [this](InternalWindow&) { minimize(); });
     addHeaderButton(*this, m_maximizeButtonId, m_maximizeButtonSprite, isMinimizable() && isMinimized(), [this](InternalWindow&) { maximize(); });
 }
@@ -301,6 +302,10 @@ bool InternalWindow::isMinimized() const
 {
     return m_isMinimized;
 }
+bool InternalWindow::isClosing() const
+{
+    return m_isClosing;
+}
 
 void InternalWindow::setMinimizable(bool val)
 {
@@ -344,6 +349,15 @@ void InternalWindow::maximize()
     headerButton(m_minimizeButtonId).setEnabled(true);
     headerButton(m_maximizeButtonId).setEnabled(false);
     m_isMinimized = false;
+}
+void InternalWindow::close()
+{
+    m_isClosing = true;
+    if (m_content != nullptr)
+    {
+        m_content->onDetachedAndWindowClosing(*this);
+        m_content = nullptr;
+    }
 }
 
 SfmlEventHandler::EventResult InternalWindow::dispatch(sf::Event& event, EventContext context, const ls::Vec2I& mousePos)

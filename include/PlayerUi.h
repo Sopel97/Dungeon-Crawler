@@ -2,6 +2,7 @@
 #define PLAYERUI_H
 
 #include <vector>
+#include <memory>
 
 #include "window/WindowContent.h"
 #include "window/InternalWindow.h"
@@ -36,7 +37,7 @@ public:
     void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
 
     void closeWindow(PanelWindow* window);
-    void openWindow(PanelWindow* wnd); //does not take ownership
+    void openWindow(std::unique_ptr<PanelWindow>&& wnd);
     bool isOpened(PanelWindow* wnd) const;
 
 	void onWindowUpdated(PanelWindow& window);
@@ -54,9 +55,10 @@ protected:
 
     WindowSpaceManager& m_windowSpaceManager;
     Player& m_player;
-	std::vector<PanelWindow*> m_windows;
+	std::vector<std::unique_ptr<PanelWindow>> m_windows;
     PanelWindow* m_focusedWindow;
 
+    void removeClosingWindows();
 	void updateWindowPositions();
 };
 

@@ -25,6 +25,7 @@ private:
     InternalWindow* m_parent;
     WindowContent* m_content;
     InternalWindowHeaderButton* m_pressedButton;
+    bool m_isClosing;
 
 protected:
     bool m_isMinimized;
@@ -89,6 +90,7 @@ public:
     bool hasHeader() const;
     bool hasScrollBar() const;
     bool isMinimized() const;
+    bool isClosing() const;
 
     void setMinimizable(bool val);
     void setCloseable(bool val);
@@ -99,6 +101,7 @@ public:
     void setScrollBarEnabled(bool val);
     void minimize();
     void maximize();
+    void close();
 
     EventResult dispatch(sf::Event& event, EventContext context, const ls::Vec2I& mousePos) override;
 

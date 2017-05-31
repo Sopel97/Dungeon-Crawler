@@ -41,5 +41,7 @@ public:
     EventResult onMouseButtonPressed(sf::Event::MouseButtonEvent& event, EventContext context) override;
     EventResult onMouseButtonReleased(sf::Event::MouseButtonEvent& event, EventContext context) override;
 
+    void onDetachedAndWindowClosing(InternalWindow& wnd) override;
+
     virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
 };
