@@ -7,7 +7,7 @@ Scene::Scene(WindowSpaceManager& windowSpaceManager, const ls::Rectangle2I& rect
     m_backgroundWindows(windowSpaceManager, rect, "Root"),
     m_name(name),
     m_topmostRegions({ m_backgroundWindows.root() }),
-    m_focusedRegionHandle(m_backgroundWindows.root())
+    m_focusedWindow(&(m_backgroundWindows.root().data()))
 {
 
 }
@@ -53,12 +53,9 @@ subdivide(BackgroundWindowHandle h, const RectSubdivision& params, const std::st
 
     return { left, right };
 }
-Scene::FreeWindowHandle Scene::createFreeWindow(const std::string& name, const ls::Vec2I& center, const ls::Vec2I& size)
+Scene::FreeWindowHandle Scene::addFreeWindow(std::unique_ptr<InternalWindow>&& wnd)
 {
-    const ls::Vec2I topLeft = center - size / 2;
-    const ls::Rectangle2I rect(topLeft, topLeft + size);
-
-    m_freeWindows.emplace_back(*m_windowSpaceManager, rect, name);
+    m_freeWindows.emplace_back(std::move(wnd));
     return std::prev(m_freeWindows.end());
 }
 
@@ -145,13 +142,13 @@ void Scene::dispatchEvent(sf::Event& event, const ls::Vec2I& mousePos)
     if (mouseOverRegionHandle.isValid())
     {
         InternalWindow& mouseOverRegion = window(mouseOverRegionHandle);
-        bool isFocused = mouseOverRegionHandle == m_focusedRegionHandle;
+        bool isFocused = &(mouseOverRegionHandle.data()) == m_focusedWindow;
 
         const SfmlEventHandler::EventContext context = SfmlEventHandler::EventContext{}.setIsFocused(isFocused).setIsMouseOver();
         const SfmlEventHandler::EventResult result = mouseOverRegion.dispatch(event, context, mousePos);
         if (result.takeFocus)
         {
-            m_focusedRegionHandle = mouseOverRegionHandle;
+            m_focusedWindow = &(mouseOverRegionHandle.data());
         }
         if (result.consumeEvent)
         {
@@ -159,10 +156,10 @@ void Scene::dispatchEvent(sf::Event& event, const ls::Vec2I& mousePos)
         }
     }
 
-    BackgroundWindowHandle focusedRegionHandle = m_focusedRegionHandle; //stored because can be changed midway
-    if (mouseOverRegionHandle != m_focusedRegionHandle)
+    InternalWindow* focusedWindow = m_focusedWindow; //stored because can be changed midway
+    if (m_focusedWindow != nullptr && &(mouseOverRegionHandle.data()) != m_focusedWindow)
     {
-        InternalWindow& focused = window(focusedRegionHandle);
+        InternalWindow& focused = *m_focusedWindow;
         const SfmlEventHandler::EventContext context = SfmlEventHandler::EventContext{}
             .setIsFocused()
             .setIsMouseOver(false);
@@ -178,14 +175,14 @@ void Scene::dispatchEvent(sf::Event& event, const ls::Vec2I& mousePos)
 
     for (BackgroundWindowHandle h : m_topmostRegions)
     {
-        if (h == focusedRegionHandle || h == mouseOverRegionHandle) continue;
+        if (&(h.data()) == focusedWindow || h == mouseOverRegionHandle) continue;
 
         BackgroundWindow& region = window(h);
         const SfmlEventHandler::EventContext context = SfmlEventHandler::EventContext{}.setIsFocused(false).setIsMouseOver(false);
         const SfmlEventHandler::EventResult result = region.dispatch(event, context, mousePos);
         if (result.takeFocus)
         {
-            m_focusedRegionHandle = h;
+            m_focusedWindow = &(h.data());
         }
         if (result.consumeEvent)
         {
@@ -260,5 +257,13 @@ void Scene::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
     {
         BackgroundWindow& wnd = window(h);
         wnd.draw(renderTarget, renderStates);
+    }
+}
+void Scene::removeClosingFreeWindows()
+{
+    m_freeWindows.erase(std::remove_if(m_freeWindows.begin(), m_freeWindows.end(), [](const std::unique_ptr<InternalWindow>& wnd)->bool {return wnd->isClosing(); }), m_freeWindows.end());
+    if (std::none_of(m_freeWindows.begin(), m_freeWindows.end(), [this](const std::unique_ptr<InternalWindow>& wnd)->bool {return wnd.get() == this->m_focusedWindow; }))
+    {
+        m_focusedWindow = nullptr;
     }
 }

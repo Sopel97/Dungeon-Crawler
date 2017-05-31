@@ -3,7 +3,6 @@
 #include "../LibS/Geometry.h"
 
 #include "BackgroundWindow.h"
-#include "FreeWindow.h"
 
 class WindowSpaceManager;
 
@@ -14,7 +13,7 @@ public:
     using BackgroundWindowHandle = typename BackgroundWindowsStorage::Iterator;
     using ConstBackgroundWindowHandle = typename BackgroundWindowsStorage::ConstIterator;
 
-    using FreeWindowStorage = std::list<FreeWindow>;
+    using FreeWindowStorage = std::vector<std::unique_ptr<InternalWindow>>;
     using FreeWindowHandle = typename FreeWindowStorage::iterator;
     using ConstFreeWindowHandle = typename FreeWindowStorage::const_iterator;
 private:
@@ -26,7 +25,7 @@ private:
     FreeWindowStorage m_freeWindows;
     std::string m_name;
     std::vector<BackgroundWindowHandle> m_topmostRegions;
-    BackgroundWindowHandle m_focusedRegionHandle;
+    InternalWindow* m_focusedWindow;
 
 public:
     Scene(WindowSpaceManager& windowSpaceManager, const ls::Rectangle2I& rect, const std::string& name);
@@ -45,7 +44,7 @@ public:
     const RectSubdivision& subdivisionParams(ConstBackgroundWindowHandle h) const;
 
     std::pair<BackgroundWindowHandle, BackgroundWindowHandle> subdivide(BackgroundWindowHandle h, const RectSubdivision& params, const std::string& nameFirst, const std::string& nameSecond);
-    FreeWindowHandle createFreeWindow(const std::string& name, const ls::Vec2I& center, const ls::Vec2I& size);
+    FreeWindowHandle addFreeWindow(std::unique_ptr<InternalWindow>&& wnd);
 
     BackgroundWindowHandle firstChild(BackgroundWindowHandle h);
     ConstBackgroundWindowHandle firstChild(ConstBackgroundWindowHandle h) const;
@@ -73,6 +72,8 @@ public:
     void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
 
 private:
+    void removeClosingFreeWindows();
+
     void setSubdivisionParams(BackgroundWindowHandle h, const RectSubdivision& params);
     void update(BackgroundWindowHandle h, const ls::Rectangle2I& rect);
 
