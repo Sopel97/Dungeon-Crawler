@@ -30,6 +30,7 @@ class InventorySystem
 public:
     struct TrackedInventory
     {
+        std::string name;
         Inventory* inventory;
         std::unique_ptr<InventoryView> inventoryView;
         InventoryWindow* inventoryWindow;
@@ -45,17 +46,17 @@ public:
         bool operator==(const Inventory* inv) {return inv == inventory;}
         bool operator==(const TrackedInventory& inv) {return inv.inventory == inventory;}
 
-        static TrackedInventory makeExternal(WindowSpaceManager& wsm, InventorySystem& invSys, Inventory& inventory, const ls::Vec2I& pos)
+        static TrackedInventory makeExternal(WindowSpaceManager& wsm, InventorySystem& invSys, Inventory& inventory, const std::string& name, const ls::Vec2I& pos)
         {
-            return TrackedInventory(wsm, invSys, inventory, pos);
+            return TrackedInventory(wsm, invSys, inventory, name, pos);
         }
-        static TrackedInventory makeInternal(WindowSpaceManager& wsm, InventorySystem& invSys, Inventory& inventory)
+        static TrackedInventory makeInternal(WindowSpaceManager& wsm, InventorySystem& invSys, Inventory& inventory, const std::string& name)
         {
-            return TrackedInventory(wsm, invSys, inventory);
+            return TrackedInventory(wsm, invSys, inventory, name);
         }
-        static TrackedInventory makePermanent(WindowSpaceManager& wsm, InventorySystem& invSys, Inventory& inventory)
+        static TrackedInventory makePermanent(WindowSpaceManager& wsm, InventorySystem& invSys, Inventory& inventory, const std::string& name)
         {
-            return TrackedInventory(wsm, invSys, inventory, true);
+            return TrackedInventory(wsm, invSys, inventory, name, true);
         }
         void setWindow(InventoryWindow* wnd)
         {
@@ -67,8 +68,13 @@ public:
             inventoryWindow = nullptr;
             isOpened = false;
         }
+        std::unique_ptr<InventoryWindow> createInventoryWindow(WindowSpaceManager& wsm)
+        {
+            return inventory->createInventoryWindow(wsm, name);
+        }
     private:
-        TrackedInventory(WindowSpaceManager& wsm, InventorySystem& invSys, Inventory& inv, bool perm = false) :
+        TrackedInventory(WindowSpaceManager& wsm, InventorySystem& invSys, Inventory& inv, const std::string& name, bool perm = false) :
+            name(name),
             inventory(&inv),
             inventoryView(inv.createInventoryView(invSys)),
             inventoryWindow(nullptr),
@@ -77,7 +83,8 @@ public:
             isPermanent(perm)
         {
         }
-        TrackedInventory(WindowSpaceManager& wsm, InventorySystem& invSys, Inventory& inv, const ls::Vec2I& pos) :
+        TrackedInventory(WindowSpaceManager& wsm, InventorySystem& invSys, Inventory& inv, const std::string& name, const ls::Vec2I& pos) :
+            name(name),
             inventory(&inv),
             inventoryView(inv.createInventoryView(invSys)),
             inventoryWindow(nullptr),
@@ -97,17 +104,17 @@ public:
 
     InventorySystem(WindowSpaceManager& wsm, Player& player, TileTransferMediator& tileTransferMediator);
 
-    bool tryOpenExternalInventory(Inventory& inventory, const ls::Vec2I& pos);
-    bool tryOpenInternalInventory(Inventory& inventory, const Inventory& parentInventory);
-    void openPermanentInventory(Inventory& inventory);
+    bool tryOpenExternalInventory(Tile& tile, Inventory& inventory, const ls::Vec2I& pos);
+    bool tryOpenInternalInventory(Tile& tile, Inventory& inventory, const Inventory& parentInventory);
+    void openPermanentInventory(Inventory& inventory, const std::string& name);
     void closeInventory(Inventory& inventory);
     bool isInventoryOpened(const Inventory& inventory);
     bool isInventoryTracked(const Inventory& inventory);
     std::pair<TrackedInventoryTreeHandle, TrackedInventoryHandle> find(const Inventory& inventory);
     std::pair<ConstTrackedInventoryTreeHandle, ConstTrackedInventoryHandle> find(const Inventory& inventory) const;
 
-    bool tryInteractWithExternalInventory(Inventory& inventory, const TileLocation& location);
-    bool tryInteractWithInternalInventory(Inventory& inventory, const InventorySlotView& slot);
+    bool tryInteractWithExternalInventory(Tile& tile, Inventory& inventory, const TileLocation& location);
+    bool tryInteractWithInternalInventory(Tile& tile, Inventory& inventory, const InventorySlotView& slot);
 
     bool canStore(const Inventory& inventory, const Tile& tile) const;
 

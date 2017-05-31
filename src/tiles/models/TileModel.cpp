@@ -61,6 +61,11 @@ bool TileModel::meetsRequirements(SlotContentRequirement req) const
         || req == SlotContentRequirement::LeftHand
         || req == SlotContentRequirement::RightHand;
 }
+const std::string& TileModel::displayedName() const
+{
+    static const std::string name = "";
+    return name;
+}
 
 Inventory* TileModel::inventory()
 {

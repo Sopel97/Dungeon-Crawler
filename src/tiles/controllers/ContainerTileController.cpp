@@ -25,12 +25,12 @@ ContainerTileController::~ContainerTileController()
 
 void ContainerTileController::use(Player& player, const TileLocation& location)
 {
-    player.tryInteractWithExternalInventory(*(m_owner->model().inventory()), location);
+    player.tryInteractWithExternalInventory(owner(), *(m_owner->model().inventory()), location);
 }
 
 void ContainerTileController::use(Player& player, const InventorySlotView& slot)
 {
-    player.tryInteractWithInternalInventory(*(m_owner->model().inventory()), slot);
+    player.tryInteractWithInternalInventory(owner(), *(m_owner->model().inventory()), slot);
 }
 
 std::unique_ptr<TileController> ContainerTileController::clone() const

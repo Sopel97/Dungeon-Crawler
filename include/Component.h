@@ -25,11 +25,11 @@ public:
 	}
 	const OwnerType& owner() const
 	{
-		return m_owner;
+		return *m_owner;
 	}
 	OwnerType& owner()
 	{
-		return m_owner;
+		return *m_owner;
 	}
 
 	virtual std::unique_ptr<ComponentCommonData> createCommonDataStorage() const

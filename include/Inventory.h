@@ -25,7 +25,7 @@ public:
     virtual const std::vector<TileStack>& contents() const = 0;
     virtual const SlotContentRequirement slotContentRequirement(size_t slotId) const = 0;
     virtual std::unique_ptr<InventoryView> createInventoryView(InventorySystem& invSys) = 0;
-    virtual std::unique_ptr<InventoryWindow> createInventoryWindow(WindowSpaceManager& wsm) const = 0;
+    virtual std::unique_ptr<InventoryWindow> createInventoryWindow(WindowSpaceManager& wsm, const std::string& name) const = 0;
 
     virtual TileStack& at(size_t slotId);
     virtual const TileStack& at(size_t slotId) const;

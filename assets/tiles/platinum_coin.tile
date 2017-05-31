@@ -1,6 +1,7 @@
 tile = {
         
     name = "Platinum Coin",
+    displayedName = "Platinum Coin",
     
     model = "PlainTileModel",
     renderer = "PlainQuantityBasedTileRenderer",

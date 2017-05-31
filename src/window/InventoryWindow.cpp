@@ -4,16 +4,9 @@
 
 WindowParams InventoryWindow::defaultParams()
 {
-    WindowParams params;
+    WindowParams params = PlayerUi::PanelWindow::defaultParams();
 
-    params.minWindowWidth = PlayerUi::playerUiPanelWidth();
-    params.minWindowHeight = 0;
-    params.minContentWidth = 0;
     params.minContentHeight = m_minSensibleHeight;
-
-    params.maxWindowWidth = PlayerUi::playerUiPanelWidth();
-    params.maxWindowHeight = std::nullopt;
-    params.maxContentWidth = std::nullopt;
     params.maxContentHeight = m_minSensibleHeight;
 
     params.isMinimizable = true;

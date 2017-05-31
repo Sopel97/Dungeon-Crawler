@@ -1,6 +1,7 @@
 tile = {
         
     name = "Black marble floor",
+    displayedName = "Black Marble Floor",
     
     model = "PlainTileModel",
     renderer = "PlainTileRenderer",

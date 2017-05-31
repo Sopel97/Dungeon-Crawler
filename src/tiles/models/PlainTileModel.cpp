@@ -35,6 +35,7 @@ void PlainTileModel::loadFromConfiguration(ConfigurationNode& config)
         m_commonData->hasCollider = false;
     }
 
+    m_commonData->displayedName = config["displayedName"].getDefault<std::string>("");
     m_commonData->drag = config["drag"].get<float>();
     m_commonData->maxThrowDistance = config["maxThrowDistance"].getDefault<int>(0);
     m_commonData->isThrowableThrough = config["isThrowableThrough"].getDefault<bool>(false);
@@ -74,6 +75,10 @@ bool PlainTileModel::canBeStored() const
 int PlainTileModel::maxQuantity() const
 {
     return m_commonData->maxQuantity;
+}
+const std::string& PlainTileModel::displayedName() const
+{
+    return m_commonData->displayedName;
 }
 
 float PlainTileModel::drag() const

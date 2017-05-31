@@ -36,6 +36,7 @@ public:
     virtual bool canBeStored() const;
     virtual int maxQuantity() const;
     virtual bool meetsRequirements(SlotContentRequirement req) const;
+    virtual const std::string& displayedName() const;
 
     virtual Inventory* inventory();
     virtual const Inventory* inventory() const;
@@ -49,6 +50,7 @@ public:
 protected:
     struct CommonData : public ComponentCommonData
     {
+        std::string displayedName;
         bool hasCollider;
         ls::Rectangle2F collider;
         float drag;

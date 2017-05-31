@@ -62,9 +62,9 @@ std::unique_ptr<InventoryView> ContainerInventory::createInventoryView(Inventory
 
     return std::make_unique<InventoryView>(invSys, *this, std::move(slotViews));
 }
-std::unique_ptr<InventoryWindow> ContainerInventory::createInventoryWindow(WindowSpaceManager& wsm) const
+std::unique_ptr<InventoryWindow> ContainerInventory::createInventoryWindow(WindowSpaceManager& wsm, const std::string& name) const
 {
-    std::unique_ptr<InventoryWindow> window = std::make_unique<InventoryWindow>(wsm, "");
+    std::unique_ptr<InventoryWindow> window = std::make_unique<InventoryWindow>(wsm, name);
     window->setMinimizable(true);
     window->setCloseable(true);
     window->setResizeable(true);

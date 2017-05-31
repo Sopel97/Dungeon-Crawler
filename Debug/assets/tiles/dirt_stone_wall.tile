@@ -1,6 +1,7 @@
 tile = {
         
     name = "Stone wall",
+    displayedName = "Dirt-stone Wall",
     
     model = "PlainTileModel",
     renderer = "InnerBorderedWallTileRenderer",

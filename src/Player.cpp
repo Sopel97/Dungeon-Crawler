@@ -28,13 +28,13 @@ void Player::onKeyPressed(sf::Event::KeyEvent& keyEvent)
 
 }
 
-bool Player::tryInteractWithExternalInventory(Inventory& inventory, const TileLocation& location)
+bool Player::tryInteractWithExternalInventory(Tile& tile, Inventory& inventory, const TileLocation& location)
 {
-    return m_inventorySystem.tryInteractWithExternalInventory(inventory, location);
+    return m_inventorySystem.tryInteractWithExternalInventory(tile, inventory, location);
 }
-bool Player::tryInteractWithInternalInventory(Inventory& inventory, const InventorySlotView& slot)
+bool Player::tryInteractWithInternalInventory(Tile& tile, Inventory& inventory, const InventorySlotView& slot)
 {
-    return m_inventorySystem.tryInteractWithInternalInventory(inventory, slot);
+    return m_inventorySystem.tryInteractWithInternalInventory(tile, inventory, slot);
 }
 
 void Player::processAsyncKeyboardInput(World& world, float dt) //TODO: make it update the player entity so it moves in the next update. Don't interact with world in this function.

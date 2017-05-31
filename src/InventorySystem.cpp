@@ -30,15 +30,15 @@ InventorySystem::InventorySystem(WindowSpaceManager& wsm, Player& player, TileTr
     m_tileMovedFromInventoryToInventoryEventSubscription(EventDispatcher::instance().subscribe<TileMovedFromInventoryToInventory>([this](const TileMovedFromInventoryToInventory& e) {onTileMovedFromInventoryToInventory(e); })),
     m_tileMovedFromInventoryToWorldEventSubscription(EventDispatcher::instance().subscribe<TileMovedFromInventoryToWorld>([this](const TileMovedFromInventoryToWorld& e) {onTileMovedFromInventoryToWorld(e); }))
 {
-    openPermanentInventory(m_equipmentInventory);
+    openPermanentInventory(m_equipmentInventory, "");
 }
 
-bool InventorySystem::tryOpenExternalInventory(Inventory& inventory, const ls::Vec2I& pos)
+bool InventorySystem::tryOpenExternalInventory(Tile& tile, Inventory& inventory, const ls::Vec2I& pos)
 {
     TrackedInventoryHandle h = find(inventory).second;
     if(!h.isValid())
     {
-        auto treeIter = m_trackedInventories.emplaceTree(TrackedInventory::makeExternal(m_wsm, *this, inventory, pos));
+        auto treeIter = m_trackedInventories.emplaceTree(TrackedInventory::makeExternal(m_wsm, *this, inventory, tile.model().displayedName(), pos));
         h = treeIter->root();
     }
 
@@ -46,7 +46,7 @@ bool InventorySystem::tryOpenExternalInventory(Inventory& inventory, const ls::V
 
     return true;
 }
-bool InventorySystem::tryOpenInternalInventory(Inventory& inventory, const Inventory& parentInventory)
+bool InventorySystem::tryOpenInternalInventory(Tile& tile, Inventory& inventory, const Inventory& parentInventory)
 {
     auto findResult = find(parentInventory);
     TrackedInventoryTreeHandle treeHandle = findResult.first;
@@ -57,19 +57,19 @@ bool InventorySystem::tryOpenInternalInventory(Inventory& inventory, const Inven
     if (!h.isValid())
     {
         auto& tree = *treeHandle;
-        h = tree.emplaceChild(trackedParentHandle, TrackedInventory::makeInternal(m_wsm, *this, inventory));
+        h = tree.emplaceChild(trackedParentHandle, TrackedInventory::makeInternal(m_wsm, *this, inventory, tile.model().displayedName()));
     }
 
     openTrackedInventory(h);
 
     return true;
 }
-void InventorySystem::openPermanentInventory(Inventory& inventory)
+void InventorySystem::openPermanentInventory(Inventory& inventory, const std::string& name)
 {
     TrackedInventoryHandle h = find(inventory).second;
     if (!h.isValid())
     {
-        auto treeIter = m_trackedInventories.emplaceTree(TrackedInventory::makePermanent(m_wsm, *this, inventory));
+        auto treeIter = m_trackedInventories.emplaceTree(TrackedInventory::makePermanent(m_wsm, *this, inventory, name));
         h = treeIter->root();
     }
 
@@ -103,7 +103,7 @@ bool InventorySystem::isInventoryTracked(const Inventory& inventory)
     return find(inventory).second.isValid();
 }
 
-bool InventorySystem::tryInteractWithExternalInventory(Inventory& inventory, const TileLocation& location)
+bool InventorySystem::tryInteractWithExternalInventory(Tile& tile, Inventory& inventory, const TileLocation& location)
 {
     if (isInventoryOpened(inventory))
     {
@@ -112,10 +112,10 @@ bool InventorySystem::tryInteractWithExternalInventory(Inventory& inventory, con
     }
     else
     {
-        return tryOpenExternalInventory(inventory, ls::Vec2I(location.x, location.y));
+        return tryOpenExternalInventory(tile, inventory, ls::Vec2I(location.x, location.y));
     }
 }
-bool InventorySystem::tryInteractWithInternalInventory(Inventory& inventory, const InventorySlotView& slot)
+bool InventorySystem::tryInteractWithInternalInventory(Tile& tile, Inventory& inventory, const InventorySlotView& slot)
 {
     if (isInventoryOpened(inventory))
     {
@@ -124,7 +124,7 @@ bool InventorySystem::tryInteractWithInternalInventory(Inventory& inventory, con
     }
     else
     {
-        return tryOpenInternalInventory(inventory, slot.inventory());
+        return tryOpenInternalInventory(tile, inventory, slot.inventory());
     }
 }
 
@@ -261,7 +261,7 @@ void InventorySystem::onInventoryWindowClosed(Inventory& inventory)
 
 void InventorySystem::openTrackedInventory(TrackedInventoryHandle inventory)
 {
-    auto inventoryWindow = inventory.data().inventory->createInventoryWindow(m_wsm);
+    auto inventoryWindow = inventory.data().createInventoryWindow(m_wsm);
     inventoryWindow->updateMaxContentHeight(*((inventory.data()).inventoryView));
     inventoryWindow->setContentHeightToMax();
     inventoryWindow->attachContent(*((inventory.data()).inventoryView));

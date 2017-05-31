@@ -1,6 +1,7 @@
 tile = {
         
     name = "Dirt",
+    displayedName = "Dirt",
     
     model = "PlainTileModel",
     renderer = "OuterBorderedTileRenderer",

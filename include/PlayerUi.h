@@ -20,14 +20,37 @@ class Game;
 class PlayerUi : public WindowContent
 {
 public:
-    // TODO: move drawing of the basic window shape to somewhere where it can be used by FreeWindow too
     class PanelWindow : public InternalWindow
     {
     public:
         PanelWindow(WindowSpaceManager& wsm, const std::string& name, const WindowParams& params) :
             InternalWindow(wsm, ls::Rectangle2I::withSize(ls::Vec2I(0, 0), m_playerUiPanelWidth, 0), name, params)
         {
+        }
 
+        static WindowParams defaultParams()
+        {
+            WindowParams params;
+
+            params.minWindowWidth = PlayerUi::playerUiPanelWidth();
+            params.minWindowHeight = 0;
+            params.minContentWidth = 0;
+            params.minContentHeight = 0;
+
+            params.maxWindowWidth = PlayerUi::playerUiPanelWidth();
+            params.maxWindowHeight = std::nullopt;
+            params.maxContentWidth = std::nullopt;
+            params.maxContentHeight = std::nullopt;
+
+            params.isMinimizable = true;
+            params.isCloseable = true;
+            params.isResizeable = true;
+            params.isMovable = true;
+            params.isContentOnly = false;
+            params.hasHeader = true;
+            params.hasScrollBar = true;
+
+            return params;
         }
     };
 

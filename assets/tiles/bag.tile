@@ -1,6 +1,7 @@
 tile = {
         
     name = "Bag",
+    displayedName = "Bag",
     
     model = "ContainerTileModel",
     renderer = "PlainTileRenderer",
