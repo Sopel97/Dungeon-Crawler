@@ -17,8 +17,9 @@ private:
 protected:
     const InternalWindow& window() const;
     InternalWindow& window();
+    bool hasWindow() const;
 public:
-    WindowContent(InternalWindow& wnd);
+    WindowContent();
     virtual ~WindowContent();
 
     WindowContent(const WindowContent&) = delete;
@@ -26,7 +27,9 @@ public:
     WindowContent& operator=(const WindowContent&) = delete;
     WindowContent& operator=(WindowContent&& other);
 
-    void detach();
+    virtual void onAttached(InternalWindow& wnd);
+    virtual void onDetached(InternalWindow& wnd);
+    virtual void onDetachedAndWindowClosing(InternalWindow& wnd);
 
     virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) {};
 };

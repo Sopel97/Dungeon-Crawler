@@ -109,8 +109,8 @@ public:
     bool hasParent() const;
     void removeParent();
 
-    void setContent(WindowContent& newUser);
-    void removeContent();
+    void attachContent(WindowContent& newUser);
+    void detachContent();
 
     template <class... Args>
     void addHeaderButton(Args&&... args)

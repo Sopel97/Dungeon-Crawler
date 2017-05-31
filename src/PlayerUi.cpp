@@ -13,8 +13,7 @@ using namespace ls;
 
 const int PlayerUi::m_playerUiPanelWidth = 230;
 
-PlayerUi::PlayerUi(WindowSpaceManager& wsm, Player& player, InternalWindow& wnd) :
-	WindowContent(wnd),
+PlayerUi::PlayerUi(WindowSpaceManager& wsm, Player& player) :
     m_windowSpaceManager(wsm),
     m_player(player),
     m_focusedWindow(nullptr)
@@ -42,7 +41,7 @@ void PlayerUi::closeWindow(PanelWindow* window)
 }
 void PlayerUi::openWindow(PanelWindow* wnd)
 {
-    wnd->setParent(window());
+    if(hasWindow()) wnd->setParent(window());
 	m_windows.push_back(wnd);
 
 	updateWindowPositions();
@@ -65,6 +64,32 @@ void PlayerUi::updateWindowPositions()
 void PlayerUi::onWindowUpdated(PanelWindow& window)
 {
 	updateWindowPositions();
+}
+void PlayerUi::onAttached(InternalWindow& wnd)
+{
+    WindowContent::onAttached(wnd);
+
+    for (auto& w : m_windows)
+    {
+        w->setParent(wnd);
+    }
+
+    updateWindowPositions();
+}
+void PlayerUi::onDetached(InternalWindow& wnd)
+{
+    WindowContent::onDetached(wnd);
+
+    for (auto& w : m_windows)
+    {
+        w->removeParent();
+    }
+
+    updateWindowPositions();
+}
+void PlayerUi::onDetachedAndWindowClosing(InternalWindow& wnd)
+{
+    onDetached(wnd);
 }
 
 SfmlEventHandler::EventResult PlayerUi::dispatch(sf::Event& event, EventContext context, const ls::Vec2I& mousePos)

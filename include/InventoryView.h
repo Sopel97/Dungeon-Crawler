@@ -20,9 +20,9 @@ private:
     std::vector<InventorySlotView> m_slotViews;
 
 public:
-    InventoryView(InventorySystem& invSys, InternalWindow& wnd, Inventory& inventory);
-    InventoryView(InventorySystem& invSys, InternalWindow& wnd, Inventory& inventory, const std::vector<InventorySlotView>& slots);
-    InventoryView(InventorySystem& invSys, InternalWindow& wnd, Inventory& inventory, std::vector<InventorySlotView>&& slots);
+    InventoryView(InventorySystem& invSys, Inventory& inventory);
+    InventoryView(InventorySystem& invSys, Inventory& inventory, const std::vector<InventorySlotView>& slots);
+    InventoryView(InventorySystem& invSys, Inventory& inventory, std::vector<InventorySlotView>&& slots);
 
     InventoryView(const InventoryView& other) = delete;
     InventoryView(InventoryView&& other) = default;

@@ -61,24 +61,26 @@ public:
         TrackedInventory(WindowSpaceManager& wsm, InventorySystem& invSys, Inventory& inv, bool perm = false) :
             inventory(&inv),
             inventoryWindow(inv.createInventoryWindow(wsm)),
-            inventoryView(inv.createInventoryView(invSys, *inventoryWindow)),
+            inventoryView(inv.createInventoryView(invSys)),
             worldPosition(std::nullopt),
             isOpened(true),
             isPermanent(perm)
         {
             inventoryWindow->updateMaxContentHeight(*inventoryView);
             inventoryWindow->headerButton(InternalWindow::closeButtonId()).setCallback([&invSys](InternalWindow& wnd) { invSys.closeInventory(wnd); });
+            inventoryWindow->attachContent(*inventoryView);
         }
         TrackedInventory(WindowSpaceManager& wsm, InventorySystem& invSys, Inventory& inv, const ls::Vec2I& pos) :
             inventory(&inv),
             inventoryWindow(inv.createInventoryWindow(wsm)),
-            inventoryView(inv.createInventoryView(invSys, *inventoryWindow)),
+            inventoryView(inv.createInventoryView(invSys)),
             worldPosition(pos),
             isOpened(true),
             isPermanent(false)
         {
             inventoryWindow->updateMaxContentHeight(*inventoryView);
             inventoryWindow->headerButton(InternalWindow::closeButtonId()).setCallback([&invSys](InternalWindow& wnd) { invSys.closeInventory(wnd); });
+            inventoryWindow->attachContent(*inventoryView);
         }
     };
 

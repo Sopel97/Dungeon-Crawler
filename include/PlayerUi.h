@@ -30,7 +30,7 @@ public:
         }
     };
 
-    PlayerUi(WindowSpaceManager& wsm, Player& player, InternalWindow& wnd);
+    PlayerUi(WindowSpaceManager& wsm, Player& player);
     ~PlayerUi();
 
     void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
@@ -40,6 +40,10 @@ public:
     bool isOpened(PanelWindow* wnd) const;
 
 	void onWindowUpdated(PanelWindow& window);
+
+    void onAttached(InternalWindow& wnd) override;
+    void onDetached(InternalWindow& wnd) override;
+    void onDetachedAndWindowClosing(InternalWindow& wnd) override;
 
     EventResult dispatch(sf::Event& event, EventContext context, const ls::Vec2I& mousePos) override;
 

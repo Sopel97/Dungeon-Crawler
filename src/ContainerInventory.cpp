@@ -37,7 +37,7 @@ const SlotContentRequirement ContainerInventory::slotContentRequirement(size_t s
 {
     return SlotContentRequirement::None;
 }
-std::unique_ptr<InventoryView> ContainerInventory::createInventoryView(InventorySystem& invSys, InternalWindow& wnd)
+std::unique_ptr<InventoryView> ContainerInventory::createInventoryView(InventorySystem& invSys)
 {
     constexpr int margins = 4;
     constexpr int spacesBetweenSlots = 3;
@@ -60,7 +60,7 @@ std::unique_ptr<InventoryView> ContainerInventory::createInventoryView(Inventory
         }
     }
 
-    return std::make_unique<InventoryView>(invSys, wnd, *this, std::move(slotViews));
+    return std::make_unique<InventoryView>(invSys, *this, std::move(slotViews));
 }
 std::unique_ptr<InventoryWindow> ContainerInventory::createInventoryWindow(WindowSpaceManager& wsm) const
 {

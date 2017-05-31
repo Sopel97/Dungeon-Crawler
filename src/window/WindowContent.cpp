@@ -1,22 +1,28 @@
 #include "window/WindowContent.h"
 
-WindowContent::WindowContent(InternalWindow& wnd) :
-    m_window(&wnd)
+WindowContent::WindowContent() :
+    m_window(nullptr)
 {
-    m_window->setContent(*this);
 }
-WindowContent::WindowContent(WindowContent&& other) :
-    m_window(other.m_window)
+WindowContent::WindowContent(WindowContent&& other)
 {
-    m_window->setContent(*this);
+    if (other.m_window != nullptr)
+    {
+        other.m_window->attachContent(*this);
+    }
 }
 WindowContent& WindowContent::operator=(WindowContent&& other)
 {
-    m_window = other.m_window;
-
-    m_window->setContent(*this);
+    if (other.m_window != nullptr)
+    {
+        other.m_window->attachContent(*this);
+    }
 
     return *this;
+}
+WindowContent::~WindowContent()
+{
+
 }
 const InternalWindow& WindowContent::window() const
 {
@@ -26,11 +32,19 @@ InternalWindow& WindowContent::window()
 {
     return *m_window;
 }
-void WindowContent::detach()
+bool WindowContent::hasWindow() const
+{
+    return m_window != nullptr;
+}
+void WindowContent::onAttached(InternalWindow& wnd)
+{
+    m_window = &wnd;
+}
+void WindowContent::onDetached(InternalWindow& wnd)
 {
     m_window = nullptr;
 }
-WindowContent::~WindowContent()
+void WindowContent::onDetachedAndWindowClosing(InternalWindow& wnd)
 {
-    m_window->removeContent();
+    m_window = nullptr;
 }

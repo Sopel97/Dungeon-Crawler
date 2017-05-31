@@ -14,10 +14,10 @@
 
 using namespace ls;
 
-Player::Player(WindowSpaceManager& wsm, Game& game, TileTransferMediator& tileTransferMediator, InternalWindow& wnd) :
+Player::Player(WindowSpaceManager& wsm, Game& game, TileTransferMediator& tileTransferMediator) :
     m_wsm(&wsm),
     m_playerEntity(std::make_unique<PlayerModel>(nullptr, this), std::make_unique<PlayerRenderer>(nullptr, this), std::make_unique<PlayerController>(nullptr, this)),
-    m_playerUi(wsm, *this, wnd),
+    m_playerUi(wsm, *this),
     m_inventorySystem(wsm, *this, tileTransferMediator)
 {
 

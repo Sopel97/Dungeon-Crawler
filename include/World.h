@@ -29,7 +29,7 @@ class TileTransferMediator;
 class World : public WindowContent
 {
 public:
-    World(Root& root, Player& player, TileTransferMediator& tileTransferMediator, InternalWindow& wnd);
+    World(Root& root, Player& player, TileTransferMediator& tileTransferMediator);
     ~World();
 
     void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);

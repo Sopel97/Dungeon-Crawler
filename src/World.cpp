@@ -35,8 +35,7 @@
 
 using namespace ls;
 
-World::World(Root& root, Player& player, TileTransferMediator& tileTransferMediator, InternalWindow& wnd) :
-    WindowContent(wnd),
+World::World(Root& root, Player& player, TileTransferMediator& tileTransferMediator) :
     m_root(root),
     m_player(player),
     m_windowSpaceManager(root.windowSpaceManager()),

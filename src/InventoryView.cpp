@@ -16,21 +16,18 @@
 
 using namespace ls;
 
-InventoryView::InventoryView(InventorySystem& invSys, InternalWindow& wnd, Inventory& inventory) :
-    WindowContent(wnd),
+InventoryView::InventoryView(InventorySystem& invSys, Inventory& inventory) :
     m_inventorySystem(&invSys),
     m_inventory(&inventory)
 {
 }
-InventoryView::InventoryView(InventorySystem& invSys, InternalWindow& wnd, Inventory& inventory, const std::vector<InventorySlotView>& slots) :
-    WindowContent(wnd),
+InventoryView::InventoryView(InventorySystem& invSys, Inventory& inventory, const std::vector<InventorySlotView>& slots) :
     m_inventorySystem(&invSys),
     m_inventory(&inventory),
     m_slotViews(slots)
 {
 }
-InventoryView::InventoryView(InventorySystem& invSys, InternalWindow& wnd, Inventory& inventory, std::vector<InventorySlotView>&& slots) :
-    WindowContent(wnd),
+InventoryView::InventoryView(InventorySystem& invSys, Inventory& inventory, std::vector<InventorySlotView>&& slots) :
     m_inventorySystem(&invSys),
     m_inventory(&inventory),
     m_slotViews(std::move(slots))

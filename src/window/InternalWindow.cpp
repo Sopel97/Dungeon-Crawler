@@ -417,14 +417,16 @@ void InternalWindow::removeParent()
     m_parent = nullptr;
 }
 
-void InternalWindow::setContent(WindowContent& newUser)
+void InternalWindow::attachContent(WindowContent& newUser)
 {
-    if (m_content != nullptr) m_content->detach();
+    if (m_content != nullptr) m_content->onDetached(*this);
 
     m_content = &newUser;
+    m_content->onAttached(*this);
 }
-void InternalWindow::removeContent()
+void InternalWindow::detachContent()
 {
+    if (m_content != nullptr) m_content->onDetached(*this);
     m_content = nullptr;
 }
 

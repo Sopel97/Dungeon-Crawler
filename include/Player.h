@@ -26,7 +26,7 @@ class TileTransferMediator;
 class Player
 {
 public:
-    Player(WindowSpaceManager& wsm, Game& game, TileTransferMediator& tileTransferMediator, InternalWindow& wnd);
+    Player(WindowSpaceManager& wsm, Game& game, TileTransferMediator& tileTransferMediator);
 
     void onKeyPressed(sf::Event::KeyEvent& keyEvent);
     void processAsyncKeyboardInput(World& world, float dt);
