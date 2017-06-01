@@ -21,6 +21,8 @@ public:
 
     virtual void use(Player& player, const TileLocation& location);
     virtual void use(Player& player, const InventorySlotView& location);
+    virtual void look(Player& player, const TileLocation& location);
+    virtual void look(Player& player, const InventorySlotView& location);
 
     virtual std::unique_ptr<TileController> clone() const;
 };

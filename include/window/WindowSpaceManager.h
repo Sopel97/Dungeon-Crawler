@@ -19,6 +19,9 @@ public:
     Scene& scene(const std::string& name);
     const Scene& scene(const std::string& name) const;
 
+    Scene& currentScene();
+    const Scene& currentScene() const;
+
     void changeScene(const std::string& name);
 
     ls::Rectangle2I rect() const;

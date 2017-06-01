@@ -21,6 +21,14 @@ const Scene& WindowSpaceManager::scene(const std::string& name) const
 {
     return m_scenes.at(name);
 }
+Scene& WindowSpaceManager::currentScene()
+{
+    return *m_currentScene;
+}
+const Scene& WindowSpaceManager::currentScene() const
+{
+    return *m_currentScene;
+}
 
 void WindowSpaceManager::changeScene(const std::string& name)
 {

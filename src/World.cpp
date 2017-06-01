@@ -393,6 +393,11 @@ void World::useTile(const ls::Vec2I& tilePosition)
     TileColumn& tileColumn = m_mapLayer->at(tilePosition.x, tilePosition.y);
     tileColumn.top().tile().controller().use(m_root.game().player(), TileLocation(*m_mapLayer, tilePosition.x, tilePosition.y, tileColumn.topZ()));
 }
+void World::lookTile(const ls::Vec2I& tilePosition)
+{
+    TileColumn& tileColumn = m_mapLayer->at(tilePosition.x, tilePosition.y);
+    tileColumn.top().tile().controller().look(m_root.game().player(), TileLocation(*m_mapLayer, tilePosition.x, tilePosition.y, tileColumn.topZ()));
+}
 
 void World::update(float dt)
 {
@@ -548,7 +553,14 @@ auto World::onMouseButtonPressed(sf::Event::MouseButtonEvent& event, EventContex
 
             if (isInsideWorldBounds(tilePosition))
             {
-                m_tileTransferMediator.grabFromWorld(tilePosition, *this, m_player);
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LAlt))
+                {
+                    lookTile(tilePosition);
+                }
+                else
+                {
+                    m_tileTransferMediator.grabFromWorld(tilePosition, *this, m_player);
+                }
             }
         }
     }

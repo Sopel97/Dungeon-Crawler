@@ -118,6 +118,10 @@ Scene::ConstBackgroundWindowHandle Scene::findBackgroundWindow(const std::string
 {
     return m_backgroundWindows.findIf([&title](const BackgroundWindow& window)->bool {return window.title() == title; });
 }
+Scene::FreeWindowHandle Scene::findFreeWindow(const std::string& title)
+{
+    return std::find_if(m_freeWindows.begin(), m_freeWindows.end(), [&title](const std::unique_ptr<InternalWindow>& window)->bool {return window->title() == title; });
+}
 
 void Scene::update(const ls::Rectangle2I& rect)
 {
@@ -153,6 +157,8 @@ void Scene::dispatchEvent(sf::Event& event, const ls::Vec2I& mousePos)
         }
         if (result.consumeEvent)
         {
+            removeClosingFreeWindows();
+            moveFocusedFreeWindowToTop();
             return;
         }
     }
@@ -171,6 +177,8 @@ void Scene::dispatchEvent(sf::Event& event, const ls::Vec2I& mousePos)
         }
         if (result.consumeEvent)
         {
+            removeClosingFreeWindows();
+            moveFocusedFreeWindowToTop();
             return;
         }
     }
@@ -185,6 +193,8 @@ void Scene::dispatchEvent(sf::Event& event, const ls::Vec2I& mousePos)
         const SfmlEventHandler::EventResult result = focused.dispatch(event, context, mousePos);
         if (result.consumeEvent)
         {
+            removeClosingFreeWindows();
+            moveFocusedFreeWindowToTop();
             return;
         }
     }
@@ -193,7 +203,7 @@ void Scene::dispatchEvent(sf::Event& event, const ls::Vec2I& mousePos)
     for (auto iter = m_freeWindows.rbegin(); iter != m_freeWindows.rend(); ++iter)
     {
         InternalWindow& wnd = **iter;
-        if (&wnd == focusedWindow || &wnd == mouseOverFreeWindowHandle->get()) continue;
+        if (&wnd == focusedWindow || (mouseOverFreeWindowHandle != m_freeWindows.end() && &wnd == mouseOverFreeWindowHandle->get())) continue;
 
         const SfmlEventHandler::EventContext context = SfmlEventHandler::EventContext{}.setIsFocused(false).setIsMouseOver(false);
         const SfmlEventHandler::EventResult result = wnd.dispatch(event, context, mousePos);
@@ -204,6 +214,8 @@ void Scene::dispatchEvent(sf::Event& event, const ls::Vec2I& mousePos)
         }
         if (result.consumeEvent)
         {
+            removeClosingFreeWindows();
+            moveFocusedFreeWindowToTop();
             return;
         }
     }
@@ -221,10 +233,13 @@ void Scene::dispatchEvent(sf::Event& event, const ls::Vec2I& mousePos)
         }
         if (result.consumeEvent)
         {
+            removeClosingFreeWindows();
+            moveFocusedFreeWindowToTop();
             return;
         }
     }
 
+    removeClosingFreeWindows();
     moveFocusedFreeWindowToTop();
 }
 
@@ -311,9 +326,22 @@ void Scene::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
         wnd->draw(renderTarget, renderStates);
     }
 }
+bool Scene::isValid(FreeWindowHandle& h) const
+{
+    return h != m_freeWindows.end();
+}
+bool Scene::isValid(ConstFreeWindowHandle& h) const
+{
+    return h != m_freeWindows.end();
+}
+void Scene::setWindowFocus(FreeWindowHandle& h)
+{
+    m_focusedWindow = h->get();
+    moveFocusedFreeWindowToTop();
+}
 void Scene::removeClosingFreeWindows()
 {
-    m_freeWindows.erase(std::remove_if(m_freeWindows.begin(), m_freeWindows.end(), [](const std::unique_ptr<InternalWindow>& wnd)->bool {return wnd->isClosing(); }), m_freeWindows.end());
+    m_freeWindows.remove_if([](const std::unique_ptr<InternalWindow>& wnd)->bool {return wnd->isClosing(); });
     if (std::none_of(m_freeWindows.begin(), m_freeWindows.end(), [this](const std::unique_ptr<InternalWindow>& wnd)->bool {return wnd.get() == this->m_focusedWindow; }))
     {
         m_focusedWindow = nullptr;

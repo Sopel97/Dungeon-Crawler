@@ -61,6 +61,7 @@ public:
 
     BackgroundWindowHandle findBackgroundWindow(const std::string& title);
     ConstBackgroundWindowHandle findBackgroundWindow(const std::string& title) const;
+    FreeWindowHandle findFreeWindow(const std::string& title);
 
     void update(const ls::Rectangle2I& rect);
 
@@ -71,6 +72,11 @@ public:
     bool tryDispatchEvent(sf::Event& event, const ls::Vec2I& mousePos);
 
     void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
+
+    bool isValid(FreeWindowHandle& h) const;
+    bool isValid(ConstFreeWindowHandle& h) const;
+
+    void setWindowFocus(FreeWindowHandle& h);
 
 private:
     void removeClosingFreeWindows();

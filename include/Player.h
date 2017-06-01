@@ -11,6 +11,7 @@
 
 #include "PlayerUi.h"
 #include "InventorySystem.h"
+#include "TileDescriptionRenderer.h"
 
 #include "entities/Entity.h"
 
@@ -43,12 +44,19 @@ public:
     InventorySystem& inventorySystem();
     const InventorySystem& inventorySystem() const;
 
+    void showTileDescription(const TileDescription& description);
+    void showTileDescription(TileDescription&& description);
+
 protected:
     WindowSpaceManager* m_wsm;
     TileTransferMediator* m_tileTransferMediator;
     Entity m_playerEntity;
     PlayerUi m_playerUi;
     InventorySystem m_inventorySystem;
+    TileDescriptionRenderer m_tileDescriptionRenderer;
+
+private:
+    void displayTileDescriptionWindow();
 };
 
 #endif // PLAYER_H

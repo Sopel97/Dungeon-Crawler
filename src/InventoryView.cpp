@@ -79,7 +79,14 @@ SfmlEventHandler::EventResult InventoryView::onMouseButtonPressed(sf::Event::Mou
         {
             std::cout << m_inventory << ' ' << slot->slotId() << '\n';
 
-            m_inventorySystem->tileTransferMediator().grabFromInventory(*m_inventorySystem, *m_inventory, slot->slotId());
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LAlt))
+            {
+                slot->content().tile().controller().look(m_inventorySystem->player(), *slot);
+            }
+            else
+            {
+                m_inventorySystem->tileTransferMediator().grabFromInventory(*m_inventorySystem, *m_inventory, slot->slotId());
+            }
 
             return EventResult{}.setTakeFocus().setConsumeEvent();
         }

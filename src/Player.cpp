@@ -4,6 +4,8 @@
 #include "entities/renderers/PlayerRenderer.h"
 #include "entities/controllers/PlayerController.h"
 
+#include "window/Scene.h"
+
 #include "World.h"
 
 #include "EventDispatcher.h"
@@ -70,4 +72,34 @@ InventorySystem& Player::inventorySystem()
 const InventorySystem& Player::inventorySystem() const
 {
     return m_inventorySystem;
+}
+void Player::showTileDescription(const TileDescription& description)
+{
+    m_tileDescriptionRenderer.setDescription(description);
+    displayTileDescriptionWindow();
+}
+void Player::showTileDescription(TileDescription&& description)
+{
+    m_tileDescriptionRenderer.setDescription(std::move(description));
+    displayTileDescriptionWindow();
+}
+void Player::displayTileDescriptionWindow()
+{
+    const ls::Rectangle2I windowRect = m_tileDescriptionRenderer.requiredWindowRect(m_wsm->rect());
+
+    Scene& scene = m_wsm->currentScene();
+    Scene::FreeWindowHandle h = scene.findFreeWindow("TileDescription");
+    if (!scene.isValid(h))
+    {
+        WindowParams params = m_tileDescriptionRenderer.requiredWindowParams();
+        auto wnd = std::make_unique<InternalWindow>(*m_wsm, windowRect, "TileDescription", params);
+        wnd->attachContent(m_tileDescriptionRenderer);
+        scene.addFreeWindow(std::move(wnd));
+    }
+    else
+    {
+        InternalWindow& wnd = **h;
+        wnd.setWindowRect(windowRect);
+        scene.setWindowFocus(h);
+    }
 }

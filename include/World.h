@@ -53,6 +53,7 @@ public:
     ls::Vec2F tileCenterToWorld(const ls::Vec2I& tilePosition) const;
 
     void useTile(const ls::Vec2I& tilePosition);
+    void lookTile(const ls::Vec2I& tilePosition);
 
     void update(float dt);
 
