@@ -4,24 +4,29 @@
 
 #include "window/WindowSpaceManager.h"
 
+#include "ResourceManager.h"
+
 TileDescriptionRenderer::TileDescriptionRenderer(WindowSpaceManager& wsm) :
     m_description(std::nullopt),
     m_wsm(&wsm)
 {
-
+    m_font = ResourceManager::instance().get<sf::Font>("Font");
 }
 
 void TileDescriptionRenderer::setDescription(const TileDescription& newDescription)
 {
     m_description = newDescription;
+    updateLines();
 }
 void TileDescriptionRenderer::setDescription(TileDescription&& newDescription)
 {
     m_description = std::move(newDescription);
+    updateLines();
 }
 void TileDescriptionRenderer::removeDescription()
 {
     m_description.reset();
+    updateLines();
 }
 
 WindowParams TileDescriptionRenderer::requiredWindowParams() const
@@ -50,11 +55,18 @@ WindowParams TileDescriptionRenderer::requiredWindowParams() const
 }
 ls::Rectangle2I TileDescriptionRenderer::requiredContentRect(const ls::Rectangle2I& space) const
 {
-    const ls::Vec2I size = calculateContentSize();
-    const ls::Vec2I mousePos(sf::Mouse::getPosition(m_wsm->window()).x, sf::Mouse::getPosition(m_wsm->window()).y);
-    ls::Rectangle2I rect = ls::Rectangle2I::withSize(mousePos - ls::Vec2I(size.x, 0), size.x, size.y);
+    static constexpr int offsetX = -20;
+    static constexpr int offsetY = -10;
 
-    //TODO: position properly if outside window
+    const ls::Vec2I size = m_contentSize;
+    const ls::Vec2I mousePos(sf::Mouse::getPosition(m_wsm->window()).x, sf::Mouse::getPosition(m_wsm->window()).y);
+    ls::Rectangle2I rect = ls::Rectangle2I::withSize(mousePos - ls::Vec2I(size.x, 0) + ls::Vec2I(offsetX, offsetY), size.x, size.y);
+
+    if (rect.min.x < space.min.x) rect.translate(ls::Vec2I(space.min.x - rect.min.x, 0));
+    if (rect.min.y < space.min.y) rect.translate(ls::Vec2I(0, space.min.y - rect.min.y));
+
+    if (rect.max.x > space.max.x) rect.translate(ls::Vec2I(space.max.x - rect.max.x, 0));
+    if (rect.max.y > space.max.y) rect.translate(ls::Vec2I(0, space.max.y - rect.max.y));
 
     return rect;
 }
@@ -71,12 +83,53 @@ SfmlEventHandler::EventResult TileDescriptionRenderer::onMouseButtonPressed(sf::
 
 void TileDescriptionRenderer::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
 {
-    // TODO: drawing
+    for (const auto& line : m_lines)
+    {
+        renderTarget.draw(line, renderStates);
+    }
 }
 
-ls::Vec2I TileDescriptionRenderer::calculateContentSize() const
+void TileDescriptionRenderer::updateLines()
 {
-    // TODO: 
+    m_lines.clear();
+    m_contentSize = ls::Vec2I(0, 0);
 
-    return ls::Vec2I(100, 100);
+    if (m_description.has_value())
+    {
+        const TileDescription& desc = m_description.value();
+        m_lines.reserve(desc.numLines());
+
+        for (const auto& line : desc)
+        {
+            m_lines.emplace_back(sf::String(line.text()), m_font.get(), line.fontSize());
+
+            sf::Text& textLine = m_lines.back();
+            textLine.setColor(line.color());
+            textLine.setStyle(line.style());
+        }
+
+        float maxWidth = 0;
+        float height = 0;
+
+        float spaceBetweenLines = 0;
+        for (const auto& line : m_lines)
+        {
+            const auto& rect = line.getLocalBounds();
+            maxWidth = std::max(maxWidth, rect.width);
+            height += rect.height + spaceBetweenLines;
+
+            spaceBetweenLines = m_spaceBetweenLines;
+        }
+
+        m_contentSize = ls::Vec2I(maxWidth + 2 * m_padding, height + 2 * m_padding);
+
+        float posY = m_padding;
+        for (auto& line : m_lines)
+        {
+            const auto& rect = line.getLocalBounds();
+            line.setPosition(m_contentSize.x / 2 - rect.width / 2, posY);
+
+            posY += rect.height + m_spaceBetweenLines;
+        }
+    }
 }

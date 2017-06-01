@@ -26,11 +26,6 @@ Player::Player(WindowSpaceManager& wsm, Game& game, TileTransferMediator& tileTr
 
 }
 
-void Player::onKeyPressed(sf::Event::KeyEvent& keyEvent)
-{
-
-}
-
 bool Player::tryInteractWithExternalInventory(Tile& tile, Inventory& inventory, const TileLocation& location)
 {
     return m_inventorySystem.tryInteractWithExternalInventory(tile, inventory, location);

@@ -81,7 +81,10 @@ SfmlEventHandler::EventResult InventoryView::onMouseButtonPressed(sf::Event::Mou
 
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LAlt))
             {
-                slot->content().tile().controller().look(m_inventorySystem->player(), *slot);
+                if (!slot->content().isEmpty())
+                {
+                    slot->content().tile().controller().look(m_inventorySystem->player(), *slot);
+                }
             }
             else
             {

@@ -29,7 +29,6 @@ class Player
 public:
     Player(WindowSpaceManager& wsm, Game& game, TileTransferMediator& tileTransferMediator);
 
-    void onKeyPressed(sf::Event::KeyEvent& keyEvent);
     void processAsyncKeyboardInput(World& world, float dt);
 
     bool tryInteractWithExternalInventory(Tile& tile, Inventory& inventory, const TileLocation& location);

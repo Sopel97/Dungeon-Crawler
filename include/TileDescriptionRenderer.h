@@ -2,8 +2,12 @@
 
 #include <optional>
 
+#include <SFML/Graphics.hpp>
+
 #include "window/WindowContent.h"
 #include "TileDescription.h"
+
+#include "ResourceManager.h"
 
 class WindowSpaceManager;
 
@@ -12,6 +16,9 @@ class TileDescriptionRenderer : public WindowContent
 private:
     std::optional<TileDescription> m_description;
     WindowSpaceManager* m_wsm;
+    ResourceHandle<sf::Font> m_font;
+    std::vector<sf::Text> m_lines;
+    ls::Vec2I m_contentSize;
 
 public:
     TileDescriptionRenderer(WindowSpaceManager& wsm);
@@ -28,5 +35,8 @@ public:
     void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) override;
 
 private:
-    ls::Vec2I calculateContentSize() const;
+    void updateLines();
+
+    static constexpr int m_padding = 10;
+    static constexpr int m_spaceBetweenLines = 8;
 };

@@ -1,6 +1,6 @@
 #include "TileDescription.h"
 
-TileDescriptionLine::TileDescriptionLine(const std::string& text, const sf::Color& color, sf::Text::Style style, TileDescriptionFontSize fontSize) :
+TileDescriptionLine::TileDescriptionLine(const std::string& text, const sf::Color& color, sf::Text::Style style, int fontSize) :
     m_text(text),
     m_color(color),
     m_style(style),
@@ -21,7 +21,7 @@ sf::Text::Style TileDescriptionLine::style() const
 {
     return m_style;
 }
-TileDescriptionFontSize TileDescriptionLine::fontSize() const
+int TileDescriptionLine::fontSize() const
 {
     return m_fontSize;
 }
@@ -62,7 +62,7 @@ const TileDescriptionLine& TileDescription::line(int i) const
     return m_lines[i];
 }
 
-void TileDescription::emplaceLine(const std::string& text, const sf::Color& color, sf::Text::Style style, TileDescriptionFontSize fontSize)
+void TileDescription::emplaceLine(const std::string& text, const sf::Color& color, sf::Text::Style style, int fontSize)
 {
     m_lines.emplace_back(text, color, style, fontSize);
 }
