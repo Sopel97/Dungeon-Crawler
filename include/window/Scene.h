@@ -13,7 +13,7 @@ public:
     using BackgroundWindowHandle = typename BackgroundWindowsStorage::Iterator;
     using ConstBackgroundWindowHandle = typename BackgroundWindowsStorage::ConstIterator;
 
-    using FreeWindowStorage = std::vector<std::unique_ptr<InternalWindow>>;
+    using FreeWindowStorage = std::list<std::unique_ptr<InternalWindow>>;
     using FreeWindowHandle = typename FreeWindowStorage::iterator;
     using ConstFreeWindowHandle = typename FreeWindowStorage::const_iterator;
 private:
@@ -66,6 +66,7 @@ public:
 
     BackgroundWindowHandle queryBackgroundWindow(const ls::Vec2I& pos);
     ConstBackgroundWindowHandle queryBackgroundWindow(const ls::Vec2I& pos) const;
+    FreeWindowHandle queryFreeWindow(const ls::Vec2I& pos);
 
     bool tryDispatchEvent(sf::Event& event, const ls::Vec2I& mousePos);
 
@@ -73,6 +74,7 @@ public:
 
 private:
     void removeClosingFreeWindows();
+    void moveFocusedFreeWindowToTop();
 
     void setSubdivisionParams(BackgroundWindowHandle h, const RectSubdivision& params);
     void update(BackgroundWindowHandle h, const ls::Rectangle2I& rect);

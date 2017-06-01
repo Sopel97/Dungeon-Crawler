@@ -55,6 +55,7 @@ subdivide(BackgroundWindowHandle h, const RectSubdivision& params, const std::st
 }
 Scene::FreeWindowHandle Scene::addFreeWindow(std::unique_ptr<InternalWindow>&& wnd)
 {
+    m_focusedWindow = wnd.get();
     m_freeWindows.emplace_back(std::move(wnd));
     return std::prev(m_freeWindows.end());
 }
@@ -138,17 +139,35 @@ void Scene::update(BackgroundWindowHandle h, const ls::Rectangle2I& rect)
 }
 void Scene::dispatchEvent(sf::Event& event, const ls::Vec2I& mousePos)
 {
+    FreeWindowHandle mouseOverFreeWindowHandle = queryFreeWindow(mousePos);
+    if (mouseOverFreeWindowHandle != m_freeWindows.end())
+    {
+        InternalWindow& mouseOverWindow = *(*mouseOverFreeWindowHandle);
+        bool isFocused = &mouseOverWindow == m_focusedWindow;
+
+        const SfmlEventHandler::EventContext context = SfmlEventHandler::EventContext{}.setIsFocused(isFocused).setIsMouseOver();
+        const SfmlEventHandler::EventResult result = mouseOverWindow.dispatch(event, context, mousePos);
+        if (result.takeFocus)
+        {
+            m_focusedWindow = &mouseOverWindow;
+        }
+        if (result.consumeEvent)
+        {
+            return;
+        }
+    }
+
     BackgroundWindowHandle mouseOverRegionHandle = queryBackgroundWindow(mousePos);
-    if (mouseOverRegionHandle.isValid())
+    if (mouseOverFreeWindowHandle == m_freeWindows.end() && mouseOverRegionHandle.isValid())
     {
         InternalWindow& mouseOverRegion = window(mouseOverRegionHandle);
-        bool isFocused = &(mouseOverRegionHandle.data()) == m_focusedWindow;
+        bool isFocused = &mouseOverRegion == m_focusedWindow;
 
         const SfmlEventHandler::EventContext context = SfmlEventHandler::EventContext{}.setIsFocused(isFocused).setIsMouseOver();
         const SfmlEventHandler::EventResult result = mouseOverRegion.dispatch(event, context, mousePos);
         if (result.takeFocus)
         {
-            m_focusedWindow = &(mouseOverRegionHandle.data());
+            m_focusedWindow = &mouseOverRegion;
         }
         if (result.consumeEvent)
         {
@@ -171,7 +190,23 @@ void Scene::dispatchEvent(sf::Event& event, const ls::Vec2I& mousePos)
     }
 
     // other regions
+    for (auto iter = m_freeWindows.rbegin(); iter != m_freeWindows.rend(); ++iter)
+    {
+        InternalWindow& wnd = **iter;
+        if (&wnd == focusedWindow || &wnd == mouseOverFreeWindowHandle->get()) continue;
 
+        const SfmlEventHandler::EventContext context = SfmlEventHandler::EventContext{}.setIsFocused(false).setIsMouseOver(false);
+        const SfmlEventHandler::EventResult result = wnd.dispatch(event, context, mousePos);
+
+        if (result.takeFocus)
+        {
+            m_focusedWindow = &wnd;
+        }
+        if (result.consumeEvent)
+        {
+            return;
+        }
+    }
 
     for (BackgroundWindowHandle h : m_topmostRegions)
     {
@@ -189,6 +224,8 @@ void Scene::dispatchEvent(sf::Event& event, const ls::Vec2I& mousePos)
             return;
         }
     }
+
+    moveFocusedFreeWindowToTop();
 }
 
 Scene::BackgroundWindowHandle Scene::queryBackgroundWindow(const ls::Vec2I& pos)
@@ -232,6 +269,16 @@ Scene::ConstBackgroundWindowHandle Scene::queryBackgroundWindow(const ls::Vec2I&
 
     return currentRegionHandle;
 }
+Scene::FreeWindowHandle Scene::queryFreeWindow(const ls::Vec2I& pos)
+{
+    for (auto iter = m_freeWindows.begin(); iter != m_freeWindows.end(); ++iter)
+    {
+        auto& wnd = **iter;
+        if (ls::intersect(wnd.absoluteWindowRect(), pos)) return iter;
+    }
+
+    return m_freeWindows.end();
+}
 
 bool Scene::tryDispatchEvent(sf::Event& event, const Vec2I& mousePos)
 {
@@ -258,6 +305,11 @@ void Scene::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
         BackgroundWindow& wnd = window(h);
         wnd.draw(renderTarget, renderStates);
     }
+
+    for (auto& wnd : m_freeWindows)
+    {
+        wnd->draw(renderTarget, renderStates);
+    }
 }
 void Scene::removeClosingFreeWindows()
 {
@@ -265,5 +317,17 @@ void Scene::removeClosingFreeWindows()
     if (std::none_of(m_freeWindows.begin(), m_freeWindows.end(), [this](const std::unique_ptr<InternalWindow>& wnd)->bool {return wnd.get() == this->m_focusedWindow; }))
     {
         m_focusedWindow = nullptr;
+    }
+}
+void Scene::moveFocusedFreeWindowToTop()
+{
+    for (auto iter = m_freeWindows.begin(); iter != m_freeWindows.end(); ++iter)
+    {
+        auto& wnd = **iter;
+        if (&wnd == m_focusedWindow)
+        {
+            m_freeWindows.splice(m_freeWindows.end(), m_freeWindows, iter);
+            return;
+        }
     }
 }
