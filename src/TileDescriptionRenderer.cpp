@@ -2,8 +2,11 @@
 
 #include <iostream>
 
-TileDescriptionRenderer::TileDescriptionRenderer() :
-    m_description(std::nullopt)
+#include "window/WindowSpaceManager.h"
+
+TileDescriptionRenderer::TileDescriptionRenderer(WindowSpaceManager& wsm) :
+    m_description(std::nullopt),
+    m_wsm(&wsm)
 {
 
 }
@@ -47,7 +50,13 @@ WindowParams TileDescriptionRenderer::requiredWindowParams() const
 }
 ls::Rectangle2I TileDescriptionRenderer::requiredContentRect(const ls::Rectangle2I& space) const
 {
-    return ls::Rectangle2I::withSize(ls::Vec2I(0, 0), 10, 10); //TODO: actually compute this and set position near mouse
+    const ls::Vec2I size = calculateContentSize();
+    const ls::Vec2I mousePos(sf::Mouse::getPosition(m_wsm->window()).x, sf::Mouse::getPosition(m_wsm->window()).y);
+    ls::Rectangle2I rect = ls::Rectangle2I::withSize(mousePos - ls::Vec2I(size.x, 0), size.x, size.y);
+
+    //TODO: position properly if outside window
+
+    return rect;
 }
 SfmlEventHandler::EventResult TileDescriptionRenderer::onMouseButtonPressed(sf::Event::MouseButtonEvent& event, EventContext context)
 {
@@ -63,4 +72,11 @@ SfmlEventHandler::EventResult TileDescriptionRenderer::onMouseButtonPressed(sf::
 void TileDescriptionRenderer::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
 {
     // TODO: drawing
+}
+
+ls::Vec2I TileDescriptionRenderer::calculateContentSize() const
+{
+    // TODO: 
+
+    return ls::Vec2I(100, 100);
 }

@@ -5,12 +5,16 @@
 #include "window/WindowContent.h"
 #include "TileDescription.h"
 
+class WindowSpaceManager;
+
 class TileDescriptionRenderer : public WindowContent
 {
 private:
     std::optional<TileDescription> m_description;
+    WindowSpaceManager* m_wsm;
+
 public:
-    TileDescriptionRenderer();
+    TileDescriptionRenderer(WindowSpaceManager& wsm);
 
     void setDescription(const TileDescription& newDescription);
     void setDescription(TileDescription&& newDescription);
