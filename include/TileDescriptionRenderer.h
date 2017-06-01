@@ -17,9 +17,12 @@ public:
     void removeDescription();
 
     WindowParams requiredWindowParams() const;
-    ls::Rectangle2I requiredWindowRect(const ls::Rectangle2I& space) const;
+    ls::Rectangle2I requiredContentRect(const ls::Rectangle2I& space) const;
 
     EventResult onMouseButtonPressed(sf::Event::MouseButtonEvent& event, EventContext context) override;
 
     void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) override;
+
+private:
+    ls::Vec2I calculateContentSize() const;
 };

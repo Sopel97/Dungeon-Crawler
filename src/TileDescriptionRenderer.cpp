@@ -45,9 +45,9 @@ WindowParams TileDescriptionRenderer::requiredWindowParams() const
 
     return params;
 }
-ls::Rectangle2I TileDescriptionRenderer::requiredWindowRect(const ls::Rectangle2I& space) const
+ls::Rectangle2I TileDescriptionRenderer::requiredContentRect(const ls::Rectangle2I& space) const
 {
-    return ls::Rectangle2I::withSize(ls::Vec2I(0, 0), 200, 200); //TODO: actually compute this and set position near mouse
+    return ls::Rectangle2I::withSize(ls::Vec2I(0, 0), 10, 10); //TODO: actually compute this and set position near mouse
 }
 SfmlEventHandler::EventResult TileDescriptionRenderer::onMouseButtonPressed(sf::Event::MouseButtonEvent& event, EventContext context)
 {

@@ -85,21 +85,21 @@ void Player::showTileDescription(TileDescription&& description)
 }
 void Player::displayTileDescriptionWindow()
 {
-    const ls::Rectangle2I windowRect = m_tileDescriptionRenderer.requiredWindowRect(m_wsm->rect());
+    const ls::Rectangle2I contentRect = m_tileDescriptionRenderer.requiredContentRect(m_wsm->rect());
 
     Scene& scene = m_wsm->currentScene();
     Scene::FreeWindowHandle h = scene.findFreeWindow("TileDescription");
     if (!scene.isValid(h))
     {
         WindowParams params = m_tileDescriptionRenderer.requiredWindowParams();
-        auto wnd = std::make_unique<InternalWindow>(*m_wsm, windowRect, "TileDescription", params);
+        auto wnd = InternalWindow::createWithContentRect(*m_wsm, contentRect, "TileDescription", params);
         wnd->attachContent(m_tileDescriptionRenderer);
         scene.addFreeWindow(std::move(wnd));
     }
     else
     {
         InternalWindow& wnd = **h;
-        wnd.setWindowRect(windowRect);
+        wnd.setContentRect(contentRect);
         scene.setWindowFocus(h);
     }
 }

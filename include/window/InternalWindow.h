@@ -5,6 +5,7 @@
 
 #include <string>
 #include <vector>
+#include <memory>
 
 #include "WindowParams.h"
 #include "SfmlEventHandler.h"
@@ -33,6 +34,8 @@ protected:
 public:
     static WindowParams defaultParams();
 
+    static std::unique_ptr<InternalWindow> createWithContentRect(WindowSpaceManager& wsm, const ls::Rectangle2I& contentRect, const std::string& name, const WindowParams& params);
+
     InternalWindow(WindowSpaceManager& wsm, const ls::Rectangle2I& windowRect, const std::string& name);
     InternalWindow(WindowSpaceManager& wsm, const ls::Rectangle2I& windowRect, const std::string& name, const WindowParams& params);
 
@@ -54,6 +57,7 @@ public:
     void setWindowWidth(int newWidth);
     void setWindowHeight(int newHeight);
     void setWindowSize(const ls::Vec2I& newSize);
+    void setContentRect(const ls::Rectangle2I& newRect);
     void setContentSize(const ls::Vec2I& newSize);
     void setContentWidth(int newWidth);
     void setContentHeight(int newHeight);
@@ -135,6 +139,7 @@ public:
     static int maximizeButtonId();
 
 private:
+    static ls::Rectangle2I windowRectWithContentRect(const ls::Rectangle2I& contentRect, const WindowParams& params);
 
     void drawSkeleton(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
     void drawSkeletonMinimized(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);

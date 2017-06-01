@@ -71,6 +71,11 @@ WindowParams InternalWindow::defaultParams()
 
     return params;
 }
+std::unique_ptr<InternalWindow> InternalWindow::createWithContentRect(WindowSpaceManager& wsm, const ls::Rectangle2I& contentRect, const std::string& name, const WindowParams& params)
+{
+    return std::make_unique<InternalWindow>(wsm, windowRectWithContentRect(contentRect, params), name, params);
+}
+
 InternalWindow::InternalWindow(WindowSpaceManager& wsm, const ls::Rectangle2I& windowRect, const std::string& name) :
     InternalWindow(wsm, windowRect, name, defaultParams())
 {
@@ -153,6 +158,10 @@ void InternalWindow::setWindowPosition(const ls::Vec2I& newPosition)
 void InternalWindow::setWindowSize(const ls::Vec2I& newSize)
 {
     m_windowRect.max = m_windowRect.min + newSize;
+}
+void InternalWindow::setContentRect(const ls::Rectangle2I& newRect)
+{
+    m_windowRect = windowRectWithContentRect(newRect, m_params);
 }
 void InternalWindow::setWindowWidth(int newWidth)
 {
@@ -729,4 +738,20 @@ InternalWindowHeaderButton* InternalWindow::queryButton(const ls::Vec2I& pos)
     }
 
     return nullptr;
+}
+ls::Rectangle2I InternalWindow::windowRectWithContentRect(const ls::Rectangle2I& contentRect, const WindowParams& params)
+{
+    ls::Vec2I offsetFromTopLeft(m_windowLeftBarWidth, m_windowTopBarHeight);
+    if (params.hasHeader)
+    {
+        offsetFromTopLeft.y = m_windowHeaderHeight;
+    }
+
+    ls::Vec2I offsetFromBottomRight(-m_windowRightBarWidth, -m_windowBottomBarHeight);
+    if (params.hasScrollBar)
+    {
+        offsetFromBottomRight.x = -m_windowScrollBarWidth;
+    }
+
+    return ls::Rectangle2I(contentRect.min - offsetFromTopLeft, contentRect.max - offsetFromBottomRight);
 }
