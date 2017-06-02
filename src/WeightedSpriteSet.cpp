@@ -1,8 +1,9 @@
 #include "WeightedSpriteSet.h"
 
-#include "Root.h"
-
 #include <algorithm>
+#include <random>
+
+#include "Rng.h"
 
 using namespace ls;
 
@@ -40,7 +41,7 @@ int WeightedSpriteSet::chooseRandomSprite() const
     float sumOfWeights = m_cumulativeWeights.back();
 
     std::uniform_real_distribution<float> distr(0.0f, sumOfWeights);
-    int spriteIndex = std::lower_bound(m_cumulativeWeights.begin(), m_cumulativeWeights.end(), distr(Root::instance().rng())) - m_cumulativeWeights.begin();
+    int spriteIndex = std::lower_bound(m_cumulativeWeights.begin(), m_cumulativeWeights.end(), distr(Rng<std::ranlux48>::instance().rng())) - m_cumulativeWeights.begin();
 
     return spriteIndex;
 }

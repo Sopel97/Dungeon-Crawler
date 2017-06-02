@@ -2,8 +2,9 @@
 
 #include <string>
 #include <cmath>
+#include <random>
 
-std::ranlux48 TileAttributeRandomizer::m_rng;
+#include "Rng.h"
 
 void TileAttributeRandomizer::loadFromConfiguration(ConfigurationNode& config)
 {
@@ -45,15 +46,17 @@ TileAttribute TileAttributeRandomizer::randomize(const TileAttributeRandomizer::
 {
     static std::uniform_real_distribution<double> distr(0.0, 1.0);
 
+    auto& rng = Rng<std::ranlux48>::instance().rng();
+
     const double probability = params.probability;
-    const double r = distr(m_rng);
+    const double r = distr(rng);
     if (r > probability) return TileAttribute{ params.attributeId, 0 };
 
     const double exponent = params.exponent;
     const double min = params.min - 0.5; //because we round them to the nearest integer later
     const double max = params.max + 0.5;
     
-    const double t = std::pow(distr(m_rng), exponent);
+    const double t = std::pow(distr(rng), exponent);
     const double value = min + (max - min)*t;
 
     int intValue = static_cast<int>(std::round(value));

@@ -20,7 +20,6 @@ Root::Root() :
 	m_window(sf::VideoMode(m_defaultWindowWidth, m_defaultWindowHeight), "Dungeon Crawler Test"),
 	m_renderStates(),
 	m_windowSpaceManager(m_window),
-    m_rng(12341),
     m_lastFrameTime(0.0f),
     m_lastMeasuredFps(0),
     m_currentFpsCounter(0),
@@ -156,11 +155,6 @@ const sf::Font& Root::defaultFont() const
 Game& Root::game()
 {
     return *m_game;
-}
-
-std::mt19937& Root::rng()
-{
-    return m_rng;
 }
 
 std::vector<std::string> Root::scanForFiles(const std::string& path, const std::string& query) const

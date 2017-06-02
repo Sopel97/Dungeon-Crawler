@@ -39,13 +39,10 @@ public:
     const sf::Font& defaultFont() const;
     Game& game();
 
-    std::mt19937& rng();
-
 protected:
     sf::RenderWindow m_window;
     sf::RenderStates m_renderStates;
     WindowSpaceManager m_windowSpaceManager;
-    std::mt19937 m_rng;
     float m_lastFrameTime;
     int m_lastMeasuredFps;
     int m_currentFpsCounter;

@@ -1,7 +1,6 @@
 #pragma once
 
 #include <vector>
-#include <random>
 
 #include "TileAttributeSet.h"
 #include "Configuration.h"
@@ -20,8 +19,6 @@ private:
     };
 
 private:
-    static std::ranlux48 m_rng;
-
     std::vector<AttributeRandomizationParameters> m_parameters;
 public:
     void loadFromConfiguration(ConfigurationNode& config);
