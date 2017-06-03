@@ -11,6 +11,7 @@
 using namespace ls;
 
 ResourceHandle<sf::Texture> InventorySlotView::m_texture {nullptr};
+ResourceHandle<sf::Font> InventorySlotView::m_font{ nullptr };
 Vec2I InventorySlotView::m_slotTexture {0, 19};
 Vec2I InventorySlotView::m_slotTextureSize {38, 38};
 Vec2I InventorySlotView::m_requirementIconSize {32, 32};
@@ -34,7 +35,8 @@ InventorySlotView::InventorySlotView(Inventory* inventory, size_t slotId, const 
     m_slotId(slotId),
     m_position(position)
 {
-    if(!m_texture) m_texture = ResourceManager::instance().get<sf::Texture>("UiNonRepeating");
+    if (!m_texture) m_texture = ResourceManager::instance().get<sf::Texture>("UiNonRepeating");
+    if (!m_font) m_font = ResourceManager::instance().get<sf::Font>("Font");
 }
 TileStack& InventorySlotView::content()
 {
@@ -89,10 +91,25 @@ void InventorySlotView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& r
     if (!tileStack.isEmpty())
     {
         tileStack.tile().draw(renderTarget, renderStates, *this);
+        if (tileStack.quantity() > 1)
+        {
+            drawQuantity(renderTarget, renderStates, tileStack.quantity());
+        }
     }
 }
 
 const Vec2I& InventorySlotView::slotSize()
 {
     return m_slotTextureSize;
+}
+
+void InventorySlotView::drawQuantity(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, int quantity)
+{
+    constexpr int padding = 2;
+
+    sf::Text quantityText(sf::String(std::to_string(quantity)), m_font.get(), m_fontSize);
+    const auto rect = quantityText.getLocalBounds();
+    quantityText.setOrigin(rect.left + rect.width, rect.top + rect.height);
+    quantityText.setPosition(m_position.x + slotSize().x - padding, m_position.y + slotSize().y - padding);
+    renderTarget.draw(quantityText);
 }

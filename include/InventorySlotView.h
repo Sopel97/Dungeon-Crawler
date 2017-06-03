@@ -15,6 +15,7 @@ namespace sf
     class RenderStates;
     class RenderTarget;
     class Texture;
+    class Font;
 }
 
 class InventorySlotView
@@ -42,7 +43,10 @@ public:
     static const ls::Vec2I& slotSize();
 
 protected:
+    static constexpr int m_fontSize = 16;
+
     static ResourceHandle<sf::Texture> m_texture;
+    static ResourceHandle<sf::Font> m_font;
     static ls::Vec2I m_slotTexture;
     static ls::Vec2I m_slotTextureSize;
     static ls::Vec2I m_requirementIconSize;
@@ -51,4 +55,6 @@ protected:
     Inventory* m_inventory; //inventory will always outlive the views of its slots
     size_t m_slotId;
     ls::Vec2I m_position; //relative to inventory inner region
+
+    void drawQuantity(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, int quantity);
 };
