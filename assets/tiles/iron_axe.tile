@@ -1,0 +1,35 @@
+tile = {
+        
+    name = "Iron Axe",
+    displayedName = "Iron Axe",
+    
+    model = "EquipmentPieceModel",
+    renderer = "PlainTileRenderer",
+    controller = "PlainTileController",
+
+    texture = "Spritesheet",
+    
+    sprites = {
+        {272, 238},
+    },
+
+    validSlots = {"None", "LeftHand", "RightHand"},
+    correctSlots = {"LeftHand", "RightHand"},
+
+    attributeRandomizationGuidelines = {
+        {
+            attributeId = "Attack",
+            exponent = 1.0,
+            probability = 1.0,
+            min = 3,
+            max = 3
+        }
+    },
+
+    drag = 0.85,
+    isThrowableThrough = true,
+    isMovableTo = true,
+    canBeStored = true,
+    maxThrowDistance = 10
+    
+}

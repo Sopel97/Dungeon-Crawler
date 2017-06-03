@@ -1,5 +1,7 @@
 #include "tiles/models/TileModel.h"
 
+#include "tiles/TileAttributeSet.h"
+
 using namespace ls;
 
 const Rectangle2F TileModel::m_emptyCollider(Vec2F(0.0f, 0.0f), Vec2F(32.0f, 32.0f));
@@ -65,6 +67,11 @@ const std::string& TileModel::displayedName() const
 {
     static const std::string name = "";
     return name;
+}
+const TileAttributeSet& TileModel::attributes() const
+{
+    static TileAttributeSet empty;
+    return empty;
 }
 
 Inventory* TileModel::inventory()

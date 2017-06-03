@@ -14,7 +14,7 @@ void TileAttributeRandomizer::loadFromConfiguration(ConfigurationNode& config)
     const int numEntries = config.length();
 
     m_parameters.reserve(numEntries);
-    for (int i = 1; i < numEntries; ++i)
+    for (int i = 1; i <= numEntries; ++i)
     {
         ConfigurationNode entry = config[i];
 

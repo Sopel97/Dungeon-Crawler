@@ -36,6 +36,7 @@ public:
     int maxQuantity() const override;
     bool meetsRequirements(SlotContentRequirement req) const override;
     const std::string& displayedName() const override;
+    const TileAttributeSet& attributes() const override;
 
     float drag() const override;
 
@@ -50,6 +51,7 @@ protected:
     {
         std::string displayedName;
         std::set<SlotContentRequirement> validSlots;
+        std::set<SlotContentRequirement> correctSlots;
         TileAttributeRandomizer attributeRandomizer;
         float drag;
         int maxThrowDistance;

@@ -1,0 +1,35 @@
+tile = {
+        
+    name = "Steel Helmet",
+    displayedName = "Steel Helmet",
+    
+    model = "EquipmentPieceModel",
+    renderer = "PlainTileRenderer",
+    controller = "PlainTileController",
+
+    texture = "Spritesheet",
+    
+    sprites = {
+        {238, 238},
+    },
+
+    validSlots = {"None", "Helmet", "LeftHand", "RightHand"},
+    correctSlots = {"Helmet"},
+
+    attributeRandomizationGuidelines = {
+        {
+            attributeId = "Defense",
+            exponent = 3.0,
+            probability = 0.8,
+            min = 5,
+            max = 15
+        }
+    },
+
+    drag = 0.85,
+    isThrowableThrough = true,
+    isMovableTo = true,
+    canBeStored = true,
+    maxThrowDistance = 10
+    
+}

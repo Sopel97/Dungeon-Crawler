@@ -395,6 +395,8 @@ void MapGenerator::generate(MapLayer& map)
     ResourceHandle<TilePrefab> backpackTile = ResourceManager::instance().get<TilePrefab>("Backpack");
     ResourceHandle<TilePrefab> goldCoinTile = ResourceManager::instance().get<TilePrefab>("Gold Coin");
     ResourceHandle<TilePrefab> platinumCoinTile = ResourceManager::instance().get<TilePrefab>("Platinum Coin");
+    ResourceHandle<TilePrefab> ironAxeTile = ResourceManager::instance().get<TilePrefab>("Iron Axe");
+    ResourceHandle<TilePrefab> steelHelmetTile = ResourceManager::instance().get<TilePrefab>("Steel Helmet");
 
     prepareHelperMaps();
 
@@ -418,6 +420,8 @@ void MapGenerator::generate(MapLayer& map)
                 else if(r < 0.10f) map.placeTile(TileStack(backpackTile.get().instantiate(), 1), x, y);
                 else if (r < 0.20f) map.placeTile(TileStack(goldCoinTile.get().instantiate(), rand() % 99 + 1), x, y);
                 else if (r < 0.25f) map.placeTile(TileStack(platinumCoinTile.get().instantiate(), rand() % 99 + 1), x, y);
+                else if (r < 0.30f) map.placeTile(TileStack(ironAxeTile.get().instantiate(), 1), x, y);
+                else if (r < 0.35f) map.placeTile(TileStack(steelHelmetTile.get().instantiate(), 1), x, y);
             }
         }
     }
