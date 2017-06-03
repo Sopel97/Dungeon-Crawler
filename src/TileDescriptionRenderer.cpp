@@ -127,7 +127,15 @@ void TileDescriptionRenderer::updateLines()
         for (auto& line : m_lines)
         {
             const auto& rect = line.getLocalBounds();
-            line.setPosition(m_contentSize.x / 2 - rect.width / 2, posY);
+
+            line.setOrigin(
+                std::floor(rect.left + rect.width / 2.0f),
+                std::floor(rect.top)
+            );
+            line.setPosition(
+                std::floor(m_contentSize.x / 2), 
+                std::floor(posY)
+            );
 
             posY += rect.height + m_spaceBetweenLines;
         }

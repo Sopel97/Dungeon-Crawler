@@ -8,9 +8,22 @@
 #include <vector>
 #include <algorithm>
 #include <cmath>
+#include <functional>
 
 namespace ls
 {
+    class OnScopeExit
+    {
+    public:
+        template <class TFwd>
+        OnScopeExit(TFwd&& f) : m_f(std::forward<TFwd>(f)) {}
+        OnScopeExit(const OnScopeExit& rhs) = delete;
+        OnScopeExit(OnScopeExit&& rhs) = delete;
+        ~OnScopeExit() { m_f(); }
+    private:
+        std::function<void(void)> m_f;
+    };
+
     class Util
     {
     public:
@@ -40,7 +53,7 @@ namespace ls
         {
             using type = Vec4<T>;
         };
-        
+
 
         //32-bit fnv-a
         static uint32_t hash(uint32_t val)
@@ -91,7 +104,7 @@ namespace ls
         static inline typename std::enable_if<std::is_integral<T>::value, T>::type mod(const T& value, const T& div)
         {
             T r = value % div;
-            if(r < T(0)) r += div;
+            if (r < T(0)) r += div;
             return r;
         }
         template <class T>
@@ -102,7 +115,7 @@ namespace ls
 
             T i = abs(floor(value / div));
             T r = value - i * div;
-            if(r < 0) r += div;
+            if (r < 0) r += div;
             return r;
         }
         template <class T>

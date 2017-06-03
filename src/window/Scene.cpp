@@ -1,5 +1,7 @@
 #include "window/Scene.h"
 
+#include "../Libs/Util.h"
+
 using namespace ls;
 
 Scene::Scene(WindowSpaceManager& windowSpaceManager, const ls::Rectangle2I& rect, const std::string& name) :
@@ -143,6 +145,12 @@ void Scene::update(BackgroundWindowHandle h, const ls::Rectangle2I& rect)
 }
 void Scene::dispatchEvent(sf::Event& event, const ls::Vec2I& mousePos)
 {
+    ls::OnScopeExit guard([this]() {
+        removeClosingFreeWindows();
+        moveFocusedFreeWindowToTop(); 
+    });
+
+    // 1. window under mouse
     FreeWindowHandle mouseOverFreeWindowHandle = queryFreeWindow(mousePos);
     if (mouseOverFreeWindowHandle != m_freeWindows.end())
     {
@@ -151,16 +159,9 @@ void Scene::dispatchEvent(sf::Event& event, const ls::Vec2I& mousePos)
 
         const SfmlEventHandler::EventContext context = SfmlEventHandler::EventContext{}.setIsFocused(isFocused).setIsMouseOver();
         const SfmlEventHandler::EventResult result = mouseOverWindow.dispatch(event, context, mousePos);
-        if (result.takeFocus)
-        {
-            m_focusedWindow = &mouseOverWindow;
-        }
-        if (result.consumeEvent)
-        {
-            removeClosingFreeWindows();
-            moveFocusedFreeWindowToTop();
-            return;
-        }
+
+        if (result.takeFocus) m_focusedWindow = &mouseOverWindow;
+        if (result.consumeEvent) return;
     }
 
     BackgroundWindowHandle mouseOverRegionHandle = queryBackgroundWindow(mousePos);
@@ -171,18 +172,12 @@ void Scene::dispatchEvent(sf::Event& event, const ls::Vec2I& mousePos)
 
         const SfmlEventHandler::EventContext context = SfmlEventHandler::EventContext{}.setIsFocused(isFocused).setIsMouseOver();
         const SfmlEventHandler::EventResult result = mouseOverRegion.dispatch(event, context, mousePos);
-        if (result.takeFocus)
-        {
-            m_focusedWindow = &mouseOverRegion;
-        }
-        if (result.consumeEvent)
-        {
-            removeClosingFreeWindows();
-            moveFocusedFreeWindowToTop();
-            return;
-        }
+
+        if (result.takeFocus) m_focusedWindow = &mouseOverRegion;
+        if (result.consumeEvent) return;
     }
 
+    // 2. focused window
     InternalWindow* focusedWindow = m_focusedWindow; //stored because can be changed midway
     if (m_focusedWindow != nullptr && &(mouseOverRegionHandle.data()) != m_focusedWindow)
     {
@@ -191,15 +186,11 @@ void Scene::dispatchEvent(sf::Event& event, const ls::Vec2I& mousePos)
             .setIsFocused()
             .setIsMouseOver(false);
         const SfmlEventHandler::EventResult result = focused.dispatch(event, context, mousePos);
-        if (result.consumeEvent)
-        {
-            removeClosingFreeWindows();
-            moveFocusedFreeWindowToTop();
-            return;
-        }
+        if (result.consumeEvent) return;
     }
 
-    // other regions
+    // 3. other windows
+    // free windows are traversed from the topmost one to the lowest one (so in reversed order)
     for (auto iter = m_freeWindows.rbegin(); iter != m_freeWindows.rend(); ++iter)
     {
         InternalWindow& wnd = **iter;
@@ -208,39 +199,20 @@ void Scene::dispatchEvent(sf::Event& event, const ls::Vec2I& mousePos)
         const SfmlEventHandler::EventContext context = SfmlEventHandler::EventContext{}.setIsFocused(false).setIsMouseOver(false);
         const SfmlEventHandler::EventResult result = wnd.dispatch(event, context, mousePos);
 
-        if (result.takeFocus)
-        {
-            m_focusedWindow = &wnd;
-        }
-        if (result.consumeEvent)
-        {
-            removeClosingFreeWindows();
-            moveFocusedFreeWindowToTop();
-            return;
-        }
+        if (result.takeFocus) m_focusedWindow = &wnd;
+        if (result.consumeEvent) return;
     }
 
     for (BackgroundWindowHandle h : m_topmostRegions)
     {
-        if (&(h.data()) == focusedWindow || h == mouseOverRegionHandle) continue;
+        BackgroundWindow& wnd = window(h);
+        if (&wnd == focusedWindow || h == mouseOverRegionHandle) continue;
 
-        BackgroundWindow& region = window(h);
         const SfmlEventHandler::EventContext context = SfmlEventHandler::EventContext{}.setIsFocused(false).setIsMouseOver(false);
-        const SfmlEventHandler::EventResult result = region.dispatch(event, context, mousePos);
-        if (result.takeFocus)
-        {
-            m_focusedWindow = &(h.data());
-        }
-        if (result.consumeEvent)
-        {
-            removeClosingFreeWindows();
-            moveFocusedFreeWindowToTop();
-            return;
-        }
+        const SfmlEventHandler::EventResult result = wnd.dispatch(event, context, mousePos);
+        if (result.takeFocus) m_focusedWindow = &wnd;
+        if (result.consumeEvent) return;
     }
-
-    removeClosingFreeWindows();
-    moveFocusedFreeWindowToTop();
 }
 
 Scene::BackgroundWindowHandle Scene::queryBackgroundWindow(const ls::Vec2I& pos)

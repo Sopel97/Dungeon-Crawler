@@ -105,7 +105,7 @@ void Root::loadAssets()
     loadTextures();
     loadTiles();
 
-    ResourceManager::instance().load<sf::Font>("assets\\fonts\\standard_font.ttf", "Font");
+    ResourceManager::instance().load<sf::Font>("assets\\fonts\\standard_font2.ttf", "Font");
 }
 void Root::loadTextures()
 {
