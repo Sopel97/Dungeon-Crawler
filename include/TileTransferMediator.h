@@ -62,4 +62,5 @@ public:
 private:
     void move(TileStack& from, TileColumn& to, int max);
     void move(TileStack& from, TileStack& to, int max);
+    void move(TileStack& from, Inventory& to, int max);
 };

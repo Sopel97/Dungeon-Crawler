@@ -117,6 +117,7 @@ public:
     bool tryInteractWithInternalInventory(Tile& tile, Inventory& inventory, const InventorySlotView& slot);
 
     bool canStore(const Inventory& inventory, const Tile& tile) const;
+    bool canStore(const Inventory& inventory, const Tile& tile, const Inventory& parent) const;
 
     PlayerEquipmentInventory& equipmentInventory();
 

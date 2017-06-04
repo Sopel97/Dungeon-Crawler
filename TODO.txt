@@ -11,7 +11,6 @@
 
 3. Do prefabs for entities too and use Component for entities
 
-6. Call tile moving events for each tile stack that is altered, pass moved quantity
 
 7. Clear world generation code
 
@@ -32,3 +31,7 @@
 
 
 24. player's line of sight using raycasting
+
+30. IMPORTANT TODO: 
+    Call tile moving events for each tile stack that is altered, pass moved quantity
+    Clean up tile transfering code now that it's mostly complete.

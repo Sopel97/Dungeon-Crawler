@@ -147,6 +147,26 @@ bool InventorySystem::canStore(const Inventory& inventory, const Tile& tile) con
 
     return true; // no cycle found
 }
+bool InventorySystem::canStore(const Inventory& inventory, const Tile& tile, const Inventory& parent) const
+{
+    if (!tile.model().canBeStored()) return false;
+
+    const Inventory* tileInventory = tile.model().inventory();
+    if (&inventory == tileInventory) return false;
+    const Inventory* parentInventory = &parent;
+
+    ConstTrackedInventoryHandle current = find(parent).second;
+    if (!current.isValid()) return false; // inventory is not tracked
+
+    for (;;)
+    {
+        if (current.data().inventory == tileInventory) return false; // cycle found
+        if (current.hasParent()) current = current.parent();
+        else break;
+    }
+
+    return true; // no cycle found
+}
 
 std::pair<InventorySystem::TrackedInventoryTreeHandle, InventorySystem::TrackedInventoryHandle> InventorySystem::find(const Inventory& inventory)
 {

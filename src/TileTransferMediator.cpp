@@ -108,16 +108,29 @@ void TileTransferMediator::operator()(const FromWorld& from, const ToInventory& 
     Inventory& inventory = *to.inventory;
     const int slot = to.slot;
     InventorySystem& inventorySystem = *to.inventorySystem;
-    if (!inventorySystem.canStore(inventory, fromTileStack.tile())) return;
-    if (!inventory.meetsRequirements(fromTileStack.tile(), slot)) return;
-
     TileStack& toTileStack = inventory.at(slot);
-    move(fromTileStack, toTileStack, fromTileStack.quantity());
-    if (fromTileStack.isEmpty()) fromTileColumn.takeFromTop();
 
+    if (!toTileStack.isEmpty() && toTileStack.tile().model().inventory() != nullptr)
+    {
+        Inventory& inventoryInside = *toTileStack.tile().model().inventory();
+        if (!inventorySystem.canStore(inventoryInside, fromTileStack.tile(), inventory)) return;
+
+        move(fromTileStack, inventoryInside, fromTileStack.quantity());
+        if (fromTileStack.isEmpty()) fromTileColumn.takeFromTop();
+
+        EventDispatcher::instance().broadcast<TileMovedFromWorldToInventory>(TileMovedFromWorldToInventory{ from, to, &(inventoryInside.at(0)) }); //temp
+    }
+    else
+    {
+        if (!inventorySystem.canStore(inventory, fromTileStack.tile())) return;
+        if (!inventory.meetsRequirements(fromTileStack.tile(), slot)) return;
+
+        move(fromTileStack, toTileStack, fromTileStack.quantity());
+        if (fromTileStack.isEmpty()) fromTileColumn.takeFromTop();
+
+        EventDispatcher::instance().broadcast<TileMovedFromWorldToInventory>(TileMovedFromWorldToInventory{ from, to, &(inventory.at(slot)) });
+    }
     std::cout << "World -> Inventory\n";
-
-    EventDispatcher::instance().broadcast<TileMovedFromWorldToInventory>(TileMovedFromWorldToInventory{ from, to, &(inventory.at(slot)) });
 }
 void TileTransferMediator::operator()(const FromInventory& from, const ToWorld& to)
 {
@@ -163,16 +176,30 @@ void TileTransferMediator::operator()(const FromInventory& from, const ToInvento
 
     Inventory& toInventory = *to.inventory;
     const int toSlot = to.slot;
-    if (!inventorySystem.canStore(toInventory, fromTileStack.tile())) return;
-    if (!toInventory.meetsRequirements(fromTileStack.tile(), toSlot)) return;
-
     TileStack& toTileStack = toInventory.at(toSlot);
-    move(fromTileStack, toTileStack, fromTileStack.quantity());
+    if (!toTileStack.isEmpty() && toTileStack.tile().model().inventory() != nullptr)
+    {
+        Inventory& inventoryInside = *toTileStack.tile().model().inventory();
+        if (&inventoryInside == &fromInventory) return;
+        if (!inventorySystem.canStore(inventoryInside, fromTileStack.tile(), toInventory)) return;
+
+        move(fromTileStack, inventoryInside, fromTileStack.quantity());
+
+        EventDispatcher::instance().broadcast<TileMovedFromInventoryToInventory>(TileMovedFromInventoryToInventory{ from, to, &(inventoryInside.at(0)) }); //temp
+    }
+    else
+    {
+        if (!inventorySystem.canStore(toInventory, fromTileStack.tile())) return;
+        if (!toInventory.meetsRequirements(fromTileStack.tile(), toSlot)) return;
+
+        move(fromTileStack, toTileStack, fromTileStack.quantity());
+
+        EventDispatcher::instance().broadcast<TileMovedFromInventoryToInventory>(TileMovedFromInventoryToInventory{ from, to, &(toInventory.at(toSlot)) });
+    }
 
     // perform move
     std::cout << "Inventory -> Inventory\n";
 
-    EventDispatcher::instance().broadcast<TileMovedFromInventoryToInventory>(TileMovedFromInventoryToInventory{ from, to, &(toInventory.at(toSlot)) });
 }
 void TileTransferMediator::move(TileStack& from, TileColumn& to, int max)
 {
@@ -208,4 +235,14 @@ void TileTransferMediator::move(TileStack& from, TileStack& to, int max)
         to.insert(toMove);
     }
     else return; // cant perform move
+}
+void TileTransferMediator::move(TileStack& from, Inventory& to, int max)
+{
+    const int invSize = to.size();
+    for (int i = 0; i < invSize && max > 0; ++i)
+    {
+        const int amountBeforeMove = from.quantity();
+        move(from, to.at(i), max);
+        max -= amountBeforeMove - from.quantity();
+    }
 }
