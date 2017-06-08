@@ -60,7 +60,7 @@ public:
     void operator()(const FromInventory& from, const ToWorld& to);
     void operator()(const FromInventory& from, const ToInventory& to);
 private:
-    void move(TileStack& from, TileColumn& to, int max);
-    void move(TileStack& from, TileStack& to, int max);
-    void move(TileStack& from, Inventory& to, int max);
+    std::vector<int> move(TileStack& from, TileColumn& to, int max);
+    bool move(TileStack& from, TileStack& to, int max);
+    std::vector<int> move(TileStack& from, Inventory& to, int max);
 };

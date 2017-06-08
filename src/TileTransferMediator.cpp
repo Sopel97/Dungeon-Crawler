@@ -67,15 +67,15 @@ void TileTransferMediator::operator()(const FromWorld& from, const ToWorld& to)
     TileColumn& fromTileColumn = map.at(fromX, fromY);
     TileStack& fromTileStack = fromTileColumn.top();
     if (!fromTileStack.tile().model().isMovableFrom()) return;
-    
-    int maxTileThrowDist = fromTileStack.tile().model().maxThrowDistance();
-    if (world.tileManhattanDistance(from.pos, to.pos) > maxTileThrowDist) return;
 
     int toX = to.pos.x;
     int toY = to.pos.y;
     TileColumn& toTileColumn = map.at(toX, toY);
     TileStack& toTileStack = toTileColumn.top();
     if (!toTileStack.tile().model().isMovableTo()) return;
+
+    int maxTileThrowDist = fromTileStack.tile().model().maxThrowDistance();
+    if (world.tileManhattanDistanceFromPlayer(to.pos) > maxTileThrowDist) return; // out of range
 
     if (!world.lineOfSightBetweenPlayerAndTile(from.pos)) return;
 
@@ -84,10 +84,13 @@ void TileTransferMediator::operator()(const FromWorld& from, const ToWorld& to)
 
     // perform move
     std::cout << "World -> World\n";
-    move(fromTileStack, toTileColumn, fromTileStack.quantity());
+    auto stacksToCauseEvent = move(fromTileStack, toTileColumn, fromTileStack.quantity());
     if (fromTileStack.isEmpty()) fromTileColumn.takeFromTop();
 
-    EventDispatcher::instance().broadcast<TileMovedFromWorldToWorld>(TileMovedFromWorldToWorld{ from, to, &(toTileColumn.top()) });
+    for (int tileZ : stacksToCauseEvent)
+    {
+        EventDispatcher::instance().broadcast<TileMovedFromWorldToWorld>(TileMovedFromWorldToWorld{ from, to, &(toTileColumn.at(tileZ)) });
+    }
 }
 void TileTransferMediator::operator()(const FromWorld& from, const ToInventory& to)
 {
@@ -115,18 +118,23 @@ void TileTransferMediator::operator()(const FromWorld& from, const ToInventory& 
         Inventory& inventoryInside = *toTileStack.tile().model().inventory();
         if (!inventorySystem.canStore(inventoryInside, fromTileStack.tile(), inventory)) return;
 
-        move(fromTileStack, inventoryInside, fromTileStack.quantity());
+        auto slotsToCauseEvent = move(fromTileStack, inventoryInside, fromTileStack.quantity());
         if (fromTileStack.isEmpty()) fromTileColumn.takeFromTop();
 
-        EventDispatcher::instance().broadcast<TileMovedFromWorldToInventory>(TileMovedFromWorldToInventory{ from, to, &(inventoryInside.at(0)) }); //temp
+        for (int slotId : slotsToCauseEvent)
+        {
+            EventDispatcher::instance().broadcast<TileMovedFromWorldToInventory>(TileMovedFromWorldToInventory{ from, to, &(inventoryInside.at(slotId)) }); //temp
+        }
     }
     else
     {
         if (!inventorySystem.canStore(inventory, fromTileStack.tile())) return;
         if (!inventory.meetsRequirements(fromTileStack.tile(), slot)) return;
 
-        move(fromTileStack, toTileStack, fromTileStack.quantity());
-        if (fromTileStack.isEmpty()) fromTileColumn.takeFromTop();
+        if (move(fromTileStack, toTileStack, fromTileStack.quantity()))
+        {
+            if (fromTileStack.isEmpty()) fromTileColumn.takeFromTop();
+        }
 
         EventDispatcher::instance().broadcast<TileMovedFromWorldToInventory>(TileMovedFromWorldToInventory{ from, to, &(inventory.at(slot)) });
     }
@@ -158,9 +166,12 @@ void TileTransferMediator::operator()(const FromInventory& from, const ToWorld& 
     // perform move
     std::cout << "Inventory -> World\n";
 
-    move(fromTileStack, toTileColumn, fromTileStack.quantity());
+    auto stacksToCauseEvent = move(fromTileStack, toTileColumn, fromTileStack.quantity());
 
-    EventDispatcher::instance().broadcast<TileMovedFromInventoryToWorld>(TileMovedFromInventoryToWorld{ from, to, &(toTileColumn.top()) });
+    for (int tileZ : stacksToCauseEvent)
+    {
+        EventDispatcher::instance().broadcast<TileMovedFromInventoryToWorld>(TileMovedFromInventoryToWorld{ from, to, &(toTileColumn.at(tileZ)) });
+    }
 }
 void TileTransferMediator::operator()(const FromInventory& from, const ToInventory& to)
 {
@@ -183,26 +194,32 @@ void TileTransferMediator::operator()(const FromInventory& from, const ToInvento
         if (&inventoryInside == &fromInventory) return;
         if (!inventorySystem.canStore(inventoryInside, fromTileStack.tile(), toInventory)) return;
 
-        move(fromTileStack, inventoryInside, fromTileStack.quantity());
+        auto slotsToCauseEvent = move(fromTileStack, inventoryInside, fromTileStack.quantity());
 
-        EventDispatcher::instance().broadcast<TileMovedFromInventoryToInventory>(TileMovedFromInventoryToInventory{ from, to, &(inventoryInside.at(0)) }); //temp
+        for (int slotId : slotsToCauseEvent)
+        {
+            EventDispatcher::instance().broadcast<TileMovedFromInventoryToInventory>(TileMovedFromInventoryToInventory{ from, to, &(inventoryInside.at(slotId)) }); //temp
+        }
     }
     else
     {
         if (!inventorySystem.canStore(toInventory, fromTileStack.tile())) return;
         if (!toInventory.meetsRequirements(fromTileStack.tile(), toSlot)) return;
 
-        move(fromTileStack, toTileStack, fromTileStack.quantity());
-
-        EventDispatcher::instance().broadcast<TileMovedFromInventoryToInventory>(TileMovedFromInventoryToInventory{ from, to, &(toInventory.at(toSlot)) });
+        if (move(fromTileStack, toTileStack, fromTileStack.quantity()))
+        {
+            EventDispatcher::instance().broadcast<TileMovedFromInventoryToInventory>(TileMovedFromInventoryToInventory{ from, to, &(toInventory.at(toSlot)) });
+        }
     }
 
     // perform move
     std::cout << "Inventory -> Inventory\n";
 
 }
-void TileTransferMediator::move(TileStack& from, TileColumn& to, int max)
+std::vector<int> TileTransferMediator::move(TileStack& from, TileColumn& to, int max)
 {
+    std::vector<int> stacksToCauseEvent;
+
     const int maxQuantity = from.maxQuantity();
     if(maxQuantity != 1)
     {
@@ -214,15 +231,21 @@ void TileTransferMediator::move(TileStack& from, TileColumn& to, int max)
             currentTop.insert(toMove);
             from.erase(toMove);
             max -= toMove;
+
+            stacksToCauseEvent.push_back(to.topZ());
         }
     }
 
     if (!from.isEmpty() && max > 0)
     {
         to.placeOnTop(from.split(std::min(from.quantity(), max)));
+
+        stacksToCauseEvent.push_back(to.topZ());
     }
+
+    return stacksToCauseEvent;
 }
-void TileTransferMediator::move(TileStack& from, TileStack& to, int max)
+bool TileTransferMediator::move(TileStack& from, TileStack& to, int max)
 {
     if (to.isEmpty())
     {
@@ -231,18 +254,29 @@ void TileTransferMediator::move(TileStack& from, TileStack& to, int max)
     else if (to.tile().equals(from.tile()))
     {
         const int toMove = std::min(from.quantity(), to.maxQuantity() - to.quantity());
+        if (toMove == 0) return false;
         from.erase(toMove);
         to.insert(toMove);
     }
-    else return; // cant perform move
+    else return false; // cant perform move
+
+    return true;
 }
-void TileTransferMediator::move(TileStack& from, Inventory& to, int max)
+std::vector<int> TileTransferMediator::move(TileStack& from, Inventory& to, int max)
 {
+    std::vector<int> slotsToCauseEvents;
+
     const int invSize = to.size();
-    for (int i = 0; i < invSize && max > 0; ++i)
+    for (int slotId = 0; slotId < invSize && max > 0; ++slotId)
     {
         const int amountBeforeMove = from.quantity();
-        move(from, to.at(i), max);
-        max -= amountBeforeMove - from.quantity();
+        if (move(from, to.at(slotId), max))
+        {
+            max -= amountBeforeMove - from.quantity();
+
+            slotsToCauseEvents.push_back(slotId);
+        }
     }
+
+    return slotsToCauseEvents;
 }
