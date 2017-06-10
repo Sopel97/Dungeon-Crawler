@@ -20,6 +20,6 @@ public:
     TimeAnimatedSprite();
     void loadFromConfiguration(ConfigurationNode& config);
 
-    int now() const;
-    int at(double time) const;
+    const ls::Vec2I& now() const;
+    const ls::Vec2I& at(double time) const;
 };
