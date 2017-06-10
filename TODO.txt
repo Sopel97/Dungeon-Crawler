@@ -23,9 +23,7 @@
 19. Make camera like the one in Carcassone. Move there everything involving camera (for example conversion between coordinates)
 
 22. Simplified sprite system
-    - AnimatedSprite class that holds instances of Sprite (x, y, width, height, later also spritesheet id if needed) and table of frame time sums (for binary search)
-    - returns a sprite when given time
-    - all sprites in game are to be represented with this class
+    a) mostly done, just need to hook it up and scrap the old system
 
 23. Maybe convert from pixel units to tile units. (1 tile is 32 pixels)
 
