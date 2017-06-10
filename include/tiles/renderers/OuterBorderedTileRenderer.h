@@ -6,7 +6,8 @@
 
 #include "ResourceLoaders.h"
 
-#include "WeightedSpriteSet.h"
+#include "sprite/TileSpriteSelector.h"
+#include "sprite/TimeAnimatedSprite.h"
 
 #include "../LibS/Geometry.h"
 
@@ -43,6 +44,7 @@ public:
     virtual bool coversOuterBorders() const;
 
     virtual void onTileInstantiated();
+    void onTileQuantityChanged(int oldQuantity, int newQuantity) override;
 
     virtual std::unique_ptr<ComponentCommonData> createCommonDataStorage() const;
     virtual void setCommonDataStorage(ComponentCommonData& commonData);
@@ -52,13 +54,13 @@ protected:
     struct CommonData : public ComponentCommonData
     {
         ResourceHandle<sf::Texture> texture;
-        WeightedSpriteSet spriteSet;
+        TileSpriteSelector spriteSelector;
         ls::Vec2I borderSprites;
 
         int outerBorderPriority;
     };
     CommonData* m_commonData;
-    int m_spriteId;
+    const TimeAnimatedSprite* m_currentAnimatedSprite;
 };
 
 REGISTER_TILE_RENDERER_TYPE(OuterBorderedTileRenderer)

@@ -15,10 +15,9 @@ public:
 
     void loadFromConfiguration(ConfigurationNode& config);
 
-    int select(int quantity) const;
-    int defaultSprite() const;
+    const TimeAnimatedSprite& select(int quantity) const;
+    const TimeAnimatedSprite& defaultSprite() const;
 
-    const TimeAnimatedSprite& at(int i) const;
 protected:
     std::vector<TimeAnimatedSprite> m_sprites;
     std::vector<int> m_thresholdQuantities;

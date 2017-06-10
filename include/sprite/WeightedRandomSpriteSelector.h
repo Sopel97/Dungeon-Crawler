@@ -15,10 +15,8 @@ public:
 
     void loadFromConfiguration(ConfigurationNode& config);
 
-    int select() const;
-    int defaultSprite() const;
-
-    const TimeAnimatedSprite& at(int i) const;
+    const TimeAnimatedSprite& select() const;
+    const TimeAnimatedSprite& defaultSprite() const;
 
 protected:
     std::vector<TimeAnimatedSprite> m_sprites;

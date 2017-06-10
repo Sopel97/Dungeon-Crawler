@@ -22,43 +22,29 @@ void TileSpriteSelector::loadFromConfiguration(ConfigurationNode& config)
     else throw std::runtime_error("Invaid sprite selector specified: " + spriteSelectorType);
 }
 
-const TimeAnimatedSprite& TileSpriteSelector::at(int i) const
+const TimeAnimatedSprite& TileSpriteSelector::onTileInstantiated() const
 {
-    return std::visit(At{i}, m_spriteSelector);
+    return std::visit(OnTileInstantiated{}, m_spriteSelector);
 }
-
-int TileSpriteSelector::onTileInstantiated(int fallbackSprite) const
-{
-    return std::visit(OnTileInstantiated{fallbackSprite}, m_spriteSelector);
-}
-int TileSpriteSelector::onTileQuantityChanged(int newQuantity, int fallbackSprite) const
+const TimeAnimatedSprite& TileSpriteSelector::onTileQuantityChanged(int newQuantity, const TimeAnimatedSprite& fallbackSprite) const
 {
     return std::visit(OnTileQuantityChanged{newQuantity, fallbackSprite}, m_spriteSelector);
 }
 
-int TileSpriteSelector::OnTileInstantiated::operator()(const QuantityBasedSpriteSelector& selector) const
+const TimeAnimatedSprite& TileSpriteSelector::OnTileInstantiated::operator()(const QuantityBasedSpriteSelector& selector) const
 {
     return selector.select(1);
 }
-int TileSpriteSelector::OnTileInstantiated::operator()(const WeightedRandomSpriteSelector& selector) const
+const TimeAnimatedSprite& TileSpriteSelector::OnTileInstantiated::operator()(const WeightedRandomSpriteSelector& selector) const
 {
     return selector.select();
 }
 
-int TileSpriteSelector::OnTileQuantityChanged::operator()(const QuantityBasedSpriteSelector& selector) const
+const TimeAnimatedSprite& TileSpriteSelector::OnTileQuantityChanged::operator()(const QuantityBasedSpriteSelector& selector) const
 {
     return selector.select(newQuantity);
 }
-int TileSpriteSelector::OnTileQuantityChanged::operator()(const WeightedRandomSpriteSelector& selector) const
+const TimeAnimatedSprite& TileSpriteSelector::OnTileQuantityChanged::operator()(const WeightedRandomSpriteSelector& selector) const
 {
     return fallback;
-}
-
-const TimeAnimatedSprite& TileSpriteSelector::At::operator()(const QuantityBasedSpriteSelector& selector) const
-{
-    return selector.at(i);
-}
-const TimeAnimatedSprite& TileSpriteSelector::At::operator()(const WeightedRandomSpriteSelector& selector) const
-{
-    return selector.at(i);
 }

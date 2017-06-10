@@ -21,14 +21,14 @@ using namespace ls;
 OuterBorderedTileRenderer::OuterBorderedTileRenderer() :
     TileRenderer(),
     m_commonData(nullptr),
-    m_spriteId(0)
+    m_currentAnimatedSprite(nullptr)
 {
 
 }
 OuterBorderedTileRenderer::OuterBorderedTileRenderer(const OuterBorderedTileRenderer& other) :
     TileRenderer(other),
     m_commonData(other.m_commonData),
-    m_spriteId(other.m_spriteId)
+    m_currentAnimatedSprite(other.m_currentAnimatedSprite)
 {
 }
 OuterBorderedTileRenderer::~OuterBorderedTileRenderer()
@@ -40,8 +40,7 @@ void OuterBorderedTileRenderer::loadFromConfiguration(ConfigurationNode& config)
     std::string textureName = config["texture"].get<std::string>();
     m_commonData->texture = ResourceManager::instance().get<sf::Texture>(textureName);
 
-    ConfigurationNode sprites = config["sprites"];
-    m_commonData->spriteSet.loadFromConfiguration(sprites);
+    m_commonData->spriteSelector.loadFromConfiguration(config);
 
     m_commonData->borderSprites = Vec2I {config["borderSprites"][1].get<int>(), config["borderSprites"][2].get<int>()};
     m_commonData->outerBorderPriority = config["outerBorderPriority"].get<int>();
@@ -49,7 +48,7 @@ void OuterBorderedTileRenderer::loadFromConfiguration(ConfigurationNode& config)
 
 void OuterBorderedTileRenderer::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const
 {
-    const Vec2I& spritePos = m_commonData->spriteSet.at(m_spriteId);
+    const Vec2I& spritePos = m_currentAnimatedSprite->now();
 
     sf::Sprite spr;
     spr.setPosition(sf::Vector2f(static_cast<float>(location.x * GameConstants::tileSize), static_cast<float>(location.y * GameConstants::tileSize)));
@@ -154,7 +153,11 @@ bool OuterBorderedTileRenderer::coversOuterBorders() const
 
 void OuterBorderedTileRenderer::onTileInstantiated()
 {
-    m_spriteId = m_commonData->spriteSet.chooseRandomSprite();
+    m_currentAnimatedSprite = &(m_commonData->spriteSelector.onTileInstantiated());
+}
+void OuterBorderedTileRenderer::onTileQuantityChanged(int oldQuantity, int newQuantity)
+{
+    m_currentAnimatedSprite = &(m_commonData->spriteSelector.onTileQuantityChanged(newQuantity, *m_currentAnimatedSprite));
 }
 
 std::unique_ptr<ComponentCommonData> OuterBorderedTileRenderer::createCommonDataStorage() const

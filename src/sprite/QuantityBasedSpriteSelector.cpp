@@ -42,22 +42,17 @@ void QuantityBasedSpriteSelector::loadFromConfiguration(ConfigurationNode& confi
     }
 }
 
-int QuantityBasedSpriteSelector::select(int quantity) const
+const TimeAnimatedSprite& QuantityBasedSpriteSelector::select(int quantity) const
 {
-    if (m_sprites.size() <= 1) return 0;
+    if (m_sprites.size() <= 1) return m_sprites[0];
 
     auto iter = std::lower_bound(m_thresholdQuantities.begin(), m_thresholdQuantities.end(), quantity + 1); //+1 is to prevent it from choosing the element we need in the end
     --iter; //should always be possible
     int index = iter - m_thresholdQuantities.begin();
-    return index;
+    return m_sprites[index];
 }
 
-int QuantityBasedSpriteSelector::defaultSprite() const
+const TimeAnimatedSprite& QuantityBasedSpriteSelector::defaultSprite() const
 {
-    return 0;
-}
-
-const TimeAnimatedSprite& QuantityBasedSpriteSelector::at(int i) const
-{
-    return m_sprites[i];
+    return m_sprites[0];
 }

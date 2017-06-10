@@ -48,9 +48,9 @@ void WeightedRandomSpriteSelector::loadFromConfiguration(ConfigurationNode& conf
 }
 
 
-int WeightedRandomSpriteSelector::select() const
+const TimeAnimatedSprite& WeightedRandomSpriteSelector::select() const
 {
-    if (m_sprites.size() <= 1) return 0;
+    if (m_sprites.size() <= 1) return m_sprites[0];
 
     float sumOfWeights = m_cumulativeWeights.back();
 
@@ -58,14 +58,10 @@ int WeightedRandomSpriteSelector::select() const
     const float r = distr(Rng<std::ranlux48>::instance().rng());
     int spriteIndex = std::lower_bound(m_cumulativeWeights.begin(), m_cumulativeWeights.end(), r) - m_cumulativeWeights.begin();
 
-    return spriteIndex;
+    return m_sprites[spriteIndex];
 }
 
-int WeightedRandomSpriteSelector::defaultSprite() const
+const TimeAnimatedSprite& WeightedRandomSpriteSelector::defaultSprite() const
 {
-    return 0;
-}
-const TimeAnimatedSprite& WeightedRandomSpriteSelector::at(int i) const
-{
-    return m_sprites[i];
+    return m_sprites[0];
 }
