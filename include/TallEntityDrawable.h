@@ -16,15 +16,15 @@ class TallEntityDrawable : public TallDrawable
 {
 public:
     TallEntityDrawable(Entity* entity);
-    virtual ~TallEntityDrawable();
+    ~TallEntityDrawable() override;
 
-    virtual const ls::Rectangle2F& boundingRectangle() const;
-    virtual const ls::Vec2F& center() const;
+    const ls::Rectangle2F& boundingRectangle() const override;
+    const ls::Vec2F& center() const override;
 
-    virtual TallDrawable::DrawableType type() const;
+    TallDrawable::DrawableType type() const override;
 
-    virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
-    virtual void drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
+    void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) override;
+    void drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) override;
 
 protected:
     Entity* m_entity;

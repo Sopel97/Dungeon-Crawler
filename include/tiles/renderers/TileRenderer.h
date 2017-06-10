@@ -23,7 +23,7 @@ class TileRenderer : public TileComponent<TileRenderer, Tile>
 public:
     TileRenderer();
     TileRenderer(const TileRenderer& other);
-    virtual ~TileRenderer();
+    ~TileRenderer() override;
 
     virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const;
     virtual void drawOutside(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const;

@@ -25,22 +25,22 @@ class InnerBorderedWallTileRenderer : public TileRenderer
 public:
     InnerBorderedWallTileRenderer();
     InnerBorderedWallTileRenderer(const InnerBorderedWallTileRenderer& other);
-    virtual ~InnerBorderedWallTileRenderer();
+    ~InnerBorderedWallTileRenderer() override;
 
-    virtual void loadFromConfiguration(ConfigurationNode& config);
+    void loadFromConfiguration(ConfigurationNode& config) override;
 
-    virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const;
-    virtual void drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const;
+    void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const override;
+    void drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const override;
 
     const sf::Texture& texture() const;
-    virtual int innerBorderGroup() const;
+    int innerBorderGroup() const override;
 
-    virtual bool isTall() const;
+    bool isTall() const override;
 
-    virtual std::unique_ptr<ComponentCommonData> createCommonDataStorage() const;
-    virtual void setCommonDataStorage(ComponentCommonData& commonData);
+    std::unique_ptr<ComponentCommonData> createCommonDataStorage() const override;
+    void setCommonDataStorage(ComponentCommonData& commonData) override;
 
-    virtual std::unique_ptr<TileRenderer> clone() const;
+    std::unique_ptr<TileRenderer> clone() const override;
 protected:
     struct CommonData : public ComponentCommonData
     {

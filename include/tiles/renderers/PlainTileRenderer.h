@@ -31,27 +31,27 @@ class PlainTileRenderer : public TileRenderer
 public:
     PlainTileRenderer();
     PlainTileRenderer(const PlainTileRenderer& other);
-    virtual ~PlainTileRenderer();
+    ~PlainTileRenderer() override;
 
-    virtual void loadFromConfiguration(ConfigurationNode& config);
+    void loadFromConfiguration(ConfigurationNode& config) override;
 
-    virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const;
-    virtual void drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const;
+    void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const override;
+    void drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const override;
 
-    virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const InventorySlotView& slot) const;
+    void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const InventorySlotView& slot) const override;
 
     const sf::Texture& texture() const;
 
-    virtual bool coversOuterBorders() const;
-    virtual int outerBorderPriority() const;
+    bool coversOuterBorders() const override;
+    int outerBorderPriority() const override;
 
-    virtual void onTileInstantiated();
-    virtual void onTileQuantityChanged(int oldQuantity, int newQuantity);
+    void onTileInstantiated() override;
+    void onTileQuantityChanged(int oldQuantity, int newQuantity) override;
 
-    virtual std::unique_ptr<ComponentCommonData> createCommonDataStorage() const;
-    virtual void setCommonDataStorage(ComponentCommonData& commonData);
+    std::unique_ptr<ComponentCommonData> createCommonDataStorage() const;
+    void setCommonDataStorage(ComponentCommonData& commonData) override;
 
-    virtual std::unique_ptr<TileRenderer> clone() const;
+    std::unique_ptr<TileRenderer> clone() const override;
 protected:
     struct CommonData : public ComponentCommonData
     {

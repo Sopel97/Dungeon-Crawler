@@ -44,7 +44,7 @@ public:
     InternalWindow& operator=(const InternalWindow&) = delete;
     InternalWindow& operator=(InternalWindow&&) = delete;
 
-    virtual ~InternalWindow();
+    ~InternalWindow() override;
 
     ls::Rectangle2I windowRect() const;
     ls::Rectangle2I contentRect() const;

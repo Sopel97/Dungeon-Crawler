@@ -18,26 +18,26 @@ class PlainTileModel : public TileModel
 public:
     PlainTileModel();
     PlainTileModel(const PlainTileModel& other);
-    virtual ~PlainTileModel();
+    ~PlainTileModel() override;
 
-    virtual void loadFromConfiguration(ConfigurationNode& config);
+    void loadFromConfiguration(ConfigurationNode& config) override;
 
-    virtual bool hasCollider() const;
-    virtual const ls::Rectangle2F& collider() const;
-    virtual bool isMovableFrom() const;
-    virtual bool isThrowableThrough() const;
-    virtual bool isMovableTo() const;
-    virtual int maxThrowDistance() const;
-    virtual bool canBeStored() const;
-    virtual int maxQuantity() const;
-    virtual const std::string& displayedName() const;
+    bool hasCollider() const override;
+    const ls::Rectangle2F& collider() const override;
+    bool isMovableFrom() const override;
+    bool isThrowableThrough() const override;
+    bool isMovableTo() const override;
+    int maxThrowDistance() const override;
+    bool canBeStored() const override;
+    int maxQuantity() const override;
+    const std::string& displayedName() const override;
 
-    virtual float drag() const;
+    float drag() const;
 
-    virtual std::unique_ptr<ComponentCommonData> createCommonDataStorage() const;
-    virtual void setCommonDataStorage(ComponentCommonData& commonData);
+    std::unique_ptr<ComponentCommonData> createCommonDataStorage() const override;
+    void setCommonDataStorage(ComponentCommonData& commonData) override;
 
-    virtual std::unique_ptr<TileModel> clone() const;
+    std::unique_ptr<TileModel> clone() const override;
 protected:
     struct CommonData : public ComponentCommonData
     {

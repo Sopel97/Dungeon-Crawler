@@ -13,7 +13,7 @@ public:
     InventoryWindow(WindowSpaceManager& wsm, const std::string& name);
     InventoryWindow(WindowSpaceManager& wsm, const std::string& name, const WindowParams& params);
 
-    virtual int verticalScroll() const;
+    int verticalScroll() const override;
 
     void setContentHeightToMax();
 

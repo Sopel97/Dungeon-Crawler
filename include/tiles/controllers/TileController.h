@@ -17,7 +17,7 @@ class TileController : public TileComponent<TileController, Tile>
 public:
     TileController();
     TileController(const TileController& other);
-    virtual ~TileController();
+    ~TileController() override;
 
     virtual void use(Player& player, const TileLocation& location);
     virtual void use(Player& player, const InventorySlotView& location);

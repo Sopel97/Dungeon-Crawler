@@ -24,17 +24,17 @@ class PlayerRenderer : public EntityRenderer
 public:
     PlayerRenderer(Entity* owner, Player* player);
     PlayerRenderer(const PlayerRenderer& other);
-    virtual ~PlayerRenderer();
+    ~PlayerRenderer() override;
 
-    virtual void loadFromConfiguration(ConfigurationNode& config);
+    void loadFromConfiguration(ConfigurationNode& config) override;
 
-    virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) const;
-    virtual void drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) const;
+    void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) const override;
+    void drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) const override;
 
     const sf::Texture& texture() const;
 
-    virtual std::unique_ptr<EntityRenderer> clone() const;
-    virtual std::unique_ptr<EntityRenderer> create(Entity* owner) const;
+    std::unique_ptr<EntityRenderer> clone() const override;
+    std::unique_ptr<EntityRenderer> create(Entity* owner) const override;
 protected:
     Player* m_playerOwner;
     ResourceHandle<sf::Texture> m_texture;

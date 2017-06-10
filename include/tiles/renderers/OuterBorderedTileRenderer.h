@@ -30,26 +30,26 @@ class OuterBorderedTileRenderer : public TileRenderer
 public:
     OuterBorderedTileRenderer();
     OuterBorderedTileRenderer(const OuterBorderedTileRenderer& other);
-    virtual ~OuterBorderedTileRenderer();
+    ~OuterBorderedTileRenderer() override;
 
-    virtual void loadFromConfiguration(ConfigurationNode& config);
+    void loadFromConfiguration(ConfigurationNode& config) override;
 
-    virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const;
-    virtual void drawOutside(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const;
+    void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const override;
+    void drawOutside(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const override;
 
     const sf::Texture& texture() const;
 
-    virtual int outerBorderPriority() const;
-    virtual bool hasOuterBorder() const;
-    virtual bool coversOuterBorders() const;
+    int outerBorderPriority() const override;
+    bool hasOuterBorder() const override;
+    bool coversOuterBorders() const override;
 
-    virtual void onTileInstantiated();
+    void onTileInstantiated() override;
     void onTileQuantityChanged(int oldQuantity, int newQuantity) override;
 
-    virtual std::unique_ptr<ComponentCommonData> createCommonDataStorage() const;
-    virtual void setCommonDataStorage(ComponentCommonData& commonData);
+    std::unique_ptr<ComponentCommonData> createCommonDataStorage() const override;
+    void setCommonDataStorage(ComponentCommonData& commonData) override;
 
-    virtual std::unique_ptr<TileRenderer> clone() const;
+    std::unique_ptr<TileRenderer> clone() const override;
 protected:
     struct CommonData : public ComponentCommonData
     {

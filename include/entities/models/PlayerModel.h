@@ -17,29 +17,29 @@ class PlayerModel : public EntityModel
 public:
     PlayerModel(Entity* owner, Player* player);
     PlayerModel(const PlayerModel& other);
-    virtual ~PlayerModel();
+    ~PlayerModel() override;
 
-    virtual void loadFromConfiguration(ConfigurationNode& config);
+    void loadFromConfiguration(ConfigurationNode& config) override;
 
-    virtual bool hasCollider() const;
-    virtual float colliderRadius() const;
+    bool hasCollider() const override;
+    float colliderRadius() const override;
 
-    virtual const ls::Vec2F& position() const;
-    virtual void setPosition(const ls::Vec2F& newPosition);
-    virtual const ls::Vec2F& velocity() const;
-    virtual void setVelocity(const ls::Vec2F& newVelocity);
-    virtual float distanceTravelled() const;
-    virtual void setDistanceTravelled(float newDistanceTravelled);
+    const ls::Vec2F& position() const override;
+    void setPosition(const ls::Vec2F& newPosition) override;
+    const ls::Vec2F& velocity() const override;
+    void setVelocity(const ls::Vec2F& newVelocity) override;
+    float distanceTravelled() const override;
+    void setDistanceTravelled(float newDistanceTravelled) override;
 
-    virtual ls::Vec2F displacementWhenMoved(float dt);
+    ls::Vec2F displacementWhenMoved(float dt) override;
 
-    virtual float maxSpeed() const;
+    float maxSpeed() const override;
 
-    virtual EntityModel::Direction directionOfMove() const;
-    virtual void setDirectionOfMove(EntityModel::Direction newDirection);
+    EntityModel::Direction directionOfMove() const override;
+    void setDirectionOfMove(EntityModel::Direction newDirection) override;
 
-    virtual std::unique_ptr<EntityModel> clone() const;
-    virtual std::unique_ptr<EntityModel> create(Entity* owner) const;
+    std::unique_ptr<EntityModel> clone() const override;
+    std::unique_ptr<EntityModel> create(Entity* owner) const override;
 protected:
     Player* m_playerOwner;
     ls::Vec2F m_position;

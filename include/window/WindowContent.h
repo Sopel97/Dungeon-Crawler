@@ -20,7 +20,7 @@ protected:
     bool hasWindow() const;
 public:
     WindowContent();
-    virtual ~WindowContent();
+    ~WindowContent() override;
 
     WindowContent(const WindowContent&) = delete;
     WindowContent(WindowContent&& other);

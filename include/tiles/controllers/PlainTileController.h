@@ -14,9 +14,9 @@ class PlainTileController : public TileController
 public:
     PlainTileController();
     PlainTileController(const PlainTileController& other);
-    virtual ~PlainTileController();
+    ~PlainTileController() override;
 
-    virtual std::unique_ptr<TileController> clone() const;
+    std::unique_ptr<TileController> clone() const override;
 };
 
 REGISTER_TILE_CONTROLLER_TYPE(PlainTileController)

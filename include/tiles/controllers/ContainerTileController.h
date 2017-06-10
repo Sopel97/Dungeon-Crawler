@@ -11,12 +11,12 @@ class ContainerTileController : public TileController
 public:
     ContainerTileController();
     ContainerTileController(const ContainerTileController& other);
-    virtual ~ContainerTileController();
+    ~ContainerTileController() override;
 
     void use(Player& player, const TileLocation& location) override;
     void use(Player& player, const InventorySlotView& slot) override;
 
-    virtual std::unique_ptr<TileController> clone() const;
+    std::unique_ptr<TileController> clone() const override;
 };
 
 REGISTER_TILE_CONTROLLER_TYPE(ContainerTileController)

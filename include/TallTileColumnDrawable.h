@@ -14,18 +14,18 @@ class TallTileColumnDrawable : public TallDrawable //requires at least one tile 
 {
 public:
     TallTileColumnDrawable(const TileColumn & tileColumn, const TileLocation & tileLocation);
-    virtual ~TallTileColumnDrawable();
+    ~TallTileColumnDrawable() override;
 
-    virtual const ls::Rectangle2F& boundingRectangle() const;
-    virtual const ls::Vec2F& center() const;
+    const ls::Rectangle2F& boundingRectangle() const override;
+    const ls::Vec2F& center() const override;
 
-    virtual TallDrawable::DrawableType type() const;
+    TallDrawable::DrawableType type() const override;
 
     int tileX() const;
     int tileY() const;
 
-    virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
-    virtual void drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
+    void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) override;
+    void drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) override;
 
 protected:
     const TileColumn& m_tileColumn;

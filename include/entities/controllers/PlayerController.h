@@ -16,17 +16,17 @@ class PlayerController : public EntityController
 public:
     PlayerController(Entity* owner, Player* player);
     PlayerController(const PlayerController& other);
-    virtual ~PlayerController();
+    ~PlayerController() override;
 
-    virtual void loadFromConfiguration(ConfigurationNode& config);
+    void loadFromConfiguration(ConfigurationNode& config) override;
 
-    virtual void update(World& world, float dt);
+    void update(World& world, float dt) override;
 
-    virtual void move(const ls::Vec2F& factor, float dt);
-    virtual void accelerate(const ls::Vec2F& dv);
+    void move(const ls::Vec2F& factor, float dt) override;
+    void accelerate(const ls::Vec2F& dv) override;
 
-    virtual std::unique_ptr<EntityController> clone() const;
-    virtual std::unique_ptr<EntityController> create(Entity* owner) const;
+    std::unique_ptr<EntityController> clone() const override;
+    std::unique_ptr<EntityController> create(Entity* owner) const override;
 
 protected:
     Player* m_playerOwner;
