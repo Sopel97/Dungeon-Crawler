@@ -9,8 +9,9 @@ tile = {
 
     texture = "Spritesheet",
     
+    spriteSelector = "WeightedRandom",
     sprites = {
-        {340, 204},
+        {{{340, 204}}},
     },
 	
     inventorySize = 15,

@@ -2,7 +2,8 @@
 
 #include "TileRenderer.h"
 
-#include "WeightedSpriteSet.h"
+#include "sprite/TileSpriteSelector.h"
+#include "sprite/TimeAnimatedSprite.h"
 
 #include "ResourceManager.h"
 
@@ -45,6 +46,7 @@ public:
     virtual int outerBorderPriority() const;
 
     virtual void onTileInstantiated();
+    virtual void onTileQuantityChanged(int oldQuantity, int newQuantity);
 
     virtual std::unique_ptr<ComponentCommonData> createCommonDataStorage() const;
     virtual void setCommonDataStorage(ComponentCommonData& commonData);
@@ -55,13 +57,13 @@ protected:
     {
         ResourceHandle<sf::Texture> texture;
         ResourceHandle<sf::Texture> metaTexture;
-        WeightedSpriteSet spriteSet;
+        TileSpriteSelector spriteSelector;
 
         int outerBorderPriority;
         bool coversOuterBorders;
     };
     CommonData* m_commonData;
-    int m_spriteId;
+    const TimeAnimatedSprite* m_currentAnimatedSprite;
 
     void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location, const sf::Texture& texture) const;
 };

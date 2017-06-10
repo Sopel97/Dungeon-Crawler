@@ -30,6 +30,4 @@
 
 24. player's line of sight using raycasting
 
-30. IMPORTANT TODO: 
-    Call tile moving events for each tile stack that is altered, pass moved quantity
-    Clean up tile transfering code now that it's mostly complete.
+25. Consider storing normal textures and meta textures in one texture side to side

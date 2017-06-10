@@ -9,8 +9,9 @@ tile = {
 
     texture = "Spritesheet",
     
+    spriteSelector = "WeightedRandom",
     sprites = {
-        {238, 238},
+        {{{238, 238}}},
     },
 
     validSlots = {"None", "Helmet", "LeftHand", "RightHand"},

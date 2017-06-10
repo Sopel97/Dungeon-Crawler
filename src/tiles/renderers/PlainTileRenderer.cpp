@@ -19,13 +19,13 @@ using namespace ls;
 PlainTileRenderer::PlainTileRenderer() :
     TileRenderer(),
     m_commonData(nullptr),
-    m_spriteId(0)
+    m_currentAnimatedSprite(nullptr)
 {
 }
 PlainTileRenderer::PlainTileRenderer(const PlainTileRenderer& other) :
     TileRenderer(other),
     m_commonData(other.m_commonData),
-    m_spriteId(other.m_spriteId)
+    m_currentAnimatedSprite(other.m_currentAnimatedSprite)
 {
 }
 PlainTileRenderer::~PlainTileRenderer()
@@ -48,8 +48,7 @@ void PlainTileRenderer::loadFromConfiguration(ConfigurationNode& config)
         m_commonData->metaTexture = nullptr;
     }
 
-    ConfigurationNode sprites = config["sprites"];
-    m_commonData->spriteSet.loadFromConfiguration(sprites);
+    m_commonData->spriteSelector.loadFromConfiguration(config);
 
     m_commonData->outerBorderPriority = config["outerBorderPriority"].getDefault<int>(-1); //-1 means that it will always be on top
 
@@ -69,7 +68,7 @@ void PlainTileRenderer::drawMeta(sf::RenderTarget& renderTarget, sf::RenderState
 }
 void PlainTileRenderer::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location, const sf::Texture& texture) const
 {
-    const ls::Vec2I sprite = m_commonData->spriteSet.at(m_spriteId);
+    const ls::Vec2I sprite = m_currentAnimatedSprite->now();
 
     sf::Sprite spr;
     spr.setPosition(sf::Vector2f(static_cast<float>(location.x) * GameConstants::tileSize, static_cast<float>(location.y) * GameConstants::tileSize));
@@ -79,14 +78,14 @@ void PlainTileRenderer::draw(sf::RenderTarget& renderTarget, sf::RenderStates& r
 }
 void PlainTileRenderer::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const InventorySlotView& slot) const
 {
-    const Vec2I& spritePos = m_commonData->spriteSet.at(m_spriteId);
+    const ls::Vec2I sprite = m_currentAnimatedSprite->now();
     const ls::Vec2I slotCenter = slot.center();
     const float x = slotCenter.x - GameConstants::tileSize / 2;
     const float y = slotCenter.y - GameConstants::tileSize / 2;
     sf::Sprite spr;
     spr.setPosition(sf::Vector2f(x, y));
     spr.setTexture(texture());
-    spr.setTextureRect(sf::IntRect(sf::Vector2i(spritePos.x, spritePos.y), sf::Vector2i(GameConstants::tileSize, GameConstants::tileSize)));
+    spr.setTextureRect(sf::IntRect(sf::Vector2i(sprite.x, sprite.y), sf::Vector2i(GameConstants::tileSize, GameConstants::tileSize)));
     renderTarget.draw(spr, renderStates);
 }
 
@@ -105,9 +104,12 @@ int PlainTileRenderer::outerBorderPriority() const
 
 void PlainTileRenderer::onTileInstantiated()
 {
-    m_spriteId = m_commonData->spriteSet.chooseRandomSprite();
+    m_currentAnimatedSprite = &(m_commonData->spriteSelector.onTileInstantiated());
 }
-
+void PlainTileRenderer::onTileQuantityChanged(int oldQuantity, int newQuantity)
+{
+    m_currentAnimatedSprite = &(m_commonData->spriteSelector.onTileQuantityChanged(newQuantity, *m_currentAnimatedSprite));
+}
 
 std::unique_ptr<ComponentCommonData> PlainTileRenderer::createCommonDataStorage() const
 {

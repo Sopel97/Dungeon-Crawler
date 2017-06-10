@@ -8,9 +8,10 @@ tile = {
     controller = "ContainerTileController",
 
     texture = "Spritesheet",
-        
+
+    spriteSelector = "WeightedRandom",
     sprites = {
-        {306, 204},
+        {{{306, 204}}},
     },
 	
     inventorySize = 5,
