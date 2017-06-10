@@ -25,11 +25,21 @@ void WeightedRandomSpriteSelector::loadFromConfiguration(ConfigurationNode& conf
     {
         ConfigurationNode thisConfig = config[i];
 
-        int weight = thisConfig[1].getDefault<float>(1.0f);
-
-        ConfigurationNode spriteConfig = thisConfig[2];
+        const int thisConfigSize = thisConfig.length();
         TimeAnimatedSprite sprite;
-        sprite.loadFromConfiguration(spriteConfig);
+        float weight;
+        if (thisConfigSize == 1)
+        {
+            weight = 1.0f;
+            ConfigurationNode spriteConfig = thisConfig[1];
+            sprite.loadFromConfiguration(spriteConfig);
+        }
+        else // should be 2
+        {
+            weight = thisConfig[1].get<float>();
+            ConfigurationNode spriteConfig = thisConfig[2];
+            sprite.loadFromConfiguration(spriteConfig);
+        }
 
         m_sprites.emplace_back(std::move(sprite));
         weightSum += weight;

@@ -18,12 +18,22 @@ void QuantityBasedSpriteSelector::loadFromConfiguration(ConfigurationNode& confi
     for (int i = 1; i <= numberOfSprites; ++i)
     {
         ConfigurationNode thisConfig = config[i];
-
-        int quantity = thisConfig[1].getDefault<int>(defaultQuantity);
-
-        ConfigurationNode spriteConfig = thisConfig[2];
+        const int thisConfigSize = thisConfig.length();
         TimeAnimatedSprite sprite;
-        sprite.loadFromConfiguration(spriteConfig);
+        int quantity;
+        if (thisConfigSize == 1)
+        {
+            quantity = defaultQuantity;
+            ConfigurationNode spriteConfig = thisConfig[1];
+            sprite.loadFromConfiguration(spriteConfig);
+        }
+        else // should be 2
+        {
+            quantity = thisConfig[1].get<int>();
+            ConfigurationNode spriteConfig = thisConfig[2];
+            sprite.loadFromConfiguration(spriteConfig);
+        }
+
 
         m_sprites.emplace_back(std::move(sprite));
         m_thresholdQuantities.emplace_back(quantity);
