@@ -17,14 +17,15 @@ void QuantityBasedSpriteSelector::loadFromConfiguration(ConfigurationNode& confi
 
     for (int i = 1; i <= numberOfSprites; ++i)
     {
-        ConfigurationNode spriteConfig = config[i];
+        ConfigurationNode thisConfig = config[i];
 
-        int x = spriteConfig[1].get<int>();
-        int y = spriteConfig[2].get<int>();
+        int quantity = thisConfig[1].getDefault<int>(defaultQuantity);
 
-        int quantity = spriteConfig[3].getDefault<int>(defaultQuantity);
+        ConfigurationNode spriteConfig = thisConfig[2];
+        TimeAnimatedSprite sprite;
+        sprite.loadFromConfiguration(spriteConfig);
 
-        m_sprites.emplace_back(x, y);
+        m_sprites.emplace_back(std::move(sprite));
         m_thresholdQuantities.emplace_back(quantity);
 
         defaultQuantity = quantity + 1;
@@ -46,7 +47,7 @@ int QuantityBasedSpriteSelector::defaultSprite() const
     return 0;
 }
 
-const ls::Vec2I& QuantityBasedSpriteSelector::at(int i) const
+const TimeAnimatedSprite& QuantityBasedSpriteSelector::at(int i) const
 {
     return m_sprites[i];
 }

@@ -6,6 +6,8 @@
 
 #include "../LibS/Geometry.h"
 
+#include "sprite/TimeAnimatedSprite.h"
+
 class WeightedRandomSpriteSelector
 {
 public:
@@ -16,9 +18,9 @@ public:
     int select() const;
     int defaultSprite() const;
 
-    const ls::Vec2I& at(int i) const;
+    const TimeAnimatedSprite& at(int i) const;
 
 protected:
-    std::vector<ls::Vec2I> m_sprites;
+    std::vector<TimeAnimatedSprite> m_sprites;
     std::vector<float> m_cumulativeWeights;
 };

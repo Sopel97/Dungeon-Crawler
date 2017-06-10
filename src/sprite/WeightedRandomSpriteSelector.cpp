@@ -23,11 +23,15 @@ void WeightedRandomSpriteSelector::loadFromConfiguration(ConfigurationNode& conf
     float weightSum = 0.0f;
     for (int i = 1; i <= numberOfSprites; ++i)
     {
-        int x = config[i][1].get<int>();
-        int y = config[i][2].get<int>();
+        ConfigurationNode thisConfig = config[i];
 
-        float weight = config[i][3].getDefault<float>(1.0f);
-        m_sprites.emplace_back(x, y);
+        int weight = thisConfig[1].getDefault<float>(1.0f);
+
+        ConfigurationNode spriteConfig = thisConfig[2];
+        TimeAnimatedSprite sprite;
+        sprite.loadFromConfiguration(spriteConfig);
+
+        m_sprites.emplace_back(std::move(sprite));
         weightSum += weight;
         m_cumulativeWeights.emplace_back(weightSum);
     }
@@ -51,7 +55,7 @@ int WeightedRandomSpriteSelector::defaultSprite() const
 {
     return 0;
 }
-const ls::Vec2I& WeightedRandomSpriteSelector::at(int i) const
+const TimeAnimatedSprite& WeightedRandomSpriteSelector::at(int i) const
 {
     return m_sprites[i];
 }
