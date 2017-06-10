@@ -5,6 +5,7 @@
 #include "window/InternalWindow.h"
 #include "RectSubdivision.h"
 #include "PlayerUi.h"
+#include "GameTime.h"
 
 #include "SFMLUtil.h"
 
@@ -54,6 +55,7 @@ World& Game::world()
 
 void Game::tick(float dt)
 {
+    GameTime::instance().update(dt);
     m_world->update(dt);
 }
 
