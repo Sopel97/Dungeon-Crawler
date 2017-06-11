@@ -10,6 +10,8 @@
 #include "tiles/Tile.h"
 #include "tiles/controllers/TileController.h"
 
+#include "Logger.h"
+
 #include "../LibS/Geometry.h"
 
 #include <cmath>
@@ -77,8 +79,6 @@ SfmlEventHandler::EventResult InventoryView::onMouseButtonPressed(sf::Event::Mou
     {
         if(event.button == sf::Mouse::Button::Left)
         {
-            std::cout << m_inventory << ' ' << slot->slotId() << '\n';
-
             if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LAlt))
             {
                 if (!slot->content().isEmpty())
@@ -110,7 +110,7 @@ SfmlEventHandler::EventResult InventoryView::onMouseButtonReleased(sf::Event::Mo
     {
         if (event.button == sf::Mouse::Button::Left)
         {
-            std::cout << "reset from inventory view\n";
+            Logger::instance().log(Logger::Priority::Debug, "reset tile move from inventory view");
             m_inventorySystem->tileTransferMediator().reset();
         }
 
@@ -123,8 +123,6 @@ SfmlEventHandler::EventResult InventoryView::onMouseButtonReleased(sf::Event::Mo
     {
         if (event.button == sf::Mouse::Button::Left)
         {
-            std::cout << m_inventory << ' ' << slot->slotId() << '\n';
-
             m_inventorySystem->tileTransferMediator().putToInventory(*m_inventorySystem, *m_inventory, slot->slotId());
 
             return EventResult{}.setTakeFocus().setConsumeEvent();

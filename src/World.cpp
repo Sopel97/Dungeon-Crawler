@@ -33,6 +33,8 @@
 
 #include "GameConstants.h"
 
+#include "Logger.h"
+
 using namespace ls;
 
 World::World(Root& root, Player& player, TileTransferMediator& tileTransferMediator) :
@@ -576,7 +578,7 @@ auto World::onMouseButtonReleased(sf::Event::MouseButtonEvent& event, EventConte
         if (event.button == sf::Mouse::Button::Left)
         {
             m_tileTransferMediator.reset();
-            std::cout << "reset from world\n";
+            Logger::instance().log(Logger::Priority::Debug, "reset tile move from world");
         }
 
         return EventResult{}.setTakeFocus(false).setConsumeEvent(false);

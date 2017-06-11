@@ -15,6 +15,8 @@
 #include "events/TileMovedFromInventoryToInventory.h"
 #include "events/TileMovedFromInventoryToWorld.h"
 
+#include "Logger.h"
+
 void TileTransferMediator::grabFromWorld(const ls::Vec2I& loc, World& world, Player& player)
 {
     m_source.emplace(FromWorld{ loc, &world, &player });
@@ -83,7 +85,7 @@ void TileTransferMediator::operator()(const FromWorld& from, const ToWorld& to)
     if (!world.lineOfSightBetweenTiles(from.pos, to.pos)) return;
 
     // perform move
-    std::cout << "World -> World\n";
+    Logger::instance().log(Logger::Priority::Debug, "moving tile: World -> World");
     auto stacksToCauseEvent = move(fromTileStack, toTileColumn, fromTileStack.quantity());
     if (fromTileStack.isEmpty()) fromTileColumn.takeFromTop();
 
@@ -138,7 +140,7 @@ void TileTransferMediator::operator()(const FromWorld& from, const ToInventory& 
 
         EventDispatcher::instance().broadcast<TileMovedFromWorldToInventory>(TileMovedFromWorldToInventory{ from, to, &(inventory.at(slot)) });
     }
-    std::cout << "World -> Inventory\n";
+    Logger::instance().log(Logger::Priority::Debug, "moving tile: World -> Inventory");
 }
 void TileTransferMediator::operator()(const FromInventory& from, const ToWorld& to)
 {
@@ -164,7 +166,7 @@ void TileTransferMediator::operator()(const FromInventory& from, const ToWorld& 
     if (!world.lineOfSightBetweenPlayerAndTile(to.pos)) return; // out of sight
 
     // perform move
-    std::cout << "Inventory -> World\n";
+    Logger::instance().log(Logger::Priority::Debug, "moving tile: Inventory -> World");
 
     auto stacksToCauseEvent = move(fromTileStack, toTileColumn, fromTileStack.quantity());
 
@@ -213,7 +215,7 @@ void TileTransferMediator::operator()(const FromInventory& from, const ToInvento
     }
 
     // perform move
-    std::cout << "Inventory -> Inventory\n";
+    Logger::instance().log(Logger::Priority::Debug, "moving tile: Inventory -> Inventory");
 
 }
 std::vector<int> TileTransferMediator::move(TileStack& from, TileColumn& to, int max)

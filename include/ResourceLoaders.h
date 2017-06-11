@@ -15,6 +15,8 @@
 
 #include "Configuration.h"
 
+#include "Logger.h"
+
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 
@@ -73,7 +75,9 @@ public:
     {
         TileModelTypeRegistrar(const std::string& name)
         {
-            std::cout << "Registered tile model type: " << name << '\n';
+            Logger::instance().logLazy(Logger::Priority::Info, [&]()->std::string {return 
+                "Registered tile model type: " + name; 
+            });
             ResourceLoader<TilePrefab>::tileModels().insert(std::make_pair(name, std::make_unique<T>()));
         }
     };
@@ -83,7 +87,9 @@ public:
     {
         TileRendererTypeRegistrar(const std::string& name)
         {
-            std::cout << "Registered tile renderer type: " << name << '\n';
+            Logger::instance().logLazy(Logger::Priority::Info, [&]()->std::string {return 
+                "Registered tile renderer type: " + name; 
+            });
             ResourceLoader<TilePrefab>::tileRenderers().insert(std::make_pair(name, std::make_unique<T>()));
         }
     };
@@ -93,7 +99,9 @@ public:
     {
         TileControllerTypeRegistrar(const std::string& name)
         {
-            std::cout << "Registered tile controller type: " << name << '\n';
+            Logger::instance().logLazy(Logger::Priority::Info, [&]()->std::string {return 
+                "Registered tile controller type: " + name; 
+            });
             ResourceLoader<TilePrefab>::tileControllers().insert(std::make_pair(name, std::make_unique<T>()));
         }
     };
@@ -149,7 +157,9 @@ public:
     {
         EntityModelTypeRegistrar(const std::string& name)
         {
-            std::cout << "Registered entity model type: " << name << '\n';
+            Logger::instance().logLazy(Logger::Priority::Info, [&]()->std::string {return 
+                "Registered entity model type: " + name; 
+            });
             ResourceLoader<Entity>::entityModels().insert(std::make_pair(name, std::make_unique<T>(nullptr)));
         }
     };
@@ -159,7 +169,9 @@ public:
     {
         EntityRendererTypeRegistrar(const std::string& name)
         {
-            std::cout << "Registered entity renderer type: " << name << '\n';
+            Logger::instance().logLazy(Logger::Priority::Info, [&]()->std::string {return 
+                "Registered entity renderer type: " + name; 
+            });
             ResourceLoader<Entity>::entityRenderers().insert(std::make_pair(name, std::make_unique<T>(nullptr)));
         }
     };
@@ -169,7 +181,9 @@ public:
     {
         EntityControllerTypeRegistrar(const std::string& name)
         {
-            std::cout << "Registered entity controller type: " << name << '\n';
+            Logger::instance().logLazy(Logger::Priority::Info, [&]()->std::string {return 
+                "Registered entity controller type: " + name; 
+            });
             ResourceLoader<Entity>::entityControllers().insert(std::make_pair(name, std::make_unique<T>(nullptr)));
         }
     };
