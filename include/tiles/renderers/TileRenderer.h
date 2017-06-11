@@ -39,5 +39,5 @@ public:
 
     virtual bool isTall() const; //tall tiles are required to have colliders
 
-    virtual std::unique_ptr<TileRenderer> clone() const;
+    std::unique_ptr<TileRenderer> clone() const override;
 };

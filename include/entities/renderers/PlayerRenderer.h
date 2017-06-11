@@ -4,7 +4,7 @@
 
 #include "Configuration.h"
 
-#include "ResourceManager.h"
+#include "ResourceLoaders.h"
 
 #include <memory>
 
@@ -22,7 +22,8 @@ class Player;
 class PlayerRenderer : public EntityRenderer
 {
 public:
-    PlayerRenderer(Entity* owner, Player* player);
+    PlayerRenderer();
+    PlayerRenderer(Player* player);
     PlayerRenderer(const PlayerRenderer& other);
     ~PlayerRenderer() override;
 
@@ -34,7 +35,6 @@ public:
     const sf::Texture& texture() const;
 
     std::unique_ptr<EntityRenderer> clone() const override;
-    std::unique_ptr<EntityRenderer> create(Entity* owner) const override;
 protected:
     Player* m_playerOwner;
     ResourceHandle<sf::Texture> m_texture;
@@ -43,3 +43,5 @@ protected:
 
     void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const ls::Vec2I& sprites) const;
 };
+
+REGISTER_ENTITY_RENDERER_TYPE(PlayerRenderer)

@@ -11,21 +11,11 @@
 
 #include <memory>
 
-int Entity::m_lastId = -1;
-
-Entity::Entity() :
-    m_model(nullptr),
-    m_renderer(nullptr),
-    m_controller(nullptr),
-    m_id(-1)
-{
-
-}
-Entity::Entity(std::unique_ptr<EntityModel>&& model, std::unique_ptr<EntityRenderer>&& renderer, std::unique_ptr<EntityController>&& controller) :
+Entity::Entity(int id, std::unique_ptr<EntityModel>&& model, std::unique_ptr<EntityRenderer>&& renderer, std::unique_ptr<EntityController>&& controller) :
     m_model(std::move(model)),
     m_renderer(std::move(renderer)),
     m_controller(std::move(controller)),
-    m_id(++m_lastId)
+    m_id(id)
 {
     m_model->setOwner(this);
     m_renderer->setOwner(this);
@@ -91,8 +81,32 @@ int Entity::id() const
 {
     return m_id;
 }
+void Entity::onEntityInstantiated()
+{
+    m_model->onEntityInstantiated();
+    m_renderer->onEntityInstantiated();
+    m_controller->onEntityInstantiated();
+}
+void Entity::onEntityCloned()
+{
+    m_model->onEntityCloned();
+    m_renderer->onEntityCloned();
+    m_controller->onEntityCloned();
+}
 
 std::unique_ptr<Entity> Entity::clone() const
 {
-    return std::make_unique<Entity>(*this);
+    std::unique_ptr<Entity> entityClone = std::make_unique<Entity>(*this);
+
+    entityClone->onEntityCloned();
+
+    return entityClone;
+}
+std::unique_ptr<Entity> Entity::instantiate() const
+{
+    std::unique_ptr<Entity> entityClone = std::make_unique<Entity>(*this);
+
+    entityClone->onEntityInstantiated();
+
+    return entityClone;
 }

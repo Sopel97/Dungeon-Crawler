@@ -10,8 +10,18 @@
 
 using namespace ls;
 
-PlayerRenderer::PlayerRenderer(Entity* owner, Player* player) :
-    EntityRenderer(owner),
+PlayerRenderer::PlayerRenderer() :
+    EntityRenderer(),
+    m_playerOwner(nullptr),
+    m_texture(),
+    m_sprites(GameConstants::tileFullSpriteSize * 5, GameConstants::tileFullSpriteSize * 2),
+    m_metaSprites(GameConstants::tileFullSpriteSize * 4, GameConstants::tileFullSpriteSize * 8)
+{
+
+}
+
+PlayerRenderer::PlayerRenderer(Player* player) :
+    EntityRenderer(),
     m_playerOwner(player),
     m_texture(ResourceManager::instance().get<sf::Texture>("Spritesheet")),
     m_sprites(GameConstants::tileFullSpriteSize * 5, GameConstants::tileFullSpriteSize * 2),
@@ -20,7 +30,7 @@ PlayerRenderer::PlayerRenderer(Entity* owner, Player* player) :
 
 }
 PlayerRenderer::PlayerRenderer(const PlayerRenderer& other) :
-    EntityRenderer(other.m_owner),
+    EntityRenderer(other),
     m_playerOwner(other.m_playerOwner),
     m_sprites(other.m_sprites)
 {
@@ -82,8 +92,4 @@ const sf::Texture& PlayerRenderer::texture() const
 std::unique_ptr<EntityRenderer> PlayerRenderer::clone() const
 {
     return std::make_unique<PlayerRenderer>(*this);
-}
-std::unique_ptr<EntityRenderer> PlayerRenderer::create(Entity* owner) const
-{
-    return std::make_unique<PlayerRenderer>(owner, nullptr);
 }

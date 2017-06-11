@@ -9,6 +9,7 @@
 #include "tiles/controllers/TileController.h"
 
 #include "entities/Entity.h"
+#include "entities/EntityPrefab.h"
 #include "entities/models/EntityModel.h"
 #include "entities/renderers/EntityRenderer.h"
 #include "entities/controllers/EntityController.h"
@@ -30,15 +31,6 @@ namespace sf
     class Texture;
     class Font;
 }
-class Tile;
-class TileModel;
-class TileRenderer;
-class TileController;
-
-class Entity;
-class EntityModel;
-class EntityRenderer;
-class EntityController;
 
 template <>
 class ResourceLoader<sf::Texture>
@@ -48,19 +40,19 @@ public:
 };
 
 #define REGISTER_TILE_MODEL_TYPE(TYPE) \
-    namespace ___TypeRegistering \
+    namespace ___TileTypeRegistering \
     { \
         const ResourceLoader<TilePrefab>::TileModelTypeRegistrar<TYPE> TYPE ## _model_var (#TYPE); \
     }
 
 #define REGISTER_TILE_RENDERER_TYPE(TYPE)  \
-    namespace ___TypeRegistering \
+    namespace ___TileTypeRegistering \
     { \
         const ResourceLoader<TilePrefab>::TileRendererTypeRegistrar<TYPE> TYPE ## _renderer_var (#TYPE); \
     }
 
 #define REGISTER_TILE_CONTROLLER_TYPE(TYPE)  \
-    namespace ___TypeRegistering \
+    namespace ___TileTypeRegistering \
     { \
         const ResourceLoader<TilePrefab>::TileControllerTypeRegistrar<TYPE> TYPE ## _controller_var (#TYPE); \
     }
@@ -127,28 +119,26 @@ protected:
 
 };
 
-
-
 #define REGISTER_ENTITY_MODEL_TYPE(TYPE) \
-    namespace ___TypeRegistering \
+    namespace ___EntityTypeRegistering \
     { \
-        const ResourceLoader<Entity>::EntityModelTypeRegistrar<TYPE> TYPE ## _model_var (#TYPE); \
+        const ResourceLoader<EntityPrefab>::EntityModelTypeRegistrar<TYPE> TYPE ## _model_var (#TYPE); \
     }
 
 #define REGISTER_ENTITY_RENDERER_TYPE(TYPE)  \
-    namespace ___TypeRegistering \
+    namespace ___EntityTypeRegistering \
     { \
-        const ResourceLoader<Entity>::EntityRendererTypeRegistrar<TYPE> TYPE ## _renderer_var (#TYPE); \
+        const ResourceLoader<EntityPrefab>::EntityRendererTypeRegistrar<TYPE> TYPE ## _renderer_var (#TYPE); \
     }
 
 #define REGISTER_ENTITY_CONTROLLER_TYPE(TYPE)  \
-    namespace ___TypeRegistering \
+    namespace ___EntityTypeRegistering \
     { \
-        const ResourceLoader<Entity>::EntityControllerTypeRegistrar<TYPE> TYPE ## _controller_var (#TYPE); \
+        const ResourceLoader<EntityPrefab>::EntityControllerTypeRegistrar<TYPE> TYPE ## _controller_var (#TYPE); \
     } 
 
 template <>
-class ResourceLoader<Entity>
+class ResourceLoader<EntityPrefab>
 {
 public:
 
@@ -160,7 +150,7 @@ public:
             Logger::instance().logLazy(Logger::Priority::Info, [&]()->std::string {return 
                 "Registered entity model type: " + name; 
             });
-            ResourceLoader<Entity>::entityModels().insert(std::make_pair(name, std::make_unique<T>(nullptr)));
+            ResourceLoader<EntityPrefab>::entityModels().insert(std::make_pair(name, std::make_unique<T>()));
         }
     };
 
@@ -172,7 +162,7 @@ public:
             Logger::instance().logLazy(Logger::Priority::Info, [&]()->std::string {return 
                 "Registered entity renderer type: " + name; 
             });
-            ResourceLoader<Entity>::entityRenderers().insert(std::make_pair(name, std::make_unique<T>(nullptr)));
+            ResourceLoader<EntityPrefab>::entityRenderers().insert(std::make_pair(name, std::make_unique<T>()));
         }
     };
 
@@ -184,11 +174,11 @@ public:
             Logger::instance().logLazy(Logger::Priority::Info, [&]()->std::string {return 
                 "Registered entity controller type: " + name; 
             });
-            ResourceLoader<Entity>::entityControllers().insert(std::make_pair(name, std::make_unique<T>(nullptr)));
+            ResourceLoader<EntityPrefab>::entityControllers().insert(std::make_pair(name, std::make_unique<T>()));
         }
     };
 
-    static std::pair<std::string, std::unique_ptr<Entity>> load(const std::string& path); //should return nullptr when resource was not loaded
+    static std::pair<std::string, std::unique_ptr<EntityPrefab>> load(const std::string& path); //should return nullptr when resource was not loaded
 
 protected:
 

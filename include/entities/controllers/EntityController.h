@@ -5,33 +5,28 @@
 
 #include <memory>
 
+#include "entities/EntityComponent.h"
+
 #include "../LibS/Geometry.h"
 
 class Entity;
 class World;
 
-class EntityController //must be functions (ie. all methods return resonable values and there is not pure virtual member functions)
+class EntityController : public EntityComponent<EntityController, Entity>
 {
 public:
-    EntityController(Entity* owner);
+    EntityController();
     EntityController(const EntityController& other);
-    virtual ~EntityController();
+    ~EntityController() override;
 
-    virtual void loadFromConfiguration(ConfigurationNode& config);
-
-    const Entity* owner() const;
-
-    void setOwner(Entity* newOwner);
+    void loadFromConfiguration(ConfigurationNode& config) override;
 
     virtual void update(World& world, float dt); //NOTE: does not move the entity!!!
 
     virtual void move(const ls::Vec2F& factor, float dt); //how much of a velocity to move
     virtual void accelerate(const ls::Vec2F& dv);
 
-    virtual std::unique_ptr<EntityController> clone() const;
-    virtual std::unique_ptr<EntityController> create(Entity* owner) const;
-protected:
-    Entity* m_owner;
+    std::unique_ptr<EntityController> clone() const override;
 };
 
 #endif // ENTITYCONTROLLER_H

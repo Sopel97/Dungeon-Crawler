@@ -18,17 +18,16 @@ class EntityController;
 class Entity
 {
 public:
-    Entity();
-    Entity(std::unique_ptr<EntityModel>&& model, std::unique_ptr<EntityRenderer>&& renderer, std::unique_ptr<EntityController>&& controller);
+    Entity(int id, std::unique_ptr<EntityModel>&& model, std::unique_ptr<EntityRenderer>&& renderer, std::unique_ptr<EntityController>&& controller);
     Entity(const Entity& other);
     Entity(Entity&&) = default;
     Entity& operator=(Entity&&) = default;
-    virtual ~Entity();
+    ~Entity();
 
     void loadFromConfiguration(ConfigurationNode& config);
 
-    virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) const;
-    virtual void drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) const;
+    void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) const;
+    void drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) const;
 
     const EntityModel& model() const;
     EntityModel& model();
@@ -39,14 +38,16 @@ public:
 
     int id() const;
 
-    virtual std::unique_ptr<Entity> clone() const;
+    void onEntityInstantiated();
+    void onEntityCloned();
+
+    std::unique_ptr<Entity> clone() const;
+    std::unique_ptr<Entity> instantiate() const;
 protected:
     std::unique_ptr<EntityModel> m_model;
     std::unique_ptr<EntityRenderer> m_renderer;
     std::unique_ptr<EntityController> m_controller;
     int m_id;
-
-    static int m_lastId;
 };
 
 #endif // ENTITY_H

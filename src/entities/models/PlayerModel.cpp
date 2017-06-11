@@ -2,8 +2,16 @@
 
 using namespace ls;
 
-PlayerModel::PlayerModel(Entity* owner, Player* player) :
-    EntityModel(owner),
+PlayerModel::PlayerModel() :
+    EntityModel(),
+    m_playerOwner(),
+    m_directionOfMove(Direction::South),
+    m_distanceTravelled(0.0f)
+{
+
+}
+PlayerModel::PlayerModel(Player* player) :
+    EntityModel(),
     m_playerOwner(player),
     m_directionOfMove(Direction::South),
     m_distanceTravelled(0.0f)
@@ -11,7 +19,7 @@ PlayerModel::PlayerModel(Entity* owner, Player* player) :
 
 }
 PlayerModel::PlayerModel(const PlayerModel& other) :
-    EntityModel(other.m_owner),
+    EntityModel(other),
     m_playerOwner(other.m_playerOwner),
     m_directionOfMove(other.m_directionOfMove),
     m_distanceTravelled(other.m_distanceTravelled)
@@ -84,8 +92,4 @@ void PlayerModel::setDirectionOfMove(EntityModel::Direction newDirection)
 std::unique_ptr<EntityModel> PlayerModel::clone() const
 {
     return std::make_unique<PlayerModel>(*this);
-}
-std::unique_ptr<EntityModel> PlayerModel::create(Entity* owner) const
-{
-    return std::make_unique<PlayerModel>(owner, nullptr);
 }

@@ -13,8 +13,17 @@
 
 using namespace ls;
 
-PlayerController::PlayerController(Entity* owner, Player* player) :
-    EntityController(owner),
+PlayerController::PlayerController() :
+    EntityController(),
+    m_playerOwner(),
+    m_acceleratedHorizontallyInLastFrame(false),
+    m_acceleratedVerticallyInLastFrame(false)
+{
+
+}
+
+PlayerController::PlayerController(Player* player) :
+    EntityController(),
     m_playerOwner(player),
     m_acceleratedHorizontallyInLastFrame(false),
     m_acceleratedVerticallyInLastFrame(false)
@@ -22,7 +31,7 @@ PlayerController::PlayerController(Entity* owner, Player* player) :
 
 }
 PlayerController::PlayerController(const PlayerController& other) :
-    EntityController(other.m_owner),
+    EntityController(other),
     m_playerOwner(other.m_playerOwner),
     m_acceleratedHorizontallyInLastFrame(other.m_acceleratedHorizontallyInLastFrame),
     m_acceleratedVerticallyInLastFrame(other.m_acceleratedVerticallyInLastFrame)
@@ -145,8 +154,4 @@ void PlayerController::accelerate(const ls::Vec2F& dv)
 std::unique_ptr<EntityController> PlayerController::clone() const
 {
     return std::make_unique<PlayerController>(*this);
-}
-std::unique_ptr<EntityController> PlayerController::create(Entity* owner) const
-{
-    return std::make_unique<PlayerController>(owner, nullptr);
 }

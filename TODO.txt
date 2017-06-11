@@ -8,10 +8,11 @@
 
 7. Clear world generation code //little priority since it is waiting for libs still
 
-11. Do proper logging. // or this
 15. Pass RenderStates by CONST reference
 19. Make camera like the one in Carcassone. Move there everything involving camera (for example conversion between coordinates)
 
 24. player's line of sight using raycasting
 
 25. Consider storing normal textures and meta textures in one texture side to side
+
+26. consider better alternative to registering components with macros, because it's ugly and may be inconsistent

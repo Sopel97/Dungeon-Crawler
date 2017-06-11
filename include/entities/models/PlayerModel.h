@@ -7,7 +7,7 @@
 
 #include "../LibS/Geometry.h"
 
-
+#include "ResourceLoaders.h"
 
 class Entity;
 class Player;
@@ -15,7 +15,8 @@ class Player;
 class PlayerModel : public EntityModel
 {
 public:
-    PlayerModel(Entity* owner, Player* player);
+    PlayerModel();
+    PlayerModel(Player* player);
     PlayerModel(const PlayerModel& other);
     ~PlayerModel() override;
 
@@ -39,7 +40,6 @@ public:
     void setDirectionOfMove(EntityModel::Direction newDirection) override;
 
     std::unique_ptr<EntityModel> clone() const override;
-    std::unique_ptr<EntityModel> create(Entity* owner) const override;
 protected:
     Player* m_playerOwner;
     ls::Vec2F m_position;
@@ -47,5 +47,7 @@ protected:
     Direction m_directionOfMove;
     float m_distanceTravelled;
 };
+
+REGISTER_ENTITY_MODEL_TYPE(PlayerModel)
 
 #endif // PLAYERMODEL_H

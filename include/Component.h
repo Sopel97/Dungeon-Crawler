@@ -2,6 +2,8 @@
 
 #include <memory>
 
+#include "ComponentCommonData.h"
+
 class ComponentCommonData;
 
 struct LuaTableNode;

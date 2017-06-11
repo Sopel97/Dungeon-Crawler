@@ -69,7 +69,7 @@ std::pair<std::string, std::unique_ptr<TilePrefab>> ResourceLoader<TilePrefab>::
     return std::make_pair(tileName, std::move(tile));
 }
 
-std::pair<std::string, std::unique_ptr<Entity>> ResourceLoader<Entity>::load(const std::string& path)
+std::pair<std::string, std::unique_ptr<EntityPrefab>> ResourceLoader<EntityPrefab>::load(const std::string& path)
 {
     Configuration config = Configuration(path);
     ConfigurationNode entityConfig = config["entity"];
@@ -83,7 +83,7 @@ std::pair<std::string, std::unique_ptr<Entity>> ResourceLoader<Entity>::load(con
     std::string modelName = entityConfig["model"].get<std::string>();
     try
     {
-        model = entityModels().at(modelName)->create(nullptr);
+        model = entityModels().at(modelName)->clone();
     }
     catch (std::out_of_range&)
     {
@@ -93,7 +93,7 @@ std::pair<std::string, std::unique_ptr<Entity>> ResourceLoader<Entity>::load(con
     std::string rendererName = entityConfig["view"].get<std::string>();
     try
     {
-        renderer = entityRenderers().at(rendererName)->create(nullptr);
+        renderer = entityRenderers().at(rendererName)->clone();
     }
     catch (std::out_of_range&)
     {
@@ -103,14 +103,14 @@ std::pair<std::string, std::unique_ptr<Entity>> ResourceLoader<Entity>::load(con
     std::string controllerName = entityConfig["controller"].get<std::string>();
     try
     {
-        controller = entityControllers().at(controllerName)->create(nullptr);
+        controller = entityControllers().at(controllerName)->clone();
     }
     catch (std::out_of_range&)
     {
         throw std::runtime_error("No entity controller with name " + controllerName);
     }
 
-    std::unique_ptr<Entity> entity = std::make_unique<Entity>
+    std::unique_ptr<EntityPrefab> entity = std::make_unique<EntityPrefab>
         (
             std::move(model),
             std::move(renderer),

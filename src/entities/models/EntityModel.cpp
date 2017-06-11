@@ -4,13 +4,13 @@ using namespace ls;
 
 const ls::Vec2F EntityModel::m_someVector {0.0f, 0.0f};
 
-EntityModel::EntityModel(Entity* owner) :
-    m_owner(owner)
+EntityModel::EntityModel() :
+    EntityComponent()
 {
 
 }
 EntityModel::EntityModel(const EntityModel& other) :
-    m_owner(other.m_owner)
+    EntityComponent(other)
 {
 
 }
@@ -24,15 +24,6 @@ void EntityModel::loadFromConfiguration(ConfigurationNode& config)
 
 }
 
-const Entity* EntityModel::owner() const
-{
-    return m_owner;
-}
-
-void EntityModel::setOwner(Entity* newOwner)
-{
-    m_owner = newOwner;
-}
 bool EntityModel::hasCollider() const
 {
     return false;
@@ -88,8 +79,4 @@ void EntityModel::setDirectionOfMove(EntityModel::Direction newDirection)
 std::unique_ptr<EntityModel> EntityModel::clone() const
 {
     return std::make_unique<EntityModel>(*this);
-}
-std::unique_ptr<EntityModel> EntityModel::create(Entity* owner) const
-{
-    return std::make_unique<EntityModel>(owner);
 }

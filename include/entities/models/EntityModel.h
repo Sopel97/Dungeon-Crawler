@@ -5,11 +5,13 @@
 
 #include <memory>
 
+#include "entities/EntityComponent.h"
+
 #include "../LibS/Geometry.h"
 
 class Entity;
 
-class EntityModel //must be functional (ie. all methods return resonable values and there is no pure virtual member functions)
+class EntityModel : public EntityComponent<EntityModel, Entity>
 {
 public:
     enum Direction //ordered as in sprites
@@ -20,15 +22,11 @@ public:
         South = 3
     };
 
-    EntityModel(Entity* owner);
+    EntityModel();
     EntityModel(const EntityModel& other);
-    virtual ~EntityModel();
+    ~EntityModel() override;
 
-    virtual void loadFromConfiguration(ConfigurationNode& config);
-
-    const Entity* owner() const;
-
-    void setOwner(Entity* newOwner);
+    void loadFromConfiguration(ConfigurationNode& config) override;
 
     virtual bool hasCollider() const;
     virtual float colliderRadius() const;
@@ -47,10 +45,8 @@ public:
     virtual Direction directionOfMove() const;
     virtual void setDirectionOfMove(Direction newDirection);
 
-    virtual std::unique_ptr<EntityModel> clone() const;
-    virtual std::unique_ptr<EntityModel> create(Entity* owner) const;
+    std::unique_ptr<EntityModel> clone() const override;
 protected:
-    Entity* m_owner;
 
 private:
     static const ls::Vec2F m_someVector;

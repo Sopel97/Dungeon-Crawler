@@ -5,6 +5,8 @@
 
 #include "Configuration.h"
 
+#include "ResourceLoaders.h"
+
 #include <memory>
 
 class Entity;
@@ -14,7 +16,8 @@ class Player;
 class PlayerController : public EntityController
 {
 public:
-    PlayerController(Entity* owner, Player* player);
+    PlayerController();
+    PlayerController(Player* player);
     PlayerController(const PlayerController& other);
     ~PlayerController() override;
 
@@ -26,12 +29,13 @@ public:
     void accelerate(const ls::Vec2F& dv) override;
 
     std::unique_ptr<EntityController> clone() const override;
-    std::unique_ptr<EntityController> create(Entity* owner) const override;
 
 protected:
     Player* m_playerOwner;
     bool m_acceleratedHorizontallyInLastFrame;
     bool m_acceleratedVerticallyInLastFrame;
 };
+
+REGISTER_ENTITY_CONTROLLER_TYPE(PlayerController)
 
 #endif // PLAYERCONTROLLER_H
