@@ -18,15 +18,17 @@
 
 using namespace ls;
 
-OuterBorderedTileRenderer::OuterBorderedTileRenderer() :
-    TileRenderer(),
+REGISTER_TILE_RENDERER_TYPE(OuterBorderedTileRenderer)
+
+OuterBorderedTileRenderer::OuterBorderedTileRenderer(Tile& owner) :
+    TileRenderer(owner),
     m_commonData(nullptr),
     m_currentAnimatedSprite(nullptr)
 {
 
 }
-OuterBorderedTileRenderer::OuterBorderedTileRenderer(const OuterBorderedTileRenderer& other) :
-    TileRenderer(other),
+OuterBorderedTileRenderer::OuterBorderedTileRenderer(const OuterBorderedTileRenderer& other, Tile& owner) :
+    TileRenderer(other, owner),
     m_commonData(other.m_commonData),
     m_currentAnimatedSprite(other.m_currentAnimatedSprite)
 {
@@ -169,7 +171,7 @@ void OuterBorderedTileRenderer::setCommonDataStorage(ComponentCommonData& common
     m_commonData = static_cast<CommonData*>(&commonData);
 }
 
-std::unique_ptr<TileRenderer> OuterBorderedTileRenderer::clone() const
+std::unique_ptr<TileRenderer> OuterBorderedTileRenderer::clone(Tile& owner) const
 {
-    return std::make_unique<OuterBorderedTileRenderer>(*this);
+    return std::make_unique<OuterBorderedTileRenderer>(*this, owner);
 }

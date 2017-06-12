@@ -12,13 +12,11 @@ class Tile;
 class PlainTileController : public TileController
 {
 public:
-    PlainTileController();
-    PlainTileController(const PlainTileController& other);
+    PlainTileController(Tile& owner);
+    PlainTileController(const PlainTileController& other, Tile& owner);
     ~PlainTileController() override;
 
-    std::unique_ptr<TileController> clone() const override;
+    std::unique_ptr<TileController> clone(Tile& owner) const override;
 };
-
-REGISTER_TILE_CONTROLLER_TYPE(PlainTileController)
 
 #endif // PLAINTILECONTROLLER_H

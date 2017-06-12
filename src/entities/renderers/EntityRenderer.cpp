@@ -1,12 +1,12 @@
 #include "entities/renderers/EntityRenderer.h"
 
-EntityRenderer::EntityRenderer() :
-    EntityComponent()
+EntityRenderer::EntityRenderer(Entity& owner) :
+    EntityComponent(owner)
 {
 
 }
-EntityRenderer::EntityRenderer(const EntityRenderer& other) :
-    EntityComponent(other)
+EntityRenderer::EntityRenderer(const EntityRenderer& other, Entity& owner) :
+    EntityComponent(other, owner)
 {
 
 }
@@ -24,7 +24,7 @@ void EntityRenderer::drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& 
 
 }
 
-std::unique_ptr<EntityRenderer> EntityRenderer::clone() const
+std::unique_ptr<EntityRenderer> EntityRenderer::clone(Entity& owner) const
 {
-    return std::make_unique<EntityRenderer>(*this);
+    return std::make_unique<EntityRenderer>(*this, owner);
 }

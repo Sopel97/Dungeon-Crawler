@@ -22,8 +22,8 @@ class TileModel : public TileComponent<TileModel, Tile>
 	//must be functional (ie. all methods return resonable values and there is no pure virtual member functions)
 {
 public:
-    TileModel();
-    TileModel(const TileModel& other);
+    TileModel(Tile& owner);
+    TileModel(const TileModel& other, Tile& owner);
     ~TileModel() override;
 
     virtual bool equals(const TileModel& other) const; //NOTE: assume that the type of other is the same as the type of *this
@@ -45,7 +45,7 @@ public:
 
     virtual float drag() const; //TODO: make it possible to specify that tile uses the drag of the tile lower
 
-    virtual std::unique_ptr<TileModel> clone() const;
+    virtual std::unique_ptr<TileModel> clone(Tile& owner) const;
 
 private:
     static const ls::Rectangle2F m_emptyCollider;

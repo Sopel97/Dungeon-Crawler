@@ -22,8 +22,8 @@ public:
         South = 3
     };
 
-    EntityModel();
-    EntityModel(const EntityModel& other);
+    EntityModel(Entity& owner);
+    EntityModel(const EntityModel& other, Entity& owner);
     ~EntityModel() override;
 
     void loadFromConfiguration(ConfigurationNode& config) override;
@@ -45,7 +45,7 @@ public:
     virtual Direction directionOfMove() const;
     virtual void setDirectionOfMove(Direction newDirection);
 
-    std::unique_ptr<EntityModel> clone() const override;
+    std::unique_ptr<EntityModel> clone(Entity& owner) const override;
 protected:
 
 private:

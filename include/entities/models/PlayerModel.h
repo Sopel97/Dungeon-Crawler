@@ -15,9 +15,9 @@ class Player;
 class PlayerModel : public EntityModel
 {
 public:
-    PlayerModel();
-    PlayerModel(Player* player);
-    PlayerModel(const PlayerModel& other);
+    PlayerModel(Entity& owner);
+    PlayerModel(Player& player, Entity& owner);
+    PlayerModel(const PlayerModel& other, Entity& owner);
     ~PlayerModel() override;
 
     void loadFromConfiguration(ConfigurationNode& config) override;
@@ -39,7 +39,7 @@ public:
     EntityModel::Direction directionOfMove() const override;
     void setDirectionOfMove(EntityModel::Direction newDirection) override;
 
-    std::unique_ptr<EntityModel> clone() const override;
+    std::unique_ptr<EntityModel> clone(Entity& owner) const override;
 protected:
     Player* m_playerOwner;
     ls::Vec2F m_position;
@@ -47,7 +47,5 @@ protected:
     Direction m_directionOfMove;
     float m_distanceTravelled;
 };
-
-REGISTER_ENTITY_MODEL_TYPE(PlayerModel)
 
 #endif // PLAYERMODEL_H

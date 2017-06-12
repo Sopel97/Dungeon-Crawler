@@ -2,6 +2,8 @@
 
 #include "Configuration.h"
 
+#include "ComponentFactory.h"
+
 #include <memory>
 
 namespace sf
@@ -20,7 +22,10 @@ class ComponentCommonData;
 class TilePrefab
 {
 public:
-    TilePrefab(std::unique_ptr<TileModel> model, std::unique_ptr<TileRenderer> renderer, std::unique_ptr<TileController> controller);
+    TilePrefab(
+        const ComponentFactory<Tile, TileModel>& modelFac, 
+        const ComponentFactory<Tile, TileRenderer>& rendererFac, 
+        const ComponentFactory<Tile, TileController>& controllerFac);
     ~TilePrefab();
 
     void loadFromConfiguration(ConfigurationNode& config);

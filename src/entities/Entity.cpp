@@ -11,25 +11,34 @@
 
 #include <memory>
 
-Entity::Entity(int id, std::unique_ptr<EntityModel>&& model, std::unique_ptr<EntityRenderer>&& renderer, std::unique_ptr<EntityController>&& controller) :
+Entity::Entity(
+    int id,
+    const ComponentFactory<Entity, EntityModel>& modelFac,
+    const ComponentFactory<Entity, EntityRenderer>& rendererFac,
+    const ComponentFactory<Entity, EntityController>& controllerFac) :
+    m_model(modelFac.create(*this)),
+    m_renderer(rendererFac.create(*this)),
+    m_controller(controllerFac.create(*this)),
+    m_id(id)
+{
+}
+Entity::Entity(
+    int id,
+    std::unique_ptr<EntityModel> model,
+    std::unique_ptr<EntityRenderer> renderer,
+    std::unique_ptr<EntityController> controller) :
     m_model(std::move(model)),
     m_renderer(std::move(renderer)),
     m_controller(std::move(controller)),
     m_id(id)
 {
-    m_model->setOwner(this);
-    m_renderer->setOwner(this);
-    m_controller->setOwner(this);
 }
 Entity::Entity(const Entity& other) :
-    m_model(other.m_model->clone()),
-    m_renderer(other.m_renderer->clone()),
-    m_controller(other.m_controller->clone()),
+    m_model(other.m_model->clone(*this)),
+    m_renderer(other.m_renderer->clone(*this)),
+    m_controller(other.m_controller->clone(*this)),
     m_id(other.m_id)
 {
-    m_model->setOwner(this);
-    m_renderer->setOwner(this);
-    m_controller->setOwner(this);
 }
 Entity::~Entity()
 {

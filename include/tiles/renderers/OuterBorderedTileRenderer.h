@@ -28,8 +28,8 @@ class TileLocation;
 class OuterBorderedTileRenderer : public TileRenderer
 {
 public:
-    OuterBorderedTileRenderer();
-    OuterBorderedTileRenderer(const OuterBorderedTileRenderer& other);
+    OuterBorderedTileRenderer(Tile& owner);
+    OuterBorderedTileRenderer(const OuterBorderedTileRenderer& other, Tile& owner);
     ~OuterBorderedTileRenderer() override;
 
     void loadFromConfiguration(ConfigurationNode& config) override;
@@ -49,7 +49,7 @@ public:
     std::unique_ptr<ComponentCommonData> createCommonDataStorage() const override;
     void setCommonDataStorage(ComponentCommonData& commonData) override;
 
-    std::unique_ptr<TileRenderer> clone() const override;
+    std::unique_ptr<TileRenderer> clone(Tile& owner) const override;
 protected:
     struct CommonData : public ComponentCommonData
     {
@@ -62,5 +62,3 @@ protected:
     CommonData* m_commonData;
     const TimeAnimatedSprite* m_currentAnimatedSprite;
 };
-
-REGISTER_TILE_RENDERER_TYPE(OuterBorderedTileRenderer)

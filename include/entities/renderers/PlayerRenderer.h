@@ -22,9 +22,9 @@ class Player;
 class PlayerRenderer : public EntityRenderer
 {
 public:
-    PlayerRenderer();
-    PlayerRenderer(Player* player);
-    PlayerRenderer(const PlayerRenderer& other);
+    PlayerRenderer(Entity& owner);
+    PlayerRenderer(Player& player, Entity& owner);
+    PlayerRenderer(const PlayerRenderer& other, Entity& owner);
     ~PlayerRenderer() override;
 
     void loadFromConfiguration(ConfigurationNode& config) override;
@@ -34,7 +34,7 @@ public:
 
     const sf::Texture& texture() const;
 
-    std::unique_ptr<EntityRenderer> clone() const override;
+    std::unique_ptr<EntityRenderer> clone(Entity& owner) const override;
 protected:
     Player* m_playerOwner;
     ResourceHandle<sf::Texture> m_texture;
@@ -43,5 +43,3 @@ protected:
 
     void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const ls::Vec2I& sprites) const;
 };
-
-REGISTER_ENTITY_RENDERER_TYPE(PlayerRenderer)

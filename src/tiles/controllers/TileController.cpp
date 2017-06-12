@@ -3,13 +3,13 @@
 #include "Player.h"
 #include "TileDescriptionGenerator.h"
 
-TileController::TileController() :
-    TileComponent()
+TileController::TileController(Tile& owner) :
+    TileComponent(owner)
 {
 
 }
-TileController::TileController(const TileController& other) :
-    TileComponent(other)
+TileController::TileController(const TileController& other, Tile& owner) :
+    TileComponent(other, owner)
 {
 
 }
@@ -34,7 +34,7 @@ void TileController::look(Player& player, const InventorySlotView& location)
 {
     player.showTileDescription(TileDescriptionGenerator::generate(owner()));
 }
-std::unique_ptr<TileController> TileController::clone() const
+std::unique_ptr<TileController> TileController::clone(Tile& owner) const
 {
-    return std::make_unique<TileController>(*this);
+    return std::make_unique<TileController>(*this, owner);
 }

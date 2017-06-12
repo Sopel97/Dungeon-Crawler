@@ -4,13 +4,15 @@
 
 #include "SlotContentRequirement.h"
 
-EquipmentPieceModel::EquipmentPieceModel() :
-    TileModel(),
+REGISTER_TILE_MODEL_TYPE(EquipmentPieceModel)
+
+EquipmentPieceModel::EquipmentPieceModel(Tile& owner) :
+    TileModel(owner),
     m_commonData(nullptr)
 {
 }
-EquipmentPieceModel::EquipmentPieceModel(const EquipmentPieceModel& other) :
-    TileModel(other),
+EquipmentPieceModel::EquipmentPieceModel(const EquipmentPieceModel& other, Tile& owner) :
+    TileModel(other, owner),
     m_commonData(other.m_commonData),
     m_attributes(other.m_attributes)
 {
@@ -112,7 +114,7 @@ void EquipmentPieceModel::setCommonDataStorage(ComponentCommonData& commonData)
     m_commonData = static_cast<CommonData*>(&commonData);
 }
 
-std::unique_ptr<TileModel> EquipmentPieceModel::clone() const
+std::unique_ptr<TileModel> EquipmentPieceModel::clone(Tile& owner) const
 {
-    return std::make_unique<EquipmentPieceModel>(*this);
+    return std::make_unique<EquipmentPieceModel>(*this, owner);
 }

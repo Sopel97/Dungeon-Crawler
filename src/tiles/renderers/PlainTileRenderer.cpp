@@ -16,14 +16,16 @@
 
 using namespace ls;
 
-PlainTileRenderer::PlainTileRenderer() :
-    TileRenderer(),
+REGISTER_TILE_RENDERER_TYPE(PlainTileRenderer)
+
+PlainTileRenderer::PlainTileRenderer(Tile& owner) :
+    TileRenderer(owner),
     m_commonData(nullptr),
     m_currentAnimatedSprite(nullptr)
 {
 }
-PlainTileRenderer::PlainTileRenderer(const PlainTileRenderer& other) :
-    TileRenderer(other),
+PlainTileRenderer::PlainTileRenderer(const PlainTileRenderer& other, Tile& owner) :
+    TileRenderer(other, owner),
     m_commonData(other.m_commonData),
     m_currentAnimatedSprite(other.m_currentAnimatedSprite)
 {
@@ -120,7 +122,7 @@ void PlainTileRenderer::setCommonDataStorage(ComponentCommonData& commonData)
     m_commonData = static_cast<CommonData*>(&commonData);
 }
 
-std::unique_ptr<TileRenderer> PlainTileRenderer::clone() const
+std::unique_ptr<TileRenderer> PlainTileRenderer::clone(Tile& owner) const
 {
-    return std::make_unique<PlainTileRenderer>(*this);
+    return std::make_unique<PlainTileRenderer>(*this, owner);
 }

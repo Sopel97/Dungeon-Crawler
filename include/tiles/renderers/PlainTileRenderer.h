@@ -29,8 +29,8 @@ class InventorySlotView;
 class PlainTileRenderer : public TileRenderer
 {
 public:
-    PlainTileRenderer();
-    PlainTileRenderer(const PlainTileRenderer& other);
+    PlainTileRenderer(Tile& owner);
+    PlainTileRenderer(const PlainTileRenderer& other, Tile& owner);
     ~PlainTileRenderer() override;
 
     void loadFromConfiguration(ConfigurationNode& config) override;
@@ -51,7 +51,7 @@ public:
     std::unique_ptr<ComponentCommonData> createCommonDataStorage() const;
     void setCommonDataStorage(ComponentCommonData& commonData) override;
 
-    std::unique_ptr<TileRenderer> clone() const override;
+    std::unique_ptr<TileRenderer> clone(Tile& owner) const override;
 protected:
     struct CommonData : public ComponentCommonData
     {
@@ -67,5 +67,3 @@ protected:
 
     void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location, const sf::Texture& texture) const;
 };
-
-REGISTER_TILE_RENDERER_TYPE(PlainTileRenderer)

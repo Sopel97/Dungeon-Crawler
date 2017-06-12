@@ -2,14 +2,16 @@
 
 using namespace ls;
 
-PlainTileModel::PlainTileModel() :
-    TileModel(),
+REGISTER_TILE_MODEL_TYPE(PlainTileModel)
+
+PlainTileModel::PlainTileModel(Tile& owner) :
+    TileModel(owner),
     m_commonData(nullptr)
 {
 
 }
-PlainTileModel::PlainTileModel(const PlainTileModel& other) :
-    TileModel(other),
+PlainTileModel::PlainTileModel(const PlainTileModel& other, Tile& owner) :
+    TileModel(other, owner),
     m_commonData(other.m_commonData)
 {
 
@@ -96,8 +98,8 @@ void PlainTileModel::setCommonDataStorage(ComponentCommonData& commonData)
 }
 
 
-std::unique_ptr<TileModel> PlainTileModel::clone() const
+std::unique_ptr<TileModel> PlainTileModel::clone(Tile& owner) const
 {
-    return std::make_unique<PlainTileModel>(*this);
+    return std::make_unique<PlainTileModel>(*this, owner);
 }
 

@@ -18,6 +18,8 @@
 
 #include "Logger.h"
 
+#include "ComponentFactory.h"
+
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 
@@ -70,7 +72,7 @@ public:
             Logger::instance().logLazy(Logger::Priority::Info, [&]()->std::string {return 
                 "Registered tile model type: " + name; 
             });
-            ResourceLoader<TilePrefab>::tileModels().insert(std::make_pair(name, std::make_unique<T>()));
+            ResourceLoader<TilePrefab>::tileModels().insert(std::make_pair(name, std::make_unique<ComponentFactory<Tile, TileModel, T>>()));
         }
     };
 
@@ -82,7 +84,7 @@ public:
             Logger::instance().logLazy(Logger::Priority::Info, [&]()->std::string {return 
                 "Registered tile renderer type: " + name; 
             });
-            ResourceLoader<TilePrefab>::tileRenderers().insert(std::make_pair(name, std::make_unique<T>()));
+            ResourceLoader<TilePrefab>::tileRenderers().insert(std::make_pair(name, std::make_unique<ComponentFactory<Tile, TileRenderer, T>>()));
         }
     };
 
@@ -94,26 +96,30 @@ public:
             Logger::instance().logLazy(Logger::Priority::Info, [&]()->std::string {return 
                 "Registered tile controller type: " + name; 
             });
-            ResourceLoader<TilePrefab>::tileControllers().insert(std::make_pair(name, std::make_unique<T>()));
+            ResourceLoader<TilePrefab>::tileControllers().insert(std::make_pair(name, std::make_unique<ComponentFactory<Tile, TileController, T>>()));
         }
     };
 
     static std::pair<std::string, std::unique_ptr<TilePrefab>> load(const std::string& path); //should return nullptr when resource was not loaded
 protected:
 
-    static std::map<std::string, std::unique_ptr<TileModel>>& tileModels() //to ensure that they are created during registation process. (When they are static members they get defined too late)
+    using TileModelFactory = ComponentFactory<Tile, TileModel>;
+    using TileRendererFactory = ComponentFactory<Tile, TileRenderer>;
+    using TileControllerFactory = ComponentFactory<Tile, TileController>;
+
+    static std::map<std::string, std::unique_ptr<TileModelFactory>>& tileModels() //to ensure that they are created during registation process. (When they are static members they get defined too late)
     {
-        static std::map<std::string, std::unique_ptr<TileModel>> _tileModels;
+        static std::map<std::string, std::unique_ptr<TileModelFactory>> _tileModels;
         return _tileModels;
     }
-    static std::map<std::string, std::unique_ptr<TileRenderer>>& tileRenderers()
+    static std::map<std::string, std::unique_ptr<TileRendererFactory>>& tileRenderers()
     {
-        static std::map<std::string, std::unique_ptr<TileRenderer>> _tileRenderers;
+        static std::map<std::string, std::unique_ptr<TileRendererFactory>> _tileRenderers;
         return _tileRenderers;
     }
-    static std::map<std::string, std::unique_ptr<TileController>>& tileControllers()
+    static std::map<std::string, std::unique_ptr<TileControllerFactory>>& tileControllers()
     {
-        static std::map<std::string, std::unique_ptr<TileController>> _tileControllers;
+        static std::map<std::string, std::unique_ptr<TileControllerFactory>> _tileControllers;
         return _tileControllers;
     }
 
@@ -150,7 +156,7 @@ public:
             Logger::instance().logLazy(Logger::Priority::Info, [&]()->std::string {return 
                 "Registered entity model type: " + name; 
             });
-            ResourceLoader<EntityPrefab>::entityModels().insert(std::make_pair(name, std::make_unique<T>()));
+            ResourceLoader<EntityPrefab>::entityModels().insert(std::make_pair(name, std::make_unique<ComponentFactory<Entity, EntityModel, T>>()));
         }
     };
 
@@ -162,7 +168,7 @@ public:
             Logger::instance().logLazy(Logger::Priority::Info, [&]()->std::string {return 
                 "Registered entity renderer type: " + name; 
             });
-            ResourceLoader<EntityPrefab>::entityRenderers().insert(std::make_pair(name, std::make_unique<T>()));
+            ResourceLoader<EntityPrefab>::entityRenderers().insert(std::make_pair(name, std::make_unique<ComponentFactory<Entity, EntityRenderer, T>>()));
         }
     };
 
@@ -174,7 +180,7 @@ public:
             Logger::instance().logLazy(Logger::Priority::Info, [&]()->std::string {return 
                 "Registered entity controller type: " + name; 
             });
-            ResourceLoader<EntityPrefab>::entityControllers().insert(std::make_pair(name, std::make_unique<T>()));
+            ResourceLoader<EntityPrefab>::entityControllers().insert(std::make_pair(name, std::make_unique<ComponentFactory<Entity, EntityController, T>>()));
         }
     };
 
@@ -182,19 +188,23 @@ public:
 
 protected:
 
-    static std::map<std::string, std::unique_ptr<EntityModel>>& entityModels() //to ensure that they are created during registation process. (When they are static members they get defined too late)
+    using EntityModelFactory = ComponentFactory<Entity, EntityModel>;
+    using EntityRendererFactory = ComponentFactory<Entity, EntityRenderer>;
+    using EntityControllerFactory = ComponentFactory<Entity, EntityController>;
+
+    static std::map<std::string, std::unique_ptr<EntityModelFactory>>& entityModels() //to ensure that they are created during registation process. (When they are static members they get defined too late)
     {
-        static std::map<std::string, std::unique_ptr<EntityModel>> _entityModels;
+        static std::map<std::string, std::unique_ptr<EntityModelFactory>> _entityModels;
         return _entityModels;
     }
-    static std::map<std::string, std::unique_ptr<EntityRenderer>>& entityRenderers()
+    static std::map<std::string, std::unique_ptr<EntityRendererFactory>>& entityRenderers()
     {
-        static std::map<std::string, std::unique_ptr<EntityRenderer>> _entityRenderers;
+        static std::map<std::string, std::unique_ptr<EntityRendererFactory>> _entityRenderers;
         return _entityRenderers;
     }
-    static std::map<std::string, std::unique_ptr<EntityController>>& entityControllers()
+    static std::map<std::string, std::unique_ptr<EntityControllerFactory>>& entityControllers()
     {
-        static std::map<std::string, std::unique_ptr<EntityController>> _entityControllers;
+        static std::map<std::string, std::unique_ptr<EntityControllerFactory>> _entityControllers;
         return _entityControllers;
     }
 };

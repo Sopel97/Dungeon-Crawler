@@ -23,8 +23,8 @@ class TileLocation;
 class InnerBorderedWallTileRenderer : public TileRenderer
 {
 public:
-    InnerBorderedWallTileRenderer();
-    InnerBorderedWallTileRenderer(const InnerBorderedWallTileRenderer& other);
+    InnerBorderedWallTileRenderer(Tile& owner);
+    InnerBorderedWallTileRenderer(const InnerBorderedWallTileRenderer& other, Tile& owner);
     ~InnerBorderedWallTileRenderer() override;
 
     void loadFromConfiguration(ConfigurationNode& config) override;
@@ -40,7 +40,7 @@ public:
     std::unique_ptr<ComponentCommonData> createCommonDataStorage() const override;
     void setCommonDataStorage(ComponentCommonData& commonData) override;
 
-    std::unique_ptr<TileRenderer> clone() const override;
+    std::unique_ptr<TileRenderer> clone(Tile& owner) const override;
 protected:
     struct CommonData : public ComponentCommonData
     {
@@ -73,5 +73,3 @@ protected:
 
     virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location, const sf::Texture& texture) const;
 };
-
-REGISTER_TILE_RENDERER_TYPE(InnerBorderedWallTileRenderer)

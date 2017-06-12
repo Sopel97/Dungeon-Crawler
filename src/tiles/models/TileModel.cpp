@@ -5,13 +5,13 @@
 using namespace ls;
 
 const Rectangle2F TileModel::m_emptyCollider(Vec2F(0.0f, 0.0f), Vec2F(32.0f, 32.0f));
-TileModel::TileModel() :
-    TileComponent()
+TileModel::TileModel(Tile& owner) :
+    TileComponent(owner)
 {
 
 }
-TileModel::TileModel(const TileModel& other) :
-    TileComponent(other)
+TileModel::TileModel(const TileModel& other, Tile& owner) :
+    TileComponent(other, owner)
 {
 
 }
@@ -88,7 +88,7 @@ float TileModel::drag() const
     return 1.0f;
 }
 
-std::unique_ptr<TileModel> TileModel::clone() const
+std::unique_ptr<TileModel> TileModel::clone(Tile& owner) const
 {
-    return std::make_unique<TileModel>(*this);
+    return std::make_unique<TileModel>(*this, owner);
 }

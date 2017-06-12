@@ -11,7 +11,7 @@ using namespace ls;
 
 const Rectangle2F TileColumn::m_defaultCollider(Vec2F(0.0f, 0.0f), Vec2F(32.0f, 32.0f));
 
-TileStack TileColumn::m_emptyTile(std::make_unique<Tile>(-1, std::make_unique<TileModel>(), std::make_unique<TileRenderer>(), std::make_unique<TileController>()), 1);
+TileStack TileColumn::m_emptyTile(std::make_unique<Tile>(), 1);
 
 const TileStack& TileColumn::top() const
 {
@@ -46,12 +46,12 @@ bool TileColumn::isValid(int z) const
 
 const TileStack& TileColumn::at(int z) const
 {
-    if(isValid(z)) return m_tiles[z];
+    if (isValid(z)) return m_tiles[z];
     return m_emptyTile;
 }
 TileStack& TileColumn::at(int z)
 {
-    if(isValid(z)) return m_tiles[z];
+    if (isValid(z)) return m_tiles[z];
     return m_emptyTile;
 }
 int TileColumn::size() const
@@ -61,8 +61,8 @@ int TileColumn::size() const
 
 bool TileColumn::isTall() const
 {
-    for(const TileStack& tileStack : m_tiles)
-        if(tileStack.tile().renderer().isTall()) return true;
+    for (const TileStack& tileStack : m_tiles)
+        if (tileStack.tile().renderer().isTall()) return true;
 
     return false;
 }
@@ -71,7 +71,7 @@ bool TileColumn::hasCollider() const
 {
     for (const TileStack& tileStack : m_tiles)
     {
-        if(tileStack.tile().model().hasCollider()) return true;
+        if (tileStack.tile().model().hasCollider()) return true;
     }
 
     return false;
@@ -80,7 +80,7 @@ const Rectangle2F& TileColumn::collider() const
 {
     for (const TileStack& tileStack : m_tiles)
     {
-        if(tileStack.tile().model().hasCollider()) return tileStack.tile().model().collider();
+        if (tileStack.tile().model().hasCollider()) return tileStack.tile().model().collider();
     }
 
     return m_defaultCollider;

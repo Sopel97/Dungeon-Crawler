@@ -16,8 +16,8 @@ class Tile;
 class PlainTileModel : public TileModel
 {
 public:
-    PlainTileModel();
-    PlainTileModel(const PlainTileModel& other);
+    PlainTileModel(Tile& owner);
+    PlainTileModel(const PlainTileModel& other, Tile& owner);
     ~PlainTileModel() override;
 
     void loadFromConfiguration(ConfigurationNode& config) override;
@@ -37,7 +37,7 @@ public:
     std::unique_ptr<ComponentCommonData> createCommonDataStorage() const override;
     void setCommonDataStorage(ComponentCommonData& commonData) override;
 
-    std::unique_ptr<TileModel> clone() const override;
+    std::unique_ptr<TileModel> clone(Tile& owner) const override;
 protected:
     struct CommonData : public ComponentCommonData
     {
@@ -53,7 +53,5 @@ protected:
     };
     CommonData* m_commonData;
 };
-
-REGISTER_TILE_MODEL_TYPE(PlainTileModel)
 
 #endif // PLAINTILEMODEL_H

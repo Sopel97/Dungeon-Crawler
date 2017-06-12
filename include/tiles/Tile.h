@@ -3,6 +3,8 @@
 
 #include "Configuration.h"
 
+#include "ComponentFactory.h"
+
 #include <memory>
 
 namespace sf
@@ -20,7 +22,12 @@ class InventorySlotView;
 class Tile
 {
 public:
-    Tile(int id, std::unique_ptr<TileModel>&& model, std::unique_ptr<TileRenderer>&& renderer, std::unique_ptr<TileController>&& controller);
+    Tile(
+        int id,
+        const ComponentFactory<Tile, TileModel>& modelFac,
+        const ComponentFactory<Tile, TileRenderer>& rendererFac,
+        const ComponentFactory<Tile, TileController>& controllerFac);
+    Tile(); // temporary for creating 'empty' tile, used to avoid checking if tile exists, tile column just returns this
     Tile(const Tile& other);
     ~Tile();
 

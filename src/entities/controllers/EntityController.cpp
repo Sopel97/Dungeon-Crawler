@@ -1,12 +1,12 @@
 #include "entities/controllers/EntityController.h"
 
-EntityController::EntityController() :
-    EntityComponent()
+EntityController::EntityController(Entity& owner) :
+    EntityComponent(owner)
 {
 
 }
-EntityController::EntityController(const EntityController& other) :
-    EntityComponent(other)
+EntityController::EntityController(const EntityController& other, Entity& owner) :
+    EntityComponent(other, owner)
 {
 
 }
@@ -34,7 +34,7 @@ void EntityController::accelerate(const ls::Vec2F& dv)
 
 }
 
-std::unique_ptr<EntityController> EntityController::clone() const
+std::unique_ptr<EntityController> EntityController::clone(Entity& owner) const
 {
-    return std::make_unique<EntityController>(*this);
+    return std::make_unique<EntityController>(*this, owner);
 }

@@ -21,8 +21,8 @@ class TileLocation;
 class EquipmentPieceModel : public TileModel
 {
 public:
-    EquipmentPieceModel();
-    EquipmentPieceModel(const EquipmentPieceModel& other);
+    EquipmentPieceModel(Tile& owner);
+    EquipmentPieceModel(const EquipmentPieceModel& other, Tile& owner);
     ~EquipmentPieceModel() override;
 
     void loadFromConfiguration(ConfigurationNode& config) override;
@@ -45,7 +45,7 @@ public:
     std::unique_ptr<ComponentCommonData> createCommonDataStorage() const override;
     void setCommonDataStorage(ComponentCommonData& commonData) override;
 
-    std::unique_ptr<TileModel> clone() const override;
+    std::unique_ptr<TileModel> clone(Tile& owner) const override;
 protected:
     struct CommonData : public ComponentCommonData
     {
@@ -61,5 +61,3 @@ protected:
 
     TileAttributeSet m_attributes;
 };
-
-REGISTER_TILE_MODEL_TYPE(EquipmentPieceModel)

@@ -19,14 +19,14 @@ std::pair<std::string, std::unique_ptr<TilePrefab>> ResourceLoader<TilePrefab>::
 
     std::string tileName = tileConfig["name"].get<std::string>();
 
-    std::unique_ptr<TileModel> model = nullptr;
-    std::unique_ptr<TileRenderer> renderer = nullptr;
-    std::unique_ptr<TileController> controller = nullptr;
+    ComponentFactory<Tile, TileModel>* modelFac = nullptr;
+    ComponentFactory<Tile, TileRenderer>* rendererFac = nullptr;
+    ComponentFactory<Tile, TileController>* controllerFac = nullptr;
 
     std::string modelName = tileConfig["model"].get<std::string>();
     try
     {
-        model = tileModels().at(modelName)->clone();
+        modelFac = tileModels().at(modelName).get();
     }
     catch (std::out_of_range&)
     {
@@ -36,7 +36,7 @@ std::pair<std::string, std::unique_ptr<TilePrefab>> ResourceLoader<TilePrefab>::
     std::string rendererName = tileConfig["renderer"].get<std::string>();
     try
     {
-        renderer = tileRenderers().at(rendererName)->clone();
+        rendererFac = tileRenderers().at(rendererName).get();
     }
     catch (std::out_of_range&)
     {
@@ -46,7 +46,7 @@ std::pair<std::string, std::unique_ptr<TilePrefab>> ResourceLoader<TilePrefab>::
     std::string controllerName = tileConfig["controller"].get<std::string>();
     try
     {
-        controller = tileControllers().at(controllerName)->clone();
+        controllerFac = tileControllers().at(controllerName).get();
     }
     catch (std::out_of_range&)
     {
@@ -55,9 +55,9 @@ std::pair<std::string, std::unique_ptr<TilePrefab>> ResourceLoader<TilePrefab>::
 
     std::unique_ptr<TilePrefab> tile = std::make_unique<TilePrefab>
         (
-            std::move(model),
-            std::move(renderer),
-            std::move(controller)
+            *modelFac,
+            *rendererFac,
+            *controllerFac
             );
 
     tile->loadFromConfiguration(tileConfig);
@@ -76,14 +76,14 @@ std::pair<std::string, std::unique_ptr<EntityPrefab>> ResourceLoader<EntityPrefa
 
     std::string entityName = entityConfig["name"].get<std::string>();
 
-    std::unique_ptr<EntityModel> model = nullptr;
-    std::unique_ptr<EntityRenderer> renderer = nullptr;
-    std::unique_ptr<EntityController> controller = nullptr;
+    ComponentFactory<Entity, EntityModel>* modelFac = nullptr;
+    ComponentFactory<Entity, EntityRenderer>* rendererFac = nullptr;
+    ComponentFactory<Entity, EntityController>* controllerFac = nullptr;
 
     std::string modelName = entityConfig["model"].get<std::string>();
     try
     {
-        model = entityModels().at(modelName)->clone();
+        modelFac = entityModels().at(modelName).get();
     }
     catch (std::out_of_range&)
     {
@@ -93,7 +93,7 @@ std::pair<std::string, std::unique_ptr<EntityPrefab>> ResourceLoader<EntityPrefa
     std::string rendererName = entityConfig["view"].get<std::string>();
     try
     {
-        renderer = entityRenderers().at(rendererName)->clone();
+        rendererFac = entityRenderers().at(rendererName).get();
     }
     catch (std::out_of_range&)
     {
@@ -103,7 +103,7 @@ std::pair<std::string, std::unique_ptr<EntityPrefab>> ResourceLoader<EntityPrefa
     std::string controllerName = entityConfig["controller"].get<std::string>();
     try
     {
-        controller = entityControllers().at(controllerName)->clone();
+        controllerFac = entityControllers().at(controllerName).get();
     }
     catch (std::out_of_range&)
     {
@@ -112,9 +112,9 @@ std::pair<std::string, std::unique_ptr<EntityPrefab>> ResourceLoader<EntityPrefa
 
     std::unique_ptr<EntityPrefab> entity = std::make_unique<EntityPrefab>
         (
-            std::move(model),
-            std::move(renderer),
-            std::move(controller)
+            *modelFac,
+            *rendererFac,
+            *controllerFac
             );
 
     entity->loadFromConfiguration(entityConfig);

@@ -7,17 +7,24 @@
 
 int TilePrefab::m_lastId = -1;
 
-TilePrefab::TilePrefab(std::unique_ptr<TileModel> model, std::unique_ptr<TileRenderer> renderer, std::unique_ptr<TileController> controller)
+TilePrefab::TilePrefab(
+    const ComponentFactory<Tile, TileModel>& modelFac, 
+    const ComponentFactory<Tile, TileRenderer>& rendererFac, 
+    const ComponentFactory<Tile, TileController>& controllerFac)
 {
-    m_modelCommonData = model->createCommonDataStorage();
-    m_rendererCommonData = renderer->createCommonDataStorage();
-    m_controllerCommonData = controller->createCommonDataStorage();
+    m_tile = std::make_unique<Tile>(++m_lastId, modelFac, rendererFac, controllerFac);
 
-    model->setCommonDataStorage(*m_modelCommonData);
-	renderer->setCommonDataStorage(*m_rendererCommonData);
-    controller->setCommonDataStorage(*m_controllerCommonData);
+    TileModel& model = m_tile->model();
+    TileRenderer& renderer = m_tile->renderer();
+    TileController& controller = m_tile->controller();
 
-    m_tile = std::make_unique<Tile>(++m_lastId, std::move(model), std::move(renderer), std::move(controller));
+    m_modelCommonData = model.createCommonDataStorage();
+    m_rendererCommonData = renderer.createCommonDataStorage();
+    m_controllerCommonData = controller.createCommonDataStorage();
+
+    model.setCommonDataStorage(*m_modelCommonData);
+	renderer.setCommonDataStorage(*m_rendererCommonData);
+    controller.setCommonDataStorage(*m_controllerCommonData);
 }
 
 TilePrefab::~TilePrefab()

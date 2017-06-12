@@ -2,6 +2,8 @@
 
 #include "Configuration.h"
 
+#include "ComponentFactory.h"
+
 #include <memory>
 
 namespace sf
@@ -19,7 +21,10 @@ class ComponentCommonData;
 class EntityPrefab
 {
 public:
-    EntityPrefab(std::unique_ptr<EntityModel> model, std::unique_ptr<EntityRenderer> renderer, std::unique_ptr<EntityController> controller);
+    EntityPrefab(
+        const ComponentFactory<Entity, EntityModel>& modelFac,
+        const ComponentFactory<Entity, EntityRenderer>& rendererFac,
+        const ComponentFactory<Entity, EntityController>& controllerFac);
     ~EntityPrefab();
 
     void loadFromConfiguration(ConfigurationNode& config);

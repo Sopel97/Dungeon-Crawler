@@ -15,8 +15,8 @@ class World;
 class EntityController : public EntityComponent<EntityController, Entity>
 {
 public:
-    EntityController();
-    EntityController(const EntityController& other);
+    EntityController(Entity& owner);
+    EntityController(const EntityController& other, Entity& owner);
     ~EntityController() override;
 
     void loadFromConfiguration(ConfigurationNode& config) override;
@@ -26,7 +26,7 @@ public:
     virtual void move(const ls::Vec2F& factor, float dt); //how much of a velocity to move
     virtual void accelerate(const ls::Vec2F& dv);
 
-    std::unique_ptr<EntityController> clone() const override;
+    std::unique_ptr<EntityController> clone(Entity& owner) const override;
 };
 
 #endif // ENTITYCONTROLLER_H

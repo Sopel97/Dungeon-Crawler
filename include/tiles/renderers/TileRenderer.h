@@ -21,8 +21,8 @@ class TileRenderer : public TileComponent<TileRenderer, Tile>
 	//must be functional (ie. all methods must return resonable values and there is no pure virtual member functions)
 {
 public:
-    TileRenderer();
-    TileRenderer(const TileRenderer& other);
+    TileRenderer(Tile& owner);
+    TileRenderer(const TileRenderer& other, Tile& owner);
     ~TileRenderer() override;
 
     virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const;
@@ -39,5 +39,5 @@ public:
 
     virtual bool isTall() const; //tall tiles are required to have colliders
 
-    std::unique_ptr<TileRenderer> clone() const override;
+    std::unique_ptr<TileRenderer> clone(Tile& owner) const override;
 };

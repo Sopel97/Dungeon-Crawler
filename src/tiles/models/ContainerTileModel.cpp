@@ -2,15 +2,17 @@
 
 using namespace ls;
 
-ContainerTileModel::ContainerTileModel() :
-    TileModel(),
+REGISTER_TILE_MODEL_TYPE(ContainerTileModel)
+
+ContainerTileModel::ContainerTileModel(Tile& owner) :
+    TileModel(owner),
     m_commonData(nullptr),
     m_inventory(1)
 {
 
 }
-ContainerTileModel::ContainerTileModel(const ContainerTileModel& other) :
-    TileModel(other),
+ContainerTileModel::ContainerTileModel(const ContainerTileModel& other, Tile& owner) :
+    TileModel(other, owner),
     m_commonData(other.m_commonData),
     m_inventory(other.m_inventory)
 {
@@ -116,7 +118,7 @@ void ContainerTileModel::setCommonDataStorage(ComponentCommonData& commonData)
 }
 
 
-std::unique_ptr<TileModel> ContainerTileModel::clone() const
+std::unique_ptr<TileModel> ContainerTileModel::clone(Tile& owner) const
 {
-    return std::make_unique<ContainerTileModel>(*this);
+    return std::make_unique<ContainerTileModel>(*this, owner);
 }

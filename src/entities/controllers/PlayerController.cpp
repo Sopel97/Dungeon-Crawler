@@ -5,16 +5,16 @@
 #include "entities/Entity.h"
 #include "entities/models/EntityModel.h"
 
-
-
 #include "../LibS/Geometry.h"
 
 #include <cmath>
 
 using namespace ls;
 
-PlayerController::PlayerController() :
-    EntityController(),
+REGISTER_ENTITY_CONTROLLER_TYPE(PlayerController)
+
+PlayerController::PlayerController(Entity& owner) :
+    EntityController(owner),
     m_playerOwner(),
     m_acceleratedHorizontallyInLastFrame(false),
     m_acceleratedVerticallyInLastFrame(false)
@@ -22,16 +22,16 @@ PlayerController::PlayerController() :
 
 }
 
-PlayerController::PlayerController(Player* player) :
-    EntityController(),
-    m_playerOwner(player),
+PlayerController::PlayerController(Player& player, Entity& owner) :
+    EntityController(owner),
+    m_playerOwner(&player),
     m_acceleratedHorizontallyInLastFrame(false),
     m_acceleratedVerticallyInLastFrame(false)
 {
 
 }
-PlayerController::PlayerController(const PlayerController& other) :
-    EntityController(other),
+PlayerController::PlayerController(const PlayerController& other, Entity& owner) :
+    EntityController(other, owner),
     m_playerOwner(other.m_playerOwner),
     m_acceleratedHorizontallyInLastFrame(other.m_acceleratedHorizontallyInLastFrame),
     m_acceleratedVerticallyInLastFrame(other.m_acceleratedVerticallyInLastFrame)
@@ -151,7 +151,7 @@ void PlayerController::accelerate(const ls::Vec2F& dv)
     }
 }
 
-std::unique_ptr<EntityController> PlayerController::clone() const
+std::unique_ptr<EntityController> PlayerController::clone(Entity& owner) const
 {
-    return std::make_unique<PlayerController>(*this);
+    return std::make_unique<PlayerController>(*this, owner);
 }

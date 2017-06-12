@@ -13,8 +13,8 @@ template <class ComponentType, class OwnerType>
 class Component
 {
 public:
-	Component() = default;
-	Component(const Component& other) = default;
+    Component(OwnerType& owner) : m_owner(&owner) {}
+    Component(const Component& other, OwnerType& owner) : m_owner(&owner) {}
 	virtual ~Component() = default;
 
 	virtual void loadFromConfiguration(ConfigurationNode& config)
@@ -43,7 +43,7 @@ public:
 
 	}
 
-	virtual std::unique_ptr<ComponentType> clone() const = 0;
+	virtual std::unique_ptr<ComponentType> clone(OwnerType& owner) const = 0;
 
 protected:
 	OwnerType* m_owner;

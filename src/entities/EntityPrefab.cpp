@@ -7,17 +7,24 @@
 
 int EntityPrefab::m_lastId = -1;
 
-EntityPrefab::EntityPrefab(std::unique_ptr<EntityModel> model, std::unique_ptr<EntityRenderer> renderer, std::unique_ptr<EntityController> controller)
+EntityPrefab::EntityPrefab(
+    const ComponentFactory<Entity, EntityModel>& modelFac,
+    const ComponentFactory<Entity, EntityRenderer>& rendererFac,
+    const ComponentFactory<Entity, EntityController>& controllerFac)
 {
-    m_modelCommonData = model->createCommonDataStorage();
-    m_rendererCommonData = renderer->createCommonDataStorage();
-    m_controllerCommonData = controller->createCommonDataStorage();
+    m_entity = std::make_unique<Entity>(++m_lastId, modelFac, rendererFac, controllerFac);
 
-    model->setCommonDataStorage(*m_modelCommonData);
-    renderer->setCommonDataStorage(*m_rendererCommonData);
-    controller->setCommonDataStorage(*m_controllerCommonData);
+    EntityModel& model = m_entity->model();
+    EntityRenderer& renderer = m_entity->renderer();
+    EntityController& controller = m_entity->controller();
 
-    m_entity = std::make_unique<Entity>(++m_lastId, std::move(model), std::move(renderer), std::move(controller));
+    m_modelCommonData = model.createCommonDataStorage();
+    m_rendererCommonData = renderer.createCommonDataStorage();
+    m_controllerCommonData = controller.createCommonDataStorage();
+
+    model.setCommonDataStorage(*m_modelCommonData);
+    renderer.setCommonDataStorage(*m_rendererCommonData);
+    controller.setCommonDataStorage(*m_controllerCommonData);
 }
 
 EntityPrefab::~EntityPrefab()

@@ -18,7 +18,7 @@ using namespace ls;
 
 Player::Player(WindowSpaceManager& wsm, Game& game, TileTransferMediator& tileTransferMediator) :
     m_wsm(&wsm),
-    m_playerEntity(-1, std::make_unique<PlayerModel>(this), std::make_unique<PlayerRenderer>(this), std::make_unique<PlayerController>(this)),
+    m_playerEntity(-1, std::make_unique<PlayerModel>(*this, m_playerEntity), std::make_unique<PlayerRenderer>(*this, m_playerEntity), std::make_unique<PlayerController>(*this, m_playerEntity)),
     m_playerUi(wsm, *this),
     m_inventorySystem(wsm, *this, tileTransferMediator),
     m_tileDescriptionRenderer(wsm)

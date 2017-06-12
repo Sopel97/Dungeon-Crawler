@@ -9,25 +9,29 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 
-Tile::Tile(int id, std::unique_ptr<TileModel>&& model, std::unique_ptr<TileRenderer>&& renderer, std::unique_ptr<TileController>&& controller) :
-    m_model(std::move(model)),
-    m_renderer(std::move(renderer)),
-    m_controller(std::move(controller)),
+Tile::Tile(int id,
+    const ComponentFactory<Tile, TileModel>& modelFac,
+    const ComponentFactory<Tile, TileRenderer>& rendererFac,
+    const ComponentFactory<Tile, TileController>& controllerFac) :
+    m_model(modelFac.create(*this)),
+    m_renderer(rendererFac.create(*this)),
+    m_controller(controllerFac.create(*this)),
     m_id(id)
 {
-    m_model->setOwner(this);
-    m_renderer->setOwner(this);
-    m_controller->setOwner(this);
+}
+Tile::Tile() :
+    m_model(std::make_unique<TileModel>(*this)),
+    m_renderer(std::make_unique<TileRenderer>(*this)),
+    m_controller(std::make_unique<TileController>(*this)),
+    m_id(-99)
+{
 }
 Tile::Tile(const Tile& other) :
-    m_model(other.m_model->clone()),
-    m_renderer(other.m_renderer->clone()),
-    m_controller(other.m_controller->clone()),
+    m_model(other.m_model->clone(*this)),
+    m_renderer(other.m_renderer->clone(*this)),
+    m_controller(other.m_controller->clone(*this)),
     m_id(other.m_id)
 {
-    m_model->setOwner(this);
-    m_renderer->setOwner(this);
-    m_controller->setOwner(this);
 }
 Tile::~Tile()
 {

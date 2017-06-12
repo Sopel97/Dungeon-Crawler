@@ -17,12 +17,12 @@ class Entity;
 class EntityRenderer : public EntityComponent<EntityRenderer, Entity>
 {
 public:
-    EntityRenderer();
-    EntityRenderer(const EntityRenderer& other);
+    EntityRenderer(Entity& owner);
+    EntityRenderer(const EntityRenderer& other, Entity& owner);
     ~EntityRenderer() override;
 
     virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) const;
     virtual void drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) const;
 
-    std::unique_ptr<EntityRenderer> clone() const override;
+    std::unique_ptr<EntityRenderer> clone(Entity& owner) const override;
 };

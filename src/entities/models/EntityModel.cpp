@@ -4,13 +4,13 @@ using namespace ls;
 
 const ls::Vec2F EntityModel::m_someVector {0.0f, 0.0f};
 
-EntityModel::EntityModel() :
-    EntityComponent()
+EntityModel::EntityModel(Entity& owner) :
+    EntityComponent(owner)
 {
 
 }
-EntityModel::EntityModel(const EntityModel& other) :
-    EntityComponent(other)
+EntityModel::EntityModel(const EntityModel& other, Entity& owner) :
+    EntityComponent(other, owner)
 {
 
 }
@@ -76,7 +76,7 @@ void EntityModel::setDirectionOfMove(EntityModel::Direction newDirection)
 {
 
 }
-std::unique_ptr<EntityModel> EntityModel::clone() const
+std::unique_ptr<EntityModel> EntityModel::clone(Entity& owner) const
 {
-    return std::make_unique<EntityModel>(*this);
+    return std::make_unique<EntityModel>(*this, owner);
 }

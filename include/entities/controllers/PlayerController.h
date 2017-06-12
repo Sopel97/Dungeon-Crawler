@@ -16,9 +16,9 @@ class Player;
 class PlayerController : public EntityController
 {
 public:
-    PlayerController();
-    PlayerController(Player* player);
-    PlayerController(const PlayerController& other);
+    PlayerController(Entity& owner);
+    PlayerController(Player& player, Entity& owner);
+    PlayerController(const PlayerController& other, Entity& owner);
     ~PlayerController() override;
 
     void loadFromConfiguration(ConfigurationNode& config) override;
@@ -28,14 +28,12 @@ public:
     void move(const ls::Vec2F& factor, float dt) override;
     void accelerate(const ls::Vec2F& dv) override;
 
-    std::unique_ptr<EntityController> clone() const override;
+    std::unique_ptr<EntityController> clone(Entity& owner) const override;
 
 protected:
     Player* m_playerOwner;
     bool m_acceleratedHorizontallyInLastFrame;
     bool m_acceleratedVerticallyInLastFrame;
 };
-
-REGISTER_ENTITY_CONTROLLER_TYPE(PlayerController)
 
 #endif // PLAYERCONTROLLER_H

@@ -9,15 +9,13 @@ class Tile;
 class ContainerTileController : public TileController
 {
 public:
-    ContainerTileController();
-    ContainerTileController(const ContainerTileController& other);
+    ContainerTileController(Tile& owner);
+    ContainerTileController(const ContainerTileController& other, Tile& owner);
     ~ContainerTileController() override;
 
     void use(Player& player, const TileLocation& location) override;
     void use(Player& player, const InventorySlotView& slot) override;
 
-    std::unique_ptr<TileController> clone() const override;
+    std::unique_ptr<TileController> clone(Tile& owner) const override;
 };
-
-REGISTER_TILE_CONTROLLER_TYPE(ContainerTileController)
 

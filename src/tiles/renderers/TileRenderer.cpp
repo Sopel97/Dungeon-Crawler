@@ -4,13 +4,13 @@
 #include "TileLocation.h"
 #include "GameConstants.h"
 
-TileRenderer::TileRenderer() :
-    TileComponent()
+TileRenderer::TileRenderer(Tile& owner) :
+    TileComponent(owner)
 {
 
 }
-TileRenderer::TileRenderer(const TileRenderer& other) :
-    TileComponent(other)
+TileRenderer::TileRenderer(const TileRenderer& other, Tile& owner) :
+    TileComponent(other, owner)
 {
 
 }
@@ -59,7 +59,7 @@ bool TileRenderer::isTall() const
     return false;
 }
 
-std::unique_ptr<TileRenderer> TileRenderer::clone() const
+std::unique_ptr<TileRenderer> TileRenderer::clone(Tile& owner) const
 {
-    return std::make_unique<TileRenderer>(*this);
+    return std::make_unique<TileRenderer>(*this, owner);
 }

@@ -10,8 +10,8 @@ template <class ComponentType, class OwnerType>
 class EntityComponent : public Component<ComponentType, OwnerType>
 {
 public:
-    EntityComponent() = default;
-    EntityComponent(const EntityComponent& other) = default;
+    EntityComponent(OwnerType& owner) : Component<ComponentType, OwnerType>(owner) {};
+    EntityComponent(const EntityComponent& other, OwnerType& owner) : Component<ComponentType, OwnerType>(other, owner) {};
     ~EntityComponent() override = default;
 
     virtual void onEntityInstantiated() {}

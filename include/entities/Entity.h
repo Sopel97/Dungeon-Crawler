@@ -3,6 +3,8 @@
 
 #include "Configuration.h"
 
+#include "ComponentFactory.h"
+
 #include <memory>
 
 namespace sf
@@ -18,7 +20,16 @@ class EntityController;
 class Entity
 {
 public:
-    Entity(int id, std::unique_ptr<EntityModel>&& model, std::unique_ptr<EntityRenderer>&& renderer, std::unique_ptr<EntityController>&& controller);
+    Entity(
+        int id,
+        const ComponentFactory<Entity, EntityModel>& modelFac,
+        const ComponentFactory<Entity, EntityRenderer>& rendererFac,
+        const ComponentFactory<Entity, EntityController>& controllerFac);
+    Entity( //temporary to allow easy creation of the player entity
+        int id,
+        std::unique_ptr<EntityModel> model,
+        std::unique_ptr<EntityRenderer> renderer,
+        std::unique_ptr<EntityController> controller);
     Entity(const Entity& other);
     Entity(Entity&&) = default;
     Entity& operator=(Entity&&) = default;

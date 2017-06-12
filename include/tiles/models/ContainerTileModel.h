@@ -21,8 +21,8 @@ class TileLocation;
 class ContainerTileModel : public TileModel
 {
 public:
-    ContainerTileModel();
-    ContainerTileModel(const ContainerTileModel& other);
+    ContainerTileModel(Tile& owner);
+    ContainerTileModel(const ContainerTileModel& other, Tile& owner);
     ~ContainerTileModel() override;
 
     void loadFromConfiguration(ConfigurationNode& config) override;
@@ -46,7 +46,7 @@ public:
     std::unique_ptr<ComponentCommonData> createCommonDataStorage() const override;
     void setCommonDataStorage(ComponentCommonData& commonData) override;
 
-    std::unique_ptr<TileModel> clone() const override;
+    std::unique_ptr<TileModel> clone(Tile& owner) const override;
 protected:
     struct CommonData : public ComponentCommonData
     {
@@ -63,7 +63,5 @@ protected:
 
     ContainerInventory m_inventory;
 };
-
-REGISTER_TILE_MODEL_TYPE(ContainerTileModel)
 
 #endif // CONTAINERTILEMODEL_H

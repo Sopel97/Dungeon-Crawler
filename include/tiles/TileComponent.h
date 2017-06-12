@@ -10,8 +10,8 @@ template <class ComponentType, class OwnerType>
 class TileComponent : public Component<ComponentType, OwnerType>
 {
 public:
-    TileComponent() = default;
-    TileComponent(const TileComponent& other) = default;
+    TileComponent(OwnerType& owner) : Component<ComponentType, OwnerType>(owner) {};
+    TileComponent(const TileComponent& other, OwnerType& owner) : Component<ComponentType, OwnerType>(other, owner) {};
     ~TileComponent() override = default;
 
     virtual void onTileQuantityChanged(int oldQuantity, int newQuantity) {}
