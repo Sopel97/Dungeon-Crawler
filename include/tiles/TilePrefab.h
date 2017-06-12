@@ -32,11 +32,11 @@ public:
 
     std::unique_ptr<Tile> instantiate() const;
 protected:
-    std::unique_ptr<ComponentCommonData> m_modelCommonData;
-    std::unique_ptr<ComponentCommonData> m_rendererCommonData;
-    std::unique_ptr<ComponentCommonData> m_controllerCommonData;
-
     std::unique_ptr<Tile> m_tile;
+
+    const ComponentFactory<Tile, TileModel>* m_modelFactory;
+    const ComponentFactory<Tile, TileRenderer>* m_rendererFactory;
+    const ComponentFactory<Tile, TileController>* m_controllerFactory;
 
     static int m_lastId;
 };

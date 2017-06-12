@@ -4,7 +4,7 @@
 
 REGISTER_TILE_CONTROLLER_TYPE(PlainTileController)
 
-PlainTileController::PlainTileController(Tile& owner) :
+PlainTileController::PlainTileController(Tile& owner, ComponentCommonData* commonData) :
     TileController(owner)
 {
 

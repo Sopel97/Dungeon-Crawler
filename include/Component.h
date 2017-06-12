@@ -34,13 +34,9 @@ public:
 		return *m_owner;
 	}
 
-	virtual std::unique_ptr<ComponentCommonData> createCommonDataStorage() const
+	static std::unique_ptr<ComponentCommonData> createCommonDataStorage()
 	{
-		return nullptr;
-	}
-	virtual void setCommonDataStorage(ComponentCommonData& commonData)
-	{
-
+        return nullptr;
 	}
 
 	virtual std::unique_ptr<ComponentType> clone(OwnerType& owner) const = 0;

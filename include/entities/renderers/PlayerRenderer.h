@@ -22,7 +22,7 @@ class Player;
 class PlayerRenderer : public EntityRenderer
 {
 public:
-    PlayerRenderer(Entity& owner);
+    PlayerRenderer(Entity& owner, ComponentCommonData* commonData);
     PlayerRenderer(Player& player, Entity& owner);
     PlayerRenderer(const PlayerRenderer& other, Entity& owner);
     ~PlayerRenderer() override;

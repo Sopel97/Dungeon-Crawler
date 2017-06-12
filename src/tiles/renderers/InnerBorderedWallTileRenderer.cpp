@@ -17,10 +17,9 @@ using namespace ls;
 
 REGISTER_TILE_RENDERER_TYPE(InnerBorderedWallTileRenderer)
 
-InnerBorderedWallTileRenderer::InnerBorderedWallTileRenderer(Tile& owner) :
+InnerBorderedWallTileRenderer::InnerBorderedWallTileRenderer(Tile& owner, ComponentCommonData* commonData) :
     TileRenderer(owner),
-    m_commonData(nullptr)
-
+    m_commonData(static_cast<CommonData*>(commonData))
 {
 
 }
@@ -217,15 +216,11 @@ bool InnerBorderedWallTileRenderer::isTall() const
     return true;
 }
 
-std::unique_ptr<ComponentCommonData> InnerBorderedWallTileRenderer::createCommonDataStorage() const
+std::unique_ptr<ComponentCommonData> InnerBorderedWallTileRenderer::createCommonDataStorage()
 {
     return std::make_unique<CommonData>();
 }
 
-void InnerBorderedWallTileRenderer::setCommonDataStorage(ComponentCommonData& commonData)
-{
-    m_commonData = static_cast<CommonData*>(&commonData);
-}
 std::unique_ptr<TileRenderer> InnerBorderedWallTileRenderer::clone(Tile& owner) const
 {
     return std::make_unique<InnerBorderedWallTileRenderer>(*this, owner);

@@ -18,9 +18,9 @@ using namespace ls;
 
 REGISTER_TILE_RENDERER_TYPE(PlainTileRenderer)
 
-PlainTileRenderer::PlainTileRenderer(Tile& owner) :
+PlainTileRenderer::PlainTileRenderer(Tile& owner, ComponentCommonData* commonData) :
     TileRenderer(owner),
-    m_commonData(nullptr),
+    m_commonData(static_cast<CommonData*>(commonData)),
     m_currentAnimatedSprite(nullptr)
 {
 }
@@ -113,13 +113,9 @@ void PlainTileRenderer::onTileQuantityChanged(int oldQuantity, int newQuantity)
     m_currentAnimatedSprite = &(m_commonData->spriteSelector.onTileQuantityChanged(newQuantity, *m_currentAnimatedSprite));
 }
 
-std::unique_ptr<ComponentCommonData> PlainTileRenderer::createCommonDataStorage() const
+std::unique_ptr<ComponentCommonData> PlainTileRenderer::createCommonDataStorage()
 {
     return std::make_unique<CommonData>();
-}
-void PlainTileRenderer::setCommonDataStorage(ComponentCommonData& commonData)
-{
-    m_commonData = static_cast<CommonData*>(&commonData);
 }
 
 std::unique_ptr<TileRenderer> PlainTileRenderer::clone(Tile& owner) const

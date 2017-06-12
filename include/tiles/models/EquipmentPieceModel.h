@@ -21,7 +21,7 @@ class TileLocation;
 class EquipmentPieceModel : public TileModel
 {
 public:
-    EquipmentPieceModel(Tile& owner);
+    EquipmentPieceModel(Tile& owner, ComponentCommonData* commonData);
     EquipmentPieceModel(const EquipmentPieceModel& other, Tile& owner);
     ~EquipmentPieceModel() override;
 
@@ -42,8 +42,7 @@ public:
 
     void onTileInstantiated() override;
 
-    std::unique_ptr<ComponentCommonData> createCommonDataStorage() const override;
-    void setCommonDataStorage(ComponentCommonData& commonData) override;
+    static std::unique_ptr<ComponentCommonData> createCommonDataStorage();
 
     std::unique_ptr<TileModel> clone(Tile& owner) const override;
 protected:

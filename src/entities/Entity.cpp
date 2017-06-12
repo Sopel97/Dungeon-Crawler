@@ -16,9 +16,9 @@ Entity::Entity(
     const ComponentFactory<Entity, EntityModel>& modelFac,
     const ComponentFactory<Entity, EntityRenderer>& rendererFac,
     const ComponentFactory<Entity, EntityController>& controllerFac) :
-    m_model(modelFac.create(*this)),
-    m_renderer(rendererFac.create(*this)),
-    m_controller(controllerFac.create(*this)),
+    m_model(modelFac.create(*this, modelFac.createCommonDataStorage())),
+    m_renderer(rendererFac.create(*this, rendererFac.createCommonDataStorage())),
+    m_controller(controllerFac.create(*this, controllerFac.createCommonDataStorage())),
     m_id(id)
 {
 }

@@ -2,8 +2,6 @@
 
 0.9. consider passing tilestack to the render function
 1. consider moving maxQuantity to model
-2. Mimic tile classes design for entities // this
-2.1 Do prefabs for entities too and use Component for entities
 2.5. rename commondata to shareddata?
 
 7. Clear world generation code //little priority since it is waiting for libs still
@@ -14,5 +12,3 @@
 24. player's line of sight using raycasting
 
 25. Consider storing normal textures and meta textures in one texture side to side
-
-26. consider better alternative to registering components with macros, because it's ugly and may be inconsistent

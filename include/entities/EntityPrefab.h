@@ -31,11 +31,11 @@ public:
 
     std::unique_ptr<Entity> instantiate() const;
 protected:
-    std::unique_ptr<ComponentCommonData> m_modelCommonData;
-    std::unique_ptr<ComponentCommonData> m_rendererCommonData;
-    std::unique_ptr<ComponentCommonData> m_controllerCommonData;
-
     std::unique_ptr<Entity> m_entity;
+
+    const ComponentFactory<Entity, EntityModel>* m_modelFactory;
+    const ComponentFactory<Entity, EntityRenderer>* m_rendererFactory;
+    const ComponentFactory<Entity, EntityController>* m_controllerFactory;
 
     static int m_lastId;
 };

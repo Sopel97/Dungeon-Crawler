@@ -28,7 +28,7 @@ class TileLocation;
 class OuterBorderedTileRenderer : public TileRenderer
 {
 public:
-    OuterBorderedTileRenderer(Tile& owner);
+    OuterBorderedTileRenderer(Tile& owner, ComponentCommonData* commonData);
     OuterBorderedTileRenderer(const OuterBorderedTileRenderer& other, Tile& owner);
     ~OuterBorderedTileRenderer() override;
 
@@ -46,8 +46,7 @@ public:
     void onTileInstantiated() override;
     void onTileQuantityChanged(int oldQuantity, int newQuantity) override;
 
-    std::unique_ptr<ComponentCommonData> createCommonDataStorage() const override;
-    void setCommonDataStorage(ComponentCommonData& commonData) override;
+    static std::unique_ptr<ComponentCommonData> createCommonDataStorage();
 
     std::unique_ptr<TileRenderer> clone(Tile& owner) const override;
 protected:

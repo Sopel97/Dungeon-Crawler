@@ -23,7 +23,7 @@ class TileLocation;
 class InnerBorderedWallTileRenderer : public TileRenderer
 {
 public:
-    InnerBorderedWallTileRenderer(Tile& owner);
+    InnerBorderedWallTileRenderer(Tile& owner, ComponentCommonData* commonData);
     InnerBorderedWallTileRenderer(const InnerBorderedWallTileRenderer& other, Tile& owner);
     ~InnerBorderedWallTileRenderer() override;
 
@@ -37,8 +37,7 @@ public:
 
     bool isTall() const override;
 
-    std::unique_ptr<ComponentCommonData> createCommonDataStorage() const override;
-    void setCommonDataStorage(ComponentCommonData& commonData) override;
+    static std::unique_ptr<ComponentCommonData> createCommonDataStorage();
 
     std::unique_ptr<TileRenderer> clone(Tile& owner) const override;
 protected:

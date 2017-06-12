@@ -6,9 +6,9 @@
 
 REGISTER_TILE_MODEL_TYPE(EquipmentPieceModel)
 
-EquipmentPieceModel::EquipmentPieceModel(Tile& owner) :
+EquipmentPieceModel::EquipmentPieceModel(Tile& owner, ComponentCommonData* commonData) :
     TileModel(owner),
-    m_commonData(nullptr)
+    m_commonData(static_cast<CommonData*>(commonData))
 {
 }
 EquipmentPieceModel::EquipmentPieceModel(const EquipmentPieceModel& other, Tile& owner) :
@@ -105,13 +105,9 @@ void EquipmentPieceModel::onTileInstantiated()
     m_attributes = m_commonData->attributeRandomizer.randomize();
 }
 
-std::unique_ptr<ComponentCommonData> EquipmentPieceModel::createCommonDataStorage() const
+std::unique_ptr<ComponentCommonData> EquipmentPieceModel::createCommonDataStorage()
 {
     return std::make_unique<CommonData>();
-}
-void EquipmentPieceModel::setCommonDataStorage(ComponentCommonData& commonData)
-{
-    m_commonData = static_cast<CommonData*>(&commonData);
 }
 
 std::unique_ptr<TileModel> EquipmentPieceModel::clone(Tile& owner) const

@@ -16,6 +16,7 @@ class MapLayer;
 class EntityModel;
 class EntityRenderer;
 class EntityController;
+class ComponentCommonData;
 
 class Entity
 {

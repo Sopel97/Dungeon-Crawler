@@ -21,7 +21,7 @@ class TileLocation;
 class ContainerTileModel : public TileModel
 {
 public:
-    ContainerTileModel(Tile& owner);
+    ContainerTileModel(Tile& owner, ComponentCommonData* commonData);
     ContainerTileModel(const ContainerTileModel& other, Tile& owner);
     ~ContainerTileModel() override;
 
@@ -43,8 +43,7 @@ public:
 
     float drag() const override;
 
-    std::unique_ptr<ComponentCommonData> createCommonDataStorage() const override;
-    void setCommonDataStorage(ComponentCommonData& commonData) override;
+    static std::unique_ptr<ComponentCommonData> createCommonDataStorage();
 
     std::unique_ptr<TileModel> clone(Tile& owner) const override;
 protected:

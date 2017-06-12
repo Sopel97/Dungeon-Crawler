@@ -12,10 +12,10 @@ using namespace ls;
 
 REGISTER_ENTITY_RENDERER_TYPE(PlayerRenderer)
 
-PlayerRenderer::PlayerRenderer(Entity& owner) :
+PlayerRenderer::PlayerRenderer(Entity& owner, ComponentCommonData* commonData) :
     EntityRenderer(owner),
     m_playerOwner(nullptr),
-    m_texture(),
+    m_texture(ResourceManager::instance().get<sf::Texture>("Spritesheet")),
     m_sprites(GameConstants::tileFullSpriteSize * 5, GameConstants::tileFullSpriteSize * 2),
     m_metaSprites(GameConstants::tileFullSpriteSize * 4, GameConstants::tileFullSpriteSize * 8)
 {

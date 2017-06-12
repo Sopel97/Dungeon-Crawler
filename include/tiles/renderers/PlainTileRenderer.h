@@ -29,7 +29,7 @@ class InventorySlotView;
 class PlainTileRenderer : public TileRenderer
 {
 public:
-    PlainTileRenderer(Tile& owner);
+    PlainTileRenderer(Tile& owner, ComponentCommonData* commonData);
     PlainTileRenderer(const PlainTileRenderer& other, Tile& owner);
     ~PlainTileRenderer() override;
 
@@ -48,8 +48,7 @@ public:
     void onTileInstantiated() override;
     void onTileQuantityChanged(int oldQuantity, int newQuantity) override;
 
-    std::unique_ptr<ComponentCommonData> createCommonDataStorage() const;
-    void setCommonDataStorage(ComponentCommonData& commonData) override;
+    static std::unique_ptr<ComponentCommonData> createCommonDataStorage();
 
     std::unique_ptr<TileRenderer> clone(Tile& owner) const override;
 protected:

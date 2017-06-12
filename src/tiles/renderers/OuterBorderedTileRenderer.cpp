@@ -20,9 +20,9 @@ using namespace ls;
 
 REGISTER_TILE_RENDERER_TYPE(OuterBorderedTileRenderer)
 
-OuterBorderedTileRenderer::OuterBorderedTileRenderer(Tile& owner) :
+OuterBorderedTileRenderer::OuterBorderedTileRenderer(Tile& owner, ComponentCommonData* commonData) :
     TileRenderer(owner),
-    m_commonData(nullptr),
+    m_commonData(static_cast<CommonData*>(commonData)),
     m_currentAnimatedSprite(nullptr)
 {
 
@@ -162,13 +162,9 @@ void OuterBorderedTileRenderer::onTileQuantityChanged(int oldQuantity, int newQu
     m_currentAnimatedSprite = &(m_commonData->spriteSelector.onTileQuantityChanged(newQuantity, *m_currentAnimatedSprite));
 }
 
-std::unique_ptr<ComponentCommonData> OuterBorderedTileRenderer::createCommonDataStorage() const
+std::unique_ptr<ComponentCommonData> OuterBorderedTileRenderer::createCommonDataStorage()
 {
     return std::make_unique<CommonData>();
-}
-void OuterBorderedTileRenderer::setCommonDataStorage(ComponentCommonData& commonData)
-{
-    m_commonData = static_cast<CommonData*>(&commonData);
 }
 
 std::unique_ptr<TileRenderer> OuterBorderedTileRenderer::clone(Tile& owner) const

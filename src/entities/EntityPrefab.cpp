@@ -10,21 +10,12 @@ int EntityPrefab::m_lastId = -1;
 EntityPrefab::EntityPrefab(
     const ComponentFactory<Entity, EntityModel>& modelFac,
     const ComponentFactory<Entity, EntityRenderer>& rendererFac,
-    const ComponentFactory<Entity, EntityController>& controllerFac)
+    const ComponentFactory<Entity, EntityController>& controllerFac) :
+    m_entity(std::make_unique<Entity>(++m_lastId, modelFac, rendererFac, controllerFac)),
+    m_modelFactory(&modelFac),
+    m_rendererFactory(&rendererFac),
+    m_controllerFactory(&controllerFac)
 {
-    m_entity = std::make_unique<Entity>(++m_lastId, modelFac, rendererFac, controllerFac);
-
-    EntityModel& model = m_entity->model();
-    EntityRenderer& renderer = m_entity->renderer();
-    EntityController& controller = m_entity->controller();
-
-    m_modelCommonData = model.createCommonDataStorage();
-    m_rendererCommonData = renderer.createCommonDataStorage();
-    m_controllerCommonData = controller.createCommonDataStorage();
-
-    model.setCommonDataStorage(*m_modelCommonData);
-    renderer.setCommonDataStorage(*m_rendererCommonData);
-    controller.setCommonDataStorage(*m_controllerCommonData);
 }
 
 EntityPrefab::~EntityPrefab()

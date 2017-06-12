@@ -18,6 +18,7 @@ class TileRenderer;
 class TileController;
 class TileLocation;
 class InventorySlotView;
+class ComponentCommonData;
 
 class Tile
 {

@@ -4,9 +4,9 @@ using namespace ls;
 
 REGISTER_TILE_MODEL_TYPE(ContainerTileModel)
 
-ContainerTileModel::ContainerTileModel(Tile& owner) :
+ContainerTileModel::ContainerTileModel(Tile& owner, ComponentCommonData* commonData) :
     TileModel(owner),
-    m_commonData(nullptr),
+    m_commonData(static_cast<CommonData*>(commonData)),
     m_inventory(1)
 {
 
@@ -107,16 +107,10 @@ float ContainerTileModel::drag() const
 {
     return  m_commonData->drag;
 }
-std::unique_ptr<ComponentCommonData> ContainerTileModel::createCommonDataStorage() const
+std::unique_ptr<ComponentCommonData> ContainerTileModel::createCommonDataStorage()
 {
     return std::make_unique<CommonData>();
 }
-
-void ContainerTileModel::setCommonDataStorage(ComponentCommonData& commonData)
-{
-    m_commonData = static_cast<CommonData*>(&commonData);
-}
-
 
 std::unique_ptr<TileModel> ContainerTileModel::clone(Tile& owner) const
 {

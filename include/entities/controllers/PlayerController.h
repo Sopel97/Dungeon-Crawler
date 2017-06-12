@@ -16,7 +16,7 @@ class Player;
 class PlayerController : public EntityController
 {
 public:
-    PlayerController(Entity& owner);
+    PlayerController(Entity& owner, ComponentCommonData* commonData);
     PlayerController(Player& player, Entity& owner);
     PlayerController(const PlayerController& other, Entity& owner);
     ~PlayerController() override;

@@ -16,7 +16,7 @@ class Tile;
 class PlainTileModel : public TileModel
 {
 public:
-    PlainTileModel(Tile& owner);
+    PlainTileModel(Tile& owner, ComponentCommonData* commonData);
     PlainTileModel(const PlainTileModel& other, Tile& owner);
     ~PlainTileModel() override;
 
@@ -34,8 +34,7 @@ public:
 
     float drag() const;
 
-    std::unique_ptr<ComponentCommonData> createCommonDataStorage() const override;
-    void setCommonDataStorage(ComponentCommonData& commonData) override;
+    static std::unique_ptr<ComponentCommonData> createCommonDataStorage();
 
     std::unique_ptr<TileModel> clone(Tile& owner) const override;
 protected:
