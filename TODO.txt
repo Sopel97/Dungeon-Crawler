@@ -1,4 +1,5 @@
 
+0. child specifier for TileRandomizer to allow nested inventories
 
 0.9. consider passing tilestack to the render function
 1. consider moving maxQuantity to model
@@ -11,4 +12,11 @@
 
 24. player's line of sight using raycasting
 
-25. Consider storing normal textures and meta textures in one texture side to side
+IMPORTANT
+100.1 store normal textures and meta textures in one texture side to side (offset by 0.5) (or some king of 3d texture if possible)
+100.2 make world drawing cleaner, parametrize intermidiate targets' sizes
+100.3 increase 'tile height' range from 32 to 64 to allow tiles that spread on 2x2 - also requires changes in shader and more drawing range
+100.4 make it possible for tiles to specify what size they are (1 - 1x1, 2 - 2x2, more should not be needed)
+
+101. try dim light depending on height from the ground
+
