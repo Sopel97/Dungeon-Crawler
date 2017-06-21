@@ -6,27 +6,16 @@
 
 #include "Rng.h"
 
+#include "tiles/Tile.h"
+#include "tiles/models/TileModel.h"
+#include "Inventory.h"
+
 void TileRandomizer::loadFromConfiguration(ConfigurationNode& config)
 {
     m_parameters.clear();
     if (!config.exists()) return;
 
-    const int numEntries = config.length();
-
-    m_parameters.reserve(numEntries);
-    for (int i = 1; i <= numEntries; ++i)
-    {
-        ConfigurationNode entry = config[i];
-
-        TileRandomizationParameters params;
-        params.tilePrefab = ResourceManager::instance().get<TilePrefab>(entry["tileName"].get<std::string>());
-        params.exponent = entry["exponent"].getDefault<double>(1.0);
-        params.probability = entry["probability"].getDefault<double>(1.0);
-        params.min = entry["min"].get<int>();
-        params.max = entry["max"].get<int>();
-
-        m_parameters.emplace_back(params);
-    }
+    m_parameters = loadFromConfigurationPartial(config);
 }
 std::vector<TileStack> TileRandomizer::randomize() const
 {
@@ -63,5 +52,52 @@ TileStack TileRandomizer::randomize(const TileRandomizer::TileRandomizationParam
     if (quantity < min) quantity = min; //may happen due to floating point rounding errors
     if (quantity > max) quantity = max;
 
-    return TileStack{ params.tilePrefab->instantiate(), quantity };
+    TileStack tileStack = TileStack(params.tilePrefab->instantiate(), quantity);
+
+    if (!params.children.empty())
+    {
+        const std::vector<TileRandomizationParameters>& childrenParams = params.children;
+
+        Inventory& inventory = *(tileStack.tile().model().inventory());
+        int currentSlot = 0;
+        for (const auto& params : childrenParams)
+        {
+            TileStack tileStack = randomize(params);
+            if (tileStack.isEmpty()) continue;
+
+            inventory.at(currentSlot) = std::move(tileStack);
+            ++currentSlot;
+        }
+    }
+
+    return tileStack;
+}
+std::vector<TileRandomizer::TileRandomizationParameters> TileRandomizer::loadFromConfigurationPartial(ConfigurationNode& config)
+{
+    std::vector<TileRandomizationParameters> parameters;
+
+    const int numEntries = config.length();
+
+    parameters.reserve(numEntries);
+    for (int i = 1; i <= numEntries; ++i)
+    {
+        ConfigurationNode entry = config[i];
+
+        TileRandomizationParameters params;
+        params.tilePrefab = ResourceManager::instance().get<TilePrefab>(entry["tileName"].get<std::string>());
+        params.exponent = entry["exponent"].getDefault<double>(1.0);
+        params.probability = entry["probability"].getDefault<double>(1.0);
+        params.min = entry["min"].get<int>();
+        params.max = entry["max"].get<int>();
+
+        ConfigurationNode childConfig = entry["child"];
+        if (childConfig.exists())
+        {
+            params.children = loadFromConfigurationPartial(childConfig);
+        }
+
+        parameters.emplace_back(params);
+    }
+
+    return parameters;
 }

@@ -17,6 +17,7 @@ private:
         double probability;
         int min;
         int max;
+        std::vector<TileRandomizationParameters> children;
         // value = min + (max - min) * x^exponent, where x is uniformly distributed on [0, 1]
     };
 
@@ -28,4 +29,5 @@ public:
 
 private:
     TileStack randomize(const TileRandomizationParameters& params) const;
+    std::vector<TileRandomizationParameters> loadFromConfigurationPartial(ConfigurationNode& config);
 };
