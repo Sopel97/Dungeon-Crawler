@@ -104,6 +104,7 @@ void Root::loadAssets()
 {
     loadTextures();
     loadTiles();
+    loadEntities();
 
     ResourceManager::instance().load<sf::Font>("assets\\fonts\\standard_font2.ttf", "Font");
 }
@@ -121,6 +122,13 @@ void Root::loadTextures()
         {
             texture->setRepeated(isRepeated);
         }
+    }
+}
+void Root::loadEntities()
+{
+    for (const auto& entityPath : scanForFiles("assets\\entities\\", "*.entity"))
+    {
+        ResourceManager::instance().load<EntityPrefab>(entityPath);
     }
 }
 void Root::loadTiles()

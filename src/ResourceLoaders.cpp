@@ -90,7 +90,7 @@ std::pair<std::string, std::unique_ptr<EntityPrefab>> ResourceLoader<EntityPrefa
         throw std::runtime_error("No entity model with name " + modelName);
     }
 
-    std::string rendererName = entityConfig["view"].get<std::string>();
+    std::string rendererName = entityConfig["renderer"].get<std::string>();
     try
     {
         rendererFac = entityRenderers().at(rendererName).get();

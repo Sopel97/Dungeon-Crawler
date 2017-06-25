@@ -1,0 +1,9 @@
+entity = {
+    
+    name = "test",
+
+    model = "PlayerModel",
+    renderer = "PlayerRenderer",
+    controller = "PlayerController"
+    
+}
