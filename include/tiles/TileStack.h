@@ -12,6 +12,7 @@ private:
 
 public:
     TileStack();
+
     TileStack(std::unique_ptr<Tile>&& tile, int quantity);
 
     TileStack(const TileStack&) = delete; //could be done but it's better not to

@@ -7,6 +7,8 @@
 #include "TileStack.h"
 #include "Configuration.h"
 
+class Inventory;
+
 class TileRandomizer
 {
 private:
@@ -26,6 +28,7 @@ private:
 public:
     void loadFromConfiguration(ConfigurationNode& config);
     std::vector<TileStack> randomize() const;
+    void randomize(Inventory& targetInventory) const;
 
 private:
     TileStack randomize(const TileRandomizationParameters& params) const;

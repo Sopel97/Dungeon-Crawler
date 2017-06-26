@@ -37,7 +37,7 @@ public:
     float maxSpeed() const override;
 
     EntityModel::Direction directionOfMove() const override;
-    void setDirectionOfMove(EntityModel::Direction newDirection) override;
+    void setDirectionOfMovement(EntityModel::Direction newDirection) override;
 
     std::unique_ptr<EntityModel> clone(Entity& owner) const override;
 protected:

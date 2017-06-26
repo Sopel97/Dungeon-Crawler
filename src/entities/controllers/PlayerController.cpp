@@ -115,20 +115,20 @@ void PlayerController::move(const ls::Vec2F& factor, float dt)
     //set direction facing based on displacement if it there. If not just on velocity
     if(displacement.magnitude() > 0.1f)
     {
-        if(displacement.x < -0.01f && std::abs(displacement.x) > std::abs(displacement.y)) model.setDirectionOfMove(EntityModel::Direction::West);
-        if(displacement.x > 0.01f && std::abs(displacement.x) > std::abs(displacement.y))  model.setDirectionOfMove(EntityModel::Direction::East);
-        if(displacement.y < -0.01f && std::abs(displacement.y) > std::abs(displacement.x)) model.setDirectionOfMove(EntityModel::Direction::North);
-        if(displacement.y > 0.01f && std::abs(displacement.y) > std::abs(displacement.x))  model.setDirectionOfMove(EntityModel::Direction::South);
+        if(displacement.x < -0.01f && std::abs(displacement.x) > std::abs(displacement.y)) model.setDirectionOfMovement(EntityModel::Direction::West);
+        if(displacement.x > 0.01f && std::abs(displacement.x) > std::abs(displacement.y))  model.setDirectionOfMovement(EntityModel::Direction::East);
+        if(displacement.y < -0.01f && std::abs(displacement.y) > std::abs(displacement.x)) model.setDirectionOfMovement(EntityModel::Direction::North);
+        if(displacement.y > 0.01f && std::abs(displacement.y) > std::abs(displacement.x))  model.setDirectionOfMovement(EntityModel::Direction::South);
     }
     else
     {
         const Vec2F& velocity = model.velocity();
         if(velocity.magnitude() > 0.1f)
         {
-            if(velocity.x < -0.01f && std::abs(velocity.x) > std::abs(velocity.y)) model.setDirectionOfMove(EntityModel::Direction::West);
-            if(velocity.x > 0.01f && std::abs(velocity.x) > std::abs(velocity.y))  model.setDirectionOfMove(EntityModel::Direction::East);
-            if(velocity.y < -0.01f && std::abs(velocity.y) > std::abs(velocity.x)) model.setDirectionOfMove(EntityModel::Direction::North);
-            if(velocity.y > 0.01f && std::abs(velocity.y) > std::abs(velocity.x))  model.setDirectionOfMove(EntityModel::Direction::South);
+            if(velocity.x < -0.01f && std::abs(velocity.x) > std::abs(velocity.y)) model.setDirectionOfMovement(EntityModel::Direction::West);
+            if(velocity.x > 0.01f && std::abs(velocity.x) > std::abs(velocity.y))  model.setDirectionOfMovement(EntityModel::Direction::East);
+            if(velocity.y < -0.01f && std::abs(velocity.y) > std::abs(velocity.x)) model.setDirectionOfMovement(EntityModel::Direction::North);
+            if(velocity.y > 0.01f && std::abs(velocity.y) > std::abs(velocity.x))  model.setDirectionOfMovement(EntityModel::Direction::South);
         }
     }
 }

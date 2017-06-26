@@ -7,6 +7,8 @@
 
 #include "entities/EntityComponent.h"
 
+#include "tiles/TileStack.h"
+
 #include "../LibS/Geometry.h"
 
 class Entity;
@@ -39,13 +41,15 @@ public:
     virtual void setDistanceTravelled(float newDistanceTravelled);
     virtual int health() const;
     virtual int maxHealth() const;
+    virtual void setHealth(int newHealth);
+    virtual TileStack createCorpse() const;
 
     virtual ls::Vec2F displacementWhenMoved(float dt);
 
     virtual float maxSpeed() const;
 
     virtual Direction directionOfMove() const;
-    virtual void setDirectionOfMove(Direction newDirection);
+    virtual void setDirectionOfMovement(Direction newDirection);
 
     std::unique_ptr<EntityModel> clone(Entity& owner) const override;
 protected:

@@ -87,7 +87,7 @@ EntityModel::Direction PlayerModel::directionOfMove() const
 {
     return m_directionOfMove;
 }
-void PlayerModel::setDirectionOfMove(EntityModel::Direction newDirection)
+void PlayerModel::setDirectionOfMovement(EntityModel::Direction newDirection)
 {
     m_directionOfMove = newDirection;
 }

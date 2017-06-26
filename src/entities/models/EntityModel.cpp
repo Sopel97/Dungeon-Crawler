@@ -65,6 +65,14 @@ int EntityModel::maxHealth() const
 {
     return 1;
 }
+void EntityModel::setHealth(int newHealth)
+{
+
+}
+TileStack EntityModel::createCorpse() const
+{
+    return TileStack();
+}
 
 Vec2F EntityModel::displacementWhenMoved(float dt)
 {
@@ -80,7 +88,7 @@ EntityModel::Direction EntityModel::directionOfMove() const
 {
     return Direction::South;
 }
-void EntityModel::setDirectionOfMove(EntityModel::Direction newDirection)
+void EntityModel::setDirectionOfMovement(EntityModel::Direction newDirection)
 {
 
 }

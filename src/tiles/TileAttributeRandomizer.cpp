@@ -44,24 +44,8 @@ TileAttributeSet TileAttributeRandomizer::randomize() const
 }
 TileAttribute TileAttributeRandomizer::randomize(const TileAttributeRandomizer::AttributeRandomizationParameters& params) const
 {
-    static std::uniform_real_distribution<double> distr(0.0, 1.0);
+    const int value = Rng<std::ranlux48>::instance().sample(params.min, params.max, params.exponent, params.probability);
+    if(value == 0) return TileAttribute{ params.attributeId, 0 };
 
-    auto& rng = Rng<std::ranlux48>::instance().rng();
-
-    const double probability = params.probability;
-    const double r = distr(rng);
-    if (r > probability) return TileAttribute{ params.attributeId, 0 };
-
-    const double exponent = params.exponent;
-    const double min = params.min - 0.5; //because we round them to the nearest integer later
-    const double max = params.max + 0.5;
-    
-    const double t = std::pow(distr(rng), exponent);
-    const double value = min + (max - min)*t;
-
-    int intValue = static_cast<int>(std::round(value));
-    if (intValue < min) intValue = min; //may happen due to floating point rounding errors
-    if (intValue > max) intValue = max;
-
-    return TileAttribute{ params.attributeId, intValue };
+    return TileAttribute{ params.attributeId, value };
 }
