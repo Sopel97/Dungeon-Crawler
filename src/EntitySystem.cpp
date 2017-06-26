@@ -95,7 +95,33 @@ void EntitySystem::removeEntity(Entity& entityToRemove)
 }
 void EntitySystem::removeDeadEntities()
 {
-    m_entities.erase(std::remove_if(m_entities.begin(), m_entities.end(), [](std::unique_ptr<Entity>& ent) {return ent->model().health() <= 0; }), m_entities.end());
+    m_entities.erase(std::remove_if(m_entities.begin(), m_entities.end(), [this](std::unique_ptr<Entity>& ent) {return isDead(*ent); }), m_entities.end());
+}
+bool EntitySystem::isDead(const Entity& entity) const
+{
+    return entity.model().health() <= 0;
+}
+void EntitySystem::createCorpsesForDeadEntities(World& world) const
+{
+    MapLayer& map = world.map();
+
+    for (const std::unique_ptr<Entity>& ent : m_entities)
+    {
+        const Entity& entity = *ent;
+        if (isDead(entity))
+        {
+            const ls::Vec2F pos = entity.model().position();
+            const ls::Vec2I tilePos = world.worldToTile(pos);
+            TileStack corpse = createCorpse(entity);
+            if (corpse.isEmpty()) continue;
+
+            map.placeTile(std::move(corpse), tilePos.x, tilePos.y);
+        }
+    }
+}
+TileStack EntitySystem::createCorpse(const Entity& entity) const
+{
+    return entity.model().createCorpse();
 }
 
 void EntitySystem::updateEntities(World& world, float dt) //will also move them and resolve collisions
@@ -114,6 +140,7 @@ void EntitySystem::updateEntities(World& world, float dt) //will also move them 
 
     //TODO: make entities push each other
 
+    createCorpsesForDeadEntities(world);
     removeDeadEntities();
 }
 void EntitySystem::moveEntity(World& world, Entity& entity, float dt)
