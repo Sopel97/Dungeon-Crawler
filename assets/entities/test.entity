@@ -2,8 +2,18 @@ entity = {
     
     name = "test",
 
-    model = "PlayerModel",
-    renderer = "PlayerRenderer",
-    controller = "PlayerController"
+    model = "PlainEntityModel",
+    renderer = "MovingEntityRenderer",
+    controller = "EntityController",
+
+    maxHealth = 100,
+
+    texture = "Spritesheet",
+    metaTexture = "SpritesheetMeta",
+    sprites = {238, 272},
+
+    corpseTile = "Bag",
+
+    lootRandomizationGuidelines = {}
     
 }

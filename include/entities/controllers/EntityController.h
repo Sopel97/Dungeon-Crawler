@@ -16,6 +16,7 @@ class EntityController : public EntityComponent<EntityController, Entity>
 {
 public:
     EntityController(Entity& owner);
+    EntityController(Entity& owner, ComponentCommonData* commonData);
     EntityController(const EntityController& other, Entity& owner);
     ~EntityController() override;
 

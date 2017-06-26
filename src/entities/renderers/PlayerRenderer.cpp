@@ -34,7 +34,8 @@ PlayerRenderer::PlayerRenderer(Player& player, Entity& owner) :
 PlayerRenderer::PlayerRenderer(const PlayerRenderer& other, Entity& owner) :
     EntityRenderer(other, owner),
     m_playerOwner(other.m_playerOwner),
-    m_sprites(other.m_sprites)
+    m_sprites(other.m_sprites),
+    m_metaSprites(other.m_metaSprites)
 {
 
 }
