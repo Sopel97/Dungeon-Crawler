@@ -35,6 +35,38 @@ Tile::Tile(const Tile& other) :
     m_id(other.m_id)
 {
 }
+Tile::Tile(Tile&& other) :
+    m_model(std::move(other.m_model)),
+    m_renderer(std::move(other.m_renderer)),
+    m_controller(std::move(other.m_controller)),
+    m_id(other.m_id)
+{
+    m_model->setOwner(this);
+    m_renderer->setOwner(this);
+    m_controller->setOwner(this);
+}
+Tile& Tile::operator=(const Tile& other)
+{
+    m_model = other.m_model->clone(*this);
+    m_renderer = other.m_renderer->clone(*this);
+    m_controller = other.m_controller->clone(*this);
+    m_id = other.m_id;
+
+    return *this;
+}
+Tile& Tile::operator=(Tile&& other)
+{
+    m_model = std::move(other.m_model);
+    m_renderer = std::move(other.m_renderer);
+    m_controller = std::move(other.m_controller);
+    m_id = other.m_id;
+
+    m_model->setOwner(this);
+    m_renderer->setOwner(this);
+    m_controller->setOwner(this);
+
+    return *this;
+}
 Tile::~Tile()
 {
 

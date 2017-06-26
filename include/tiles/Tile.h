@@ -30,6 +30,9 @@ public:
         const ComponentFactory<Tile, TileController>& controllerFac);
     Tile(); // temporary for creating 'empty' tile, used to avoid checking if tile exists, tile column just returns this
     Tile(const Tile& other);
+    Tile(Tile&& other);
+    Tile& operator=(const Tile& other);
+    Tile& operator=(Tile&& other);
     ~Tile();
 
     void loadFromConfiguration(ConfigurationNode& config);

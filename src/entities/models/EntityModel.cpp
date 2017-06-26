@@ -57,6 +57,14 @@ void EntityModel::setDistanceTravelled(float newDistanceTravelled)
 {
 
 }
+int EntityModel::health() const
+{
+    return 1;
+}
+int EntityModel::maxHealth() const
+{
+    return 1;
+}
 
 Vec2F EntityModel::displacementWhenMoved(float dt)
 {

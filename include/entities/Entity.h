@@ -32,8 +32,9 @@ public:
         std::unique_ptr<EntityRenderer> renderer,
         std::unique_ptr<EntityController> controller);
     Entity(const Entity& other);
-    Entity(Entity&&) = default;
-    Entity& operator=(Entity&&) = default;
+    Entity(Entity&& other);
+    Entity& operator=(const Entity& other);
+    Entity& operator=(Entity&& other);
     ~Entity();
 
     void loadFromConfiguration(ConfigurationNode& config);

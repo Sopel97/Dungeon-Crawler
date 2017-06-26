@@ -37,6 +37,8 @@ public:
     virtual void setVelocity(const ls::Vec2F& newVelocity);
     virtual float distanceTravelled() const;
     virtual void setDistanceTravelled(float newDistanceTravelled);
+    virtual int health() const;
+    virtual int maxHealth() const;
 
     virtual ls::Vec2F displacementWhenMoved(float dt);
 

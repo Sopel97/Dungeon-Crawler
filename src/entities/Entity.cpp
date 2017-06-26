@@ -40,6 +40,38 @@ Entity::Entity(const Entity& other) :
     m_id(other.m_id)
 {
 }
+Entity::Entity(Entity&& other) :
+    m_model(std::move(other.m_model)),
+    m_renderer(std::move(other.m_renderer)),
+    m_controller(std::move(other.m_controller)),
+    m_id(other.m_id)
+{
+    m_model->setOwner(this);
+    m_renderer->setOwner(this);
+    m_controller->setOwner(this);
+}
+Entity& Entity::operator=(const Entity& other)
+{
+    m_model = other.m_model->clone(*this);
+    m_renderer = other.m_renderer->clone(*this);
+    m_controller = other.m_controller->clone(*this);
+    m_id = other.m_id;
+
+    return *this;
+}
+Entity& Entity::operator=(Entity&& other)
+{
+    m_model = std::move(other.m_model);
+    m_renderer = std::move(other.m_renderer);
+    m_controller = std::move(other.m_controller);
+    m_id = other.m_id;
+
+    m_model->setOwner(this);
+    m_renderer->setOwner(this);
+    m_controller->setOwner(this);
+
+    return *this;
+}
 Entity::~Entity()
 {
 
