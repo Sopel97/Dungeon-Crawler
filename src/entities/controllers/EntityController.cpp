@@ -1,15 +1,6 @@
 #include "entities/controllers/EntityController.h"
 
-#include "ResourceLoaders.h"
-
-REGISTER_ENTITY_CONTROLLER_TYPE(EntityController)
-
 EntityController::EntityController(Entity& owner) :
-    EntityComponent(owner)
-{
-
-}
-EntityController::EntityController(Entity& owner, ComponentCommonData* commonData) :
     EntityComponent(owner)
 {
 

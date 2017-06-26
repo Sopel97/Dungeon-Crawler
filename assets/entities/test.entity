@@ -4,7 +4,7 @@ entity = {
 
     model = "PlainEntityModel",
     renderer = "MovingEntityRenderer",
-    controller = "EntityController",
+    controller = "StationaryEntityController",
 
     maxHealth = 100,
 
@@ -14,6 +14,27 @@ entity = {
 
     corpseTile = "Bag",
 
-    lootRandomizationGuidelines = {}
-    
+    lootRandomizationGuidelines = {
+        {
+            tileName = "Platinum Coin",
+            exponent = 2.0,
+            probability = 1.0,
+            min = 0,
+            max = 10
+        },
+        {
+            tileName = "Bag",
+            exponent = 1.0,
+            probability = 0.5,
+            min = 1,
+            max = 1,
+            child = {
+                tileName = "Iron Axe",
+                exponent = 1.0,
+                probability = 1.0,
+                min = 1,
+                max = 1
+            }
+        }
+    }
 }
