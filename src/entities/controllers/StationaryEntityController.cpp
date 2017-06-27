@@ -38,6 +38,7 @@ void StationaryEntityController::loadFromConfiguration(ConfigurationNode& config
 
 void StationaryEntityController::update(World& world, float dt)
 {
+    m_owner->model().setHealth(m_owner->model().health() - 1);
 }
 
 void StationaryEntityController::move(const ls::Vec2F& factor, float dt)

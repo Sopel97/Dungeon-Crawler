@@ -28,12 +28,21 @@ entity = {
             probability = 0.5,
             min = 1,
             max = 1,
-            child = {
-                tileName = "Iron Axe",
-                exponent = 1.0,
-                probability = 1.0,
-                min = 1,
-                max = 1
+            children = {
+                {
+                    tileName = "Iron Axe",
+                    exponent = 1.0,
+                    probability = 1.0,
+                    min = 1,
+                    max = 1
+                },
+                {
+                    tileName = "Steel Helmet",
+                    exponent = 1.0,
+                    probability = 0.5,
+                    min = 1,
+                    max = 1
+                }
             }
         }
     }

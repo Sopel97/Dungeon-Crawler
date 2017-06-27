@@ -85,7 +85,7 @@ std::vector<TileRandomizer::TileRandomizationParameters> TileRandomizer::loadFro
         params.min = entry["min"].get<int>();
         params.max = entry["max"].get<int>();
 
-        ConfigurationNode childConfig = entry["child"];
+        ConfigurationNode childConfig = entry["children"];
         if (childConfig.exists())
         {
             params.children = loadFromConfigurationPartial(childConfig);

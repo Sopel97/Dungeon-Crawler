@@ -12,6 +12,7 @@
 #include "TileLocation.h"
 
 #include "entities/Entity.h"
+#include "entities/EntityPrefab.h"
 #include "entities/models/EntityModel.h"
 #include "entities/renderers/EntityRenderer.h"
 #include "entities/controllers/EntityController.h"
@@ -603,4 +604,17 @@ auto World::onMouseButtonReleased(sf::Event::MouseButtonEvent& event, EventConte
     }
 
     return EventResult{}.setTakeFocus().setConsumeEvent();
+}
+auto World::onKeyPressed(sf::Event::KeyEvent& event, EventContext context) 
+-> EventResult
+{
+    if (event.code == sf::Keyboard::Num1)
+    {
+        const ls::Vec2I mousePos(sf::Mouse::getPosition(m_windowSpaceManager.window()).x, sf::Mouse::getPosition(m_windowSpaceManager.window()).y);
+        const ls::Vec2F worldPos = screenToWorld(mousePos);
+        m_entitySystem.emplaceEntity(ResourceManager::instance().get<EntityPrefab>("test").get(), worldPos);
+    
+        return EventResult().setConsumeEvent().setTakeFocus(false);
+    }
+    return EventResult().setConsumeEvent(false).setTakeFocus(false);
 }

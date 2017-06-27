@@ -70,8 +70,9 @@ public:
     int tileManhattanDistance(const ls::Vec2I& from, const ls::Vec2I& to) const;
     int tileManhattanDistanceFromPlayer(const ls::Vec2I& to) const;
 
-    EventResult onMouseButtonPressed(sf::Event::MouseButtonEvent& event, EventContext context);
-    EventResult onMouseButtonReleased(sf::Event::MouseButtonEvent& event, EventContext context);
+    EventResult onMouseButtonPressed(sf::Event::MouseButtonEvent& event, EventContext context) override;
+    EventResult onMouseButtonReleased(sf::Event::MouseButtonEvent& event, EventContext context) override;
+    EventResult onKeyPressed(sf::Event::KeyEvent& event, EventContext context) override;
 
 protected:
     Root& m_root;

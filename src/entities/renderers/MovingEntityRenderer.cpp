@@ -23,6 +23,8 @@ MovingEntityRenderer::MovingEntityRenderer(Entity& owner, ComponentCommonData* c
 
 MovingEntityRenderer::MovingEntityRenderer(const MovingEntityRenderer& other, Entity& owner) :
     EntityRenderer(other, owner),
+    m_texture(other.m_texture),
+    m_metaTexture(other.m_metaTexture),
     m_sprites(other.m_sprites)
 {
 
