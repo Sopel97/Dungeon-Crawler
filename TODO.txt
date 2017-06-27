@@ -20,3 +20,4 @@ IMPORTANT
 
 101. try dim light depending on height from the ground
 
+102. '%' sign missing in tibia font

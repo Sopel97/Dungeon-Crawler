@@ -24,7 +24,7 @@ TileDescription TileDescriptionGenerator::generate(const Tile& tile)
     const TileAttributeSet& attributes = tile.model().attributes();
     for (const auto& attribute : attributes)
     {
-        desc.emplaceLine(TileAttributeIdHelper::enumToString(attribute.id) + std::string(": ") + std::to_string(attribute.value), sf::Color::Green, sf::Text::Style::Regular, 16);
+        desc.emplaceLine(attribute.formatToString(), attribute.color(), sf::Text::Style::Regular, 16);
     }
 
     return desc;
