@@ -1,4 +1,4 @@
-#include "..\..\include\entities\EntityPrefab.h"
+#include "entities/EntityPrefab.h"
 
 #include "entities/controllers/EntityController.h"
 #include "entities/models/EntityModel.h"

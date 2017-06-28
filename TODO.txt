@@ -5,6 +5,16 @@
 1. consider moving maxQuantity to model
 2.5. rename commondata to shareddata?
 
+PROBABLY NEXT:
+3. projectile system (structure similar to entity system), projectiles for melee weapons and other things like arrows.
+3.1 WeaponTileController - arrows use that to
+3.1.1 parametrised by projectile to spawn on attack request or ammo type (then ammo is requested from entity and if it matches then attack if deferred to that ammo) (weapons can have multiple valid ammo types)
+3.1.2 ammo types (probably runtime integer)
+3.1.3 attack request for tile controller takes attacking entity and world
+3.2 projectiles should not be hard bound to entities because projectile may outlive its owner
+3.2.1 projectiles should receive event when owner is deleted because some things may still rely on owner.
+3.3 projectiles receive a parent entity and hinted position through onProjectileInstantiated function (and therfore instantiate too) that is called from Projectile
+
 7. Clear world generation code //little priority since it is waiting for libs still
 
 15. Pass RenderStates by CONST reference
