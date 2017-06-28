@@ -103,6 +103,7 @@ void Root::processAsyncKeyboardInput(float dt)
 void Root::loadAssets()
 {
     loadTextures();
+    loadProjectiles();
     loadTiles();
     loadEntities();
 
@@ -124,11 +125,11 @@ void Root::loadTextures()
         }
     }
 }
-void Root::loadEntities()
+void Root::loadProjectiles()
 {
-    for (const auto& entityPath : scanForFiles("assets\\entities\\", "*.entity"))
+    for (const auto& projectilePath : scanForFiles("assets\\projectiles\\", "*.proj"))
     {
-        ResourceManager::instance().load<EntityPrefab>(entityPath);
+        ResourceManager::instance().load<ProjectilePrefab>(projectilePath);
     }
 }
 void Root::loadTiles()
@@ -136,6 +137,13 @@ void Root::loadTiles()
     for (const auto& tilePath : scanForFiles("assets\\tiles\\", "*.tile"))
     {
         ResourceManager::instance().load<TilePrefab>(tilePath);
+    }
+}
+void Root::loadEntities()
+{
+    for (const auto& entityPath : scanForFiles("assets\\entities\\", "*.ent"))
+    {
+        ResourceManager::instance().load<EntityPrefab>(entityPath);
     }
 }
 

@@ -53,12 +53,11 @@ std::pair<std::string, std::unique_ptr<TilePrefab>> ResourceLoader<TilePrefab>::
         throw std::runtime_error("No tile controller with name " + controllerName);
     }
 
-    std::unique_ptr<TilePrefab> tile = std::make_unique<TilePrefab>
-        (
-            *modelFac,
-            *rendererFac,
-            *controllerFac
-            );
+    std::unique_ptr<TilePrefab> tile = std::make_unique<TilePrefab>(
+        *modelFac,
+        *rendererFac,
+        *controllerFac
+    );
 
     tile->loadFromConfiguration(tileConfig);
 
@@ -110,12 +109,11 @@ std::pair<std::string, std::unique_ptr<EntityPrefab>> ResourceLoader<EntityPrefa
         throw std::runtime_error("No entity controller with name " + controllerName);
     }
 
-    std::unique_ptr<EntityPrefab> entity = std::make_unique<EntityPrefab>
-        (
-            *modelFac,
-            *rendererFac,
-            *controllerFac
-            );
+    std::unique_ptr<EntityPrefab> entity = std::make_unique<EntityPrefab>(
+        *modelFac,
+        *rendererFac,
+        *controllerFac
+    );
 
     entity->loadFromConfiguration(entityConfig);
 
@@ -124,6 +122,62 @@ std::pair<std::string, std::unique_ptr<EntityPrefab>> ResourceLoader<EntityPrefa
     });
 
     return std::make_pair(entityName, std::move(entity));
+}
+
+std::pair<std::string, std::unique_ptr<ProjectilePrefab>> ResourceLoader<ProjectilePrefab>::load(const std::string& path)
+{
+    Configuration config = Configuration(path);
+    ConfigurationNode projectileConfig = config["projectile"];
+
+    std::string projectileName = projectileConfig["name"].get<std::string>();
+
+    ComponentFactory<Projectile, ProjectileModel>* modelFac = nullptr;
+    ComponentFactory<Projectile, ProjectileRenderer>* rendererFac = nullptr;
+    ComponentFactory<Projectile, ProjectileController>* controllerFac = nullptr;
+
+    std::string modelName = projectileConfig["model"].get<std::string>();
+    try
+    {
+        modelFac = projectileModels().at(modelName).get();
+    }
+    catch (std::out_of_range&)
+    {
+        throw std::runtime_error("No projectile model with name " + modelName);
+    }
+
+    std::string rendererName = projectileConfig["renderer"].get<std::string>();
+    try
+    {
+        rendererFac = projectileRenderers().at(rendererName).get();
+    }
+    catch (std::out_of_range&)
+    {
+        throw std::runtime_error("No projectile renderer with name " + rendererName);
+    }
+
+    std::string controllerName = projectileConfig["controller"].get<std::string>();
+    try
+    {
+        controllerFac = projectileControllers().at(controllerName).get();
+    }
+    catch (std::out_of_range&)
+    {
+        throw std::runtime_error("No projectile controller with name " + controllerName);
+    }
+
+    std::unique_ptr<ProjectilePrefab> projectile = std::make_unique<ProjectilePrefab>(
+        *modelFac,
+        *rendererFac,
+        *controllerFac
+    );
+
+    projectile->loadFromConfiguration(projectileConfig);
+
+    Logger::instance().logLazy(Logger::Priority::Info, [&]()->std::string {return
+        "Loaded projectile: " + projectileName + ";model: " + modelName + ";renderer: " + rendererName + "; controller: " + controllerName;
+    });
+
+    return std::make_pair(projectileName, std::move(projectile));
 }
 
 std::pair<std::string, std::unique_ptr<sf::Font>> ResourceLoader<sf::Font>::load(const std::string& path)

@@ -14,6 +14,12 @@
 #include "entities/renderers/EntityRenderer.h"
 #include "entities/controllers/EntityController.h"
 
+#include "projectiles/Projectile.h"
+#include "projectiles/ProjectilePrefab.h"
+#include "projectiles/models/ProjectileModel.h"
+#include "projectiles/renderers/ProjectileRenderer.h"
+#include "projectiles/controllers/ProjectileController.h"
+
 #include "Configuration.h"
 
 #include "Logger.h"
@@ -42,19 +48,19 @@ public:
 };
 
 #define REGISTER_TILE_MODEL_TYPE(TYPE) \
-    namespace ___TileTypeRegistering \
+    namespace ___TileModelTypeRegistering \
     { \
         const ResourceLoader<TilePrefab>::TileModelTypeRegistrar<TYPE> TYPE ## _model_var (#TYPE); \
     }
 
 #define REGISTER_TILE_RENDERER_TYPE(TYPE)  \
-    namespace ___TileTypeRegistering \
+    namespace ___TileRendererTypeRegistering \
     { \
         const ResourceLoader<TilePrefab>::TileRendererTypeRegistrar<TYPE> TYPE ## _renderer_var (#TYPE); \
     }
 
 #define REGISTER_TILE_CONTROLLER_TYPE(TYPE)  \
-    namespace ___TileTypeRegistering \
+    namespace ___TileControllerTypeRegistering \
     { \
         const ResourceLoader<TilePrefab>::TileControllerTypeRegistrar<TYPE> TYPE ## _controller_var (#TYPE); \
     }
@@ -126,19 +132,19 @@ protected:
 };
 
 #define REGISTER_ENTITY_MODEL_TYPE(TYPE) \
-    namespace ___EntityTypeRegistering \
+    namespace ___EntityModelTypeRegistering \
     { \
         const ResourceLoader<EntityPrefab>::EntityModelTypeRegistrar<TYPE> TYPE ## _model_var (#TYPE); \
     }
 
 #define REGISTER_ENTITY_RENDERER_TYPE(TYPE)  \
-    namespace ___EntityTypeRegistering \
+    namespace ___EntityRendererTypeRegistering \
     { \
         const ResourceLoader<EntityPrefab>::EntityRendererTypeRegistrar<TYPE> TYPE ## _renderer_var (#TYPE); \
     }
 
 #define REGISTER_ENTITY_CONTROLLER_TYPE(TYPE)  \
-    namespace ___EntityTypeRegistering \
+    namespace ___EntityControllerTypeRegistering \
     { \
         const ResourceLoader<EntityPrefab>::EntityControllerTypeRegistrar<TYPE> TYPE ## _controller_var (#TYPE); \
     } 
@@ -206,6 +212,90 @@ protected:
     {
         static std::map<std::string, std::unique_ptr<EntityControllerFactory>> _entityControllers;
         return _entityControllers;
+    }
+};
+
+#define REGISTER_PROJECTILE_MODEL_TYPE(TYPE) \
+    namespace ___ProjectileModelTypeRegistering \
+    { \
+        const ResourceLoader<ProjectilePrefab>::ProjectileModelTypeRegistrar<TYPE> TYPE ## _model_var (#TYPE); \
+    }
+
+#define REGISTER_PROJECTILE_RENDERER_TYPE(TYPE)  \
+    namespace ___ProjectileRendererTypeRegistering \
+    { \
+        const ResourceLoader<ProjectilePrefab>::ProjectileRendererTypeRegistrar<TYPE> TYPE ## _renderer_var (#TYPE); \
+    }
+
+#define REGISTER_PROJECTILE_CONTROLLER_TYPE(TYPE)  \
+    namespace ___ProjectileControllerTypeRegistering \
+    { \
+        const ResourceLoader<ProjectilePrefab>::ProjectileControllerTypeRegistrar<TYPE> TYPE ## _controller_var (#TYPE); \
+    } 
+
+template <>
+class ResourceLoader<ProjectilePrefab>
+{
+public:
+
+    template<class T>
+    struct ProjectileModelTypeRegistrar
+    {
+        ProjectileModelTypeRegistrar(const std::string& name)
+        {
+            Logger::instance().logLazy(Logger::Priority::Info, [&]()->std::string {return
+                "Registered projectile model type: " + name;
+            });
+            ResourceLoader<ProjectilePrefab>::projectileModels().insert(std::make_pair(name, std::make_unique<ComponentFactory<Projectile, ProjectileModel, T>>()));
+        }
+    };
+
+    template<class T>
+    struct ProjectileRendererTypeRegistrar
+    {
+        ProjectileRendererTypeRegistrar(const std::string& name)
+        {
+            Logger::instance().logLazy(Logger::Priority::Info, [&]()->std::string {return
+                "Registered projectile renderer type: " + name;
+            });
+            ResourceLoader<ProjectilePrefab>::projectileRenderers().insert(std::make_pair(name, std::make_unique<ComponentFactory<Projectile, ProjectileRenderer, T>>()));
+        }
+    };
+
+    template<class T>
+    struct ProjectileControllerTypeRegistrar
+    {
+        ProjectileControllerTypeRegistrar(const std::string& name)
+        {
+            Logger::instance().logLazy(Logger::Priority::Info, [&]()->std::string {return
+                "Registered projectile controller type: " + name;
+            });
+            ResourceLoader<ProjectilePrefab>::projectileControllers().insert(std::make_pair(name, std::make_unique<ComponentFactory<Projectile, ProjectileController, T>>()));
+        }
+    };
+
+    static std::pair<std::string, std::unique_ptr<ProjectilePrefab>> load(const std::string& path); //should return nullptr when resource was not loaded
+
+protected:
+
+    using ProjectileModelFactory = ComponentFactory<Projectile, ProjectileModel>;
+    using ProjectileRendererFactory = ComponentFactory<Projectile, ProjectileRenderer>;
+    using ProjectileControllerFactory = ComponentFactory<Projectile, ProjectileController>;
+
+    static std::map<std::string, std::unique_ptr<ProjectileModelFactory>>& projectileModels() //to ensure that they are created during registation process. (When they are static members they get defined too late)
+    {
+        static std::map<std::string, std::unique_ptr<ProjectileModelFactory>> _projectileModels;
+        return _projectileModels;
+    }
+    static std::map<std::string, std::unique_ptr<ProjectileRendererFactory>>& projectileRenderers()
+    {
+        static std::map<std::string, std::unique_ptr<ProjectileRendererFactory>> _projectileRenderers;
+        return _projectileRenderers;
+    }
+    static std::map<std::string, std::unique_ptr<ProjectileControllerFactory>>& projectileControllers()
+    {
+        static std::map<std::string, std::unique_ptr<ProjectileControllerFactory>> _projectileControllers;
+        return _projectileControllers;
     }
 };
 
