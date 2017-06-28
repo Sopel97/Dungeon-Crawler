@@ -31,6 +31,7 @@ public:
     void setVelocity(const ls::Vec2F& newVelocity) override;
     float distanceTravelled() const override;
     void setDistanceTravelled(float newDistanceTravelled) override;
+    EntityGroupId group() const override;
 
     ls::Vec2F displacementWhenMoved(float dt) override;
 

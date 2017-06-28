@@ -73,6 +73,10 @@ TileStack EntityModel::createCorpse() const
 {
     return TileStack();
 }
+EntityGroupId EntityModel::group() const
+{
+    return EntityGroupId::Friendly;
+}
 
 Vec2F EntityModel::displacementWhenMoved(float dt)
 {

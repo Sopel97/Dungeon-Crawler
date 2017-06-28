@@ -13,7 +13,6 @@
 class Entity;
 class Player;
 
-
 // TODO: common data storages for some entity components
 class PlainEntityModel : public EntityModel
 {
@@ -37,6 +36,7 @@ public:
     int maxHealth() const override;
     void setHealth(int newHealth) override;
     TileStack createCorpse() const override;
+    EntityGroupId group() const override;
 
     ls::Vec2F displacementWhenMoved(float dt) override;
 
@@ -53,6 +53,7 @@ protected:
     float m_distanceTravelled;
     int m_health;
     int m_maxHealth;
+    EntityGroupId m_group;
     ResourceHandle<TilePrefab> m_corpseTile;
     TileRandomizer m_lootRandomizer;
 };

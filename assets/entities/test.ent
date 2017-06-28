@@ -8,6 +8,8 @@ entity = {
 
     maxHealth = 100,
 
+    group = "Unfriendly",
+
     texture = "Spritesheet",
     metaTexture = "SpritesheetMeta",
     sprites = {238, 272},

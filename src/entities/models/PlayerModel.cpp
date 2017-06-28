@@ -72,6 +72,10 @@ void PlayerModel::setDistanceTravelled(float newDistanceTravelled)
 {
     m_distanceTravelled = newDistanceTravelled;
 }
+EntityGroupId PlayerModel::group() const
+{
+    return EntityGroupId::Friendly;
+}
 
 Vec2F PlayerModel::displacementWhenMoved(float dt)
 {

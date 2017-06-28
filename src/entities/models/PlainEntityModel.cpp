@@ -10,6 +10,7 @@ PlainEntityModel::PlainEntityModel(Entity& owner, ComponentCommonData* commonDat
     m_distanceTravelled(0.0f),
     m_health(1),
     m_maxHealth(1),
+    m_group(EntityGroupId::Unfriendly),
     m_corpseTile(nullptr)
 {
 
@@ -20,6 +21,7 @@ PlainEntityModel::PlainEntityModel(const PlainEntityModel& other, Entity& owner)
     m_distanceTravelled(other.m_distanceTravelled),
     m_health(other.m_health),
     m_maxHealth(other.m_maxHealth),
+    m_group(other.m_group),
     m_corpseTile(other.m_corpseTile),
     m_lootRandomizer(other.m_lootRandomizer)
 {
@@ -35,6 +37,7 @@ void PlainEntityModel::loadFromConfiguration(ConfigurationNode& config)
     m_health = m_maxHealth = config["maxHealth"].get<int>();
     m_corpseTile = ResourceManager::instance().get<TilePrefab>(config["corpseTile"].get<std::string>());
     m_lootRandomizer.loadFromConfiguration(config["lootRandomizationGuidelines"]);
+    m_group = EntityGroupIdHelper::stringToEnum(config["group"].get<std::string>());
 }
 
 bool PlainEntityModel::hasCollider() const
@@ -88,6 +91,10 @@ TileStack PlainEntityModel::createCorpse() const
     TileStack corpse = TileStack(m_corpseTile->instantiate(), 1);
     m_lootRandomizer.randomize(*(corpse.tile().model().inventory()));
     return corpse;
+}
+EntityGroupId PlainEntityModel::group() const
+{
+    return m_group;
 }
 
 Vec2F PlainEntityModel::displacementWhenMoved(float dt)
