@@ -36,9 +36,9 @@ void TileRenderer::draw(sf::RenderTarget& renderTarget, sf::RenderStates& render
 
 }
 
-int TileRenderer::innerBorderGroup() const
+TileInnerBorderGroupType TileRenderer::innerBorderGroup() const
 {
-    return -1;
+    return TileInnerBorderGroupType();
 }
 
 int TileRenderer::outerBorderPriority() const

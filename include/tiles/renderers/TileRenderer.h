@@ -2,6 +2,8 @@
 
 #include "Configuration.h"
 
+#include "CompactIdentifier.h"
+
 #include "ComponentCommonData.h"
 #include "tiles/TileComponent.h"
 
@@ -16,6 +18,9 @@ class MapLayer;
 class Tile;
 class TileLocation;
 class InventorySlotView;
+
+struct InnerBorderGroup;
+using TileInnerBorderGroupType = CompactIdentifier<InnerBorderGroup, std::string, int>;
 
 class TileRenderer : public TileComponent<TileRenderer, Tile>
 	//must be functional (ie. all methods must return resonable values and there is no pure virtual member functions)
@@ -32,7 +37,7 @@ public:
 
     virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const InventorySlotView& slot) const;
 
-    virtual int innerBorderGroup() const;
+    virtual TileInnerBorderGroupType innerBorderGroup() const;
     virtual int outerBorderPriority() const;
     virtual bool hasOuterBorder() const;
     virtual bool coversOuterBorders() const;

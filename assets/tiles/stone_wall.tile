@@ -1,7 +1,7 @@
 tile = {
         
     name = "Stone wall",
-    displayedName = "Dirt-stone Wall",
+    displayedName = "Stone wall",
     
     model = "PlainTileModel",
     renderer = "InnerBorderedWallTileRenderer",
@@ -12,7 +12,7 @@ tile = {
     
     spriteSet = {34, 0},
 
-    innerBorderGroup = 1,
+    innerBorderGroup = "Stone wall",
 	
 	collider = {
 		{0.0, 0.0},

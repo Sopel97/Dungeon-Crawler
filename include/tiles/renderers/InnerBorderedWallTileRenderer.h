@@ -33,7 +33,7 @@ public:
     void drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const override;
 
     const sf::Texture& texture() const;
-    int innerBorderGroup() const override;
+    TileInnerBorderGroupType innerBorderGroup() const override;
 
     bool isTall() const override;
 
@@ -66,7 +66,7 @@ protected:
         ResourceHandle<sf::Texture> texture;
         ResourceHandle<sf::Texture> metaTexture;
 
-        int innerBorderGroup;
+        TileInnerBorderGroupType innerBorderGroup;
     };
     CommonData* m_commonData;
 

@@ -66,7 +66,7 @@ void InnerBorderedWallTileRenderer::loadFromConfiguration(ConfigurationNode& con
     m_commonData->spriteSet.outerTopLeft = spriteSet + Vec2I(2 * GameConstants::tileFullSpriteSize, 2 * GameConstants::tileFullSpriteSize);
     m_commonData->spriteSet.innerBottomRight = spriteSet + Vec2I(0 * GameConstants::tileFullSpriteSize, 0 * GameConstants::tileFullSpriteSize);
 
-    m_commonData->innerBorderGroup = config["innerBorderGroup"].get<int>();
+    m_commonData->innerBorderGroup = config["innerBorderGroup"].get<std::string>();
 }
 
 void InnerBorderedWallTileRenderer::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const
@@ -206,7 +206,7 @@ const sf::Texture& InnerBorderedWallTileRenderer::texture() const
 {
     return m_commonData->texture.get();
 }
-int InnerBorderedWallTileRenderer::innerBorderGroup() const
+TileInnerBorderGroupType InnerBorderedWallTileRenderer::innerBorderGroup() const
 {
     return m_commonData->innerBorderGroup;
 }
