@@ -49,6 +49,8 @@ public:
 
     virtual ls::Vec2F displacementWhenMoved(float dt);
 
+    void onEntityInstantiated(const ls::Vec2F& pos) override;
+
     virtual float maxSpeed() const;
 
     virtual Direction directionOfMove() const;

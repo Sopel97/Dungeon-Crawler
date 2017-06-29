@@ -122,11 +122,11 @@ int Entity::id() const
 {
     return m_id;
 }
-void Entity::onEntityInstantiated()
+void Entity::onEntityInstantiated(const ls::Vec2F& pos)
 {
-    m_model->onEntityInstantiated();
-    m_renderer->onEntityInstantiated();
-    m_controller->onEntityInstantiated();
+    m_model->onEntityInstantiated(pos);
+    m_renderer->onEntityInstantiated(pos);
+    m_controller->onEntityInstantiated(pos);
 }
 void Entity::onEntityCloned()
 {
@@ -143,11 +143,11 @@ std::unique_ptr<Entity> Entity::clone() const
 
     return entityClone;
 }
-std::unique_ptr<Entity> Entity::instantiate() const
+std::unique_ptr<Entity> Entity::instantiate(const ls::Vec2F& pos) const
 {
     std::unique_ptr<Entity> entityClone = std::make_unique<Entity>(*this);
 
-    entityClone->onEntityInstantiated();
+    entityClone->onEntityInstantiated(pos);
 
     return entityClone;
 }

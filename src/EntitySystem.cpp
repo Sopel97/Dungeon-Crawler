@@ -78,16 +78,13 @@ const Entity& EntitySystem::entity(int i) const
     return *(m_entities[i]);
 }
 
-void EntitySystem::addEntity(std::unique_ptr<Entity>&& newEntity, const ls::Vec2F& position)
+void EntitySystem::addEntity(std::unique_ptr<Entity>&& newEntity)
 {
     m_entities.emplace_back(std::move(newEntity));
-    newEntity->model().setPosition(position);
 }
-void EntitySystem::emplaceEntity(const EntityPrefab& prefab, const ls::Vec2F& position)
+void EntitySystem::spawnEntity(const EntityPrefab& prefab, const ls::Vec2F& position)
 {
-    std::unique_ptr<Entity> newEntity = prefab.instantiate();
-    newEntity->model().setPosition(position);
-    m_entities.emplace_back(std::move(newEntity));
+    addEntity(prefab.instantiate(position));
 }
 void EntitySystem::removeEntity(Entity& entityToRemove)
 {

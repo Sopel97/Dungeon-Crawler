@@ -27,7 +27,7 @@ void EntityPrefab::loadFromConfiguration(ConfigurationNode& config)
     m_entity->loadFromConfiguration(config);
 }
 
-std::unique_ptr<Entity> EntityPrefab::instantiate() const
+std::unique_ptr<Entity> EntityPrefab::instantiate(const ls::Vec2F& pos) const
 {
-    return m_entity->instantiate();
+    return m_entity->instantiate(pos);
 }

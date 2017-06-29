@@ -4,6 +4,8 @@
 
 #include "ComponentFactory.h"
 
+#include "../LibS/Shapes.h"
+
 #include <memory>
 
 namespace sf
@@ -29,7 +31,7 @@ public:
 
     void loadFromConfiguration(ConfigurationNode& config);
 
-    std::unique_ptr<Entity> instantiate() const;
+    std::unique_ptr<Entity> instantiate(const ls::Vec2F& pos) const;
 protected:
     std::unique_ptr<Entity> m_entity;
 

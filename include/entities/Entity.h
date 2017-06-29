@@ -5,6 +5,8 @@
 
 #include "ComponentFactory.h"
 
+#include "../LibS/Shapes.h"
+
 #include <memory>
 
 namespace sf
@@ -51,11 +53,11 @@ public:
 
     int id() const;
 
-    void onEntityInstantiated();
+    void onEntityInstantiated(const ls::Vec2F& pos);
     void onEntityCloned();
 
+    std::unique_ptr<Entity> instantiate(const ls::Vec2F& pos) const;
     std::unique_ptr<Entity> clone() const;
-    std::unique_ptr<Entity> instantiate() const;
 protected:
     std::unique_ptr<EntityModel> m_model;
     std::unique_ptr<EntityRenderer> m_renderer;

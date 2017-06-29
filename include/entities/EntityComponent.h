@@ -4,6 +4,8 @@
 
 #include "Component.h"
 
+#include "../LibS/Shapes.h"
+
 class ComponentCommonData;
 
 template <class ComponentType, class OwnerType>
@@ -14,6 +16,6 @@ public:
     EntityComponent(const EntityComponent& other, OwnerType& owner) : Component<ComponentType, OwnerType>(other, owner) {};
     ~EntityComponent() override = default;
 
-    virtual void onEntityInstantiated() {}
+    virtual void onEntityInstantiated(const ls::Vec2F& pos) {}
     virtual void onEntityCloned() {}
 };

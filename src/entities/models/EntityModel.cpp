@@ -88,6 +88,11 @@ Vec2F EntityModel::displacementWhenMoved(float dt)
     return Vec2F(0.0f, 0.0f);
 }
 
+void EntityModel::onEntityInstantiated(const ls::Vec2F& pos)
+{
+    this->setPosition(pos);
+}
+
 float EntityModel::maxSpeed() const
 {
     return 10.0f;
