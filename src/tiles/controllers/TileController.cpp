@@ -34,6 +34,18 @@ void TileController::look(Player& player, const InventorySlotView& location)
 {
     player.showTileDescription(TileDescriptionGenerator::generate(owner()));
 }
+void TileController::attack(World& world, Player& player, const ls::Vec2F& hintedPosition)
+{
+
+}
+void TileController::indirectAttack(World& world, Player& player, const ls::Vec2F& hintedPosition)
+{
+
+}
+TileAmmoGroupType TileController::ammoGroup() const
+{
+    return TileAmmoGroupType();
+}
 std::unique_ptr<TileController> TileController::clone(Tile& owner) const
 {
     return std::make_unique<TileController>(*this, owner);

@@ -7,7 +7,8 @@
 
 PROBABLY NEXT:
 3. projectile system
-3.1 WeaponTileController - arrows use that to
+3.1 WeaponTileController - with attack function
+3.1.(0) AmmoTileController - with attackDeffered function
 3.1.1 parametrised by projectile to spawn on attack request or ammo type (then ammo is requested from entity and if it matches then attack if deferred to that ammo) (weapons can have multiple valid ammo types)
 3.1.2 ammo types (probably runtime integer)
 3.1.3 attack request for tile controller takes attacking entity and world

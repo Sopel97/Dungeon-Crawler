@@ -3,8 +3,6 @@
 
 #include "TileController.h"
 
-#include "ResourceLoaders.h"
-
 #include <memory>
 
 class Tile;

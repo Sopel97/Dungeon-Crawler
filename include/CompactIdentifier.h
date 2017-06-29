@@ -53,3 +53,6 @@ public:
         return m_id;
     }
 };
+
+template <class GroupType>
+using RuntimeIdentifier = CompactIdentifier<GroupType, std::string, int>;

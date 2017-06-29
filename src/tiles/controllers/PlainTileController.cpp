@@ -2,6 +2,8 @@
 
 #include "tiles/Tile.h"
 
+#include "ResourceLoaders.h"
+
 REGISTER_TILE_CONTROLLER_TYPE(PlainTileController)
 
 PlainTileController::PlainTileController(Tile& owner, ComponentCommonData* commonData) :

@@ -20,7 +20,7 @@ class TileLocation;
 class InventorySlotView;
 
 struct InnerBorderGroup;
-using TileInnerBorderGroupType = CompactIdentifier<InnerBorderGroup, std::string, int>;
+using TileInnerBorderGroupType = RuntimeIdentifier<InnerBorderGroup>;
 
 class TileRenderer : public TileComponent<TileRenderer, Tile>
 	//must be functional (ie. all methods must return resonable values and there is no pure virtual member functions)
