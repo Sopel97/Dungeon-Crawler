@@ -77,6 +77,11 @@ EntityGroupId EntityModel::group() const
 {
     return EntityGroupId::Friendly;
 }
+TileStack& EntityModel::ammo()
+{
+    static TileStack a;
+    return a;
+}
 
 Vec2F EntityModel::displacementWhenMoved(float dt)
 {

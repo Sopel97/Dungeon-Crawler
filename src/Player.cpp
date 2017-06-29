@@ -21,9 +21,10 @@ Player::Player(WindowSpaceManager& wsm, Game& game, TileTransferMediator& tileTr
     m_playerEntity(-1, std::make_unique<PlayerModel>(*this, m_playerEntity), std::make_unique<PlayerRenderer>(*this, m_playerEntity), std::make_unique<PlayerController>(*this, m_playerEntity)),
     m_playerUi(wsm, *this),
     m_inventorySystem(wsm, *this, tileTransferMediator),
-    m_tileDescriptionRenderer(wsm)
+    m_tileDescriptionRenderer(wsm),
+    m_equipmentInventory()
 {
-
+    m_inventorySystem.openPermanentInventory(m_equipmentInventory, "");
 }
 
 bool Player::tryInteractWithExternalInventory(Tile& tile, Inventory& inventory, const TileLocation& location)
@@ -68,6 +69,14 @@ InventorySystem& Player::inventorySystem()
 const InventorySystem& Player::inventorySystem() const
 {
     return m_inventorySystem;
+}
+TileStack& Player::ammo()
+{
+    return m_equipmentInventory.ammo();
+}
+const PlayerEquipmentInventory& Player::equipmentInventory() const
+{
+    return m_equipmentInventory;
 }
 void Player::showTileDescription(const TileDescription& description)
 {

@@ -43,6 +43,9 @@ public:
     InventorySystem& inventorySystem();
     const InventorySystem& inventorySystem() const;
 
+    TileStack& ammo();
+    const PlayerEquipmentInventory& equipmentInventory() const;
+
     void showTileDescription(const TileDescription& description);
     void showTileDescription(TileDescription&& description);
 
@@ -53,6 +56,7 @@ protected:
     PlayerUi m_playerUi;
     InventorySystem m_inventorySystem;
     TileDescriptionRenderer m_tileDescriptionRenderer;
+    PlayerEquipmentInventory m_equipmentInventory;
 
 private:
     void displayTileDescriptionWindow();

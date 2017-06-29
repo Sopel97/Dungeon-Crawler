@@ -24,6 +24,8 @@ public:
     std::unique_ptr<InventoryView> createInventoryView(InventorySystem& invSys) override;
     std::unique_ptr<InventoryWindow> createInventoryWindow(WindowSpaceManager& wsm, const std::string& name) const override;
 
+    TileStack& ammo();
+
     int size() const override;
 
 protected:

@@ -140,8 +140,6 @@ protected:
 
     TrackedInventoryForest m_trackedInventories;
 
-    PlayerEquipmentInventory m_equipmentInventory;
-
     EventDispatcher::EventCallbackHandle<TileMovedFromWorldToWorld> m_tileMovedFromWorldToWorldEventSubscription;
     EventDispatcher::EventCallbackHandle<TileMovedFromWorldToInventory> m_tileMovedFromWorldToInventoryEventSubscription;
     EventDispatcher::EventCallbackHandle<TileMovedFromInventoryToInventory> m_tileMovedFromInventoryToInventoryEventSubscription;

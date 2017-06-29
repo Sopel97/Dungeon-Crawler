@@ -1,5 +1,7 @@
 #include "entities/models/PlayerModel.h"
 
+#include "Player.h"
+
 using namespace ls;
 
 REGISTER_ENTITY_MODEL_TYPE(PlayerModel)
@@ -75,6 +77,10 @@ void PlayerModel::setDistanceTravelled(float newDistanceTravelled)
 EntityGroupId PlayerModel::group() const
 {
     return EntityGroupId::Friendly;
+}
+TileStack& PlayerModel::ammo()
+{
+    return m_playerOwner->ammo();
 }
 
 Vec2F PlayerModel::displacementWhenMoved(float dt)

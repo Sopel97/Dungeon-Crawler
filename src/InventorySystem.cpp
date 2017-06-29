@@ -24,13 +24,11 @@ InventorySystem::InventorySystem(WindowSpaceManager& wsm, Player& player, TileTr
     m_player(player),
     m_playerUi(player.playerUi()),
     m_tileTransferMediator(tileTransferMediator),
-    m_equipmentInventory(),
     m_tileMovedFromWorldToWorldEventSubscription(EventDispatcher::instance().subscribe<TileMovedFromWorldToWorld>([this](const TileMovedFromWorldToWorld& e) {onTileMovedFromWorldToWorld(e); })),
     m_tileMovedFromWorldToInventoryEventSubscription(EventDispatcher::instance().subscribe<TileMovedFromWorldToInventory>([this](const TileMovedFromWorldToInventory& e) {onTileMovedFromWorldToInventory(e); })),
     m_tileMovedFromInventoryToInventoryEventSubscription(EventDispatcher::instance().subscribe<TileMovedFromInventoryToInventory>([this](const TileMovedFromInventoryToInventory& e) {onTileMovedFromInventoryToInventory(e); })),
     m_tileMovedFromInventoryToWorldEventSubscription(EventDispatcher::instance().subscribe<TileMovedFromInventoryToWorld>([this](const TileMovedFromInventoryToWorld& e) {onTileMovedFromInventoryToWorld(e); }))
 {
-    openPermanentInventory(m_equipmentInventory, "");
 }
 
 bool InventorySystem::tryOpenExternalInventory(Tile& tile, Inventory& inventory, const ls::Vec2I& pos)
@@ -177,10 +175,6 @@ std::pair<InventorySystem::ConstTrackedInventoryTreeHandle, InventorySystem::Con
     return m_trackedInventories.findIf([&inventory](const TrackedInventory& inv) {return inv.inventory == &inventory; });
 }
 
-PlayerEquipmentInventory& InventorySystem::equipmentInventory()
-{
-    return m_equipmentInventory;
-}
 TileTransferMediator& InventorySystem::tileTransferMediator()
 {
     return m_tileTransferMediator;

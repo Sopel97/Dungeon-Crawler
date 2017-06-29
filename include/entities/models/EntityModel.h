@@ -45,6 +45,7 @@ public:
     virtual void setHealth(int newHealth);
     virtual TileStack createCorpse() const;
     virtual EntityGroupId group() const;
+    virtual TileStack& ammo();
 
     virtual ls::Vec2F displacementWhenMoved(float dt);
 

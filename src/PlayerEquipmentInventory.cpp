@@ -74,6 +74,10 @@ std::unique_ptr<InventoryWindow> PlayerEquipmentInventory::createInventoryWindow
     window->setScrollBarEnabled(false);
     return window;
 }
+TileStack& PlayerEquipmentInventory::ammo()
+{
+    return m_contents[9];
+}
 int PlayerEquipmentInventory::size() const
 {
     return m_contents.size();
