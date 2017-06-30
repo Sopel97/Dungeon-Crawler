@@ -10,7 +10,7 @@ PlainEntityModel::PlainEntityModel(Entity& owner, ComponentCommonData* commonDat
     m_distanceTravelled(0.0f),
     m_health(1),
     m_maxHealth(1),
-    m_group(EntityGroupId::Unfriendly),
+    m_group(AggroGroupId::Unfriendly),
     m_corpseTile(nullptr)
 {
 
@@ -37,7 +37,7 @@ void PlainEntityModel::loadFromConfiguration(ConfigurationNode& config)
     m_health = m_maxHealth = config["maxHealth"].get<int>();
     m_corpseTile = ResourceManager::instance().get<TilePrefab>(config["corpseTile"].get<std::string>());
     m_lootRandomizer.loadFromConfiguration(config["lootRandomizationGuidelines"]);
-    m_group = EntityGroupIdHelper::stringToEnum(config["group"].get<std::string>());
+    m_group = AggroGroupIdHelper::stringToEnum(config["group"].get<std::string>());
 }
 
 bool PlainEntityModel::hasCollider() const
@@ -92,7 +92,7 @@ TileStack PlainEntityModel::createCorpse() const
     m_lootRandomizer.randomize(*(corpse.tile().model().inventory()));
     return corpse;
 }
-EntityGroupId PlainEntityModel::group() const
+AggroGroupId PlainEntityModel::group() const
 {
     return m_group;
 }

@@ -31,7 +31,7 @@ public:
     void setVelocity(const ls::Vec2F& newVelocity) override;
     float distanceTravelled() const override;
     void setDistanceTravelled(float newDistanceTravelled) override;
-    EntityGroupId group() const override;
+    AggroGroupId group() const override;
     TileStack& ammo() override;
 
     ls::Vec2F displacementWhenMoved(float dt) override;

@@ -74,9 +74,9 @@ void PlayerModel::setDistanceTravelled(float newDistanceTravelled)
 {
     m_distanceTravelled = newDistanceTravelled;
 }
-EntityGroupId PlayerModel::group() const
+AggroGroupId PlayerModel::group() const
 {
-    return EntityGroupId::Friendly;
+    return AggroGroupId::Friendly;
 }
 TileStack& PlayerModel::ammo()
 {

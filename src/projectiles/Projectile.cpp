@@ -123,6 +123,18 @@ void Projectile::onProjectileCloned()
     m_renderer->onProjectileCloned();
     m_controller->onProjectileCloned();
 }
+void Projectile::onCollidedWithEntity(Entity& entity)
+{
+    m_model->onCollidedWithEntity(entity);
+    m_renderer->onCollidedWithEntity(entity);
+    m_controller->onCollidedWithEntity(entity);
+}
+void Projectile::onCollidedWithTile()
+{
+    m_model->onCollidedWithTile();
+    m_renderer->onCollidedWithTile();
+    m_controller->onCollidedWithTile();
+}
 
 std::unique_ptr<Projectile> Projectile::clone() const
 {

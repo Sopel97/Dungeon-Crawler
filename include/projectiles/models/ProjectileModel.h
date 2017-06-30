@@ -4,6 +4,7 @@
 
 #include <memory>
 
+#include "AggroGroup.h"
 #include "projectiles/ProjectileComponent.h"
 
 #include "../LibS/Shapes.h"
@@ -23,6 +24,7 @@ public:
     virtual bool canCollideWithEntities() const;
     virtual ls::Circle2F collider() const;
     virtual bool isDead() const;
+    virtual AggroGroupId group() const;
 
     virtual const ls::Vec2F& position() const;
     virtual void setPosition(const ls::Vec2F& newPosition);

@@ -38,6 +38,10 @@ bool ProjectileModel::isDead() const
 {
     return true;
 }
+AggroGroupId ProjectileModel::group() const
+{
+    return AggroGroupId::Neutral;
+}
 const ls::Vec2F& ProjectileModel::position() const
 {
     static const ls::Vec2F somePosition;
@@ -50,6 +54,7 @@ const Entity* ProjectileModel::parentEntity() const
 {
     return nullptr;
 }
+
 std::unique_ptr<ProjectileModel> ProjectileModel::clone(Projectile& owner) const
 {
     return std::make_unique<ProjectileModel>(*this, owner);

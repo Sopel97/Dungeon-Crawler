@@ -19,6 +19,7 @@ class ProjectileController;
 class ComponentCommonData;
 class Entity;
 class World;
+class TileStack;
 
 class Projectile
 {
@@ -50,6 +51,10 @@ public:
 
     void onProjectileCloned();
     void onProjectileInstantiated(World& world, Entity& parentEntity, const ls::Vec2F& hintedPosition);
+    void onCollidedWithEntity(Entity& entity);
+
+    // could use some parameters
+    void onCollidedWithTile();
 
     std::unique_ptr<Projectile> clone() const;
     std::unique_ptr<Projectile> instantiate(World& world, Entity& parentEntity, const ls::Vec2F& hintedPosition) const;

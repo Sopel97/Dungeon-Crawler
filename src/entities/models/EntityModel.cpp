@@ -73,9 +73,9 @@ TileStack EntityModel::createCorpse() const
 {
     return TileStack();
 }
-EntityGroupId EntityModel::group() const
+AggroGroupId EntityModel::group() const
 {
-    return EntityGroupId::Friendly;
+    return AggroGroupId::Neutral;
 }
 TileStack& EntityModel::ammo()
 {

@@ -7,6 +7,13 @@
 #include "MapLayer.h"
 #include "TileColumn.h"
 
+#include "AggroGroup.h"
+
+#include "entities/Entity.h"
+#include "entities/models/EntityModel.h"
+#include "entities/renderers/EntityRenderer.h"
+#include "entities/controllers/EntityController.h"
+
 #include "projectiles/ProjectilePrefab.h"
 #include "projectiles/models/ProjectileModel.h"
 #include "projectiles/renderers/ProjectileRenderer.h"
@@ -82,10 +89,71 @@ bool ProjectileSystem::isDead(const Projectile& projectile) const
 }
 void ProjectileSystem::update(float dt)
 {
-    //TODO: update projectiles, check collisions with tiles, check collisions with entities
+    for (auto& projectile : m_projectiles)
+    {
+        update(*projectile, dt);
+    }
+
+    removeDeadProjectiles();
 }
 
 std::vector<Projectile*> ProjectileSystem::getVisibleProjectiles(const Camera& camera)
 {
     return query(camera.viewRectangle());
+}
+void ProjectileSystem::update(Projectile& projectile, float dt)
+{
+    projectile.controller().update(*m_world, dt);
+
+    if (projectile.model().canCollideWithEntities()) resolveCollisionsWithEntities(projectile);
+    if (projectile.model().canCollideWithTiles()) resolveCollisionsWithTiles(projectile);
+}
+void ProjectileSystem::removeDeadProjectiles()
+{
+    m_projectiles.erase(std::remove_if(m_projectiles.begin(), m_projectiles.end(), [this](std::unique_ptr<Projectile>& proj) {return isDead(*proj); }), m_projectiles.end());
+}
+
+void ProjectileSystem::resolveCollisionsWithEntities(Projectile& projectile)
+{
+    //TODO: some fancy sweep collision checking
+    //TODO: maybe check line of sight if requested by projectile
+
+    const AggroGroupId projectileGroup = projectile.model().group();
+
+    const ls::Circle2F collider = projectile.model().collider();
+    const ls::Rectangle2F colliderBoundingBox = collider.boundingBox();
+    auto entities = m_entitySystem->query(colliderBoundingBox);
+
+    for (Entity* entity : entities)
+    {
+        if (isDead(projectile)) return;
+
+        const AggroGroupId entityGroup = entity->model().group();
+        if (!EntityGroupRelations::canCollide(entityGroup, projectileGroup)) continue;
+        if (!entity->model().hasCollider()) continue;
+
+        const ls::Circle2F entityCollider(entity->model().position(), entity->model().colliderRadius());
+        if (ls::intersect(entityCollider, collider))
+        {
+            projectile.onCollidedWithEntity(*entity);
+        }
+    }
+}
+void ProjectileSystem::resolveCollisionsWithTiles(Projectile& projectile)
+{
+    //TODO: some fancy sweep collision checking
+    const ls::Circle2F collider = projectile.model().collider();
+    const ls::Rectangle2F boundingBox = collider.boundingBox();
+
+    auto tileColliders = m_world->queryTileColliders(boundingBox);
+
+    for (const auto& tileCollider : tileColliders)
+    {
+        if (isDead(projectile)) return;
+
+        if (ls::intersect(boundingBox, tileCollider))
+        {
+            projectile.onCollidedWithTile();
+        }
+    }
 }

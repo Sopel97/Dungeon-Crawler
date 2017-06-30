@@ -41,4 +41,8 @@ protected:
     std::vector<std::unique_ptr<Projectile>> m_projectiles;
 
     bool isDead(const Projectile& projectile) const;
+    void update(Projectile& projectile, float dt);
+    void removeDeadProjectiles();
+    void resolveCollisionsWithEntities(Projectile& projectile);
+    void resolveCollisionsWithTiles(Projectile& projectile);
 };

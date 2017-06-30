@@ -6,7 +6,7 @@
 #include <memory>
 
 #include "entities/EntityComponent.h"
-#include "entities/EntityGroup.h"
+#include "AggroGroup.h"
 
 #include "tiles/TileStack.h"
 
@@ -44,7 +44,7 @@ public:
     virtual int maxHealth() const;
     virtual void setHealth(int newHealth);
     virtual TileStack createCorpse() const;
-    virtual EntityGroupId group() const;
+    virtual AggroGroupId group() const;
     virtual TileStack& ammo();
 
     virtual ls::Vec2F displacementWhenMoved(float dt);
