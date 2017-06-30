@@ -6,6 +6,10 @@
 2.5. rename commondata to shareddata?
 
 PROBABLY NEXT:
+- Collider, TileCollider, EntityCollider, ProjectileCollider that hold volume, information about attached object. volume by reference, owner by referece
+-- utility that takes two colliders and checks if they collide
+-- rewrite everything that checks collisions, gathers colliders, returns volumes to return respective colliders
+
 3. projectile system
 3.1 WeaponTileController - with attack function
 3.1.(0) AmmoTileController - with attackDeffered function
