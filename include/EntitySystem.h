@@ -29,8 +29,8 @@ public:
     Entity& entity(int i);
     const Entity& entity(int i) const;
 
-    void addEntity(std::unique_ptr<Entity>&& newEntity);
-    void spawnEntity(const EntityPrefab& prefab, const ls::Vec2F& position);
+    Entity& addEntity(std::unique_ptr<Entity>&& newEntity);
+    Entity& spawnEntity(const EntityPrefab& prefab, const ls::Vec2F& position);
     void removeEntity(Entity& entityToRemove);
 
     void update(float dt);

@@ -28,8 +28,8 @@ public:
     Projectile& projectile(int i);
     const Projectile& projectile(int i) const;
 
-    void addProjectile(std::unique_ptr<Projectile>&& newProjectile);
-    void spawnProjectile(const ProjectilePrefab& prefab, World& world, Entity& parentEntity, const ls::Vec2F& hintedPosition);
+    Projectile& addProjectile(std::unique_ptr<Projectile>&& newProjectile);
+    Projectile& spawnProjectile(const ProjectilePrefab& prefab, World& world, Entity& parentEntity, const ls::Vec2F& hintedPosition);
     void removeProjectile(Projectile& projectileToRemove);
 
     void update(float dt);

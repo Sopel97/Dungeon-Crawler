@@ -63,13 +63,14 @@ const Projectile& ProjectileSystem::projectile(int i) const
     return *(m_projectiles[i]);
 }
 
-void ProjectileSystem::addProjectile(std::unique_ptr<Projectile>&& newEntity)
+Projectile& ProjectileSystem::addProjectile(std::unique_ptr<Projectile>&& newEntity)
 {
     m_projectiles.emplace_back(std::move(newEntity));
+    return *(m_projectiles.back());
 }
-void ProjectileSystem::spawnProjectile(const ProjectilePrefab& prefab, World& world, Entity& parentEntity, const ls::Vec2F& hintedPosition)
+Projectile& ProjectileSystem::spawnProjectile(const ProjectilePrefab& prefab, World& world, Entity& parentEntity, const ls::Vec2F& hintedPosition)
 {
-    addProjectile(prefab.instantiate(world, parentEntity, hintedPosition));
+    return addProjectile(prefab.instantiate(world, parentEntity, hintedPosition));
 }
 void ProjectileSystem::removeProjectile(Projectile& projectileToRemove)
 {

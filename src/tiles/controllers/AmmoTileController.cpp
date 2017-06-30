@@ -6,6 +6,9 @@
 
 #include "ResourceLoaders.h"
 
+#include "World.h"
+#include "Player.h"
+
 REGISTER_TILE_CONTROLLER_TYPE(AmmoTileController)
 
 AmmoTileController::AmmoTileController(Tile& owner, ComponentCommonData* commonData) :
@@ -37,7 +40,7 @@ void AmmoTileController::loadFromConfiguration(ConfigurationNode& config)
 
 void AmmoTileController::indirectAttack(World& world, Player& player, const ls::Vec2F& hintedPosition)
 {
-    // TODO: spawn projectile
+    world.spawnProjectile(m_projectile.get(), world, player.entity(), hintedPosition);
 }
 
 std::unique_ptr<TileController> AmmoTileController::clone(Tile& owner) const

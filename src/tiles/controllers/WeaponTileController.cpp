@@ -4,6 +4,9 @@
 
 #include "ResourceLoaders.h"
 
+#include "Player.h"
+#include "World.h"
+
 REGISTER_TILE_CONTROLLER_TYPE(WeaponTileController)
 
 WeaponTileController::WeaponTileController(Tile& owner, ComponentCommonData* commonData) :
@@ -52,7 +55,19 @@ void WeaponTileController::loadFromConfiguration(ConfigurationNode& config)
 
 void WeaponTileController::attack(World& world, Player& player, const ls::Vec2F& hintedPosition)
 {
+    if (m_usesAmmo)
+    {
+        TileStack& ammo = player.ammo();
+        if (ammo.isEmpty()) return;
+        if (ammo.quantity() < m_ammoPerAttack) return;
 
+        ammo.tile().controller().indirectAttack(world, player, hintedPosition);
+        ammo.erase(m_ammoPerAttack);
+    }
+    else
+    {
+        world.spawnProjectile(m_projectile.get(), world, player.entity(), hintedPosition);
+    }
 }
 
 std::unique_ptr<TileController> WeaponTileController::clone(Tile& owner) const

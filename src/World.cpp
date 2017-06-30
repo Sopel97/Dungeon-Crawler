@@ -471,6 +471,14 @@ int World::tileManhattanDistanceFromPlayer(const ls::Vec2I& to) const
 {
     return tileManhattanDistance(worldToTile(m_player.entity().model().position()), to);
 }
+Projectile& World::spawnProjectile(const ProjectilePrefab& prefab, World& world, Entity& parentEntity, const ls::Vec2F& hintedPosition)
+{
+    return m_projectileSystem.spawnProjectile(prefab, world, parentEntity, hintedPosition);
+}
+Entity& World::spawnEntity(const EntityPrefab& prefab, const ls::Vec2F& position)
+{
+    return m_entitySystem.spawnEntity(prefab, position);
+}
 std::vector<ls::Vec2I> World::queryGridPoints(const ls::LineSegment2F& line) const
 {
     constexpr float eps = 0.01f; //tolerance for diagonal moves

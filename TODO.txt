@@ -33,3 +33,5 @@ IMPORTANT
 102. '%' sign missing in tibia font
 
 103. Make entities move in update and better collision resolving in entity system (currently it's very ugly)
+
+104. clean up tall drawables and everything related

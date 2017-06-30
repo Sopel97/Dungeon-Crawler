@@ -71,6 +71,9 @@ public:
     int tileManhattanDistance(const ls::Vec2I& from, const ls::Vec2I& to) const;
     int tileManhattanDistanceFromPlayer(const ls::Vec2I& to) const;
 
+    Projectile& spawnProjectile(const ProjectilePrefab& prefab, World& world, Entity& parentEntity, const ls::Vec2F& hintedPosition);
+    Entity& spawnEntity(const EntityPrefab& prefab, const ls::Vec2F& position);
+
     EventResult onMouseButtonPressed(sf::Event::MouseButtonEvent& event, EventContext context) override;
     EventResult onMouseButtonReleased(sf::Event::MouseButtonEvent& event, EventContext context) override;
     EventResult onKeyPressed(sf::Event::KeyEvent& event, EventContext context) override;
