@@ -7,6 +7,8 @@ enum class EntityGroupId
 {
     Friendly,
     Unfriendly,
+    Neutral,
+    Aggressive,
     NumGroups
 };
 
@@ -27,14 +29,18 @@ class EntityGroupRelations
 private:
     static constexpr int numGroups = static_cast<int>(EntityGroupId::NumGroups);
     static constexpr bool m_canCollide[numGroups][numGroups] = {
-        /*                   Friendly    Unfriendly */
-        /* Friendly */     { true,       true },
-        /* Unfriendly */   { true,       true }
+        /*                   Friendly    Unfriendly    Neutral    Aggressive */
+        /* Friendly */     { true,       true,         true,      true },
+        /* Unfriendly */   { true,       true,         true,      true },
+        /* Neutral */      { true,       true,         true,      true },
+        /* Aggressive */   { true,       true,         true,      true }
     };
     static constexpr bool m_canDamage[numGroups][numGroups] = {
-        /*                   Friendly    Unfriendly */
-        /* Friendly */     { false,      true },
-        /* Unfriendly */   { true,       false }
+        /*                   Friendly    Unfriendly    Neutral    Aggressive */
+        /* Friendly */     { true,       true,         false,     true },
+        /* Unfriendly */   { true,       true,         false,     true },
+        /* Neutral */      { false,      false,        false,     false },
+        /* Aggressive */   { true,       true,         false,     false }
     };
 
 public:
