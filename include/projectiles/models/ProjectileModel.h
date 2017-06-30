@@ -22,6 +22,7 @@ public:
     virtual bool canCollideWithTiles() const;
     virtual bool canCollideWithEntities() const;
     virtual ls::Circle2F collider() const;
+    virtual bool isDead() const;
 
     virtual const ls::Vec2F& position() const;
     virtual void setPosition(const ls::Vec2F& newPosition);

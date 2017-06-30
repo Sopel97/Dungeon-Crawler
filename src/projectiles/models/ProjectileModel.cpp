@@ -34,6 +34,10 @@ ls::Circle2F ProjectileModel::collider() const
 {
     return ls::Circle2F();
 }
+bool ProjectileModel::isDead() const
+{
+    return true;
+}
 const ls::Vec2F& ProjectileModel::position() const
 {
     static const ls::Vec2F somePosition;

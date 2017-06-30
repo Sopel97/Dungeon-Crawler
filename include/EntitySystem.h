@@ -21,7 +21,7 @@ class EntityPrefab;
 class EntitySystem
 {
 public:
-    EntitySystem(Player& player);
+    EntitySystem(World& world, Player& player);
 
     std::vector<Entity*> query(const ls::Rectangle2F& rect);
     const std::vector<std::unique_ptr<Entity>>& entities() const;
@@ -33,10 +33,11 @@ public:
     void spawnEntity(const EntityPrefab& prefab, const ls::Vec2F& position);
     void removeEntity(Entity& entityToRemove);
 
-    void updateEntities(World& world, float dt);
+    void update(float dt);
 
     std::vector<Entity*> getVisibleEntities(const Camera& camera);
 protected:
+    World* m_world;
     Player* m_player;
     std::vector<std::unique_ptr<Entity>> m_entities;
     

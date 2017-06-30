@@ -8,6 +8,7 @@
 #include "Camera.h"
 
 #include "EntitySystem.h"
+#include "ProjectileSystem.h"
 
 #include "ResourceManager.h"
 
@@ -83,6 +84,7 @@ protected:
     int m_height;
     std::unique_ptr<MapLayer> m_mapLayer;
     EntitySystem m_entitySystem;
+    ProjectileSystem m_projectileSystem;
     Camera m_camera;
     MapGenerator m_mapGenerator;
 

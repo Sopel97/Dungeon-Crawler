@@ -9,13 +9,16 @@ namespace sf
     class RenderStates;
 }
 
+
+//TODO: make this and sorting code cleaner
 class TallDrawable
 {
 public:
     enum class DrawableType
     {
         TileStack,
-        Entity
+        Entity,
+        Projectile
     };
 
     TallDrawable();

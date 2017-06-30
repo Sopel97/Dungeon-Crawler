@@ -25,7 +25,8 @@
 
 using namespace ls;
 
-EntitySystem::EntitySystem(Player& player) :
+EntitySystem::EntitySystem(World& world, Player& player) :
+    m_world(&world),
     m_player(&player)
 {
 
@@ -121,23 +122,23 @@ TileStack EntitySystem::createCorpse(const Entity& entity) const
     return entity.model().createCorpse();
 }
 
-void EntitySystem::updateEntities(World& world, float dt) //will also move them and resolve collisions
+void EntitySystem::update(float dt) //will also move them and resolve collisions
 {
     for(std::unique_ptr<Entity>& entity : m_entities)
     {
-        entity->controller().update(world, dt);
+        entity->controller().update(*m_world, dt);
     }
-    m_player->entity().controller().update(world, dt);
+    m_player->entity().controller().update(*m_world, dt);
 
     for(std::unique_ptr<Entity>& entity : m_entities)
     {
-        moveEntity(world, *entity, dt);
+        moveEntity(*m_world, *entity, dt);
     }
-    moveEntity(world, m_player->entity(), dt);
+    moveEntity(*m_world, m_player->entity(), dt);
 
     //TODO: make entities push each other
 
-    createCorpsesForDeadEntities(world);
+    createCorpsesForDeadEntities(*m_world);
     removeDeadEntities();
 }
 void EntitySystem::moveEntity(World& world, Entity& entity, float dt)

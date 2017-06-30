@@ -25,6 +25,7 @@
 #include "TallDrawable.h"
 #include "TallEntityDrawable.h"
 #include "TallTileColumnDrawable.h"
+#include "TallProjectileDrawable.h"
 
 #include "TileTransferMediator.h"
 
@@ -46,7 +47,8 @@ World::World(Root& root, Player& player, TileTransferMediator& tileTransferMedia
     m_width(m_worldWidth),
     m_height(m_worldHeight),
     m_mapLayer(std::make_unique<MapLayer>(*this, m_width, m_height)),
-    m_entitySystem(player),
+    m_entitySystem(*this, player),
+    m_projectileSystem(*this, m_entitySystem),
     m_camera(Vec2F(m_width * GameConstants::tileSize / 2.0f, m_height * GameConstants::tileSize / 2.0f), m_viewWidth * GameConstants::tileSize, m_viewHeight * GameConstants::tileSize),
     m_mapGenerator(m_width, m_height),
     m_intermidiateRenderTarget()
@@ -135,6 +137,10 @@ void World::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
     for (Entity* visibleEntity : m_entitySystem.getVisibleEntities(m_camera))
     {
         tallDrawables.push_back(new TallEntityDrawable(visibleEntity));
+    }
+    for (Projectile* visibleProjectile : m_projectileSystem.getVisibleProjectiles(m_camera))
+    {
+        tallDrawables.push_back(new TallProjectileDrawable(visibleProjectile));
     }
 
     //TODO: sorting does not work 100%. It gives wrong ordering when going by long walls.
@@ -404,7 +410,8 @@ void World::lookTile(const ls::Vec2I& tilePosition)
 
 void World::update(float dt)
 {
-    m_entitySystem.updateEntities(*this, dt);
+    m_entitySystem.update(dt);
+    m_projectileSystem.update(dt);
 
     m_camera.setCenter(m_player.entity().model().position());
 }
