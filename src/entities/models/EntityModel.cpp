@@ -24,10 +24,6 @@ void EntityModel::loadFromConfiguration(ConfigurationNode& config)
 
 }
 
-bool EntityModel::hasCollider() const
-{
-    return false;
-}
 EntityCollider EntityModel::collider()
 {
     return EntityCollider(*m_owner, ls::Circle2F());
@@ -81,11 +77,6 @@ TileStack& EntityModel::ammo()
 {
     static TileStack a;
     return a;
-}
-
-Vec2F EntityModel::displacementWhenMoved(float dt)
-{
-    return Vec2F(0.0f, 0.0f);
 }
 
 void EntityModel::onEntityInstantiated(const ls::Vec2F& pos)

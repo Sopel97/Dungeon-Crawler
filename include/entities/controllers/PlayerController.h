@@ -25,7 +25,6 @@ public:
 
     void update(World& world, float dt) override;
 
-    void move(const ls::Vec2F& factor, float dt) override;
     void accelerate(const ls::Vec2F& dv) override;
 
     std::unique_ptr<EntityController> clone(Entity& owner) const override;
@@ -34,6 +33,9 @@ protected:
     Player* m_playerOwner;
     bool m_acceleratedHorizontallyInLastFrame;
     bool m_acceleratedVerticallyInLastFrame;
+
+private:
+    void move(float dt);
 };
 
 #endif // PLAYERCONTROLLER_H

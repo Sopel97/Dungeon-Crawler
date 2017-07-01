@@ -95,16 +95,18 @@ void PlayerController::update(World& world, float dt)
 
     m_acceleratedHorizontallyInLastFrame = false;
     m_acceleratedVerticallyInLastFrame = false;
+
+    move(dt);
 }
 
-void PlayerController::move(const ls::Vec2F& factor, float dt)
+void PlayerController::move(float dt)
 {
     auto& model = m_owner->model();
 
     Vec2F position = model.position();
     float distanceTravelled = model.distanceTravelled();
 
-    Vec2F displacement = model.displacementWhenMoved(dt) * factor;
+    Vec2F displacement = model.velocity() * dt;
 
     position += displacement;
     distanceTravelled += displacement.magnitude();

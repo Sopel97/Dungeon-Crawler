@@ -21,9 +21,8 @@ public:
 
     void loadFromConfiguration(ConfigurationNode& config) override;
 
-    virtual void update(World& world, float dt); //NOTE: does not move the entity!!!
+    virtual void update(World& world, float dt);
 
-    virtual void move(const ls::Vec2F& factor, float dt); //how much of a velocity to move
     virtual void accelerate(const ls::Vec2F& dv);
 
     std::unique_ptr<EntityController> clone(Entity& owner) const override;

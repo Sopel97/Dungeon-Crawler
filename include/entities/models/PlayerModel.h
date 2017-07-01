@@ -22,7 +22,6 @@ public:
 
     void loadFromConfiguration(ConfigurationNode& config) override;
 
-    bool hasCollider() const override;
     EntityCollider collider() override;
 
     const ls::Vec2F& position() const override;
@@ -33,8 +32,6 @@ public:
     void setDistanceTravelled(float newDistanceTravelled) override;
     AggroGroupId group() const override;
     TileStack& ammo() override;
-
-    ls::Vec2F displacementWhenMoved(float dt) override;
 
     float maxSpeed() const override;
 

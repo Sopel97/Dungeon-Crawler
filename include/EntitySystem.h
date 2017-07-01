@@ -2,8 +2,10 @@
 #define ENTITYSYSTEM_H
 
 #include <memory>
+#include <optional>
 
 #include "colliders/EntityCollider.h"
+#include "colliders/TileCollider.h"
 
 #include "../LibS/Geometry.h"
 
@@ -36,7 +38,6 @@ public:
     Entity& spawnEntity(const EntityPrefab& prefab, const ls::Vec2F& position);
     void removeEntity(Entity& entityToRemove);
 
-    // TODO: make this properly
     void update(float dt);
 
     std::vector<Entity*> getVisibleEntities(const Camera& camera);
@@ -45,12 +46,19 @@ protected:
     Player* m_player;
     std::vector<std::unique_ptr<Entity>> m_entities;
     
-    void moveEntity(World& world, Entity& entity, float dt);
+    void updateEntity(Entity& entity, float dt);
     void removeDeadEntities();
     void createCorpsesForDeadEntities(World& world) const;
     TileStack createCorpse(const Entity& entity) const;
 
     bool isDead(const Entity& entity) const;
+
+    std::optional<ls::Vec2F> penetration(EntityCollider& entityCollider, std::vector<TileCollider>& tileColliders);
+    ls::Vec2F penetration(EntityCollider& entityCollider, TileCollider& tileCollider);
+    ls::Vec2F resolvePenetration(const ls::Vec2F& pen); 
+    ls::Vec2F adjustedVelocityAfterPenetrationResolved(const ls::Vec2F& escape, const ls::Vec2F& velocity);
+
+    bool isAlmostZero(const ls::Vec2F& v, float thr) const;
 };
 
 #endif // ENTITYSYSTEM_H

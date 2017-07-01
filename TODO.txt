@@ -6,17 +6,9 @@
 2.5. rename commondata to shareddata?
 
 PROBABLY NEXT:
-- Collider, TileCollider, EntityCollider, ProjectileCollider that hold volume, information about attached object. volume by reference, owner by referece
--- utility that takes two colliders and checks if they collide
--- rewrite everything that checks collisions, gathers colliders, returns volumes to return respective colliders
 
-3. projectile system
-3.1 WeaponTileController - with attack function
-3.1.(0) AmmoTileController - with attackDeffered function
-3.1.1 parametrised by projectile to spawn on attack request or ammo type (then ammo is requested from entity and if it matches then attack if deferred to that ammo) (weapons can have multiple valid ammo types)
-3.1.2 ammo types (probably runtime integer)
-3.1.3 attack request for tile controller takes attacking entity and world
-3.2 projectiles should not be hard bound to entities because projectile may outlive its owner
+3. Make entities move in update and better collision resolving in entity system (currently it's very ugly)
+
 3.2.1 projectiles should receive event when owner is deleted because some things may still rely on owner.
 
 7. Clear world generation code //little priority since it is waiting for libs still
@@ -26,8 +18,8 @@ PROBABLY NEXT:
 
 24. player's line of sight using raycasting
 
-IMPORTANT
-100.1 store normal textures and meta textures in one texture side to side (offset by 0.5) (or some king of 3d texture if possible)
+DRAWING RELATED, kinda important
+100.1 store normal textures and meta textures in one texture side to side (offset by 0.5)
 100.2 make world drawing cleaner, parametrize intermidiate targets' sizes
 100.3 increase 'tile height' range from 32 to 64 to allow tiles that spread on 2x2 - also requires changes in shader and more drawing range
 100.4 make it possible for tiles to specify what size they are (1 - 1x1, 2 - 2x2, more should not be needed)
@@ -35,7 +27,5 @@ IMPORTANT
 101. try dim light depending on height from the ground
 
 102. '%' sign missing in tibia font
-
-103. Make entities move in update and better collision resolving in entity system (currently it's very ugly)
 
 104. clean up tall drawables and everything related

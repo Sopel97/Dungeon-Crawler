@@ -40,10 +40,6 @@ void PlainEntityModel::loadFromConfiguration(ConfigurationNode& config)
     m_group = AggroGroupIdHelper::stringToEnum(config["group"].get<std::string>());
 }
 
-bool PlainEntityModel::hasCollider() const
-{
-    return true;
-}
 EntityCollider PlainEntityModel::collider()
 {
     return EntityCollider(*m_owner, ls::Circle2F(m_position, 6.0f));
@@ -95,11 +91,6 @@ TileStack PlainEntityModel::createCorpse() const
 AggroGroupId PlainEntityModel::group() const
 {
     return m_group;
-}
-
-Vec2F PlainEntityModel::displacementWhenMoved(float dt)
-{
-    return m_velocity * dt;
 }
 
 float PlainEntityModel::maxSpeed() const

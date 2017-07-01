@@ -24,7 +24,6 @@ public:
 
     void update(World& world, float dt) override;
 
-    void move(const ls::Vec2F& factor, float dt) override;
     void accelerate(const ls::Vec2F& dv) override;
 
     std::unique_ptr<EntityController> clone(Entity& owner) const override;

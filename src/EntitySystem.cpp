@@ -42,14 +42,14 @@ std::vector<Entity*> EntitySystem::query(const Rectangle2F& rect)
     const float halfRectWidth = rect.width() / 2.0f;
     const float halfRectHeight = rect.height() / 2.0f;
 
-    for(std::unique_ptr<Entity>& entity : m_entities)
+    for (std::unique_ptr<Entity>& entity : m_entities)
     {
         EntityCollider collider = entity->model().collider();
         const Vec2F pos = collider.volume().origin;
         const float radius = collider.volume().radius;
         const float xDist = std::abs(rectCenter.x - pos.x) - halfRectWidth;
         const float yDist = std::abs(rectCenter.y - pos.y) - halfRectHeight;
-        if(xDist < radius && yDist < radius)
+        if (xDist < radius && yDist < radius)
         {
             entitiesInRegion.push_back(entity.get());
         }
@@ -80,8 +80,6 @@ std::vector<EntityCollider> EntitySystem::queryColliders(const ls::Rectangle2F& 
 
     for (std::unique_ptr<Entity>& entity : m_entities)
     {
-        if (!entity->model().hasCollider()) continue;
-
         EntityCollider collider = entity->model().collider();
         const Vec2F pos = collider.volume().origin;
         const float radius = collider.volume().radius;
@@ -167,86 +165,120 @@ TileStack EntitySystem::createCorpse(const Entity& entity) const
 
 void EntitySystem::update(float dt) //will also move them and resolve collisions
 {
-    for(std::unique_ptr<Entity>& entity : m_entities)
+    for (std::unique_ptr<Entity>& entity : m_entities)
     {
-        entity->controller().update(*m_world, dt);
+        updateEntity(*entity, dt);
     }
-    m_player->entity().controller().update(*m_world, dt);
-
-    for(std::unique_ptr<Entity>& entity : m_entities)
-    {
-        moveEntity(*m_world, *entity, dt);
-    }
-    moveEntity(*m_world, m_player->entity(), dt);
+    updateEntity(m_player->entity(), dt);
 
     //TODO: make entities push each other
 
     createCorpsesForDeadEntities(*m_world);
     removeDeadEntities();
 }
-void EntitySystem::moveEntity(World& world, Entity& entity, float dt)
+void EntitySystem::updateEntity(Entity& entity, float dt)
 {
     auto& model = entity.model();
-    Vec2F displacementWhenMoved = model.displacementWhenMoved(dt);
-    Vec2F position = model.position();
-    Vec2F velocity = model.velocity();
-    Vec2F idealPositionAfterMove = position + displacementWhenMoved;
-    Vec2F moveFactor(1.0f, 1.0f);
 
-    if(model.hasCollider())
+    const Vec2F positionBeforeUpdate = model.position();
+    entity.controller().update(*m_world, dt);
+    const Vec2F positionAfterUpdate = model.position();
+    Vec2F currentPosition = positionAfterUpdate;
+    Vec2F currentVelocity = model.velocity();
+
+    EntityCollider entityCollider = model.collider();
+
+    std::vector<TileCollider> tileCollidersInRange = m_world->queryTileColliders(entityCollider.boundingBox());
+
+    [&]()
     {
-        EntityCollider collider = model.collider();
-        const float radius = collider.volume().radius;
-        Rectangle2F entityCollider(idealPositionAfterMove - Vec2F(radius, radius), idealPositionAfterMove + Vec2F(radius, radius));
-        int xmin = static_cast<int>(entityCollider.min.x / static_cast<float>(GameConstants::tileSize));
-        int ymin = static_cast<int>(entityCollider.min.y / static_cast<float>(GameConstants::tileSize));
-        int xmax = static_cast<int>(entityCollider.max.x / static_cast<float>(GameConstants::tileSize));
-        int ymax = static_cast<int>(entityCollider.max.y / static_cast<float>(GameConstants::tileSize));
-
-        std::vector<TileCollider> collidersInRange;
-
-        for(int x = xmin; x <= xmax; ++x)
+        constexpr int maxIterations = 2;
+        for (int i = 0; i < maxIterations; ++i)
         {
-            for(int y = ymin; y <= ymax; ++y)
+            auto pen = penetration(entityCollider, tileCollidersInRange);
+            if (pen.has_value())
             {
-                TileColumn& tileColumn = world.map().at(x, y);
-                if(tileColumn.hasCollider())
-                {
-                    TileCollider tileCollider = tileColumn.collider({ x, y });
-                    collidersInRange.push_back(tileCollider);
-                }
+                const ls::Vec2F r = resolvePenetration(pen.value());
+                currentPosition += r;
+                model.setPosition(currentPosition);
+                entityCollider = model.collider();
             }
+            else return;
         }
 
-        entityCollider.translate(-displacementWhenMoved); //back to initial position
-        entityCollider.translate(Vec2F(displacementWhenMoved.x, 0.0f)); //as it moved only in x direction
-
-        for(const auto& tileCollider : collidersInRange)
-        {
-            if (ls::intersect(entityCollider, tileCollider.volume()))
+        { // max 2 iterations, on third just restore old position
+            auto pen = penetration(entityCollider, tileCollidersInRange);
+            if (pen.has_value())
             {
-                moveFactor.x = 0.0f;
-                entityCollider.translate(-Vec2F(displacementWhenMoved.x, 0.0f)); //if it can't move there go back
-                velocity.x = 0.0f;
-                break;
+                model.setPosition(positionBeforeUpdate);
+                model.setVelocity(ls::Vec2F(0.0f, 0.0f));
             }
         }
+    }();
+    model.setVelocity(adjustedVelocityAfterPenetrationResolved(currentPosition - positionAfterUpdate, currentVelocity));
+}
+bool EntitySystem::isAlmostZero(const ls::Vec2F& v, float thr) const
+{
+    return (std::abs(v.x) < thr && std::abs(v.y) < thr);
+}
+ls::Vec2F EntitySystem::adjustedVelocityAfterPenetrationResolved(const ls::Vec2F& escape, const ls::Vec2F& velocity)
+{
+    if (isAlmostZero(escape, 0.000001f)) return velocity;
 
-        entityCollider.translate(Vec2F(0.0f, displacementWhenMoved.y)); //as it moved in y direction
+    const ls::Vec2F escapeNormal = escape.normalized().normal();
+    const ls::Vec2F fac(std::abs(escapeNormal.x), std::abs(escapeNormal.y));
 
-        for(const auto& tileCollider : collidersInRange)
+    return velocity * fac;
+}
+ls::Vec2F EntitySystem::resolvePenetration(const ls::Vec2F& pen)
+{
+    if (std::abs(pen.x) < std::abs(pen.y))
+    {
+        return { -pen.x*1.01f, 0.0f };
+    }
+    else
+    {
+        return { 0.0f, -pen.y*1.01f };
+    }
+}
+std::optional<ls::Vec2F> EntitySystem::penetration(EntityCollider& entityCollider, std::vector<TileCollider>& tileColliders)
+{
+    for (auto& tileCollider : tileColliders)
+    {
+        if (Collisions::collide(tileCollider, entityCollider))
         {
-            if (ls::intersect(entityCollider, tileCollider.volume()))
-            {
-                moveFactor.y = 0.0f;
-                velocity.y = 0.0f;
-                break;
-            }
+            return penetration(entityCollider, tileCollider);
         }
     }
 
-    entity.controller().move(moveFactor, dt);
-    model.setVelocity(velocity);
+    return std::nullopt;
+}
+ls::Vec2F EntitySystem::penetration(EntityCollider& entityCollider, TileCollider& tileCollider)
+{
+    const Rectangle2F& tileAABB = tileCollider.boundingBox();
+    const Rectangle2F& entityAABB = entityCollider.boundingBox();
+
+    float xPen;
+    if (tileAABB.min.x < entityAABB.min.x)
+    {
+        xPen = entityAABB.min.x - tileAABB.max.x;
+    }
+    else
+    {
+        xPen = entityAABB.max.x - tileAABB.min.x;
+    }
+
+    float yPen;
+    if (tileAABB.min.y < entityAABB.min.y)
+    {
+        yPen = entityAABB.min.y - tileAABB.max.y;
+    }
+    else
+    {
+        yPen = entityAABB.max.y - tileAABB.min.y;
+    }
+
+    return { xPen, yPen };
 }
 
 std::vector<Entity*> EntitySystem::getVisibleEntities(const Camera& camera)

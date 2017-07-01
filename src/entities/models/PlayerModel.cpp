@@ -40,10 +40,6 @@ void PlayerModel::loadFromConfiguration(ConfigurationNode& config)
 
 }
 
-bool PlayerModel::hasCollider() const
-{
-    return true;
-}
 EntityCollider PlayerModel::collider()
 {
     return EntityCollider(*m_owner, ls::Circle2F(m_position, 6.0f));
@@ -81,11 +77,6 @@ AggroGroupId PlayerModel::group() const
 TileStack& PlayerModel::ammo()
 {
     return m_playerOwner->ammo();
-}
-
-Vec2F PlayerModel::displacementWhenMoved(float dt)
-{
-    return m_velocity * dt;
 }
 
 float PlayerModel::maxSpeed() const

@@ -33,7 +33,6 @@ public:
 
     void loadFromConfiguration(ConfigurationNode& config) override;
 
-    virtual bool hasCollider() const;
     virtual EntityCollider collider();
 
     virtual const ls::Vec2F& position() const;
@@ -48,8 +47,6 @@ public:
     virtual TileStack createCorpse() const;
     virtual AggroGroupId group() const;
     virtual TileStack& ammo();
-
-    virtual ls::Vec2F displacementWhenMoved(float dt);
 
     void onEntityInstantiated(const ls::Vec2F& pos) override;
 
