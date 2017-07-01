@@ -59,6 +59,8 @@ protected:
     ls::Vec2F adjustedVelocityAfterPenetrationResolved(const ls::Vec2F& escape, const ls::Vec2F& velocity);
 
     bool isAlmostZero(const ls::Vec2F& v, float thr) const;
+
+    ls::Vec2F pushingForce(EntityCollider& entityCollider);
 };
 
 #endif // ENTITYSYSTEM_H

@@ -16,7 +16,6 @@ class StationaryEntityController : public EntityController
 {
 public:
     StationaryEntityController(Entity& owner, ComponentCommonData* commonData);
-    StationaryEntityController(Player& player, Entity& owner);
     StationaryEntityController(const StationaryEntityController& other, Entity& owner);
     ~StationaryEntityController() override;
 
@@ -27,4 +26,6 @@ public:
     void accelerate(const ls::Vec2F& dv) override;
 
     std::unique_ptr<EntityController> clone(Entity& owner) const override;
+
+    ls::Vec2F m_velocity; // TEMP for testing
 };

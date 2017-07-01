@@ -171,8 +171,6 @@ void EntitySystem::update(float dt) //will also move them and resolve collisions
     }
     updateEntity(m_player->entity(), dt);
 
-    //TODO: make entities push each other
-
     createCorpsesForDeadEntities(*m_world);
     removeDeadEntities();
 }
@@ -183,10 +181,13 @@ void EntitySystem::updateEntity(Entity& entity, float dt)
     const Vec2F positionBeforeUpdate = model.position();
     entity.controller().update(*m_world, dt);
     const Vec2F positionAfterUpdate = model.position();
+    EntityCollider entityCollider = model.collider();
+
+    const ls::Vec2F pushing = pushingForce(entityCollider);
+    entity.controller().accelerate(pushing);
+
     Vec2F currentPosition = positionAfterUpdate;
     Vec2F currentVelocity = model.velocity();
-
-    EntityCollider entityCollider = model.collider();
 
     std::vector<TileCollider> tileCollidersInRange = m_world->queryTileColliders(entityCollider.boundingBox());
 
@@ -216,6 +217,40 @@ void EntitySystem::updateEntity(Entity& entity, float dt)
         }
     }();
     model.setVelocity(adjustedVelocityAfterPenetrationResolved(currentPosition - positionAfterUpdate, currentVelocity));
+}
+ls::Vec2F EntitySystem::pushingForce(EntityCollider& entityCollider)
+{
+    constexpr float contribution = 0.12f; //chosen empirically
+
+    ls::Vec2F force(0.0f, 0.0f);
+
+    auto forceFromEntity = [&](Entity& entity) {
+        if (&entity == &(entityCollider.entity())) return ls::Vec2F(0.0f, 0.0f);
+
+        EntityCollider& otherEntityCollider = entity.model().collider();
+
+        ls::Vec2F displacement = entityCollider.volume().origin - otherEntityCollider.volume().origin;
+        if (isAlmostZero(displacement, 0.0001f)) displacement.y = 0.01f;
+
+        const float radiiSum = entityCollider.volume().radius + otherEntityCollider.volume().radius;
+        const float radiiSumSqr = radiiSum*radiiSum;
+        const float distSqr = displacement.magnitudeSquared();
+        if (distSqr < radiiSumSqr)
+        {
+            const float mag = (radiiSumSqr - distSqr) * contribution;
+            return displacement.normalized() * mag;
+        }
+
+        return ls::Vec2F(0.0f, 0.0f);
+    };
+
+    for (std::unique_ptr<Entity>& ent : m_entities)
+    {
+        force += forceFromEntity(*ent);
+    }
+    force += forceFromEntity(m_player->entity());
+
+    return force;
 }
 bool EntitySystem::isAlmostZero(const ls::Vec2F& v, float thr) const
 {

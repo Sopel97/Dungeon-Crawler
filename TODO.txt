@@ -6,6 +6,11 @@
 PROBABLY NEXT:
 
 3.2.1 projectiles should receive event when owner is deleted because some things may still rely on owner.
+3.3 melee projectile
+3.3.1 create one and hook it up to the weapon
+
+4. Damage calculating 'mediator'
+4.1 entity receives damage request and asks 'mediator' to resolve it
 
 7. Clear world generation code //little priority since it is waiting for libs still
 
