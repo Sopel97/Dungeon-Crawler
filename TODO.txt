@@ -2,12 +2,8 @@
 0. child specifier for TileRandomizer to allow nested inventories
 
 0.9. consider passing tilestack to the render function
-1. consider moving maxQuantity to model
-2.5. rename commondata to shareddata?
 
 PROBABLY NEXT:
-
-3. Make entities move in update and better collision resolving in entity system (currently it's very ugly)
 
 3.2.1 projectiles should receive event when owner is deleted because some things may still rely on owner.
 
