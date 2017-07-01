@@ -7,11 +7,19 @@ TileCollider::TileCollider(Tile& tile, const ls::Rectangle2F& volume) :
 
 }
 
-const ls::Rectangle2F& TileCollider::volume()
+const ls::Rectangle2F& TileCollider::volume() const
 {
     return m_volume;
 }
-ls::Rectangle2F TileCollider::boundingBox()
+ls::Rectangle2F TileCollider::boundingBox() const
 {
     return m_volume;
+}
+const Tile& TileCollider::tile() const
+{
+    return *m_parent;
+}
+Tile& TileCollider::tile()
+{
+    return *m_parent;
 }

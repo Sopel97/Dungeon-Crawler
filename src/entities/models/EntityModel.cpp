@@ -28,9 +28,9 @@ bool EntityModel::hasCollider() const
 {
     return false;
 }
-float EntityModel::colliderRadius() const
+EntityCollider EntityModel::collider()
 {
-    return 0.0f;
+    return EntityCollider(*m_owner, ls::Circle2F());
 }
 const ls::Vec2F& EntityModel::position() const
 {

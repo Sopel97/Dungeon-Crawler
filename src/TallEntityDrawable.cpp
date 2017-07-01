@@ -9,7 +9,7 @@ using namespace ls;
 TallEntityDrawable::TallEntityDrawable(Entity* entity) :
     m_entity(entity)
 {
-    float radius = m_entity->model().colliderRadius();
+    float radius = m_entity->model().collider().volume().radius;
     Vec2F halfSize {radius / 2.0f, radius / 2.0f};
     m_center = m_entity->model().position();
     m_boundingRectangle = Rectangle2F(m_center - halfSize, m_center + halfSize);

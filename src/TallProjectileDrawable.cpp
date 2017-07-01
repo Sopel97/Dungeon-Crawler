@@ -9,7 +9,7 @@ using namespace ls;
 TallProjectileDrawable::TallProjectileDrawable(Projectile* projectile) :
     m_projectile(projectile)
 {
-    float radius = m_projectile->model().collider().radius;
+    float radius = m_projectile->model().collider().volume().radius;
     Vec2F halfSize{ radius / 2.0f, radius / 2.0f };
     m_center = m_projectile->model().position();
     m_boundingRectangle = Rectangle2F(m_center - halfSize, m_center + halfSize);

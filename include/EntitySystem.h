@@ -3,6 +3,8 @@
 
 #include <memory>
 
+#include "colliders/EntityCollider.h"
+
 #include "../LibS/Geometry.h"
 
 #include "tiles/TileStack.h"
@@ -24,6 +26,7 @@ public:
     EntitySystem(World& world, Player& player);
 
     std::vector<Entity*> query(const ls::Rectangle2F& rect);
+    std::vector<EntityCollider> queryColliders(const ls::Rectangle2F& rect);
     const std::vector<std::unique_ptr<Entity>>& entities() const;
 
     Entity& entity(int i);
@@ -33,6 +36,7 @@ public:
     Entity& spawnEntity(const EntityPrefab& prefab, const ls::Vec2F& position);
     void removeEntity(Entity& entityToRemove);
 
+    // TODO: make this properly
     void update(float dt);
 
     std::vector<Entity*> getVisibleEntities(const Camera& camera);

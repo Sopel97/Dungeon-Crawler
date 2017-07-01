@@ -13,6 +13,8 @@
 #include "entities/renderers/EntityRenderer.h"
 #include "entities/controllers/EntityController.h"
 
+#include "colliders/Collisions.h"
+
 #include "TileColumn.h"
 
 #include "Camera.h"
@@ -42,11 +44,12 @@ std::vector<Entity*> EntitySystem::query(const Rectangle2F& rect)
 
     for(std::unique_ptr<Entity>& entity : m_entities)
     {
-        const Vec2F entityPosition = entity->model().position();
-        const float entityRadius = entity->model().colliderRadius();
-        const float xDist = std::abs(rectCenter.x - entityPosition.x) - halfRectWidth;
-        const float yDist = std::abs(rectCenter.y - entityPosition.y) - halfRectHeight;
-        if(xDist < entityRadius && yDist < entityRadius)
+        EntityCollider collider = entity->model().collider();
+        const Vec2F pos = collider.volume().origin;
+        const float radius = collider.volume().radius;
+        const float xDist = std::abs(rectCenter.x - pos.x) - halfRectWidth;
+        const float yDist = std::abs(rectCenter.y - pos.y) - halfRectHeight;
+        if(xDist < radius && yDist < radius)
         {
             entitiesInRegion.push_back(entity.get());
         }
@@ -54,10 +57,11 @@ std::vector<Entity*> EntitySystem::query(const Rectangle2F& rect)
 
     {
         Entity& playerEntity = m_player->entity();
-        const Vec2F position = playerEntity.model().position();
-        const float radius = playerEntity.model().colliderRadius();
-        const float xDist = std::abs(rectCenter.x - position.x) - halfRectWidth;
-        const float yDist = std::abs(rectCenter.y - position.y) - halfRectHeight;
+        EntityCollider collider = playerEntity.model().collider();
+        const Vec2F pos = collider.volume().origin;
+        const float radius = collider.volume().radius;
+        const float xDist = std::abs(rectCenter.x - pos.x) - halfRectWidth;
+        const float yDist = std::abs(rectCenter.y - pos.y) - halfRectHeight;
         if (xDist < radius && yDist < radius)
         {
             entitiesInRegion.push_back(&playerEntity);
@@ -65,6 +69,44 @@ std::vector<Entity*> EntitySystem::query(const Rectangle2F& rect)
     }
 
     return entitiesInRegion;
+}
+std::vector<EntityCollider> EntitySystem::queryColliders(const ls::Rectangle2F& rect)
+{
+    std::vector<EntityCollider> collidersInRegion;
+
+    const Vec2F rectCenter = rect.centerOfMass();
+    const float halfRectWidth = rect.width() / 2.0f;
+    const float halfRectHeight = rect.height() / 2.0f;
+
+    for (std::unique_ptr<Entity>& entity : m_entities)
+    {
+        if (!entity->model().hasCollider()) continue;
+
+        EntityCollider collider = entity->model().collider();
+        const Vec2F pos = collider.volume().origin;
+        const float radius = collider.volume().radius;
+        const float xDist = std::abs(rectCenter.x - pos.x) - halfRectWidth;
+        const float yDist = std::abs(rectCenter.y - pos.y) - halfRectHeight;
+        if (xDist < radius && yDist < radius)
+        {
+            collidersInRegion.push_back(collider);
+        }
+    }
+
+    {
+        Entity& playerEntity = m_player->entity();
+        EntityCollider collider = playerEntity.model().collider();
+        const Vec2F pos = collider.volume().origin;
+        const float radius = collider.volume().radius;
+        const float xDist = std::abs(rectCenter.x - pos.x) - halfRectWidth;
+        const float yDist = std::abs(rectCenter.y - pos.y) - halfRectHeight;
+        if (xDist < radius && yDist < radius)
+        {
+            collidersInRegion.push_back(collider);
+        }
+    }
+
+    return collidersInRegion;
 }
 const std::vector<std::unique_ptr<Entity>>& EntitySystem::entities() const
 {
@@ -153,23 +195,24 @@ void EntitySystem::moveEntity(World& world, Entity& entity, float dt)
 
     if(model.hasCollider())
     {
-        float entityColliderRadius = model.colliderRadius();
-        Rectangle2F entityCollider(idealPositionAfterMove - Vec2F(entityColliderRadius, entityColliderRadius), idealPositionAfterMove + Vec2F(entityColliderRadius, entityColliderRadius));
+        EntityCollider collider = model.collider();
+        const float radius = collider.volume().radius;
+        Rectangle2F entityCollider(idealPositionAfterMove - Vec2F(radius, radius), idealPositionAfterMove + Vec2F(radius, radius));
         int xmin = static_cast<int>(entityCollider.min.x / static_cast<float>(GameConstants::tileSize));
         int ymin = static_cast<int>(entityCollider.min.y / static_cast<float>(GameConstants::tileSize));
         int xmax = static_cast<int>(entityCollider.max.x / static_cast<float>(GameConstants::tileSize));
         int ymax = static_cast<int>(entityCollider.max.y / static_cast<float>(GameConstants::tileSize));
 
-        std::vector<Rectangle2F> collidersInRange;
+        std::vector<TileCollider> collidersInRange;
 
         for(int x = xmin; x <= xmax; ++x)
         {
             for(int y = ymin; y <= ymax; ++y)
             {
-                const TileColumn& tileColumn = world.map().at(x, y);
+                TileColumn& tileColumn = world.map().at(x, y);
                 if(tileColumn.hasCollider())
                 {
-                    Rectangle2F tileCollider = tileColumn.collider().translated(Vec2F(static_cast<float>(x), static_cast<float>(y)) * static_cast<float>(GameConstants::tileSize));
+                    TileCollider tileCollider = tileColumn.collider({ x, y });
                     collidersInRange.push_back(tileCollider);
                 }
             }
@@ -178,9 +221,9 @@ void EntitySystem::moveEntity(World& world, Entity& entity, float dt)
         entityCollider.translate(-displacementWhenMoved); //back to initial position
         entityCollider.translate(Vec2F(displacementWhenMoved.x, 0.0f)); //as it moved only in x direction
 
-        for(const auto& rect : collidersInRange)
+        for(const auto& tileCollider : collidersInRange)
         {
-            if(ls::intersect(entityCollider, rect))
+            if (ls::intersect(entityCollider, tileCollider.volume()))
             {
                 moveFactor.x = 0.0f;
                 entityCollider.translate(-Vec2F(displacementWhenMoved.x, 0.0f)); //if it can't move there go back
@@ -191,9 +234,9 @@ void EntitySystem::moveEntity(World& world, Entity& entity, float dt)
 
         entityCollider.translate(Vec2F(0.0f, displacementWhenMoved.y)); //as it moved in y direction
 
-        for(const auto& rect : collidersInRange)
+        for(const auto& tileCollider : collidersInRange)
         {
-            if(ls::intersect(entityCollider, rect))
+            if (ls::intersect(entityCollider, tileCollider.volume()))
             {
                 moveFactor.y = 0.0f;
                 velocity.y = 0.0f;

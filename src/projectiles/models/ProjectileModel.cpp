@@ -30,9 +30,9 @@ bool ProjectileModel::canCollideWithTiles() const
 {
     return false;
 }
-ls::Circle2F ProjectileModel::collider() const
+ProjectileCollider ProjectileModel::collider()
 {
-    return ls::Circle2F();
+    return ProjectileCollider(*m_owner, ls::Circle2F());
 }
 bool ProjectileModel::isDead() const
 {

@@ -44,9 +44,9 @@ bool PlainEntityModel::hasCollider() const
 {
     return true;
 }
-float PlainEntityModel::colliderRadius() const
+EntityCollider PlainEntityModel::collider()
 {
-    return 6.0f;
+    return EntityCollider(*m_owner, ls::Circle2F(m_position, 6.0f));
 }
 
 const Vec2F& PlainEntityModel::position() const

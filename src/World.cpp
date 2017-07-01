@@ -100,9 +100,9 @@ void World::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
     {
         for (int x = firstTileX; x <= lastTileX; ++x)
         {
-            const TileColumn& tileColumn = m_mapLayer->at(x, y);
+            TileColumn& tileColumn = m_mapLayer->at(x, y);
             int z = 0;
-            for (const TileStack& tileStack : tileColumn.tiles())
+            for (TileStack& tileStack : tileColumn.tiles())
             {
                 TileLocation location(*m_mapLayer, x, y, z);
 
@@ -429,7 +429,7 @@ bool World::isInsideWorldBounds(const ls::Vec2I& pos) const
     return pos.x >= 0 && pos.y >= 0 && pos.x < m_width && pos.y < m_height;
 }
 
-std::vector<Rectangle2F> World::queryTileColliders(const Rectangle2F& queryRegion) const
+std::vector<TileCollider> World::queryTileColliders(const Rectangle2F& queryRegion)
 {
     return m_mapLayer->queryTileColliders(queryRegion);
 }

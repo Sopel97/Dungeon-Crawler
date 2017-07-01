@@ -79,7 +79,7 @@ TileStack MapLayer::takeTile(int x, int y)
     return at(x, y).takeFromTop();
 }
 
-std::vector<Rectangle2F> MapLayer::queryTileColliders(const Rectangle2F& queryRegion) const
+std::vector<TileCollider> MapLayer::queryTileColliders(const Rectangle2F& queryRegion)
 {
     const Vec2F& queryRegionTopLeft     = queryRegion.min;
     const Vec2F& queryRegionBottomRight = queryRegion.max;
@@ -88,19 +88,13 @@ std::vector<Rectangle2F> MapLayer::queryTileColliders(const Rectangle2F& queryRe
     int lastTileX = std::min(Util::fastFloor(queryRegionBottomRight.x / GameConstants::tileSize), m_width - 1);
     int lastTileY = std::min(Util::fastFloor(queryRegionBottomRight.y / GameConstants::tileSize), m_height - 1);
 
-    std::vector<Rectangle2F> colliders;
+    std::vector<TileCollider> colliders;
     for(int x = firstTileX; x <= lastTileX; ++x)
     {
         for(int y = firstTileY; y <= lastTileY; ++y)
         {
-            const TileColumn& tileColumn = at(x, y);
-            for(const TileStack& tileStack : tileColumn.tiles())
-            {
-                if(tileStack.tile().model().hasCollider())
-                {
-                    colliders.emplace_back(tileStack.tile().model().collider());
-                }
-            }
+            TileColumn& tileColumn = at(x, y);
+            if (tileColumn.hasCollider()) colliders.emplace_back(tileColumn.collider({ x, y }));
         }
     }
     return colliders;

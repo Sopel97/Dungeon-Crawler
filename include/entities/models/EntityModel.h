@@ -10,6 +10,8 @@
 
 #include "tiles/TileStack.h"
 
+#include "colliders/EntityCollider.h"
+
 #include "../LibS/Geometry.h"
 
 class Entity;
@@ -32,7 +34,7 @@ public:
     void loadFromConfiguration(ConfigurationNode& config) override;
 
     virtual bool hasCollider() const;
-    virtual float colliderRadius() const;
+    virtual EntityCollider collider();
 
     virtual const ls::Vec2F& position() const;
     virtual void setPosition(const ls::Vec2F& newPosition);

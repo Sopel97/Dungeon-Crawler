@@ -29,9 +29,9 @@ bool TileModel::hasCollider() const
 {
     return false;
 }
-const Rectangle2F& TileModel::collider() const
+TileCollider TileModel::collider(const ls::Vec2I& pos)
 {
-    return m_emptyCollider;
+    return TileCollider(*m_owner, m_emptyCollider);
 }
 bool TileModel::isMovableFrom() const
 {

@@ -6,6 +6,8 @@
 
 #include "projectiles/Projectile.h"
 
+#include "colliders/ProjectileCollider.h"
+
 namespace sf
 {
     class RenderTarget;
@@ -23,6 +25,7 @@ public:
     ProjectileSystem(World& world, EntitySystem& entitySystem);
 
     std::vector<Projectile*> query(const ls::Rectangle2F& rect);
+    std::vector<ProjectileCollider> queryColliders(const ls::Rectangle2F& rect);
     const std::vector<std::unique_ptr<Projectile>>& projectiles() const;
 
     Projectile& projectile(int i);

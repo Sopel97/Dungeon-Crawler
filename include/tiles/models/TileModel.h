@@ -5,13 +5,15 @@
 
 #include "../LibS/Geometry.h"
 
-#include "../../ComponentCommonData.h"
+#include "ComponentCommonData.h"
 
 #include <memory>
 
 #include "tiles/TileComponent.h"
 
 #include "SlotContentRequirement.h"
+
+#include "colliders/TileCollider.h"
 
 class Tile;
 class TileLocation;
@@ -29,7 +31,7 @@ public:
     virtual bool equals(const TileModel& other) const; //NOTE: assume that the type of other is the same as the type of *this
 
     virtual bool hasCollider() const;
-    virtual const ls::Rectangle2F& collider() const;
+    virtual TileCollider collider(const ls::Vec2I& pos);
     virtual bool isMovableFrom() const;
     virtual bool isThrowableThrough() const;
     virtual bool isMovableTo() const;

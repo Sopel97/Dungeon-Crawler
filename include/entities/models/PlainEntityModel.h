@@ -24,7 +24,7 @@ public:
     void loadFromConfiguration(ConfigurationNode& config) override;
 
     bool hasCollider() const override;
-    float colliderRadius() const override;
+    EntityCollider collider() override;
 
     const ls::Vec2F& position() const override;
     void setPosition(const ls::Vec2F& newPosition) override;

@@ -44,9 +44,9 @@ bool PlayerModel::hasCollider() const
 {
     return true;
 }
-float PlayerModel::colliderRadius() const
+EntityCollider PlayerModel::collider()
 {
-    return 6.0f;
+    return EntityCollider(*m_owner, ls::Circle2F(m_position, 6.0f));
 }
 
 const Vec2F& PlayerModel::position() const

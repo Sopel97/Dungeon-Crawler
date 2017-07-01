@@ -23,7 +23,7 @@ public:
     void loadFromConfiguration(ConfigurationNode& config) override;
 
     bool hasCollider() const override;
-    const ls::Rectangle2F& collider() const override;
+    TileCollider collider(const ls::Vec2I& pos) override;
     bool isMovableFrom() const override;
     bool isThrowableThrough() const override;
     bool isMovableTo() const override;

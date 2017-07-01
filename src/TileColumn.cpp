@@ -9,8 +9,6 @@
 
 using namespace ls;
 
-const Rectangle2F TileColumn::m_defaultCollider(Vec2F(0.0f, 0.0f), Vec2F(32.0f, 32.0f));
-
 TileStack TileColumn::m_emptyTile(std::make_unique<Tile>(), 1);
 
 const TileStack& TileColumn::top() const
@@ -35,6 +33,10 @@ TileStack TileColumn::takeFromTop()
 }
 
 const std::vector<TileStack>& TileColumn::tiles() const
+{
+    return m_tiles;
+}
+std::vector<TileStack>& TileColumn::tiles()
 {
     return m_tiles;
 }
@@ -76,14 +78,14 @@ bool TileColumn::hasCollider() const
 
     return false;
 }
-const Rectangle2F& TileColumn::collider() const
+TileCollider TileColumn::collider(const ls::Vec2I& pos)
 {
-    for (const TileStack& tileStack : m_tiles)
+    for (TileStack& tileStack : m_tiles)
     {
-        if (tileStack.tile().model().hasCollider()) return tileStack.tile().model().collider();
+        if (tileStack.tile().model().hasCollider()) return tileStack.tile().model().collider(pos);
     }
 
-    return m_defaultCollider;
+    return m_emptyTile.tile().model().collider(pos);
 }
 
 int TileColumn::topZ() const

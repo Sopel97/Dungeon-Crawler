@@ -14,6 +14,8 @@
 
 #include "window/WindowContent.h"
 
+#include "colliders/TileCollider.h"
+
 #include "../LibS/Geometry.h"
 
 #include <SFML/Graphics.hpp>
@@ -62,7 +64,7 @@ public:
 
     bool isInsideWorldBounds(const ls::Vec2I& pos) const;
 
-    std::vector<ls::Rectangle2F> queryTileColliders(const ls::Rectangle2F& queryRegion) const;
+    std::vector<TileCollider> queryTileColliders(const ls::Rectangle2F& queryRegion);
     std::vector<ls::Vec2I> queryGridPointsBetweenTiles(const ls::Vec2I& from, const ls::Vec2I& to) const;
     std::vector<ls::Vec2I> queryGridPointsBetweenPlayerAndTile(const ls::Vec2I& to) const;
     bool lineOfSightBetweenTiles(const ls::Vec2I& from, const ls::Vec2I& to) const;

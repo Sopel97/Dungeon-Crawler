@@ -13,7 +13,7 @@ class MapLayer;
 class TallTileColumnDrawable : public TallDrawable //requires at least one tile in tile stack to be tall
 {
 public:
-    TallTileColumnDrawable(const TileColumn & tileColumn, const TileLocation & tileLocation);
+    TallTileColumnDrawable(TileColumn & tileColumn, const TileLocation & tileLocation);
     ~TallTileColumnDrawable() override;
 
     const ls::Rectangle2F& boundingRectangle() const override;
@@ -28,7 +28,7 @@ public:
     void drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) override;
 
 protected:
-    const TileColumn& m_tileColumn;
+    TileColumn& m_tileColumn;
     int m_tileX;
     int m_tileY;
     const MapLayer& m_map;

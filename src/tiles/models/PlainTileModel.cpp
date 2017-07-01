@@ -1,5 +1,7 @@
 #include "tiles/models/PlainTileModel.h"
 
+#include "GameConstants.h"
+
 using namespace ls;
 
 REGISTER_TILE_MODEL_TYPE(PlainTileModel)
@@ -50,9 +52,10 @@ bool PlainTileModel::hasCollider() const
 {
     return m_commonData->hasCollider;
 }
-const Rectangle2F& PlainTileModel::collider() const
+TileCollider PlainTileModel::collider(const ls::Vec2I& pos)
 {
-    return m_commonData->collider;
+    const ls::Rectangle2F aabb = m_commonData->collider.translated(static_cast<ls::Vec2F>(pos) * GameConstants::tileSize);
+    return TileCollider(*m_owner, aabb);
 }
 bool PlainTileModel::isMovableFrom() const
 {

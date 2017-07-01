@@ -1,6 +1,8 @@
 #ifndef MAPLAYER_H
 #define MAPLAYER_H
 
+#include "colliders/TileCollider.h"
+
 #include "../LibS/Array2.h"
 
 #include "../LibS/Geometry.h"
@@ -31,7 +33,7 @@ public:
     TileStack takeTile(int x, int y);
 
 
-    std::vector<ls::Rectangle2F> queryTileColliders(const ls::Rectangle2F& queryRegion) const;
+    std::vector<TileCollider> queryTileColliders(const ls::Rectangle2F& queryRegion);
 
 protected:
     World& m_world;

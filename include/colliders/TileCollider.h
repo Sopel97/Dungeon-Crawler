@@ -13,6 +13,9 @@ private:
 public:
     TileCollider(Tile& tile, const ls::Rectangle2F& volume);
 
-    const ls::Rectangle2F& volume();
-    ls::Rectangle2F boundingBox();
+    const ls::Rectangle2F& volume() const;
+    ls::Rectangle2F boundingBox() const;
+
+    const Tile& tile() const;
+    Tile& tile();
 };

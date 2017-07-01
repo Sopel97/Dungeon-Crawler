@@ -7,6 +7,8 @@
 #include "AggroGroup.h"
 #include "projectiles/ProjectileComponent.h"
 
+#include "colliders/ProjectileCollider.h"
+
 #include "../LibS/Shapes.h"
 
 class Projectile;
@@ -22,7 +24,7 @@ public:
 
     virtual bool canCollideWithTiles() const;
     virtual bool canCollideWithEntities() const;
-    virtual ls::Circle2F collider() const;
+    virtual ProjectileCollider collider();
     virtual bool isDead() const;
     virtual AggroGroupId group() const;
 

@@ -4,6 +4,8 @@
 #include <vector>
 #include <memory>
 
+#include "colliders/TileCollider.h"
+
 #include "../LibS/Geometry.h"
 
 class TileStack;
@@ -27,9 +29,10 @@ public:
     bool isTall() const;
 
     bool hasCollider() const;
-    const ls::Rectangle2F& collider() const;
+    TileCollider collider(const ls::Vec2I& pos);
 
     const std::vector<TileStack>& tiles() const;
+    std::vector<TileStack>& tiles();
 
     int topZ() const;
 
@@ -37,8 +40,6 @@ protected:
     std::vector<TileStack> m_tiles;
 
     static TileStack m_emptyTile;
-private:
-    static const ls::Rectangle2F m_defaultCollider;
 };
 
 #endif // TILECOLUMN_H

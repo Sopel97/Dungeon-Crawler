@@ -13,7 +13,9 @@ private:
 public:
     EntityCollider(Entity& entity, const ls::Circle2F& volume);
 
-    const ls::Circle2F& volume();
-    ls::Rectangle2F boundingBox();
+    const ls::Circle2F& volume() const;
+    ls::Rectangle2F boundingBox() const;
 
+    const Entity& entity() const;
+    Entity& entity();
 };

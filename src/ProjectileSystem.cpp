@@ -19,6 +19,9 @@
 #include "projectiles/renderers/ProjectileRenderer.h"
 #include "projectiles/controllers/ProjectileController.h"
 
+#include "colliders/Collisions.h"
+#include "colliders/EntityCollider.h"
+
 #include "Camera.h"
 
 #include <vector>
@@ -46,16 +49,37 @@ std::vector<Projectile*> ProjectileSystem::query(const Rectangle2F& rect)
 
     for (std::unique_ptr<Projectile>& projectile : m_projectiles)
     {
-        const ls::Circle2F collider = projectile->model().collider();
-        const float xDist = std::abs(rectCenter.x - collider.origin.x) - halfRectWidth;
-        const float yDist = std::abs(rectCenter.y - collider.origin.y) - halfRectHeight;
-        if (xDist < collider.radius && yDist < collider.radius)
+        ProjectileCollider collider = projectile->model().collider();
+        const float xDist = std::abs(rectCenter.x - collider.volume().origin.x) - halfRectWidth;
+        const float yDist = std::abs(rectCenter.y - collider.volume().origin.y) - halfRectHeight;
+        if (xDist < collider.volume().radius && yDist < collider.volume().radius)
         {
             projectilesInRegion.push_back(projectile.get());
         }
     }
 
     return projectilesInRegion;
+}
+std::vector<ProjectileCollider> ProjectileSystem::queryColliders(const ls::Rectangle2F& rect)
+{
+    std::vector<ProjectileCollider> collidersInRegion;
+
+    const Vec2F rectCenter = rect.centerOfMass();
+    const float halfRectWidth = rect.width() / 2.0f;
+    const float halfRectHeight = rect.height() / 2.0f;
+
+    for (std::unique_ptr<Projectile>& projectile : m_projectiles)
+    {
+        ProjectileCollider collider = projectile->model().collider();
+        const float xDist = std::abs(rectCenter.x - collider.volume().origin.x) - halfRectWidth;
+        const float yDist = std::abs(rectCenter.y - collider.volume().origin.y) - halfRectHeight;
+        if (xDist < collider.volume().radius && yDist < collider.volume().radius)
+        {
+            collidersInRegion.push_back(collider);
+        }
+    }
+
+    return collidersInRegion;
 }
 const std::vector<std::unique_ptr<Projectile>>& ProjectileSystem::projectiles() const
 {
@@ -120,40 +144,40 @@ void ProjectileSystem::resolveCollisionsWithEntities(Projectile& projectile)
 
     const AggroGroupId projectileGroup = projectile.model().group();
 
-    const ls::Circle2F collider = projectile.model().collider();
+    ProjectileCollider collider = projectile.model().collider();
     const ls::Rectangle2F colliderBoundingBox = collider.boundingBox();
-    auto entities = m_entitySystem->query(colliderBoundingBox);
+    auto entities = m_entitySystem->queryColliders(colliderBoundingBox);
 
-    for (Entity* entity : entities)
+    for (EntityCollider& entityCollider : entities)
     {
         if (isDead(projectile)) return;
 
-        const AggroGroupId entityGroup = entity->model().group();
-        if (!EntityGroupRelations::canCollide(entityGroup, projectileGroup)) continue;
-        if (!entity->model().hasCollider()) continue;
+        Entity& entity = entityCollider.entity();
 
-        const ls::Circle2F entityCollider(entity->model().position(), entity->model().colliderRadius());
-        if (ls::intersect(entityCollider, collider))
+        const AggroGroupId entityGroup = entity.model().group();
+        if (!EntityGroupRelations::canCollide(entityGroup, projectileGroup)) continue;
+
+        if (Collisions::collide(entityCollider, collider))
         {
-            projectile.onCollidedWithEntity(*entity);
+            projectile.onCollidedWithEntity(entityCollider);
         }
     }
 }
 void ProjectileSystem::resolveCollisionsWithTiles(Projectile& projectile)
 {
     //TODO: some fancy sweep collision checking
-    const ls::Circle2F collider = projectile.model().collider();
+    ProjectileCollider collider = projectile.model().collider();
     const ls::Rectangle2F boundingBox = collider.boundingBox();
 
     auto tileColliders = m_world->queryTileColliders(boundingBox);
 
-    for (const auto& tileCollider : tileColliders)
+    for (auto& tileCollider : tileColliders)
     {
         if (isDead(projectile)) return;
 
-        if (ls::intersect(boundingBox, tileCollider))
+        if (Collisions::collide(tileCollider, collider))
         {
-            projectile.onCollidedWithTile();
+            projectile.onCollidedWithTile(tileCollider);
         }
     }
 }

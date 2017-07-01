@@ -13,6 +13,9 @@ private:
 public:
     ProjectileCollider(Projectile& projectile, const ls::Circle2F& volume);
 
-    const ls::Circle2F& volume();
-    ls::Rectangle2F boundingBox();
+    const ls::Circle2F& volume() const;
+    ls::Rectangle2F boundingBox() const;
+
+    const Projectile& projectile() const;
+    Projectile& projectile();
 };

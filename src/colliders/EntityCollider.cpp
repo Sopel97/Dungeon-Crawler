@@ -7,11 +7,20 @@ EntityCollider::EntityCollider(Entity& entity, const ls::Circle2F& volume) :
 
 }
 
-const ls::Circle2F& EntityCollider::volume()
+const ls::Circle2F& EntityCollider::volume() const
 {
     return m_volume;
 }
-ls::Rectangle2F EntityCollider::boundingBox()
+ls::Rectangle2F EntityCollider::boundingBox() const
 {
     return m_volume.boundingBox();
+}
+
+const Entity& EntityCollider::entity() const
+{
+    return *m_parent;
+}
+Entity& EntityCollider::entity()
+{
+    return *m_parent;
 }
