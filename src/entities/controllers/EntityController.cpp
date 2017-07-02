@@ -1,5 +1,8 @@
 #include "entities/controllers/EntityController.h"
 
+#include "entities/Entity.h"
+#include "entities/models/EntityModel.h"
+
 EntityController::EntityController(Entity& owner) :
     EntityComponent(owner)
 {
@@ -28,6 +31,12 @@ void EntityController::update(World& world, float dt)
 void EntityController::accelerate(const ls::Vec2F& dv)
 {
 
+}
+
+void EntityController::dealDamage(int damage)
+{
+    const int currentHealth = m_owner->model().health();
+    m_owner->model().setHealth(currentHealth - damage);
 }
 
 std::unique_ptr<EntityController> EntityController::clone(Entity& owner) const

@@ -191,7 +191,7 @@ void EntitySystem::updateEntity(Entity& entity, float dt)
 
     std::vector<TileCollider> tileCollidersInRange = m_world->queryTileColliders(entityCollider.boundingBox());
 
-    [&]()
+    [&]() // lambda for easy early exit
     {
         constexpr int maxIterations = 2;
         for (int i = 0; i < maxIterations; ++i)
@@ -230,7 +230,7 @@ ls::Vec2F EntitySystem::pushingForce(EntityCollider& entityCollider)
         EntityCollider& otherEntityCollider = entity.model().collider();
 
         ls::Vec2F displacement = entityCollider.volume().origin - otherEntityCollider.volume().origin;
-        if (isAlmostZero(displacement, 0.0001f)) displacement.y = 0.01f;
+        if (isAlmostZero(displacement, 1.0f)) displacement.y = 1.0f;
 
         const float radiiSum = entityCollider.volume().radius + otherEntityCollider.volume().radius;
         const float radiiSumSqr = radiiSum*radiiSum;

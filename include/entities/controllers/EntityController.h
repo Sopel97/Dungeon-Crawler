@@ -25,6 +25,8 @@ public:
 
     virtual void accelerate(const ls::Vec2F& dv);
 
+    virtual void dealDamage(int damage);
+
     std::unique_ptr<EntityController> clone(Entity& owner) const override;
 };
 

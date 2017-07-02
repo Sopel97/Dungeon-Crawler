@@ -11,15 +11,13 @@ using namespace ls;
 REGISTER_ENTITY_CONTROLLER_TYPE(StationaryEntityController)
 
 StationaryEntityController::StationaryEntityController(Entity& owner, ComponentCommonData* commonData) :
-    EntityController(owner),
-    m_velocity(0,0)
+    EntityController(owner)
 {
 
 }
 
 StationaryEntityController::StationaryEntityController(const StationaryEntityController& other, Entity& owner) :
-    EntityController(other, owner),
-    m_velocity(other.m_velocity)
+    EntityController(other, owner)
 {
 
 }
@@ -37,12 +35,12 @@ void StationaryEntityController::update(World& world, float dt)
 {
     //m_owner->model().setHealth(m_owner->model().health() - 1);
 
-    m_owner->model().setPosition(m_owner->model().position() + m_velocity * dt);
+    m_owner->model().setPosition(m_owner->model().position() + m_owner->model().velocity() * dt);
 }
 
 void StationaryEntityController::accelerate(const ls::Vec2F& dv)
 {
-    m_velocity += dv;
+    m_owner->model().setVelocity(m_owner->model().velocity() + dv);
 }
 
 std::unique_ptr<EntityController> StationaryEntityController::clone(Entity& owner) const

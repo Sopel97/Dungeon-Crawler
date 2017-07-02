@@ -6,6 +6,8 @@ REGISTER_ENTITY_MODEL_TYPE(PlainEntityModel)
 
 PlainEntityModel::PlainEntityModel(Entity& owner, ComponentCommonData* commonData) :
     EntityModel(owner),
+    m_position(0, 0),
+    m_velocity(0, 0),
     m_directionOfMove(Direction::South),
     m_distanceTravelled(0.0f),
     m_health(1),
@@ -17,6 +19,8 @@ PlainEntityModel::PlainEntityModel(Entity& owner, ComponentCommonData* commonDat
 }
 PlainEntityModel::PlainEntityModel(const PlainEntityModel& other, Entity& owner) :
     EntityModel(other, owner),
+    m_position(other.m_position),
+    m_velocity(other.m_velocity),
     m_directionOfMove(other.m_directionOfMove),
     m_distanceTravelled(other.m_distanceTravelled),
     m_health(other.m_health),

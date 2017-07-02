@@ -26,6 +26,4 @@ public:
     void accelerate(const ls::Vec2F& dv) override;
 
     std::unique_ptr<EntityController> clone(Entity& owner) const override;
-
-    ls::Vec2F m_velocity; // TEMP for testing
 };
