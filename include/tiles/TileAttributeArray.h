@@ -16,7 +16,7 @@ private:
     std::vector<ValueType> m_values;
 public:
     TileAttributeArray();
-    TileAttributeArray(const TileAttributeSet& set);
+    explicit TileAttributeArray(const TileAttributeSet& set);
     TileAttributeArray(const TileAttributeSet& set, const std::vector<TileAttributeId>& mask);
     TileAttributeArray(const TileAttributeArray&) = default;
     TileAttributeArray(TileAttributeArray&&) = default;

@@ -42,6 +42,8 @@ TileAttributeArray& TileAttributeArray::operator+=(const TileAttributeArray& rhs
     {
         m_values[i] += rhs.m_values[i];
     }
+
+    return *this;
 }
 TileAttributeArray& TileAttributeArray::operator-=(const TileAttributeArray& rhs)
 {
@@ -49,6 +51,8 @@ TileAttributeArray& TileAttributeArray::operator-=(const TileAttributeArray& rhs
     {
         m_values[i] -= rhs.m_values[i];
     }
+
+    return *this;
 }
 TileAttributeArray TileAttributeArray::operator+(const TileAttributeArray& rhs) const
 {
@@ -66,10 +70,14 @@ TileAttributeArray TileAttributeArray::operator-(const TileAttributeArray& rhs) 
 TileAttributeArray& TileAttributeArray::operator+=(const TileAttribute& rhs)
 {
     m_values[static_cast<int>(rhs.id)] += rhs.value;
+
+    return *this;
 }
 TileAttributeArray& TileAttributeArray::operator-=(const TileAttribute& rhs)
 {
     m_values[static_cast<int>(rhs.id)] -= rhs.value;
+
+    return *this;
 }
 TileAttributeArray TileAttributeArray::operator+(const TileAttribute& rhs) const
 {
