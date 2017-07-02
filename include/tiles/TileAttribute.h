@@ -48,8 +48,10 @@ struct TileAttributeTraits
 
 struct TileAttribute
 {
+    using ValueType = int;
+
     TileAttributeId id;
-    int value;
+    ValueType value;
 
     std::string formatToString() const;
     sf::Color color() const;
