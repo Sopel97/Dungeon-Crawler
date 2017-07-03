@@ -32,6 +32,8 @@ public:
     ComponentCommonData* createCommonDataStorage() const override
     {
         std::unique_ptr<ComponentCommonData> commonData = DerivedComponent::createCommonDataStorage();
+        if (commonData == nullptr) return nullptr;
+
         m_commonDataStorages.emplace_back(std::move(commonData));
         return m_commonDataStorages.back().get();
     }
