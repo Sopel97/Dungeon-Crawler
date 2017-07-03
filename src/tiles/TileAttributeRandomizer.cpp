@@ -44,7 +44,9 @@ TileAttributeSet TileAttributeRandomizer::randomize() const
 }
 TileAttribute TileAttributeRandomizer::randomize(const TileAttributeRandomizer::AttributeRandomizationParameters& params) const
 {
-    const int value = Rng<std::ranlux48>::instance().sample(params.min, params.max, params.exponent, params.probability);
+    if (!Rng<std::ranlux48>::instance().doesHappen(params.probability)) return TileAttribute{ params.attributeId, 0 };
+
+    const int value = Rng<std::ranlux48>::instance().sample(params.min, params.max, params.exponent);
     if(value == 0) return TileAttribute{ params.attributeId, 0 };
 
     return TileAttribute{ params.attributeId, value };

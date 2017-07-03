@@ -24,13 +24,19 @@ public:
         return m_rng;
     }
 
+    template <class T>
+    bool doesHappen(T probability)
+    {
+        static std::uniform_real_distribution<double> distr(0.0, 1.0);
+
+        return distr(m_rng) <= probability;
+    }
+
+    // value = min + (max - min) * x^exponent, where x is uniformly distributed on [0, 1]
     template <class T, class U>
-    T sample(T min, T max, U exponent, U probability)
+    T sample(T min, T max, U exponent)
     {
         static std::uniform_real_distribution<U> distr(0.0, 1.0);
-
-        const U r = distr(m_rng);
-        if (r > probability) return 0;
 
         if (min == max) return min;
 
@@ -80,14 +86,15 @@ public:
         return values[std::distance(weightSums.begin(), std::lower_bound(weightSums.begin(), weightSums.end(), distr(m_rng)))];
     }
 
+    // http://utopia.duth.gr/~pefraimi/research/data/2007EncOfAlg.pdf
     template <class T, class U>
-    std::vector<const T*> weightedChoose(const std::vector<T>& values, const std::vector<U>& weights, int n = 1)
+    std::vector<const T*> weightedChoose(const std::vector<T>& values, const std::vector<U>& weights, int n)
     {
         if (n == 1) return { &(weightedChoose(values, weights)) };
 
         const auto indices = weightedShuffleIndices(weights);
         
-        std::vector<T> result;
+        std::vector<const T*> result;
         result.reserve(n);
         for (int i = 0; i < n; ++i)
         {

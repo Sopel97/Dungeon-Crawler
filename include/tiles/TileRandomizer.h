@@ -12,16 +12,25 @@ class Inventory;
 class TileRandomizer
 {
 private:
-    struct TileRandomizationParameters
+    struct TileRandomizationParameters;
+
+    struct TileRandomizationChoice
     {
         ResourceHandle<TilePrefab> tilePrefab;
         double exponent;
-        double probability;
+        double weight;
         int min;
         int max;
         std::vector<TileRandomizationParameters> children;
-        // value = min + (max - min) * x^exponent, where x is uniformly distributed on [0, 1]
     };
+
+    struct TileRandomizationParameters
+    {
+        double probability;
+        int numToChoose;
+        std::vector<TileRandomizationChoice> choices;
+    };
+    
 
 private:
     std::vector<TileRandomizationParameters> m_parameters;
@@ -31,6 +40,7 @@ public:
     void randomize(Inventory& targetInventory) const;
 
 private:
-    TileStack randomize(const TileRandomizationParameters& params) const;
+    std::vector<TileStack> randomize(const TileRandomizationParameters& params) const;
+    TileStack randomize(const TileRandomizationChoice& choice) const;
     std::vector<TileRandomizationParameters> loadFromConfigurationPartial(ConfigurationNode& config);
 };

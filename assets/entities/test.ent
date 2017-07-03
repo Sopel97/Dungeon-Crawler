@@ -25,23 +25,43 @@ entity = {
             max = 10
         },
         {
-            tileName = "Bag",
-            exponent = 1.0,
-            probability = 0.5,
-            min = 1,
-            max = 1,
-            children = {
+            probability = 1.0,
+            n = 2,
+            choices = {
+                {
+                    tileName = "Bag",
+                    exponent = 1.0,
+                    weight = 1.0,
+                    min = 1,
+                    max = 1,
+                    children = {
+                        {
+                            tileName = "Iron Axe",
+                            exponent = 1.0,
+                            probability = 1.0,
+                            min = 1,
+                            max = 1
+                        },
+                        {
+                            tileName = "Steel Helmet",
+                            exponent = 1.0,
+                            probability = 0.5,
+                            min = 1,
+                            max = 1
+                        }
+                    }
+                },
                 {
                     tileName = "Iron Axe",
                     exponent = 1.0,
-                    probability = 1.0,
+                    weight = 1.0,
                     min = 1,
                     max = 1
                 },
                 {
                     tileName = "Steel Helmet",
                     exponent = 1.0,
-                    probability = 0.5,
+                    weight = 1.0,
                     min = 1,
                     max = 1
                 }

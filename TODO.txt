@@ -5,11 +5,6 @@
 
 PROBABLY NEXT:
 
-2. Way to specify "choose one from many" in tile randomization, make it weighted.
-2.1 Normally "{ tile... }", choosing "{ probability, n, choices = { { tile (with weight instead of probabiliy)... }... } }"
-2.1.1 choose one weighted from remaining until n tiles are chosen. Requireq creating weight sums for each choosing.
-2.1.2 or http://utopia.duth.gr/~pefraimi/research/data/2007EncOfAlg.pdf
-
 3.2.1 projectiles should receive event when owner is deleted because some things may still rely on owner.
 3.3 melee projectile
 3.3.1 create one and hook it up to the weapon
