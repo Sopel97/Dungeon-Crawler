@@ -56,4 +56,5 @@ private:
     int m_health;
     AggroGroupId m_group;
     TileAttributeArray m_attributes;
+    std::vector<Entity*> m_hitEntities;
 };

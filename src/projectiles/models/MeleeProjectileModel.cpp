@@ -106,6 +106,9 @@ void MeleeProjectileModel::onProjectileInstantiated(World& world, Entity& parent
 void MeleeProjectileModel::onCollidedWithEntity(EntityCollider& entityCollider)
 {
     Entity& entity = entityCollider.entity();
+    if (std::find(m_hitEntities.begin(), m_hitEntities.end(), &entity) != m_hitEntities.end()) return;
+
+    m_hitEntities.emplace_back(&entity);
     if (!EntityGroupRelations::canDamage(m_group, entity.model().group())) return;
     
     --m_health;
