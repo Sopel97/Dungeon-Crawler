@@ -13,7 +13,6 @@
 class Entity;
 class Player;
 
-// TODO: common data storages for some entity components
 class PlainEntityModel : public EntityModel
 {
 public:
@@ -42,15 +41,22 @@ public:
     EntityModel::Direction directionOfMove() const override;
     void setDirectionOfMovement(EntityModel::Direction newDirection) override;
 
+    static std::unique_ptr<ComponentCommonData> createCommonDataStorage();
+
     std::unique_ptr<EntityModel> clone(Entity& owner) const override;
 protected:
+    struct CommonData : public ComponentCommonData
+    {
+        int maxHealth;
+        AggroGroupId group;
+        ResourceHandle<TilePrefab> corpseTile;
+        TileRandomizer lootRandomizer;
+    };
+
+    CommonData* m_commonData;
     ls::Vec2F m_position;
     ls::Vec2F m_velocity;
     Direction m_directionOfMove;
     float m_distanceTravelled;
     int m_health;
-    int m_maxHealth;
-    AggroGroupId m_group;
-    ResourceHandle<TilePrefab> m_corpseTile;
-    TileRandomizer m_lootRandomizer;
 };

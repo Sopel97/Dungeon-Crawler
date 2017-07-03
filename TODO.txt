@@ -5,6 +5,8 @@
 
 PROBABLY NEXT:
 
+2. make common datas type safe (since there is a factory, and creating common data is static member function there should be no problem doing that)
+
 3.2.1 projectiles should receive event when owner is deleted because some things may still rely on owner.
 3.3 melee projectile
 3.3.1 create one and hook it up to the weapon

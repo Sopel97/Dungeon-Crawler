@@ -6,28 +6,23 @@ REGISTER_ENTITY_MODEL_TYPE(PlainEntityModel)
 
 PlainEntityModel::PlainEntityModel(Entity& owner, ComponentCommonData* commonData) :
     EntityModel(owner),
+    m_commonData(static_cast<CommonData*>(commonData)),
     m_position(0, 0),
     m_velocity(0, 0),
     m_directionOfMove(Direction::South),
     m_distanceTravelled(0.0f),
-    m_health(1),
-    m_maxHealth(1),
-    m_group(AggroGroupId::Unfriendly),
-    m_corpseTile(nullptr)
+    m_health(1)
 {
 
 }
 PlainEntityModel::PlainEntityModel(const PlainEntityModel& other, Entity& owner) :
     EntityModel(other, owner),
+    m_commonData(other.m_commonData),
     m_position(other.m_position),
     m_velocity(other.m_velocity),
     m_directionOfMove(other.m_directionOfMove),
     m_distanceTravelled(other.m_distanceTravelled),
-    m_health(other.m_health),
-    m_maxHealth(other.m_maxHealth),
-    m_group(other.m_group),
-    m_corpseTile(other.m_corpseTile),
-    m_lootRandomizer(other.m_lootRandomizer)
+    m_health(other.m_health)
 {
 
 }
@@ -38,10 +33,10 @@ PlainEntityModel::~PlainEntityModel()
 
 void PlainEntityModel::loadFromConfiguration(ConfigurationNode& config)
 {
-    m_health = m_maxHealth = config["maxHealth"].get<int>();
-    m_corpseTile = ResourceManager::instance().get<TilePrefab>(config["corpseTile"].get<std::string>());
-    m_lootRandomizer.loadFromConfiguration(config["lootRandomizationGuidelines"]);
-    m_group = AggroGroupIdHelper::stringToEnum(config["group"].get<std::string>());
+    m_health = m_commonData->maxHealth = config["maxHealth"].get<int>();
+    m_commonData->corpseTile = ResourceManager::instance().get<TilePrefab>(config["corpseTile"].get<std::string>());
+    m_commonData->lootRandomizer.loadFromConfiguration(config["lootRandomizationGuidelines"]);
+    m_commonData->group = AggroGroupIdHelper::stringToEnum(config["group"].get<std::string>());
 }
 
 EntityCollider PlainEntityModel::collider()
@@ -80,7 +75,7 @@ int PlainEntityModel::health() const
 }
 int PlainEntityModel::maxHealth() const
 {
-    return m_maxHealth;
+    return m_commonData->maxHealth;
 }
 void PlainEntityModel::setHealth(int newHealth)
 {
@@ -88,13 +83,13 @@ void PlainEntityModel::setHealth(int newHealth)
 }
 TileStack PlainEntityModel::createCorpse() const
 {
-    TileStack corpse = TileStack(m_corpseTile->instantiate(), 1);
-    m_lootRandomizer.randomize(*(corpse.tile().model().inventory()));
+    TileStack corpse = TileStack(m_commonData->corpseTile->instantiate(), 1);
+    m_commonData->lootRandomizer.randomize(*(corpse.tile().model().inventory()));
     return corpse;
 }
 AggroGroupId PlainEntityModel::group() const
 {
-    return m_group;
+    return m_commonData->group;
 }
 
 float PlainEntityModel::maxSpeed() const
@@ -109,6 +104,10 @@ EntityModel::Direction PlainEntityModel::directionOfMove() const
 void PlainEntityModel::setDirectionOfMovement(EntityModel::Direction newDirection)
 {
     m_directionOfMove = newDirection;
+}
+std::unique_ptr<ComponentCommonData> PlainEntityModel::createCommonDataStorage()
+{
+    return std::make_unique<CommonData>();
 }
 std::unique_ptr<EntityModel> PlainEntityModel::clone(Entity& owner) const
 {

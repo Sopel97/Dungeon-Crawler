@@ -40,12 +40,19 @@ public:
     void onProjectileInstantiated(World& world, Entity& parentEntity, const ls::Vec2F& hintedPosition) override;
     void onCollidedWithEntity(EntityCollider& entityCollider) override;
 
+    static std::unique_ptr<ComponentCommonData> createCommonDataStorage();
+
     std::unique_ptr<ProjectileModel> clone(Projectile& owner) const override;
 
 private:
+    struct CommonData : public ComponentCommonData
+    {
+        std::vector<TileAttributeId> inheritedAttributes;
+    };
+
+    CommonData* m_commonData;
     ls::Vec2F m_position;
     float m_radius;
-    float m_offset;
     int m_health;
     AggroGroupId m_group;
     TileAttributeArray m_attributes;

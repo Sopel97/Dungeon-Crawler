@@ -10,9 +10,9 @@ REGISTER_PROJECTILE_MODEL_TYPE(MeleeProjectileModel);
 
 MeleeProjectileModel::MeleeProjectileModel(Projectile& owner, ComponentCommonData* commonData) :
     ProjectileModel(owner),
+    m_commonData(static_cast<CommonData*>(commonData)),
     m_position(0, 0),
     m_radius(15.0f),
-    m_offset(15.0f),
     m_health(3),
     m_group(AggroGroupId::Neutral),
     m_attributes()
@@ -21,9 +21,9 @@ MeleeProjectileModel::MeleeProjectileModel(Projectile& owner, ComponentCommonDat
 }
 MeleeProjectileModel::MeleeProjectileModel(const MeleeProjectileModel& other, Projectile& owner) :
     ProjectileModel(other, owner),
+    m_commonData(other.m_commonData),
     m_position(other.m_position),
     m_radius(other.m_radius),
-    m_offset(other.m_offset),
     m_health(other.m_health),
     m_group(other.m_group),
     m_attributes(other.m_attributes)
@@ -37,7 +37,13 @@ MeleeProjectileModel::~MeleeProjectileModel()
 
 void MeleeProjectileModel::loadFromConfiguration(ConfigurationNode& config)
 {
-
+    ConfigurationNode inheritedAttributesConfig = config["inheritedAttributes"];
+    const int numEntries = inheritedAttributesConfig.length();
+    for (int i = 1; i <= numEntries; ++i)
+    {
+        const std::string attributeName = inheritedAttributesConfig[i].get<std::string>();
+        m_commonData->inheritedAttributes.emplace_back(TileAttributeIdHelper::stringToEnum(attributeName));
+    }
 }
 
 bool MeleeProjectileModel::canCollideWithTiles() const
@@ -90,11 +96,12 @@ void MeleeProjectileModel::onProjectileInstantiated(World& world, Entity& parent
     ls::Vec2F displacement = hintedPosition - parentEntity.model().position();
     if (displacement.magnitudeSquared() < 0.001f) displacement.x = 1.0f;
     displacement.normalize();
-    const ls::Vec2F offset = displacement * m_offset;
+    const float offsetLength = m_radius;
+    const ls::Vec2F offset = displacement * offsetLength;
 
     m_position = parentEntity.model().position() + offset;
 
-    m_attributes = TileAttributeArray(parentEntity.model().attributes(), { TileAttributeId::Attack });
+    m_attributes = TileAttributeArray(parentEntity.model().attributes(), m_commonData->inheritedAttributes);
 }
 void MeleeProjectileModel::onCollidedWithEntity(EntityCollider& entityCollider)
 {
@@ -104,6 +111,11 @@ void MeleeProjectileModel::onCollidedWithEntity(EntityCollider& entityCollider)
     --m_health;
     const int damage = DamageCalculator::calculateDamage(m_attributes, entity.model().attributes());
     entity.controller().dealDamage(damage);
+}
+
+std::unique_ptr<ComponentCommonData> MeleeProjectileModel::createCommonDataStorage()
+{
+    return std::make_unique<CommonData>();
 }
 
 std::unique_ptr<ProjectileModel> MeleeProjectileModel::clone(Projectile& owner) const

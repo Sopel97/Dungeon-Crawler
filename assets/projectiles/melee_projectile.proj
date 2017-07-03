@@ -3,5 +3,11 @@ projectile = {
 
     model = "MeleeProjectileModel",
     renderer = "NullProjectileRenderer",
-    controller = "StationaryProjectileController"
+    controller = "StationaryProjectileController",
+
+    lifetime = 0.25,
+
+    inheritedAttributes = {
+        "Attack"
+    }
 }
