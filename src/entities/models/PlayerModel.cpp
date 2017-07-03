@@ -2,6 +2,8 @@
 
 #include "Player.h"
 
+#include "tiles/TileAttributeArray.h"
+
 using namespace ls;
 
 REGISTER_ENTITY_MODEL_TYPE(PlayerModel)
@@ -77,6 +79,11 @@ AggroGroupId PlayerModel::group() const
 TileStack& PlayerModel::ammo()
 {
     return m_playerOwner->ammo();
+}
+const TileAttributeArray& PlayerModel::attributes()
+{
+    static TileAttributeArray a;
+    return a;
 }
 
 float PlayerModel::maxSpeed() const

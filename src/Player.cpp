@@ -88,6 +88,14 @@ void Player::showTileDescription(TileDescription&& description)
     m_tileDescriptionRenderer.setDescription(std::move(description));
     displayTileDescriptionWindow();
 }
+
+void Player::attack(World& world, const ls::Vec2F& pos)
+{
+    TileStack& weapon = m_equipmentInventory.weapon();
+    if (weapon.isEmpty()) return;
+    
+    weapon.tile().controller().attack(world, *this, pos);
+}
 void Player::displayTileDescriptionWindow()
 {
     const ls::Rectangle2I contentRect = m_tileDescriptionRenderer.requiredContentRect(m_wsm->rect());

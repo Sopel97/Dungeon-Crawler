@@ -4,15 +4,18 @@
 #include "entities/models/EntityModel.h"
 #include "ResourceLoaders.h"
 
+#include "DamageCalculator.h"
+
 REGISTER_PROJECTILE_MODEL_TYPE(MeleeProjectileModel);
 
 MeleeProjectileModel::MeleeProjectileModel(Projectile& owner, ComponentCommonData* commonData) :
     ProjectileModel(owner),
     m_position(0, 0),
-    m_radius(20.0f),
-    m_offset(10.0f),
+    m_radius(15.0f),
+    m_offset(15.0f),
     m_health(3),
-    m_group(AggroGroupId::Neutral)
+    m_group(AggroGroupId::Neutral),
+    m_attributes()
 {
 
 }
@@ -22,7 +25,8 @@ MeleeProjectileModel::MeleeProjectileModel(const MeleeProjectileModel& other, Pr
     m_radius(other.m_radius),
     m_offset(other.m_offset),
     m_health(other.m_health),
-    m_group(other.m_group)
+    m_group(other.m_group),
+    m_attributes(other.m_attributes)
 {
 
 }
@@ -57,6 +61,14 @@ AggroGroupId MeleeProjectileModel::group() const
     return m_group;
 }
 
+int MeleeProjectileModel::health() const
+{
+    return m_health;
+}
+void MeleeProjectileModel::setHealth(int newHealth)
+{
+    m_health = newHealth;
+}
 const ls::Vec2F& MeleeProjectileModel::position() const
 {
     return m_position;
@@ -81,11 +93,17 @@ void MeleeProjectileModel::onProjectileInstantiated(World& world, Entity& parent
     const ls::Vec2F offset = displacement * m_offset;
 
     m_position = parentEntity.model().position() + offset;
+
+    m_attributes = TileAttributeArray(parentEntity.model().attributes(), { TileAttributeId::Attack });
 }
 void MeleeProjectileModel::onCollidedWithEntity(EntityCollider& entityCollider)
 {
+    Entity& entity = entityCollider.entity();
+    if (!EntityGroupRelations::canDamage(m_group, entity.model().group())) return;
+    
     --m_health;
-    std::cout << "asdadsads";
+    const int damage = DamageCalculator::calculateDamage(m_attributes, entity.model().attributes());
+    entity.controller().dealDamage(damage);
 }
 
 std::unique_ptr<ProjectileModel> MeleeProjectileModel::clone(Projectile& owner) const

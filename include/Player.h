@@ -49,6 +49,8 @@ public:
     void showTileDescription(const TileDescription& description);
     void showTileDescription(TileDescription&& description);
 
+    void attack(World& world, const ls::Vec2F& pos);
+
 protected:
     WindowSpaceManager* m_wsm;
     TileTransferMediator* m_tileTransferMediator;

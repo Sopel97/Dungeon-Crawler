@@ -25,6 +25,7 @@ public:
     std::unique_ptr<InventoryWindow> createInventoryWindow(WindowSpaceManager& wsm, const std::string& name) const override;
 
     TileStack& ammo();
+    TileStack& weapon();
 
     int size() const override;
 

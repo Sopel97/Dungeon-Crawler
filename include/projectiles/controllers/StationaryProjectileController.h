@@ -18,5 +18,10 @@ public:
     StationaryProjectileController(const StationaryProjectileController& other, Projectile& owner);
     ~StationaryProjectileController() override;
 
+    void update(World& world, float dt) override;
+
     std::unique_ptr<ProjectileController> clone(Projectile& owner) const override;
+
+private:
+    int m_ticksLeft;
 };

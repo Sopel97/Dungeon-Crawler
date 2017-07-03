@@ -20,7 +20,7 @@ public:
     std::unique_ptr<TileController> clone(Tile& owner) const override;
 
 private:
-    bool m_usesAmmo;
+    bool m_requiresAmmo;
     int m_ammoPerAttack;
     std::vector<TileAmmoGroupType> m_allowedAmmoGroups;
     ResourceHandle<ProjectilePrefab> m_projectile;

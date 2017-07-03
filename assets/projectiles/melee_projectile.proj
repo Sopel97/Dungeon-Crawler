@@ -1,0 +1,7 @@
+projectile = {
+    name = "Melee Projectile",
+
+    model = "MeleeProjectileModel",
+    renderer = "NullProjectileRenderer",
+    controller = "StationaryProjectileController"
+}

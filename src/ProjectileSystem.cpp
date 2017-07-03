@@ -155,6 +155,7 @@ void ProjectileSystem::resolveCollisionsWithEntities(Projectile& projectile)
         Entity& entity = entityCollider.entity();
 
         const AggroGroupId entityGroup = entity.model().group();
+
         if (!EntityGroupRelations::canCollide(entityGroup, projectileGroup)) continue;
 
         if (Collisions::collide(entityCollider, collider))

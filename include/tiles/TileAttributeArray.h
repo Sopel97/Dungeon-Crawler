@@ -18,6 +18,7 @@ public:
     TileAttributeArray();
     explicit TileAttributeArray(const TileAttributeSet& set);
     TileAttributeArray(const TileAttributeSet& set, const std::vector<TileAttributeId>& mask);
+    TileAttributeArray(const TileAttributeArray& other, const std::vector<TileAttributeId>& mask);
     TileAttributeArray(const TileAttributeArray&) = default;
     TileAttributeArray(TileAttributeArray&&) = default;
     TileAttributeArray& operator=(const TileAttributeArray&) = default;

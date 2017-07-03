@@ -1,5 +1,7 @@
 #include "entities/models/EntityModel.h"
 
+#include "tiles/TileAttributeArray.h"
+
 using namespace ls;
 
 const ls::Vec2F EntityModel::m_someVector {0.0f, 0.0f};
@@ -76,6 +78,11 @@ AggroGroupId EntityModel::group() const
 TileStack& EntityModel::ammo()
 {
     static TileStack a;
+    return a;
+}
+const TileAttributeArray& EntityModel::attributes()
+{
+    static TileAttributeArray a;
     return a;
 }
 

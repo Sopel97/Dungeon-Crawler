@@ -78,6 +78,10 @@ TileStack& PlayerEquipmentInventory::ammo()
 {
     return m_contents[9];
 }
+TileStack& PlayerEquipmentInventory::weapon()
+{
+    return m_contents[1];
+}
 int PlayerEquipmentInventory::size() const
 {
     return m_contents.size();

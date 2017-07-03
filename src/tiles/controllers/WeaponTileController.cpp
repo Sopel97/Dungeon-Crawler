@@ -11,7 +11,7 @@ REGISTER_TILE_CONTROLLER_TYPE(WeaponTileController)
 
 WeaponTileController::WeaponTileController(Tile& owner, ComponentCommonData* commonData) :
     TileController(owner),
-    m_usesAmmo(false),
+    m_requiresAmmo(false),
     m_ammoPerAttack(0),
     m_allowedAmmoGroups(),
     m_projectile(nullptr)
@@ -21,7 +21,7 @@ WeaponTileController::WeaponTileController(Tile& owner, ComponentCommonData* com
 
 WeaponTileController::WeaponTileController(const WeaponTileController& other, Tile& owner) :
     TileController(other, owner),
-    m_usesAmmo(other.m_usesAmmo),
+    m_requiresAmmo(other.m_requiresAmmo),
     m_ammoPerAttack(other.m_ammoPerAttack),
     m_allowedAmmoGroups(other.m_allowedAmmoGroups),
     m_projectile(other.m_projectile)
@@ -36,8 +36,8 @@ WeaponTileController::~WeaponTileController()
 
 void WeaponTileController::loadFromConfiguration(ConfigurationNode& config)
 {
-    m_usesAmmo = config["requiresAmmo"].get<bool>();
-    if (m_usesAmmo)
+    m_requiresAmmo = config["requiresAmmo"].get<bool>();
+    if (m_requiresAmmo)
     {
         m_ammoPerAttack = config["ammoPerAttack"].get<int>();
         ConfigurationNode allowedAmmoGroupsConfig = config["allowedAmmoGroups"];
@@ -55,7 +55,7 @@ void WeaponTileController::loadFromConfiguration(ConfigurationNode& config)
 
 void WeaponTileController::attack(World& world, Player& player, const ls::Vec2F& hintedPosition)
 {
-    if (m_usesAmmo)
+    if (m_requiresAmmo)
     {
         TileStack& ammo = player.ammo();
         if (ammo.isEmpty()) return;

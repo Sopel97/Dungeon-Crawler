@@ -4,5 +4,5 @@
 
 int DamageCalculator::calculateDamage(const TileAttributeArray& attacker, const TileAttributeArray& defender)
 {
-    return 0;
+    return 10;
 }

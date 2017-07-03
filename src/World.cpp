@@ -631,5 +631,13 @@ auto World::onKeyPressed(sf::Event::KeyEvent& event, EventContext context)
     
         return EventResult().setConsumeEvent().setTakeFocus(false);
     }
+    else if (event.code == sf::Keyboard::Num2)
+    {
+        const ls::Vec2I mousePos(sf::Mouse::getPosition(m_windowSpaceManager.window()).x, sf::Mouse::getPosition(m_windowSpaceManager.window()).y);
+        const ls::Vec2F worldPos = screenToWorld(mousePos);
+        m_player.attack(*this, worldPos);
+
+        return EventResult().setConsumeEvent().setTakeFocus(false);
+    }
     return EventResult().setConsumeEvent(false).setTakeFocus(false);
 }

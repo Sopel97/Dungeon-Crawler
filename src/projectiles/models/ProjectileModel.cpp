@@ -42,6 +42,14 @@ AggroGroupId ProjectileModel::group() const
 {
     return AggroGroupId::Neutral;
 }
+int ProjectileModel::health() const
+{
+    return 0;
+}
+void ProjectileModel::setHealth(int newHealth)
+{
+
+}
 const ls::Vec2F& ProjectileModel::position() const
 {
     static const ls::Vec2F somePosition;

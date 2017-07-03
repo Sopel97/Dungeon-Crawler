@@ -27,6 +27,8 @@ public:
     virtual ProjectileCollider collider();
     virtual bool isDead() const;
     virtual AggroGroupId group() const;
+    virtual int health() const;
+    virtual void setHealth(int newHealth);
 
     virtual const ls::Vec2F& position() const;
     virtual void setPosition(const ls::Vec2F& newPosition);

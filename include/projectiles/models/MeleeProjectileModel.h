@@ -11,6 +11,8 @@
 
 #include "../LibS/Shapes.h"
 
+#include "tiles/TileAttributeArray.h"
+
 class Projectile;
 
 class MeleeProjectileModel : public ProjectileModel
@@ -27,6 +29,8 @@ public:
     ProjectileCollider collider() override;
     bool isDead() const override;
     AggroGroupId group() const override;
+    int health() const override;
+    void setHealth(int newHealth) override;
 
     const ls::Vec2F& position() const override;
     void setPosition(const ls::Vec2F& newPosition) override;
@@ -44,4 +48,5 @@ private:
     float m_offset;
     int m_health;
     AggroGroupId m_group;
+    TileAttributeArray m_attributes;
 };

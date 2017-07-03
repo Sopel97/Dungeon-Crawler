@@ -33,7 +33,7 @@ void StationaryEntityController::loadFromConfiguration(ConfigurationNode& config
 
 void StationaryEntityController::update(World& world, float dt)
 {
-    m_owner->model().setHealth(m_owner->model().health() - 1);
+    //m_owner->model().setHealth(m_owner->model().health() - 1);
 
     m_owner->model().setPosition(m_owner->model().position() + m_owner->model().velocity() * dt);
 }

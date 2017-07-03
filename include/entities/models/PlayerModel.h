@@ -32,6 +32,7 @@ public:
     void setDistanceTravelled(float newDistanceTravelled) override;
     AggroGroupId group() const override;
     TileStack& ammo() override;
+    const TileAttributeArray& attributes() override;
 
     float maxSpeed() const override;
 

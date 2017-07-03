@@ -35,6 +35,14 @@ TileAttributeArray::TileAttributeArray(const TileAttributeSet& set, const std::v
         m_values[static_cast<int>(maskAttr)] = 0;
     }
 }
+TileAttributeArray::TileAttributeArray(const TileAttributeArray& other, const std::vector<TileAttributeId>& mask) :
+    m_values(numAttributes, 0)
+{
+    for (auto id : mask)
+    {
+        m_values[static_cast<int>(id)] = other.m_values[static_cast<int>(id)];
+    }
+}
 
 TileAttributeArray& TileAttributeArray::operator+=(const TileAttributeArray& rhs)
 {
