@@ -1,4 +1,4 @@
-#include "tiles/TileAttributeRandomizer.h"
+#include "AttributeRandomizer.h"
 
 #include <string>
 #include <cmath>
@@ -6,7 +6,7 @@
 
 #include "Rng.h"
 
-void TileAttributeRandomizer::loadFromConfiguration(ConfigurationNode& config)
+void AttributeRandomizer::loadFromConfiguration(ConfigurationNode& config)
 {
     m_parameters.clear();
     if (!config.exists()) return;
@@ -19,7 +19,7 @@ void TileAttributeRandomizer::loadFromConfiguration(ConfigurationNode& config)
         ConfigurationNode entry = config[i];
 
         AttributeRandomizationParameters params;
-        params.attributeId = TileAttributeIdHelper::stringToEnum(entry["attributeId"].get<std::string>());
+        params.attributeId = AttributeIdHelper::stringToEnum(entry["attributeId"].get<std::string>());
         params.exponent = entry["exponent"].getDefault<double>(1.0);
         params.probability = entry["probability"].getDefault<double>(1.0);
         params.min = entry["min"].get<int>();
@@ -28,13 +28,13 @@ void TileAttributeRandomizer::loadFromConfiguration(ConfigurationNode& config)
         m_parameters.emplace_back(params);
     }
 }
-TileAttributeSet TileAttributeRandomizer::randomize() const
+AttributeSet AttributeRandomizer::randomize() const
 {
-    TileAttributeSet attributes;
+    AttributeSet attributes;
 
     for (const auto& params : m_parameters)
     {
-        TileAttribute attr = randomize(params);
+        Attribute attr = randomize(params);
         if (attr.value == 0) continue;
 
         attributes += attr;
@@ -42,12 +42,12 @@ TileAttributeSet TileAttributeRandomizer::randomize() const
 
     return attributes;
 }
-TileAttribute TileAttributeRandomizer::randomize(const TileAttributeRandomizer::AttributeRandomizationParameters& params) const
+Attribute AttributeRandomizer::randomize(const AttributeRandomizer::AttributeRandomizationParameters& params) const
 {
-    if (!Rng<std::ranlux48>::instance().doesHappen(params.probability)) return TileAttribute{ params.attributeId, 0 };
+    if (!Rng<std::ranlux48>::instance().doesHappen(params.probability)) return Attribute{ params.attributeId, 0 };
 
     const int value = Rng<std::ranlux48>::instance().sample(params.min, params.max, params.exponent);
-    if(value == 0) return TileAttribute{ params.attributeId, 0 };
+    if(value == 0) return Attribute{ params.attributeId, 0 };
 
-    return TileAttribute{ params.attributeId, value };
+    return Attribute{ params.attributeId, value };
 }

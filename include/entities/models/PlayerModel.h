@@ -9,7 +9,7 @@
 
 #include "ResourceLoaders.h"
 
-#include "tiles/TileAttributeArray.h"
+#include "AttributeArray.h"
 
 class Entity;
 class Player;
@@ -34,7 +34,7 @@ public:
     void setDistanceTravelled(float newDistanceTravelled) override;
     AggroGroupId group() const override;
     TileStack& ammo() override;
-    const TileAttributeArray& attributes() const override;
+    const AttributeArray& attributes() const override;
 
     float maxSpeed() const override;
 

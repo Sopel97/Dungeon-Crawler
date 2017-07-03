@@ -42,7 +42,7 @@ void MeleeProjectileModel::loadFromConfiguration(ConfigurationNode& config)
     for (int i = 1; i <= numEntries; ++i)
     {
         const std::string attributeName = inheritedAttributesConfig[i].get<std::string>();
-        m_commonData->inheritedAttributes.emplace_back(TileAttributeIdHelper::stringToEnum(attributeName));
+        m_commonData->inheritedAttributes.emplace_back(AttributeIdHelper::stringToEnum(attributeName));
     }
 }
 
@@ -101,7 +101,7 @@ void MeleeProjectileModel::onProjectileInstantiated(World& world, Entity& parent
 
     m_position = parentEntity.model().position() + offset;
 
-    m_attributes = TileAttributeArray(parentEntity.model().attributes(), m_commonData->inheritedAttributes);
+    m_attributes = AttributeArray(parentEntity.model().attributes(), m_commonData->inheritedAttributes);
 }
 void MeleeProjectileModel::onCollidedWithEntity(EntityCollider& entityCollider)
 {

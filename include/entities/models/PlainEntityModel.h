@@ -10,7 +10,7 @@
 #include "ResourceManager.h"
 #include "tiles/TileRandomizer.h"
 
-#include "tiles/TileAttributeArray.h"
+#include "AttributeArray.h"
 
 class Entity;
 class Player;
@@ -37,7 +37,7 @@ public:
     void setHealth(int newHealth) override;
     TileStack createCorpse() const override;
     AggroGroupId group() const override;
-    const TileAttributeArray& attributes() const override;
+    const AttributeArray& attributes() const override;
 
     float maxSpeed() const override;
 
@@ -55,7 +55,7 @@ protected:
         AggroGroupId group;
         ResourceHandle<TilePrefab> corpseTile;
         TileRandomizer lootRandomizer;
-        TileAttributeArray attributes;
+        AttributeArray attributes;
     };
 
     CommonData* m_commonData;

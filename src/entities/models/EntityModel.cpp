@@ -1,6 +1,6 @@
 #include "entities/models/EntityModel.h"
 
-#include "tiles/TileAttributeArray.h"
+#include "AttributeArray.h"
 
 using namespace ls;
 
@@ -80,9 +80,9 @@ TileStack& EntityModel::ammo()
     static TileStack a;
     return a;
 }
-const TileAttributeArray& EntityModel::attributes() const
+const AttributeArray& EntityModel::attributes() const
 {
-    static TileAttributeArray a;
+    static AttributeArray a;
     return a;
 }
 

@@ -2,8 +2,9 @@
 
 #include "TileDescription.h"
 
+#include "AttributeSet.h"
+
 #include "tiles/Tile.h"
-#include "tiles/TileAttributeSet.h"
 #include "tiles/models/TileModel.h"
 
 #include "Inventory.h"
@@ -21,7 +22,7 @@ TileDescription TileDescriptionGenerator::generate(const Tile& tile)
         desc.emplaceLine(std::string("Capacity: ") + std::to_string(inventorySize), sf::Color::Green, sf::Text::Style::Regular, 16);
     }
 
-    const TileAttributeSet& attributes = tile.model().attributes();
+    const AttributeSet& attributes = tile.model().attributes();
     for (const auto& attribute : attributes)
     {
         desc.emplaceLine(attribute.formatToString(), attribute.color(), sf::Text::Style::Regular, 16);

@@ -11,7 +11,7 @@
 
 #include "../LibS/Shapes.h"
 
-#include "tiles/TileAttributeArray.h"
+#include "AttributeArray.h"
 
 class Projectile;
 
@@ -47,7 +47,7 @@ public:
 private:
     struct CommonData : public ComponentCommonData
     {
-        std::vector<TileAttributeId> inheritedAttributes;
+        std::vector<AttributeId> inheritedAttributes;
     };
 
     CommonData* m_commonData;
@@ -55,6 +55,6 @@ private:
     float m_radius;
     int m_health;
     AggroGroupId m_group;
-    TileAttributeArray m_attributes;
+    AttributeArray m_attributes;
     std::vector<Entity*> m_hitEntities;
 };

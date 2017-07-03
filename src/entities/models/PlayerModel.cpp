@@ -2,8 +2,8 @@
 
 #include "Player.h"
 
-#include "tiles/TileAttributeArray.h"
-#include "tiles/TileAttributeSet.h"
+#include "AttributeArray.h"
+#include "AttributeSet.h"
 
 using namespace ls;
 
@@ -81,10 +81,10 @@ TileStack& PlayerModel::ammo()
 {
     return m_playerOwner->ammo();
 }
-const TileAttributeArray& PlayerModel::attributes() const
+const AttributeArray& PlayerModel::attributes() const
 {
     // TODO: this should be a member and updated when needed
-    static TileAttributeArray attributes;
+    static AttributeArray attributes;
 
     attributes.clear();
     for (const auto& tileStack : m_playerOwner->equipmentInventory().contents())
@@ -93,7 +93,7 @@ const TileAttributeArray& PlayerModel::attributes() const
 
         const Tile& tile = tileStack.tile();
 
-        const TileAttributeSet& tileAttributes = tile.model().attributes();
+        const AttributeSet& tileAttributes = tile.model().attributes();
         for (const auto& attribute : tileAttributes)
         {
             attributes += attribute;

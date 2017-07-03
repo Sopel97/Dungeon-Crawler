@@ -18,7 +18,7 @@
 class Tile;
 class TileLocation;
 class Inventory;
-class TileAttributeSet;
+class AttributeSet;
 
 class TileModel : public TileComponent<TileModel, Tile>
 	//must be functional (ie. all methods return resonable values and there is no pure virtual member functions)
@@ -40,7 +40,7 @@ public:
     virtual int maxQuantity() const;
     virtual bool meetsRequirements(SlotContentRequirement req) const;
     virtual const std::string& displayedName() const;
-    virtual const TileAttributeSet& attributes() const;
+    virtual const AttributeSet& attributes() const;
 
     virtual Inventory* inventory();
     virtual const Inventory* inventory() const;

@@ -1,6 +1,6 @@
 #include "tiles/models/TileModel.h"
 
-#include "tiles/TileAttributeSet.h"
+#include "AttributeSet.h"
 
 using namespace ls;
 
@@ -68,9 +68,9 @@ const std::string& TileModel::displayedName() const
     static const std::string name = "";
     return name;
 }
-const TileAttributeSet& TileModel::attributes() const
+const AttributeSet& TileModel::attributes() const
 {
-    static TileAttributeSet empty;
+    static AttributeSet empty;
     return empty;
 }
 

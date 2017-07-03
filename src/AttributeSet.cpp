@@ -1,8 +1,8 @@
-#include "tiles/TileAttributeSet.h"
+#include "AttributeSet.h"
 
 #include <algorithm>
 
-TileAttributeSet& TileAttributeSet::operator+=(const TileAttributeSet& rhs)
+AttributeSet& AttributeSet::operator+=(const AttributeSet& rhs)
 {
     auto lhsCurrent = begin();
     auto rhsCurrent = rhs.begin();
@@ -34,7 +34,7 @@ TileAttributeSet& TileAttributeSet::operator+=(const TileAttributeSet& rhs)
 
     return *this;
 }
-TileAttributeSet& TileAttributeSet::operator-=(const TileAttributeSet& rhs)
+AttributeSet& AttributeSet::operator-=(const AttributeSet& rhs)
 {
     auto lhsCurrent = begin();
     auto rhsCurrent = rhs.begin();
@@ -54,7 +54,7 @@ TileAttributeSet& TileAttributeSet::operator-=(const TileAttributeSet& rhs)
         }
         else
         {
-            lhsCurrent = m_attributes.insert(std::next(lhsCurrent), TileAttribute{ rhsCurrent->id, -rhsCurrent->value });
+            lhsCurrent = m_attributes.insert(std::next(lhsCurrent), Attribute{ rhsCurrent->id, -rhsCurrent->value });
             ++lhsCurrent;
             ++rhsCurrent;
         }
@@ -66,22 +66,22 @@ TileAttributeSet& TileAttributeSet::operator-=(const TileAttributeSet& rhs)
 
     return *this;
 }
-TileAttributeSet TileAttributeSet::operator+(const TileAttributeSet& rhs) const
+AttributeSet AttributeSet::operator+(const AttributeSet& rhs) const
 {
-    TileAttributeSet sum = *this;
+    AttributeSet sum = *this;
     sum += rhs;
     return sum;
 }
-TileAttributeSet TileAttributeSet::operator-(const TileAttributeSet& rhs) const
+AttributeSet AttributeSet::operator-(const AttributeSet& rhs) const
 {
-    TileAttributeSet diff = *this;
+    AttributeSet diff = *this;
     diff -= rhs;
     return diff;
 }
 
-TileAttributeSet& TileAttributeSet::operator+=(const TileAttribute& rhs)
+AttributeSet& AttributeSet::operator+=(const Attribute& rhs)
 {
-    auto iter = std::lower_bound(m_attributes.begin(), m_attributes.end(), rhs, [](const TileAttribute& lhs, const TileAttribute& rhs)->bool {return lhs.id < rhs.id; });
+    auto iter = std::lower_bound(m_attributes.begin(), m_attributes.end(), rhs, [](const Attribute& lhs, const Attribute& rhs)->bool {return lhs.id < rhs.id; });
 
     if (iter == cend() || iter->id != rhs.id) // not found
     {
@@ -94,13 +94,13 @@ TileAttributeSet& TileAttributeSet::operator+=(const TileAttribute& rhs)
 
     return *this;
 }
-TileAttributeSet& TileAttributeSet::operator-=(const TileAttribute& rhs)
+AttributeSet& AttributeSet::operator-=(const Attribute& rhs)
 {
-    auto iter = std::lower_bound(m_attributes.begin(), m_attributes.end(), rhs.id, [](const TileAttribute& lhs, const TileAttributeId& rhs)->bool {return lhs.id < rhs; });
+    auto iter = std::lower_bound(m_attributes.begin(), m_attributes.end(), rhs.id, [](const Attribute& lhs, const AttributeId& rhs)->bool {return lhs.id < rhs; });
 
     if (iter == cend() || iter->id != rhs.id) // not found
     {
-        m_attributes.insert(iter, TileAttribute{ rhs.id, -rhs.value });
+        m_attributes.insert(iter, Attribute{ rhs.id, -rhs.value });
     }
     else
     {
@@ -109,36 +109,36 @@ TileAttributeSet& TileAttributeSet::operator-=(const TileAttribute& rhs)
 
     return *this;
 }
-TileAttributeSet TileAttributeSet::operator+(const TileAttribute& rhs) const
+AttributeSet AttributeSet::operator+(const Attribute& rhs) const
 {
-    TileAttributeSet sum = *this;
+    AttributeSet sum = *this;
     sum += rhs;
     return sum;
 }
-TileAttributeSet TileAttributeSet::operator-(const TileAttribute& rhs) const
+AttributeSet AttributeSet::operator-(const Attribute& rhs) const
 {
-    TileAttributeSet diff = *this;
+    AttributeSet diff = *this;
     diff -= rhs;
     return diff;
 }
 
-bool TileAttributeSet::isEmpty() const
+bool AttributeSet::isEmpty() const
 {
     return m_attributes.empty();
 }
-bool TileAttributeSet::isPresent(TileAttributeId id) const
+bool AttributeSet::isPresent(AttributeId id) const
 {
     return find(id) != cend();
 }
-int TileAttributeSet::value(TileAttributeId id) const
+int AttributeSet::value(AttributeId id) const
 {
     auto iter = find(id);
     if(iter != cend()) return iter->value;
     else return 0;
 }
-TileAttributeSet::ConstIterator TileAttributeSet::find(TileAttributeId id) const
+AttributeSet::ConstIterator AttributeSet::find(AttributeId id) const
 {
-    auto iter = std::lower_bound(m_attributes.begin(), m_attributes.end(), id, [](const TileAttribute& lhs, const TileAttributeId& rhs)->bool {return lhs.id < rhs; });
+    auto iter = std::lower_bound(m_attributes.begin(), m_attributes.end(), id, [](const Attribute& lhs, const AttributeId& rhs)->bool {return lhs.id < rhs; });
     
     if (iter == cend()) return iter;
     if (iter->id != id) return cend();
@@ -146,32 +146,32 @@ TileAttributeSet::ConstIterator TileAttributeSet::find(TileAttributeId id) const
     return iter;
 }
 
-TileAttributeSet::ConstIterator TileAttributeSet::cbegin() const
+AttributeSet::ConstIterator AttributeSet::cbegin() const
 {
     return m_attributes.cbegin();
 }
-TileAttributeSet::ConstIterator TileAttributeSet::begin() const
+AttributeSet::ConstIterator AttributeSet::begin() const
 {
     return m_attributes.begin();
 }
-TileAttributeSet::Iterator TileAttributeSet::begin()
+AttributeSet::Iterator AttributeSet::begin()
 {
     return m_attributes.begin();
 }
-TileAttributeSet::ConstIterator TileAttributeSet::cend() const
+AttributeSet::ConstIterator AttributeSet::cend() const
 {
     return m_attributes.cend();
 }
-TileAttributeSet::ConstIterator TileAttributeSet::end() const
+AttributeSet::ConstIterator AttributeSet::end() const
 {
     return m_attributes.end();
 }
-TileAttributeSet::Iterator TileAttributeSet::end()
+AttributeSet::Iterator AttributeSet::end()
 {
     return m_attributes.end();
 }
 
-void TileAttributeSet::clear()
+void AttributeSet::clear()
 {
     m_attributes.clear();
 }

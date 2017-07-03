@@ -90,7 +90,7 @@ const std::string& EquipmentPieceModel::displayedName() const
 {
     return m_commonData->displayedName;
 }
-const TileAttributeSet& EquipmentPieceModel::attributes() const
+const AttributeSet& EquipmentPieceModel::attributes() const
 {
     return m_attributes;
 }

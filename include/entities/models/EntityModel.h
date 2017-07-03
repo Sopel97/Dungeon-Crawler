@@ -15,7 +15,7 @@
 #include "../LibS/Geometry.h"
 
 class Entity;
-class TileAttributeArray;
+class AttributeArray;
 
 class EntityModel : public EntityComponent<EntityModel, Entity>
 {
@@ -48,7 +48,7 @@ public:
     virtual TileStack createCorpse() const;
     virtual AggroGroupId group() const;
     virtual TileStack& ammo();
-    virtual const TileAttributeArray& attributes() const;
+    virtual const AttributeArray& attributes() const;
 
     void onEntityInstantiated(const ls::Vec2F& pos) override;
 

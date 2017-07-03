@@ -44,9 +44,9 @@ void PlainEntityModel::loadFromConfiguration(ConfigurationNode& config)
     for (int i = 1; i <= numAttributes; ++i)
     {
         const std::string attributeName = attributesConfig[i][1].get<std::string>();
-        const TileAttributeId attributeId = TileAttributeIdHelper::stringToEnum(attributeName);
+        const AttributeId attributeId = AttributeIdHelper::stringToEnum(attributeName);
         const int value = attributesConfig[i][2];
-        m_commonData->attributes += TileAttribute{ attributeId, value };
+        m_commonData->attributes += Attribute{ attributeId, value };
     }
 }
 
@@ -102,7 +102,7 @@ AggroGroupId PlainEntityModel::group() const
 {
     return m_commonData->group;
 }
-const TileAttributeArray& PlainEntityModel::attributes() const
+const AttributeArray& PlainEntityModel::attributes() const
 {
     return m_commonData->attributes;
 }

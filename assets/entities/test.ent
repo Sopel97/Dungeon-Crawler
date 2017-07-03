@@ -6,7 +6,7 @@ entity = {
     renderer = "MovingEntityRenderer",
     controller = "StationaryEntityController",
 
-    maxHealth = 100,
+    maxHealth = 10,
 
     group = "Unfriendly",
 

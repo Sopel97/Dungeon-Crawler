@@ -10,8 +10,8 @@
 
 #include "../../ComponentCommonData.h"
 
-#include "tiles/TileAttributeSet.h"
-#include "tiles/TileAttributeRandomizer.h"
+#include "AttributeSet.h"
+#include "AttributeRandomizer.h"
 
 #include <memory>
 
@@ -36,7 +36,7 @@ public:
     int maxQuantity() const override;
     bool meetsRequirements(SlotContentRequirement req) const override;
     const std::string& displayedName() const override;
-    const TileAttributeSet& attributes() const override;
+    const AttributeSet& attributes() const override;
 
     float drag() const override;
 
@@ -51,12 +51,12 @@ protected:
         std::string displayedName;
         std::set<SlotContentRequirement> validSlots;
         std::set<SlotContentRequirement> correctSlots;
-        TileAttributeRandomizer attributeRandomizer;
+        AttributeRandomizer attributeRandomizer;
         float drag;
         int maxThrowDistance;
         bool canBeStored;
     };
     CommonData* m_commonData;
 
-    TileAttributeSet m_attributes;
+    AttributeSet m_attributes;
 };

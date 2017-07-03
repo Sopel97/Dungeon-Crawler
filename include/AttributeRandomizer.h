@@ -2,15 +2,15 @@
 
 #include <vector>
 
-#include "TileAttributeSet.h"
+#include "AttributeSet.h"
 #include "Configuration.h"
 
-class TileAttributeRandomizer
+class AttributeRandomizer
 {
 private:
     struct AttributeRandomizationParameters
     {
-        TileAttributeId attributeId;
+        AttributeId attributeId;
         double exponent;
         double probability;
         int min;
@@ -22,8 +22,8 @@ private:
     std::vector<AttributeRandomizationParameters> m_parameters;
 public:
     void loadFromConfiguration(ConfigurationNode& config);
-    TileAttributeSet randomize() const;
+    AttributeSet randomize() const;
 
 private:
-    TileAttribute randomize(const AttributeRandomizationParameters& params) const;
+    Attribute randomize(const AttributeRandomizationParameters& params) const;
 };
