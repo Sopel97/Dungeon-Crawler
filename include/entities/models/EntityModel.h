@@ -48,7 +48,7 @@ public:
     virtual TileStack createCorpse() const;
     virtual AggroGroupId group() const;
     virtual TileStack& ammo();
-    virtual const TileAttributeArray& attributes();
+    virtual const TileAttributeArray& attributes() const;
 
     void onEntityInstantiated(const ls::Vec2F& pos) override;
 

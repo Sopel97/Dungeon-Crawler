@@ -80,7 +80,7 @@ TileStack& EntityModel::ammo()
     static TileStack a;
     return a;
 }
-const TileAttributeArray& EntityModel::attributes()
+const TileAttributeArray& EntityModel::attributes() const
 {
     static TileAttributeArray a;
     return a;

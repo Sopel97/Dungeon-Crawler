@@ -3,6 +3,7 @@
 #include "Player.h"
 
 #include "tiles/TileAttributeArray.h"
+#include "tiles/TileAttributeSet.h"
 
 using namespace ls;
 
@@ -80,10 +81,26 @@ TileStack& PlayerModel::ammo()
 {
     return m_playerOwner->ammo();
 }
-const TileAttributeArray& PlayerModel::attributes()
+const TileAttributeArray& PlayerModel::attributes() const
 {
-    static TileAttributeArray a;
-    return a;
+    // TODO: this should be a member and updated when needed
+    static TileAttributeArray attributes;
+
+    attributes.clear();
+    for (const auto& tileStack : m_playerOwner->equipmentInventory().contents())
+    {
+        if (tileStack.isEmpty()) continue;
+
+        const Tile& tile = tileStack.tile();
+
+        const TileAttributeSet& tileAttributes = tile.model().attributes();
+        for (const auto& attribute : tileAttributes)
+        {
+            attributes += attribute;
+        }
+    }
+
+    return attributes;
 }
 
 float PlayerModel::maxSpeed() const

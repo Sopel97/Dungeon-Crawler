@@ -1,8 +1,10 @@
 #include "DamageCalculator.h"
 
+#include <algorithm>
+
 #include "tiles/TileAttributeArray.h"
 
 int DamageCalculator::calculateDamage(const TileAttributeArray& attacker, const TileAttributeArray& defender)
 {
-    return 10;
+    return std::max(0, attacker[TileAttributeId::Attack] - defender[TileAttributeId::Defense]);
 }

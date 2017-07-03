@@ -34,9 +34,20 @@ PlainEntityModel::~PlainEntityModel()
 void PlainEntityModel::loadFromConfiguration(ConfigurationNode& config)
 {
     m_health = m_commonData->maxHealth = config["maxHealth"].get<int>();
+    m_commonData->maxSpeed = config["maxSpeed"].get<float>();
     m_commonData->corpseTile = ResourceManager::instance().get<TilePrefab>(config["corpseTile"].get<std::string>());
     m_commonData->lootRandomizer.loadFromConfiguration(config["lootRandomizationGuidelines"]);
     m_commonData->group = AggroGroupIdHelper::stringToEnum(config["group"].get<std::string>());
+
+    ConfigurationNode attributesConfig = config["attributes"];
+    const int numAttributes = attributesConfig.length();
+    for (int i = 1; i <= numAttributes; ++i)
+    {
+        const std::string attributeName = attributesConfig[i][1].get<std::string>();
+        const TileAttributeId attributeId = TileAttributeIdHelper::stringToEnum(attributeName);
+        const int value = attributesConfig[i][2];
+        m_commonData->attributes += TileAttribute{ attributeId, value };
+    }
 }
 
 EntityCollider PlainEntityModel::collider()
@@ -91,10 +102,14 @@ AggroGroupId PlainEntityModel::group() const
 {
     return m_commonData->group;
 }
+const TileAttributeArray& PlainEntityModel::attributes() const
+{
+    return m_commonData->attributes;
+}
 
 float PlainEntityModel::maxSpeed() const
 {
-    return 64.0f;
+    return m_commonData->maxSpeed;
 }
 
 EntityModel::Direction PlainEntityModel::directionOfMove() const
