@@ -21,7 +21,19 @@ class TileLocation;
 class ContainerTileModel : public TileModel
 {
 public:
-    ContainerTileModel(Tile& owner, ComponentCommonData* commonData);
+    struct CommonData : public ComponentCommonData
+    {
+        std::string displayedName;
+        bool hasCollider;
+        ls::Rectangle2F collider;
+        float drag;
+        int maxThrowDistance;
+        bool isThrowableThrough;
+        bool isMovableTo;
+        bool canBeStored;
+    };
+
+    ContainerTileModel(Tile& owner, CommonData& commonData);
     ContainerTileModel(const ContainerTileModel& other, Tile& owner);
     ~ContainerTileModel() override;
 
@@ -47,17 +59,6 @@ public:
 
     std::unique_ptr<TileModel> clone(Tile& owner) const override;
 protected:
-    struct CommonData : public ComponentCommonData
-    {
-        std::string displayedName;
-        bool hasCollider;
-        ls::Rectangle2F collider;
-        float drag;
-        int maxThrowDistance;
-        bool isThrowableThrough;
-        bool isMovableTo;
-        bool canBeStored;
-    };
     CommonData* m_commonData;
 
     ContainerInventory m_inventory;

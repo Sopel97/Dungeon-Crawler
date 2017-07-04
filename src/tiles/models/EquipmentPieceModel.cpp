@@ -6,9 +6,9 @@
 
 REGISTER_TILE_MODEL_TYPE(EquipmentPieceModel)
 
-EquipmentPieceModel::EquipmentPieceModel(Tile& owner, ComponentCommonData* commonData) :
+EquipmentPieceModel::EquipmentPieceModel(Tile& owner, CommonData& commonData) :
     TileModel(owner),
-    m_commonData(static_cast<CommonData*>(commonData))
+    m_commonData(&commonData)
 {
 }
 EquipmentPieceModel::EquipmentPieceModel(const EquipmentPieceModel& other, Tile& owner) :

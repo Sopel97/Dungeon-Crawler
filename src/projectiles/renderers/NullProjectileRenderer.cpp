@@ -4,7 +4,7 @@
 
 REGISTER_PROJECTILE_RENDERER_TYPE(NullProjectileRenderer);
 
-NullProjectileRenderer::NullProjectileRenderer(Projectile& owner, ComponentCommonData* commonData) :
+NullProjectileRenderer::NullProjectileRenderer(Projectile& owner) :
     ProjectileRenderer(owner)
 {
 

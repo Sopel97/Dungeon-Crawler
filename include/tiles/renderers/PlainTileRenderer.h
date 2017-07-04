@@ -29,7 +29,17 @@ class InventorySlotView;
 class PlainTileRenderer : public TileRenderer
 {
 public:
-    PlainTileRenderer(Tile& owner, ComponentCommonData* commonData);
+    struct CommonData : public ComponentCommonData
+    {
+        ResourceHandle<sf::Texture> texture;
+        ResourceHandle<sf::Texture> metaTexture;
+        TileSpriteSelector spriteSelector;
+
+        int outerBorderPriority;
+        bool coversOuterBorders;
+    };
+
+    PlainTileRenderer(Tile& owner, CommonData& commonData);
     PlainTileRenderer(const PlainTileRenderer& other, Tile& owner);
     ~PlainTileRenderer() override;
 
@@ -52,15 +62,6 @@ public:
 
     std::unique_ptr<TileRenderer> clone(Tile& owner) const override;
 protected:
-    struct CommonData : public ComponentCommonData
-    {
-        ResourceHandle<sf::Texture> texture;
-        ResourceHandle<sf::Texture> metaTexture;
-        TileSpriteSelector spriteSelector;
-
-        int outerBorderPriority;
-        bool coversOuterBorders;
-    };
     CommonData* m_commonData;
     const TimeAnimatedSprite* m_currentAnimatedSprite;
 

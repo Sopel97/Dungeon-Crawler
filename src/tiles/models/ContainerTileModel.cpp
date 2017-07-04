@@ -6,9 +6,9 @@ using namespace ls;
 
 REGISTER_TILE_MODEL_TYPE(ContainerTileModel)
 
-ContainerTileModel::ContainerTileModel(Tile& owner, ComponentCommonData* commonData) :
+ContainerTileModel::ContainerTileModel(Tile& owner, CommonData& commonData) :
     TileModel(owner),
-    m_commonData(static_cast<CommonData*>(commonData)),
+    m_commonData(&commonData),
     m_inventory(1)
 {
 

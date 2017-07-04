@@ -21,7 +21,7 @@ class Entity;
 class MovingEntityRenderer : public EntityRenderer
 {
 public:
-    MovingEntityRenderer(Entity& owner, ComponentCommonData* commonData);
+    MovingEntityRenderer(Entity& owner);
     MovingEntityRenderer(const MovingEntityRenderer& other, Entity& owner);
     ~MovingEntityRenderer() override;
 

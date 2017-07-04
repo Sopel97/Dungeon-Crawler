@@ -10,7 +10,7 @@ class Projectile;
 class NullProjectileRenderer : public ProjectileRenderer
 {
 public:
-    NullProjectileRenderer(Projectile& owner, ComponentCommonData* commonData);
+    NullProjectileRenderer(Projectile& owner);
     NullProjectileRenderer(const NullProjectileRenderer& other, Projectile& owner);
     ~NullProjectileRenderer() override;
 

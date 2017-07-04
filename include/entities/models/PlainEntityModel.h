@@ -18,7 +18,17 @@ class Player;
 class PlainEntityModel : public EntityModel
 {
 public:
-    PlainEntityModel(Entity& owner, ComponentCommonData* commonData);
+    struct CommonData : public ComponentCommonData
+    {
+        int maxHealth;
+        float maxSpeed;
+        AggroGroupId group;
+        ResourceHandle<TilePrefab> corpseTile;
+        TileRandomizer lootRandomizer;
+        AttributeArray attributes;
+    };
+
+    PlainEntityModel(Entity& owner, CommonData& commonData);
     PlainEntityModel(const PlainEntityModel& other, Entity& owner);
     ~PlainEntityModel() override;
 
@@ -48,15 +58,6 @@ public:
 
     std::unique_ptr<EntityModel> clone(Entity& owner) const override;
 protected:
-    struct CommonData : public ComponentCommonData
-    {
-        int maxHealth;
-        float maxSpeed;
-        AggroGroupId group;
-        ResourceHandle<TilePrefab> corpseTile;
-        TileRandomizer lootRandomizer;
-        AttributeArray attributes;
-    };
 
     CommonData* m_commonData;
     ls::Vec2F m_position;

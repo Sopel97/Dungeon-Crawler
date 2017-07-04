@@ -28,7 +28,16 @@ class TileLocation;
 class OuterBorderedTileRenderer : public TileRenderer
 {
 public:
-    OuterBorderedTileRenderer(Tile& owner, ComponentCommonData* commonData);
+    struct CommonData : public ComponentCommonData
+    {
+        ResourceHandle<sf::Texture> texture;
+        TileSpriteSelector spriteSelector;
+        ls::Vec2I borderSprites;
+
+        int outerBorderPriority;
+    };
+
+    OuterBorderedTileRenderer(Tile& owner, CommonData& commonData);
     OuterBorderedTileRenderer(const OuterBorderedTileRenderer& other, Tile& owner);
     ~OuterBorderedTileRenderer() override;
 
@@ -49,15 +58,8 @@ public:
     static std::unique_ptr<ComponentCommonData> createCommonDataStorage();
 
     std::unique_ptr<TileRenderer> clone(Tile& owner) const override;
-protected:
-    struct CommonData : public ComponentCommonData
-    {
-        ResourceHandle<sf::Texture> texture;
-        TileSpriteSelector spriteSelector;
-        ls::Vec2I borderSprites;
 
-        int outerBorderPriority;
-    };
+protected:
     CommonData* m_commonData;
     const TimeAnimatedSprite* m_currentAnimatedSprite;
 };

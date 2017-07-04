@@ -10,7 +10,7 @@ using namespace ls;
 
 REGISTER_ENTITY_CONTROLLER_TYPE(StationaryEntityController)
 
-StationaryEntityController::StationaryEntityController(Entity& owner, ComponentCommonData* commonData) :
+StationaryEntityController::StationaryEntityController(Entity& owner) :
     EntityController(owner)
 {
 

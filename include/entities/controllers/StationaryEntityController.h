@@ -15,7 +15,7 @@ class Player;
 class StationaryEntityController : public EntityController
 {
 public:
-    StationaryEntityController(Entity& owner, ComponentCommonData* commonData);
+    StationaryEntityController(Entity& owner);
     StationaryEntityController(const StationaryEntityController& other, Entity& owner);
     ~StationaryEntityController() override;
 

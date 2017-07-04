@@ -14,7 +14,7 @@ class World;
 class StationaryProjectileController : public ProjectileController
 {
 public:
-    StationaryProjectileController(Projectile& owner, ComponentCommonData* commonData);
+    StationaryProjectileController(Projectile& owner);
     StationaryProjectileController(const StationaryProjectileController& other, Projectile& owner);
     ~StationaryProjectileController() override;
 

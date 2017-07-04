@@ -13,6 +13,8 @@ template <class ComponentType, class OwnerType>
 class Component
 {
 public:
+    using CommonData = void;
+
     Component(OwnerType& owner) : m_owner(&owner) {}
     Component(const Component& other, OwnerType& owner) : m_owner(&owner) {}
 	virtual ~Component() = default;

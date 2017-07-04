@@ -15,9 +15,9 @@ Tile::Tile(int id,
     const ComponentFactory<Tile, TileModel>& modelFac,
     const ComponentFactory<Tile, TileRenderer>& rendererFac,
     const ComponentFactory<Tile, TileController>& controllerFac) :
-    m_model(modelFac.create(*this, modelFac.createCommonDataStorage())),
-    m_renderer(rendererFac.create(*this, rendererFac.createCommonDataStorage())),
-    m_controller(controllerFac.create(*this, controllerFac.createCommonDataStorage())),
+    m_model(modelFac.createWithNewCommonData(*this)),
+    m_renderer(rendererFac.createWithNewCommonData(*this)),
+    m_controller(controllerFac.createWithNewCommonData(*this)),
     m_id(id)
 {
 }

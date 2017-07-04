@@ -20,9 +20,9 @@ using namespace ls;
 
 REGISTER_TILE_RENDERER_TYPE(OuterBorderedTileRenderer)
 
-OuterBorderedTileRenderer::OuterBorderedTileRenderer(Tile& owner, ComponentCommonData* commonData) :
+OuterBorderedTileRenderer::OuterBorderedTileRenderer(Tile& owner, CommonData& commonData) :
     TileRenderer(owner),
-    m_commonData(static_cast<CommonData*>(commonData)),
+    m_commonData(&commonData),
     m_currentAnimatedSprite(nullptr)
 {
 

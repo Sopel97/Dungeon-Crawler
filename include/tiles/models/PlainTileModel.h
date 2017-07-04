@@ -16,7 +16,20 @@ class Tile;
 class PlainTileModel : public TileModel
 {
 public:
-    PlainTileModel(Tile& owner, ComponentCommonData* commonData);
+    struct CommonData : public ComponentCommonData
+    {
+        std::string displayedName;
+        bool hasCollider;
+        ls::Rectangle2F collider;
+        float drag;
+        int maxThrowDistance;
+        bool isThrowableThrough;
+        bool isMovableTo;
+        bool canBeStored;
+        int maxQuantity;
+    };
+
+    PlainTileModel(Tile& owner, CommonData& commonData);
     PlainTileModel(const PlainTileModel& other, Tile& owner);
     ~PlainTileModel() override;
 
@@ -38,18 +51,6 @@ public:
 
     std::unique_ptr<TileModel> clone(Tile& owner) const override;
 protected:
-    struct CommonData : public ComponentCommonData
-    {
-        std::string displayedName;
-        bool hasCollider;
-        ls::Rectangle2F collider;
-        float drag;
-        int maxThrowDistance;
-        bool isThrowableThrough;
-        bool isMovableTo;
-        bool canBeStored;
-        int maxQuantity;
-    };
     CommonData* m_commonData;
 };
 

@@ -9,7 +9,7 @@
 
 REGISTER_TILE_CONTROLLER_TYPE(WeaponTileController)
 
-WeaponTileController::WeaponTileController(Tile& owner, ComponentCommonData* commonData) :
+WeaponTileController::WeaponTileController(Tile& owner) :
     TileController(owner),
     m_requiresAmmo(false),
     m_ammoPerAttack(0),

@@ -11,7 +11,7 @@
 
 REGISTER_TILE_CONTROLLER_TYPE(AmmoTileController)
 
-AmmoTileController::AmmoTileController(Tile& owner, ComponentCommonData* commonData) :
+AmmoTileController::AmmoTileController(Tile& owner) :
     TileController(owner),
     m_ammoGroup(),
     m_projectile(nullptr)

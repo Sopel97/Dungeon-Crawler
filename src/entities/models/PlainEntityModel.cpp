@@ -4,9 +4,9 @@ using namespace ls;
 
 REGISTER_ENTITY_MODEL_TYPE(PlainEntityModel)
 
-PlainEntityModel::PlainEntityModel(Entity& owner, ComponentCommonData* commonData) :
+PlainEntityModel::PlainEntityModel(Entity& owner, CommonData& commonData) :
     EntityModel(owner),
-    m_commonData(static_cast<CommonData*>(commonData)),
+    m_commonData(&commonData),
     m_position(0, 0),
     m_velocity(0, 0),
     m_directionOfMove(Direction::South),

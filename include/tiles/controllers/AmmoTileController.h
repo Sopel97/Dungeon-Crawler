@@ -9,7 +9,7 @@ class ProjectilePrefab;
 class AmmoTileController : public TileController
 {
 public:
-    AmmoTileController(Tile& owner, ComponentCommonData* commonData);
+    AmmoTileController(Tile& owner);
     AmmoTileController(const AmmoTileController& other, Tile& owner);
     ~AmmoTileController() override;
 

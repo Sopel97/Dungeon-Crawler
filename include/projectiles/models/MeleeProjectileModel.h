@@ -18,7 +18,12 @@ class Projectile;
 class MeleeProjectileModel : public ProjectileModel
 {
 public:
-    MeleeProjectileModel(Projectile& owner, ComponentCommonData* commonData);
+    struct CommonData : public ComponentCommonData
+    {
+        std::vector<AttributeId> inheritedAttributes;
+    };
+
+    MeleeProjectileModel(Projectile& owner, CommonData& commonData);
     MeleeProjectileModel(const MeleeProjectileModel& other, Projectile& owner);
     ~MeleeProjectileModel() override;
 
@@ -45,10 +50,6 @@ public:
     std::unique_ptr<ProjectileModel> clone(Projectile& owner) const override;
 
 private:
-    struct CommonData : public ComponentCommonData
-    {
-        std::vector<AttributeId> inheritedAttributes;
-    };
 
     CommonData* m_commonData;
     ls::Vec2F m_position;

@@ -23,24 +23,6 @@ class TileLocation;
 class InnerBorderedWallTileRenderer : public TileRenderer
 {
 public:
-    InnerBorderedWallTileRenderer(Tile& owner, ComponentCommonData* commonData);
-    InnerBorderedWallTileRenderer(const InnerBorderedWallTileRenderer& other, Tile& owner);
-    ~InnerBorderedWallTileRenderer() override;
-
-    void loadFromConfiguration(ConfigurationNode& config) override;
-
-    void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const override;
-    void drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const override;
-
-    const sf::Texture& texture() const;
-    TileInnerBorderGroupType innerBorderGroup() const override;
-
-    bool isTall() const override;
-
-    static std::unique_ptr<ComponentCommonData> createCommonDataStorage();
-
-    std::unique_ptr<TileRenderer> clone(Tile& owner) const override;
-protected:
     struct CommonData : public ComponentCommonData
     {
         struct SpriteSet
@@ -68,6 +50,25 @@ protected:
 
         TileInnerBorderGroupType innerBorderGroup;
     };
+
+    InnerBorderedWallTileRenderer(Tile& owner, CommonData& commonData);
+    InnerBorderedWallTileRenderer(const InnerBorderedWallTileRenderer& other, Tile& owner);
+    ~InnerBorderedWallTileRenderer() override;
+
+    void loadFromConfiguration(ConfigurationNode& config) override;
+
+    void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const override;
+    void drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const override;
+
+    const sf::Texture& texture() const;
+    TileInnerBorderGroupType innerBorderGroup() const override;
+
+    bool isTall() const override;
+
+    static std::unique_ptr<ComponentCommonData> createCommonDataStorage();
+
+    std::unique_ptr<TileRenderer> clone(Tile& owner) const override;
+protected:
     CommonData* m_commonData;
 
     virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location, const sf::Texture& texture) const;

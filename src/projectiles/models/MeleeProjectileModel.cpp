@@ -8,9 +8,9 @@
 
 REGISTER_PROJECTILE_MODEL_TYPE(MeleeProjectileModel);
 
-MeleeProjectileModel::MeleeProjectileModel(Projectile& owner, ComponentCommonData* commonData) :
+MeleeProjectileModel::MeleeProjectileModel(Projectile& owner, CommonData& commonData) :
     ProjectileModel(owner),
-    m_commonData(static_cast<CommonData*>(commonData)),
+    m_commonData(&commonData),
     m_position(0, 0),
     m_radius(15.0f),
     m_health(3),

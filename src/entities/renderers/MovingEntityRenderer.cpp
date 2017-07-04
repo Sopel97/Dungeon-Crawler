@@ -12,7 +12,7 @@ using namespace ls;
 
 REGISTER_ENTITY_RENDERER_TYPE(MovingEntityRenderer)
 
-MovingEntityRenderer::MovingEntityRenderer(Entity& owner, ComponentCommonData* commonData) :
+MovingEntityRenderer::MovingEntityRenderer(Entity& owner) :
     EntityRenderer(owner),
     m_texture(nullptr),
     m_metaTexture(nullptr),

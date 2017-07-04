@@ -9,7 +9,7 @@ using namespace ls;
 
 REGISTER_ENTITY_MODEL_TYPE(PlayerModel)
 
-PlayerModel::PlayerModel(Entity& owner, ComponentCommonData* commonData) :
+PlayerModel::PlayerModel(Entity& owner) :
     EntityModel(owner),
     m_playerOwner(),
     m_directionOfMove(Direction::South),

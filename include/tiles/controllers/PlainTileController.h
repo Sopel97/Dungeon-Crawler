@@ -10,7 +10,7 @@ class Tile;
 class PlainTileController : public TileController
 {
 public:
-    PlainTileController(Tile& owner, ComponentCommonData* commonData);
+    PlainTileController(Tile& owner);
     PlainTileController(const PlainTileController& other, Tile& owner);
     ~PlainTileController() override;
 

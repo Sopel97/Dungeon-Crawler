@@ -18,9 +18,9 @@ using namespace ls;
 
 REGISTER_TILE_RENDERER_TYPE(PlainTileRenderer)
 
-PlainTileRenderer::PlainTileRenderer(Tile& owner, ComponentCommonData* commonData) :
+PlainTileRenderer::PlainTileRenderer(Tile& owner, CommonData& commonData) :
     TileRenderer(owner),
-    m_commonData(static_cast<CommonData*>(commonData)),
+    m_commonData(&commonData),
     m_currentAnimatedSprite(nullptr)
 {
 }

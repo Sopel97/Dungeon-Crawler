@@ -6,9 +6,9 @@ using namespace ls;
 
 REGISTER_TILE_MODEL_TYPE(PlainTileModel)
 
-PlainTileModel::PlainTileModel(Tile& owner, ComponentCommonData* commonData) :
+PlainTileModel::PlainTileModel(Tile& owner, CommonData& commonData) :
     TileModel(owner),
-    m_commonData(static_cast<CommonData*>(commonData))
+    m_commonData(&commonData)
 {
 
 }

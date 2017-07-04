@@ -9,7 +9,7 @@
 class WeaponTileController : public TileController
 {
 public:
-    WeaponTileController(Tile& owner, ComponentCommonData* commonData);
+    WeaponTileController(Tile& owner);
     WeaponTileController(const WeaponTileController& other, Tile& owner);
     ~WeaponTileController() override;
 

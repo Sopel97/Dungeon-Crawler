@@ -14,8 +14,7 @@ template <class OwnerType, class BaseComponent>
 class ComponentFactory<OwnerType, BaseComponent>
 {
 public:
-    virtual std::unique_ptr<BaseComponent> create(OwnerType&, ComponentCommonData*) const = 0;
-    virtual ComponentCommonData* createCommonDataStorage() const = 0;
+    virtual std::unique_ptr<BaseComponent> createWithNewCommonData(OwnerType&) const = 0;
 };
 
 // stores all created common datas
@@ -24,20 +23,50 @@ template <class OwnerType, class BaseComponent, class DerivedComponent>
 class ComponentFactory<OwnerType, BaseComponent, DerivedComponent> : public ComponentFactory<OwnerType, BaseComponent>
 {
 public:
-    std::unique_ptr<BaseComponent> create(OwnerType& owner, ComponentCommonData* commonData) const override
-    {
-        return std::make_unique<DerivedComponent>(owner, commonData);
-    }
+    using CommonDataType = typename DerivedComponent::CommonData;
 
-    ComponentCommonData* createCommonDataStorage() const override
+    std::unique_ptr<BaseComponent> createWithNewCommonData(OwnerType& owner) const override
     {
-        std::unique_ptr<ComponentCommonData> commonData = DerivedComponent::createCommonDataStorage();
-        if (commonData == nullptr) return nullptr;
-
-        m_commonDataStorages.emplace_back(std::move(commonData));
-        return m_commonDataStorages.back().get();
+        return createWithNewCommonDataHelper<CommonDataType>(owner);
     }
 
 private:
-    mutable std::vector<std::unique_ptr<ComponentCommonData>> m_commonDataStorages;
+    template <class C>
+    std::unique_ptr<BaseComponent> createWithNewCommonDataHelper(OwnerType& owner) const
+    {
+        return std::make_unique<DerivedComponent>(owner, *(createCommonDataStorage<C>()));
+    }
+    template <>
+    std::unique_ptr<BaseComponent> createWithNewCommonDataHelper<void>(OwnerType& owner) const
+    {
+        return std::make_unique<DerivedComponent>(owner);
+    }
+
+    template <class C>
+    CommonDataType* createCommonDataStorage() const
+    {
+        std::unique_ptr<CommonDataType> commonData = std::make_unique<CommonDataType>();
+
+        m_cont.commonDataStorages.emplace_back(std::move(commonData));
+        return m_cont.commonDataStorages.back().get();
+    }
+    template <>
+    CommonDataType* createCommonDataStorage<void>() const
+    {
+        return nullptr;
+    }
+
+    template <class C>
+    struct CommonDataStoragesContainer
+    {
+        std::vector<std::unique_ptr<C>> commonDataStorages;
+    };
+
+    template <>
+    struct CommonDataStoragesContainer<void>
+    {
+
+    };
+
+    mutable CommonDataStoragesContainer<CommonDataType> m_cont;
 };

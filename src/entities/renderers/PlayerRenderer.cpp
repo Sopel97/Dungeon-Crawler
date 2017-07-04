@@ -12,7 +12,7 @@ using namespace ls;
 
 REGISTER_ENTITY_RENDERER_TYPE(PlayerRenderer)
 
-PlayerRenderer::PlayerRenderer(Entity& owner, ComponentCommonData* commonData) :
+PlayerRenderer::PlayerRenderer(Entity& owner) :
     EntityRenderer(owner),
     m_playerOwner(nullptr),
     m_texture(ResourceManager::instance().get<sf::Texture>("Spritesheet")),

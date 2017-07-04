@@ -17,7 +17,7 @@ class Player;
 class PlayerModel : public EntityModel
 {
 public:
-    PlayerModel(Entity& owner, ComponentCommonData* commonData);
+    PlayerModel(Entity& owner);
     PlayerModel(Player& player, Entity& owner);
     PlayerModel(const PlayerModel& other, Entity& owner);
     ~PlayerModel() override;

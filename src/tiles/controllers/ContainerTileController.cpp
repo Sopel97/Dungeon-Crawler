@@ -12,7 +12,7 @@
 
 REGISTER_TILE_CONTROLLER_TYPE(ContainerTileController)
 
-ContainerTileController::ContainerTileController(Tile& owner, ComponentCommonData* commonData) :
+ContainerTileController::ContainerTileController(Tile& owner) :
     TileController(owner)
 {
 

@@ -16,9 +16,9 @@ Projectile::Projectile(
     const ComponentFactory<Projectile, ProjectileModel>& modelFac,
     const ComponentFactory<Projectile, ProjectileRenderer>& rendererFac,
     const ComponentFactory<Projectile, ProjectileController>& controllerFac) :
-    m_model(modelFac.create(*this, modelFac.createCommonDataStorage())),
-    m_renderer(rendererFac.create(*this, rendererFac.createCommonDataStorage())),
-    m_controller(controllerFac.create(*this, controllerFac.createCommonDataStorage())),
+    m_model(modelFac.createWithNewCommonData(*this)),
+    m_renderer(rendererFac.createWithNewCommonData(*this)),
+    m_controller(controllerFac.createWithNewCommonData(*this)),
     m_id(id)
 {
 }

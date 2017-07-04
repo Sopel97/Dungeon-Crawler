@@ -21,7 +21,18 @@ class TileLocation;
 class EquipmentPieceModel : public TileModel
 {
 public:
-    EquipmentPieceModel(Tile& owner, ComponentCommonData* commonData);
+    struct CommonData : public ComponentCommonData
+    {
+        std::string displayedName;
+        std::set<SlotContentRequirement> validSlots;
+        std::set<SlotContentRequirement> correctSlots;
+        AttributeRandomizer attributeRandomizer;
+        float drag;
+        int maxThrowDistance;
+        bool canBeStored;
+    };
+
+    EquipmentPieceModel(Tile& owner, CommonData& commonData);
     EquipmentPieceModel(const EquipmentPieceModel& other, Tile& owner);
     ~EquipmentPieceModel() override;
 
@@ -46,16 +57,6 @@ public:
 
     std::unique_ptr<TileModel> clone(Tile& owner) const override;
 protected:
-    struct CommonData : public ComponentCommonData
-    {
-        std::string displayedName;
-        std::set<SlotContentRequirement> validSlots;
-        std::set<SlotContentRequirement> correctSlots;
-        AttributeRandomizer attributeRandomizer;
-        float drag;
-        int maxThrowDistance;
-        bool canBeStored;
-    };
     CommonData* m_commonData;
 
     AttributeSet m_attributes;

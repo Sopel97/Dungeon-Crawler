@@ -13,7 +13,7 @@ using namespace ls;
 
 REGISTER_ENTITY_CONTROLLER_TYPE(PlayerController)
 
-PlayerController::PlayerController(Entity& owner, ComponentCommonData* commonData) :
+PlayerController::PlayerController(Entity& owner) :
     EntityController(owner),
     m_playerOwner(),
     m_acceleratedHorizontallyInLastFrame(false),

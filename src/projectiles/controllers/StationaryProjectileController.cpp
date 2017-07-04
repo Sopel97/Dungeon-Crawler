@@ -4,7 +4,7 @@
 
 REGISTER_PROJECTILE_CONTROLLER_TYPE(StationaryProjectileController);
 
-StationaryProjectileController::StationaryProjectileController(Projectile& owner, ComponentCommonData* commonData) :
+StationaryProjectileController::StationaryProjectileController(Projectile& owner) :
     ProjectileController(owner),
     m_timeLeft(1.0f)
 {

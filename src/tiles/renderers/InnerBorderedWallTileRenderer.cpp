@@ -17,9 +17,9 @@ using namespace ls;
 
 REGISTER_TILE_RENDERER_TYPE(InnerBorderedWallTileRenderer)
 
-InnerBorderedWallTileRenderer::InnerBorderedWallTileRenderer(Tile& owner, ComponentCommonData* commonData) :
+InnerBorderedWallTileRenderer::InnerBorderedWallTileRenderer(Tile& owner, CommonData& commonData) :
     TileRenderer(owner),
-    m_commonData(static_cast<CommonData*>(commonData))
+    m_commonData(&commonData)
 {
 
 }
