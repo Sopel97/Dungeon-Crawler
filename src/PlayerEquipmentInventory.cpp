@@ -17,7 +17,7 @@ PlayerEquipmentInventory::PlayerEquipmentInventory()
     m_contentRequirements.reserve(10);
     m_contentRequirements.push_back(SlotContentRequirement::Necklace);
     m_contentRequirements.push_back(SlotContentRequirement::RightHand);
-    m_contentRequirements.push_back(SlotContentRequirement::Ring);
+    m_contentRequirements.push_back(SlotContentRequirement::Ammo);
 
     m_contentRequirements.push_back(SlotContentRequirement::Helmet);
     m_contentRequirements.push_back(SlotContentRequirement::Chestplate);
@@ -26,7 +26,7 @@ PlayerEquipmentInventory::PlayerEquipmentInventory()
 
     m_contentRequirements.push_back(SlotContentRequirement::Container);
     m_contentRequirements.push_back(SlotContentRequirement::LeftHand);
-    m_contentRequirements.push_back(SlotContentRequirement::Ammo);
+    m_contentRequirements.push_back(SlotContentRequirement::Ring);
 }
 
 std::vector<TileStack>& PlayerEquipmentInventory::contents()
@@ -76,7 +76,7 @@ std::unique_ptr<InventoryWindow> PlayerEquipmentInventory::createInventoryWindow
 }
 TileStack& PlayerEquipmentInventory::ammo()
 {
-    return m_contents[9];
+    return m_contents[2];
 }
 TileStack& PlayerEquipmentInventory::weapon()
 {

@@ -32,6 +32,27 @@ entity = {
             max = 10
         },
         {
+            tileName = "Wooden Bow",
+            exponent = 1.0,
+            probability = 1.0,
+            min = 1,
+            max = 1
+        },
+        {
+            tileName = "Wooden Arrow",
+            exponent = 1.0,
+            probability = 1.0,
+            min = 10,
+            max = 20
+        },
+        {
+            tileName = "Platinum Coin",
+            exponent = 2.0,
+            probability = 1.0,
+            min = 0,
+            max = 10
+        },
+        {
             probability = 1.0,
             n = 2,
             choices = {

@@ -1,0 +1,46 @@
+tile = {
+        
+    name = "Wooden Arrow",
+    displayedName = "Wooden Arrow",
+    
+    model = "EquipmentPieceModel",
+    renderer = "PlainTileRenderer",
+    controller = "AmmoTileController",
+
+    texture = "Spritesheet",
+    
+    spriteSelector = "QuantityBased",
+    sprites = {
+        {1, {{340+34*0, 238}}},
+        {2, {{340+34*1, 238}}},
+        {3, {{340+34*2, 238}}},
+        {4, {{340+34*3, 238}}},
+        {5, {{340+34*4, 238}}},
+        {10, {{340+34*5, 238}}}
+    },
+
+    maxQuantity = 100,
+
+    ammoGroup = "Arrow",
+    projectile = "Melee Projectile",
+
+    validSlots = {"None", "Ammo", "LeftHand", "RightHand"},
+    correctSlots = {"Ammo"},
+
+    attributeRandomizationGuidelines = {
+        {
+            attributeId = "Attack",
+            exponent = 1.0,
+            probability = 1.0,
+            min = 3,
+            max = 3
+        }
+    },
+
+    drag = 0.85,
+    isThrowableThrough = true,
+    isMovableTo = true,
+    canBeStored = true,
+    maxThrowDistance = 10
+    
+}

@@ -1,0 +1,42 @@
+tile = {
+        
+    name = "Wooden Bow",
+    displayedName = "Wooden Bow",
+    
+    model = "EquipmentPieceModel",
+    renderer = "PlainTileRenderer",
+    controller = "WeaponTileController",
+
+    texture = "Spritesheet",
+    
+    spriteSelector = "WeightedRandom",
+    sprites = {
+        {{{306, 238}}},
+    },
+
+    requiresAmmo = true,
+    ammoPerAttack = 2,
+    allowedAmmoGroups = {
+        "Arrow"
+    },
+
+    validSlots = {"None", "LeftHand", "RightHand"},
+    correctSlots = {"LeftHand", "RightHand"},
+
+    attributeRandomizationGuidelines = {
+        {
+            attributeId = "Attack",
+            exponent = 1.0,
+            probability = 1.0,
+            min = 3,
+            max = 3
+        }
+    },
+
+    drag = 0.85,
+    isThrowableThrough = true,
+    isMovableTo = true,
+    canBeStored = true,
+    maxThrowDistance = 10
+    
+}

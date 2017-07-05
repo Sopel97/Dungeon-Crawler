@@ -27,6 +27,7 @@ public:
         std::set<SlotContentRequirement> validSlots;
         std::set<SlotContentRequirement> correctSlots;
         AttributeRandomizer attributeRandomizer;
+        int maxQuantity;
         float drag;
         int maxThrowDistance;
         bool canBeStored;
@@ -37,6 +38,8 @@ public:
     ~EquipmentPieceModel() override;
 
     void loadFromConfiguration(ConfigurationNode& config) override;
+
+    bool equals(const TileModel& other) const override;
 
     bool hasCollider() const override;
     bool isMovableFrom() const override;

@@ -49,11 +49,18 @@ void EquipmentPieceModel::loadFromConfiguration(ConfigurationNode& config)
     m_commonData->attributeRandomizer.loadFromConfiguration(attributeParams);
 
     m_commonData->displayedName = config["displayedName"].getDefault<std::string>("");
+    m_commonData->maxQuantity = config["maxQuantity"].getDefault<int>(1);
     m_commonData->drag = config["drag"].get<float>();
     m_commonData->maxThrowDistance = config["maxThrowDistance"].getDefault<int>(0);
     m_commonData->canBeStored = config["canBeStored"].getDefault<bool>(false);
 }
 
+bool EquipmentPieceModel::equals(const TileModel& other) const
+{
+    // TODO: compare better
+
+    return true;
+}
 bool EquipmentPieceModel::hasCollider() const
 {
     return false;
@@ -80,7 +87,7 @@ bool EquipmentPieceModel::canBeStored() const
 }
 int EquipmentPieceModel::maxQuantity() const
 {
-    return 1;
+    return m_commonData->maxQuantity;
 }
 bool EquipmentPieceModel::meetsRequirements(SlotContentRequirement req) const
 {
