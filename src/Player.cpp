@@ -74,6 +74,10 @@ TileStack& Player::ammo()
 {
     return m_equipmentInventory.ammo();
 }
+TileStack& Player::weapon()
+{
+    return m_equipmentInventory.weapon();
+}
 const PlayerEquipmentInventory& Player::equipmentInventory() const
 {
     return m_equipmentInventory;

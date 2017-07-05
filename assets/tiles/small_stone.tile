@@ -1,0 +1,47 @@
+tile = {
+        
+    name = "Small Stone",
+    displayedName = "Small Stone",
+    
+    model = "EquipmentPieceModel",
+    renderer = "PlainTileRenderer",
+    controller = "WeaponTileController",
+
+    texture = "Spritesheet",
+    
+    spriteSelector = "QuantityBased",
+    sprites = {
+        {1, {{340+34*0, 272}}},
+        {2, {{340+34*1, 272}}},
+        {3, {{340+34*2, 272}}},
+        {4, {{340+34*3, 272}}},
+        {5, {{340+34*4, 272}}},
+        {10, {{340+34*5, 272}}}
+    },
+
+    maxQuantity = 100,
+
+    requiresAmmo = false,
+    chanceToBreak = 1.0,
+    projectile = "Melee Projectile",
+
+    validSlots = {"None", "LeftHand", "RightHand"},
+    correctSlots = {"LeftHand", "RightHand"},
+
+    attributeRandomizationGuidelines = {
+        {
+            attributeId = "Attack",
+            exponent = 1.0,
+            probability = 1.0,
+            min = 3,
+            max = 3
+        }
+    },
+
+    drag = 0.85,
+    isThrowableThrough = true,
+    isMovableTo = true,
+    canBeStored = true,
+    maxThrowDistance = 10
+    
+}

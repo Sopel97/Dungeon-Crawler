@@ -44,6 +44,7 @@ public:
     const InventorySystem& inventorySystem() const;
 
     TileStack& ammo();
+    TileStack& weapon();
     const PlayerEquipmentInventory& equipmentInventory() const;
 
     void showTileDescription(const TileDescription& description);

@@ -22,6 +22,7 @@ public:
 private:
     bool m_requiresAmmo;
     int m_ammoPerAttack;
+    float m_chanceToBreak;
     std::vector<TileAmmoGroupType> m_allowedAmmoGroups;
     ResourceHandle<ProjectilePrefab> m_projectile;
 };
