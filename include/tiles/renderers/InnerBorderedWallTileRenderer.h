@@ -46,9 +46,10 @@ public:
         }spriteSet;
 
         ResourceHandle<sf::Texture> texture;
-        ResourceHandle<sf::Texture> metaTexture;
 
         TileInnerBorderGroupType innerBorderGroup;
+
+        bool hasMetaTexture;
     };
 
     InnerBorderedWallTileRenderer(Tile& owner, CommonData& commonData);
@@ -71,5 +72,5 @@ public:
 protected:
     CommonData* m_commonData;
 
-    virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location, const sf::Texture& texture) const;
+    virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location, const ls::Vec2I& textureOffset) const;
 };

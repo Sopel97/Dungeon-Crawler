@@ -161,7 +161,7 @@ void World::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
         delete tallDrawable;
     }
 
-    //drawLightMapToIntermidiate(renderStates);
+    drawLightMapToIntermidiate(renderStates);
     drawIntermidiate(renderTarget, renderStates);
 }
 

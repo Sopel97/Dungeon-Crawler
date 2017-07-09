@@ -16,8 +16,7 @@ PlayerRenderer::PlayerRenderer(Entity& owner) :
     EntityRenderer(owner),
     m_playerOwner(nullptr),
     m_texture(ResourceManager::instance().get<sf::Texture>("Spritesheet")),
-    m_sprites(GameConstants::tileFullSpriteSize * 5, GameConstants::tileFullSpriteSize * 2),
-    m_metaSprites(GameConstants::tileFullSpriteSize * 4, GameConstants::tileFullSpriteSize * 8)
+    m_sprites(GameConstants::tileFullSpriteSize * 5, GameConstants::tileFullSpriteSize * 2)
 {
 
 }
@@ -26,16 +25,14 @@ PlayerRenderer::PlayerRenderer(Player& player, Entity& owner) :
     EntityRenderer(owner),
     m_playerOwner(&player),
     m_texture(ResourceManager::instance().get<sf::Texture>("Spritesheet")),
-    m_sprites(GameConstants::tileFullSpriteSize * 5, GameConstants::tileFullSpriteSize * 2),
-    m_metaSprites(GameConstants::tileFullSpriteSize * 4, GameConstants::tileFullSpriteSize * 8)
+    m_sprites(GameConstants::tileFullSpriteSize * 5, GameConstants::tileFullSpriteSize * 2)
 {
 
 }
 PlayerRenderer::PlayerRenderer(const PlayerRenderer& other, Entity& owner) :
     EntityRenderer(other, owner),
     m_playerOwner(other.m_playerOwner),
-    m_sprites(other.m_sprites),
-    m_metaSprites(other.m_metaSprites)
+    m_sprites(other.m_sprites)
 {
 
 }
@@ -55,7 +52,7 @@ void PlayerRenderer::draw(sf::RenderTarget& renderTarget, sf::RenderStates& rend
 
 void PlayerRenderer::drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) const
 {
-    draw(renderTarget, renderStates, m_metaSprites);
+    draw(renderTarget, renderStates, m_sprites + ls::Vec2I(m_texture.get().getSize().x/2, 0));
 }
 void PlayerRenderer::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const ls::Vec2I& sprites) const
 {

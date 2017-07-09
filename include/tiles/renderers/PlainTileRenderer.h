@@ -32,11 +32,11 @@ public:
     struct CommonData : public ComponentCommonData
     {
         ResourceHandle<sf::Texture> texture;
-        ResourceHandle<sf::Texture> metaTexture;
         TileSpriteSelector spriteSelector;
 
         int outerBorderPriority;
         bool coversOuterBorders;
+        bool hasMetaTexture;
     };
 
     PlainTileRenderer(Tile& owner, CommonData& commonData);
@@ -65,5 +65,5 @@ protected:
     CommonData* m_commonData;
     const TimeAnimatedSprite* m_currentAnimatedSprite;
 
-    void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location, const sf::Texture& texture) const;
+    void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location, const ls::Vec2I& textureOffset) const;
 };

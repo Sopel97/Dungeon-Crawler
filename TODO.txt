@@ -1,34 +1,25 @@
+- consider passing tilestack to more functions in tile
 
-0. child specifier for TileRandomizer to allow nested inventories
-
-0.9. consider passing tilestack to the render function
+- consider merging controllers and models because they are hardly separable
 
 PROBABLY NEXT:
 
-2. make common datas type safe (since there is a factory, and creating common data is static member function there should be no problem doing that)
+- projectiles should receive event when owner is deleted because some things may still rely on owner.
 
-3.2.1 projectiles should receive event when owner is deleted because some things may still rely on owner.
-3.3 melee projectile
-3.3.1 create one and hook it up to the weapon
+- Clear world generation code //little priority since it is waiting for libs still
 
-4. Damage calculating 'mediator'
-4.1 entity receives damage request and asks 'mediator' to resolve it
+- Pass RenderStates by CONST reference
+- Make camera like the one in Carcassone. Move there everything involving camera (for example conversion between coordinates)
 
-7. Clear world generation code //little priority since it is waiting for libs still
-
-15. Pass RenderStates by CONST reference
-19. Make camera like the one in Carcassone. Move there everything involving camera (for example conversion between coordinates)
-
-24. player's line of sight using raycasting
+- player's line of sight using raycasting
 
 DRAWING RELATED, kinda important
-100.1 store normal textures and meta textures in one texture side to side (offset by 0.5)
-100.2 make world drawing cleaner, parametrize intermidiate targets' sizes
-100.3 increase 'tile height' range from 32 to 64 to allow tiles that spread on 2x2 - also requires changes in shader and more drawing range
-100.4 make it possible for tiles to specify what size they are (1 - 1x1, 2 - 2x2, more should not be needed)
+- make world drawing cleaner, parametrize intermidiate targets' sizes
+- increase 'tile height' range from 32 to 64 to allow tiles that spread on 2x2 - also requires changes in shader and more drawing range
+- make it possible for tiles to specify what size they are (1 - 1x1, 2 - 2x2, more should not be needed)
 
-101. try dim light depending on height from the ground
+- try dim light depending on height from the ground
 
-102. '%' sign missing in tibia font
+- '%' sign missing in tibia font
 
-104. clean up tall drawables and everything related
+- clean up tall drawables and everything related

@@ -11,8 +11,8 @@ entity = {
     group = "Unfriendly",
 
     texture = "Spritesheet",
-    metaTexture = "SpritesheetMeta",
-    sprites = {238, 272},
+    hasMetaTexture = true,
+    sprites = {272, 68},
 
     maxSpeed = 64.0,
 

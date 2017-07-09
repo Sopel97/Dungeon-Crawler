@@ -38,16 +38,7 @@ void InnerBorderedWallTileRenderer::loadFromConfiguration(ConfigurationNode& con
 {
     std::string textureName = config["texture"].get<std::string>();
     m_commonData->texture = ResourceManager::instance().get<sf::Texture>(textureName);
-
-    if (config["metaTexture"].exists())
-    {
-        std::string metaTextureName = config["metaTexture"].get<std::string>();
-        m_commonData->metaTexture = ResourceManager::instance().get<sf::Texture>(metaTextureName);
-    }
-    else
-    {
-        m_commonData->metaTexture = nullptr;
-    }
+    m_commonData->hasMetaTexture = config["hasMetaTexture"].get<bool>();
 
     Vec2I spriteSet{ config["spriteSet"][1].get<int>(), config["spriteSet"][2].get<int>() };
 
@@ -72,15 +63,15 @@ void InnerBorderedWallTileRenderer::loadFromConfiguration(ConfigurationNode& con
 void InnerBorderedWallTileRenderer::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const
 {
     if (!m_commonData->texture) return;
-    draw(renderTarget, renderStates, location, m_commonData->texture.get());
+    draw(renderTarget, renderStates, location, ls::Vec2I(0, 0));
 }
 
 void InnerBorderedWallTileRenderer::drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const
 {
-    if (!m_commonData->metaTexture) return;
-    draw(renderTarget, renderStates, location, m_commonData->metaTexture.get());
+    if (!m_commonData->texture || !m_commonData->hasMetaTexture) return;
+    draw(renderTarget, renderStates, location, ls::Vec2I(texture().getSize().x / 2, 0));
 }
-void InnerBorderedWallTileRenderer::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location, const sf::Texture& texture) const
+void InnerBorderedWallTileRenderer::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location, const ls::Vec2I& textureOffset) const
 {
     enum Indices
     {
@@ -133,8 +124,8 @@ void InnerBorderedWallTileRenderer::draw(sf::RenderTarget& renderTarget, sf::Ren
         {
             sf::Sprite spr;
             spr.setPosition(sf::Vector2f(static_cast<float>(x * GameConstants::tileSize), static_cast<float>(y * GameConstants::tileSize)));
-            spr.setTexture(texture);
-            spr.setTextureRect(sf::IntRect(sf::Vector2i(resultSprite->x, resultSprite->y), sf::Vector2i(GameConstants::tileSize, GameConstants::tileSize)));
+            spr.setTexture(texture());
+            spr.setTextureRect(sf::IntRect(sf::Vector2i(resultSprite->x + textureOffset.x, resultSprite->y + textureOffset.y), sf::Vector2i(GameConstants::tileSize, GameConstants::tileSize)));
             renderTarget.draw(spr, renderStates);
         }
     }
@@ -155,8 +146,8 @@ void InnerBorderedWallTileRenderer::draw(sf::RenderTarget& renderTarget, sf::Ren
         {
             sf::Sprite spr;
             spr.setPosition(sf::Vector2f(static_cast<float>((x - 1) * GameConstants::tileSize), static_cast<float>(y * GameConstants::tileSize)));
-            spr.setTexture(texture);
-            spr.setTextureRect(sf::IntRect(sf::Vector2i(resultSprite->x, resultSprite->y), sf::Vector2i(GameConstants::tileSize, GameConstants::tileSize)));
+            spr.setTexture(texture());
+            spr.setTextureRect(sf::IntRect(sf::Vector2i(resultSprite->x + textureOffset.x, resultSprite->y + textureOffset.y), sf::Vector2i(GameConstants::tileSize, GameConstants::tileSize)));
             renderTarget.draw(spr, renderStates);
         }
     }
@@ -177,8 +168,8 @@ void InnerBorderedWallTileRenderer::draw(sf::RenderTarget& renderTarget, sf::Ren
         {
             sf::Sprite spr;
             spr.setPosition(sf::Vector2f(static_cast<float>(x * GameConstants::tileSize), static_cast<float>((y - 1) * GameConstants::tileSize)));
-            spr.setTexture(texture);
-            spr.setTextureRect(sf::IntRect(sf::Vector2i(resultSprite->x, resultSprite->y), sf::Vector2i(GameConstants::tileSize, GameConstants::tileSize)));
+            spr.setTexture(texture());
+            spr.setTextureRect(sf::IntRect(sf::Vector2i(resultSprite->x + textureOffset.x, resultSprite->y + textureOffset.y), sf::Vector2i(GameConstants::tileSize, GameConstants::tileSize)));
             renderTarget.draw(spr, renderStates);
         }
     }
@@ -195,8 +186,8 @@ void InnerBorderedWallTileRenderer::draw(sf::RenderTarget& renderTarget, sf::Ren
         {
             sf::Sprite spr;
             spr.setPosition(sf::Vector2f(static_cast<float>((x - 1) * GameConstants::tileSize), static_cast<float>((y - 1) * GameConstants::tileSize)));
-            spr.setTexture(texture);
-            spr.setTextureRect(sf::IntRect(sf::Vector2i(resultSprite->x, resultSprite->y), sf::Vector2i(GameConstants::tileSize, GameConstants::tileSize)));
+            spr.setTexture(texture());
+            spr.setTextureRect(sf::IntRect(sf::Vector2i(resultSprite->x + textureOffset.x, resultSprite->y + textureOffset.y), sf::Vector2i(GameConstants::tileSize, GameConstants::tileSize)));
             renderTarget.draw(spr, renderStates);
         }
     }

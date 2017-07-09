@@ -8,7 +8,7 @@ tile = {
     controller = "PlainTileController",
 
     texture = "Spritesheet",
-    metaTexture = "SpritesheetMeta",
+    hasMetaTexture = true,
     
     spriteSet = {34, 0},
 

@@ -15,7 +15,6 @@ REGISTER_ENTITY_RENDERER_TYPE(MovingEntityRenderer)
 MovingEntityRenderer::MovingEntityRenderer(Entity& owner) :
     EntityRenderer(owner),
     m_texture(nullptr),
-    m_metaTexture(nullptr),
     m_sprites(0, 0)
 {
 
@@ -24,7 +23,6 @@ MovingEntityRenderer::MovingEntityRenderer(Entity& owner) :
 MovingEntityRenderer::MovingEntityRenderer(const MovingEntityRenderer& other, Entity& owner) :
     EntityRenderer(other, owner),
     m_texture(other.m_texture),
-    m_metaTexture(other.m_metaTexture),
     m_sprites(other.m_sprites)
 {
 
@@ -37,21 +35,21 @@ MovingEntityRenderer::~MovingEntityRenderer()
 void MovingEntityRenderer::loadFromConfiguration(ConfigurationNode& config)
 {
     m_texture = ResourceManager::instance().get<sf::Texture>(config["texture"].get<std::string>());
-    m_metaTexture = ResourceManager::instance().get<sf::Texture>(config["metaTexture"].get<std::string>());
+    m_hasMetaTexture = config["hasMetaTexture"].get<bool>();
     m_sprites.x = config["sprites"][1].get<int>();
     m_sprites.y = config["sprites"][2].get<int>();
 }
 
 void MovingEntityRenderer::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) const
 {
-    draw(renderTarget, renderStates, m_texture.get());
+    draw(renderTarget, renderStates, ls::Vec2I(0, 0));
 }
 
 void MovingEntityRenderer::drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) const
 {
-    draw(renderTarget, renderStates, m_metaTexture.get());
+    draw(renderTarget, renderStates, ls::Vec2I(m_texture.get().getSize().x / 2, 0));
 }
-void MovingEntityRenderer::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const sf::Texture& texture) const
+void MovingEntityRenderer::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const ls::Vec2I& textureOffset) const
 {
     const Vec2I offsetToOrigin = Vec2I(-25, -26);
     constexpr float steppingSpeedThreshold = 16.0f;
@@ -76,8 +74,8 @@ void MovingEntityRenderer::draw(sf::RenderTarget& renderTarget, sf::RenderStates
     const Vec2I spriteSize(GameConstants::tileSize, GameConstants::tileSize);
     sf::Sprite spr;
     spr.setPosition(sf::Vector2f(position.x + offsetToOrigin.x, position.y + offsetToOrigin.y));
-    spr.setTexture(texture);
-    spr.setTextureRect(sf::IntRect(sf::Vector2i(m_sprites.x + steppingSpriteVariant * GameConstants::tileFullSpriteSize, m_sprites.y + direction * GameConstants::tileFullSpriteSize), sf::Vector2i(spriteSize.x, spriteSize.y)));
+    spr.setTexture(texture());
+    spr.setTextureRect(sf::IntRect(sf::Vector2i(m_sprites.x + steppingSpriteVariant * GameConstants::tileFullSpriteSize + textureOffset.x, m_sprites.y + direction * GameConstants::tileFullSpriteSize + textureOffset.y), sf::Vector2i(spriteSize.x, spriteSize.y)));
     renderTarget.draw(spr, renderStates);
 }
 
