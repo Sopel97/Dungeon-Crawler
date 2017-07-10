@@ -22,6 +22,12 @@ class TileController : public TileComponent<TileController, Tile>
 	//must not be abstract (ie. all methods return resonable values and there is not pure virtual member functions)
 {
 public:
+    struct AttackResult
+    {
+        int weaponUsed;
+        int ammoUsed;
+    };
+
     TileController(Tile& owner);
     TileController(const TileController& other, Tile& owner);
     ~TileController() override;
@@ -30,7 +36,7 @@ public:
     virtual void use(Player& player, const InventorySlotView& location);
     virtual void look(Player& player, const TileLocation& location);
     virtual void look(Player& player, const InventorySlotView& location);
-    virtual void attack(World& world, Player& player, const ls::Vec2F& hintedPosition);
+    virtual AttackResult attack(World& world, Player& player, const ls::Vec2F& hintedPosition);
     virtual void indirectAttack(World& world, Player& player, const ls::Vec2F& hintedPosition);
     virtual TileAmmoGroupType ammoGroup() const;
 

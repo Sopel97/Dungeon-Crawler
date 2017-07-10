@@ -58,16 +58,19 @@ void WeaponTileController::loadFromConfiguration(ConfigurationNode& config)
     }
 }
 
-void WeaponTileController::attack(World& world, Player& player, const ls::Vec2F& hintedPosition)
+WeaponTileController::AttackResult WeaponTileController::attack(World& world, Player& player, const ls::Vec2F& hintedPosition)
 {
+    AttackResult attackResult{ 0, 0 };
+
     if (m_requiresAmmo)
     {
         TileStack& ammo = player.ammo();
-        if (ammo.isEmpty()) return;
-        if (ammo.quantity() < m_ammoPerAttack) return;
+        if (ammo.isEmpty()) return attackResult;
+        if (ammo.quantity() < m_ammoPerAttack) return attackResult;
+        if (std::find(m_allowedAmmoGroups.begin(), m_allowedAmmoGroups.end(), ammo.tile().controller().ammoGroup()) == m_allowedAmmoGroups.end()) return attackResult;
 
         ammo.tile().controller().indirectAttack(world, player, hintedPosition);
-        ammo.erase(m_ammoPerAttack);
+        attackResult.ammoUsed = m_ammoPerAttack;
     }
     else
     {
@@ -75,10 +78,11 @@ void WeaponTileController::attack(World& world, Player& player, const ls::Vec2F&
 
         if (Rng<std::ranlux48>::instance().doesHappen(m_chanceToBreak))
         {
-            // TODO: better way to do this
-            player.weapon().erase(1);
+            attackResult.weaponUsed = 1;
         }
     }
+
+    return attackResult;
 }
 
 std::unique_ptr<TileController> WeaponTileController::clone(Tile& owner) const

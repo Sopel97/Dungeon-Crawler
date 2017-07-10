@@ -98,7 +98,10 @@ void Player::attack(World& world, const ls::Vec2F& pos)
     TileStack& weapon = m_equipmentInventory.weapon();
     if (weapon.isEmpty()) return;
     
-    weapon.tile().controller().attack(world, *this, pos);
+    auto attackResult = weapon.tile().controller().attack(world, *this, pos);
+
+    weapon.erase(attackResult.weaponUsed);
+    ammo().erase(attackResult.ammoUsed);
 }
 void Player::displayTileDescriptionWindow()
 {

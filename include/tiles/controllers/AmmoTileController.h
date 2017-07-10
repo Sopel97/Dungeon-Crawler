@@ -17,6 +17,8 @@ public:
 
     void indirectAttack(World& world, Player& player, const ls::Vec2F& hintedPosition) override;
 
+    TileAmmoGroupType ammoGroup() const override;
+
     std::unique_ptr<TileController> clone(Tile& owner) const override;
 
 private:

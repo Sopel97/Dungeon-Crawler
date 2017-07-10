@@ -34,9 +34,9 @@ void TileController::look(Player& player, const InventorySlotView& location)
 {
     player.showTileDescription(TileDescriptionGenerator::generate(owner()));
 }
-void TileController::attack(World& world, Player& player, const ls::Vec2F& hintedPosition)
+TileController::AttackResult TileController::attack(World& world, Player& player, const ls::Vec2F& hintedPosition)
 {
-
+    return { 0, 0 };
 }
 void TileController::indirectAttack(World& world, Player& player, const ls::Vec2F& hintedPosition)
 {

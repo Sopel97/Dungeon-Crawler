@@ -15,7 +15,7 @@ public:
 
     void loadFromConfiguration(ConfigurationNode& config) override;
 
-    void attack(World& world, Player& player, const ls::Vec2F& hintedPosition) override;
+    AttackResult attack(World& world, Player& player, const ls::Vec2F& hintedPosition) override;
 
     std::unique_ptr<TileController> clone(Tile& owner) const override;
 

@@ -1,8 +1,4 @@
-- consider passing tilestack to more functions in tile
-
-- consider merging controllers and models because they are hardly separable
-
-PROBABLY NEXT:
+- merge controllers and models because they are hardly separable
 
 - projectiles should receive event when owner is deleted because some things may still rely on owner.
 
@@ -22,4 +18,4 @@ DRAWING RELATED, kinda important
 
 - '%' sign missing in tibia font
 
-- clean up tall drawables and everything related
+- clean up tall drawables and everything related (may not be needed at all if depth buffer approach works as expected)

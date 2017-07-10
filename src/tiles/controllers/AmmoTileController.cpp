@@ -42,6 +42,10 @@ void AmmoTileController::indirectAttack(World& world, Player& player, const ls::
 {
     world.spawnProjectile(m_projectile.get(), world, player.entity(), hintedPosition);
 }
+TileAmmoGroupType AmmoTileController::ammoGroup() const
+{
+    return m_ammoGroup;
+}
 
 std::unique_ptr<TileController> AmmoTileController::clone(Tile& owner) const
 {
