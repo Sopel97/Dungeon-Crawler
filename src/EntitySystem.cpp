@@ -134,6 +134,13 @@ void EntitySystem::removeEntity(Entity& entityToRemove)
 }
 void EntitySystem::removeDeadEntities()
 {
+    for (auto& entity : m_entities)
+    {
+        if (isDead(*entity))
+        {
+            m_world->onEntityDeleted(*entity);
+        }
+    }
     m_entities.erase(std::remove_if(m_entities.begin(), m_entities.end(), [this](std::unique_ptr<Entity>& ent) {return isDead(*ent); }), m_entities.end());
 }
 bool EntitySystem::isDead(const Entity& entity) const

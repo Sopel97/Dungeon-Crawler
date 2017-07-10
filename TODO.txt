@@ -1,7 +1,5 @@
 - merge controllers and models because they are hardly separable
 
-- projectiles should receive event when owner is deleted because some things may still rely on owner.
-
 - Clear world generation code //little priority since it is waiting for libs still
 
 - Pass RenderStates by CONST reference

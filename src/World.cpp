@@ -641,3 +641,7 @@ auto World::onKeyPressed(sf::Event::KeyEvent& event, EventContext context)
     }
     return EventResult().setConsumeEvent(false).setTakeFocus(false);
 }
+void World::onEntityDeleted(Entity& entity)
+{
+    m_projectileSystem.onEntityDeleted(entity);
+}

@@ -80,6 +80,8 @@ public:
     EventResult onMouseButtonReleased(sf::Event::MouseButtonEvent& event, EventContext context) override;
     EventResult onKeyPressed(sf::Event::KeyEvent& event, EventContext context) override;
 
+    void onEntityDeleted(Entity& entity);
+
 protected:
     Root& m_root;
     Player& m_player;

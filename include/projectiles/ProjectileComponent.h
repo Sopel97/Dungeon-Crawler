@@ -25,4 +25,5 @@ public:
     virtual void onProjectileCloned() {}
     virtual void onCollidedWithEntity(EntityCollider& entityCollider) {};
     virtual void onCollidedWithTile(TileCollider& tileCollider) {};
+    virtual void onParentEntityDeleted() {};
 };

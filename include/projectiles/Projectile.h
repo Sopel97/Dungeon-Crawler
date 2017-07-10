@@ -55,6 +55,7 @@ public:
     void onProjectileInstantiated(World& world, Entity& parentEntity, const ls::Vec2F& hintedPosition);
     void onCollidedWithEntity(EntityCollider& entityCollider);
     void onCollidedWithTile(TileCollider& tileCollider);
+    void onParentEntityDeleted();
 
     std::unique_ptr<Projectile> clone() const;
     std::unique_ptr<Projectile> instantiate(World& world, Entity& parentEntity, const ls::Vec2F& hintedPosition) const;

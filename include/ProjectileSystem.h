@@ -38,6 +38,8 @@ public:
     void update(float dt);
 
     std::vector<Projectile*> getVisibleProjectiles(const Camera& camera);
+
+    void onEntityDeleted(Entity& entity);
 protected:
     World* m_world;
     EntitySystem* m_entitySystem;

@@ -135,6 +135,12 @@ void Projectile::onCollidedWithTile(TileCollider& tileCollider)
     m_renderer->onCollidedWithTile(tileCollider);
     m_controller->onCollidedWithTile(tileCollider);
 }
+void Projectile::onParentEntityDeleted()
+{
+    m_model->onParentEntityDeleted();
+    m_renderer->onParentEntityDeleted();
+    m_controller->onParentEntityDeleted();
+}
 
 std::unique_ptr<Projectile> Projectile::clone() const
 {

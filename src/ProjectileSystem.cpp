@@ -125,6 +125,16 @@ std::vector<Projectile*> ProjectileSystem::getVisibleProjectiles(const Camera& c
 {
     return query(camera.viewRectangle());
 }
+void ProjectileSystem::onEntityDeleted(Entity& entity)
+{
+    for (auto& projectile : m_projectiles)
+    {
+        if (projectile->model().parentEntity() == &entity)
+        {
+            projectile->onParentEntityDeleted();
+        }
+    }
+}
 void ProjectileSystem::update(Projectile& projectile, float dt)
 {
     projectile.controller().update(*m_world, dt);
