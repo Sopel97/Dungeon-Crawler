@@ -7,6 +7,8 @@
 #include "window/WindowContent.h"
 #include "window/InternalWindow.h"
 
+#include "TileDescriptionRenderer.h"
+
 #include "../LibS/Shapes.h"
 
 namespace sf
@@ -71,6 +73,9 @@ public:
 
     EventResult dispatch(sf::Event& event, EventContext context, const ls::Vec2I& mousePos) override;
 
+    void showTileDescription(const TileDescription& description);
+    void showTileDescription(TileDescription&& description);
+
 	static constexpr int playerUiPanelWidth() { return m_playerUiPanelWidth; }
 protected:
 
@@ -80,9 +85,11 @@ protected:
     Player& m_player;
 	std::vector<std::unique_ptr<PanelWindow>> m_windows;
     PanelWindow* m_focusedWindow;
+    TileDescriptionRenderer m_tileDescriptionRenderer;
 
     void removeClosingWindows();
 	void updateWindowPositions();
+    void displayTileDescriptionWindow();
 };
 
 #endif // PLAYERUI_H

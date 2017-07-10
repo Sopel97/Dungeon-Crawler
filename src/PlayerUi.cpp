@@ -18,7 +18,8 @@ const int PlayerUi::m_playerUiPanelWidth = 230;
 PlayerUi::PlayerUi(WindowSpaceManager& wsm, Player& player) :
     m_windowSpaceManager(wsm),
     m_player(player),
-    m_focusedWindow(nullptr)
+    m_focusedWindow(nullptr),
+    m_tileDescriptionRenderer(wsm)
 {
 }
 
@@ -153,4 +154,34 @@ SfmlEventHandler::EventResult PlayerUi::dispatch(sf::Event& event, EventContext 
     }
 
     return result;
+}
+void PlayerUi::showTileDescription(const TileDescription& description)
+{
+    m_tileDescriptionRenderer.setDescription(description);
+    displayTileDescriptionWindow();
+}
+void PlayerUi::showTileDescription(TileDescription&& description)
+{
+    m_tileDescriptionRenderer.setDescription(std::move(description));
+    displayTileDescriptionWindow();
+}
+void PlayerUi::displayTileDescriptionWindow()
+{
+    const ls::Rectangle2I contentRect = m_tileDescriptionRenderer.requiredContentRect(m_windowSpaceManager.rect());
+
+    Scene& scene = m_windowSpaceManager.currentScene();
+    Scene::FreeWindowHandle h = scene.findFreeWindow("TileDescription");
+    if (!scene.isValid(h))
+    {
+        WindowParams params = m_tileDescriptionRenderer.requiredWindowParams();
+        auto wnd = InternalWindow::createWithContentRect(m_windowSpaceManager, contentRect, "TileDescription", params);
+        wnd->attachContent(m_tileDescriptionRenderer);
+        scene.addFreeWindow(std::move(wnd));
+    }
+    else
+    {
+        InternalWindow& wnd = **h;
+        wnd.setContentRect(contentRect);
+        scene.setWindowFocus(h);
+    }
 }

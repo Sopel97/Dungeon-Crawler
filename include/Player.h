@@ -11,7 +11,6 @@
 
 #include "PlayerUi.h"
 #include "InventorySystem.h"
-#include "TileDescriptionRenderer.h"
 
 #include "entities/Entity.h"
 
@@ -58,11 +57,9 @@ protected:
     Entity m_playerEntity;
     PlayerUi m_playerUi;
     InventorySystem m_inventorySystem;
-    TileDescriptionRenderer m_tileDescriptionRenderer;
     PlayerEquipmentInventory m_equipmentInventory;
 
 private:
-    void displayTileDescriptionWindow();
 };
 
 #endif // PLAYER_H

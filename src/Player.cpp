@@ -21,7 +21,6 @@ Player::Player(WindowSpaceManager& wsm, Game& game, TileTransferMediator& tileTr
     m_playerEntity(-1, std::make_unique<PlayerModel>(*this, m_playerEntity), std::make_unique<PlayerRenderer>(*this, m_playerEntity), std::make_unique<PlayerController>(*this, m_playerEntity)),
     m_playerUi(wsm, *this),
     m_inventorySystem(wsm, *this, tileTransferMediator),
-    m_tileDescriptionRenderer(wsm),
     m_equipmentInventory()
 {
     m_inventorySystem.openPermanentInventory(m_equipmentInventory, "");
@@ -84,13 +83,11 @@ const PlayerEquipmentInventory& Player::equipmentInventory() const
 }
 void Player::showTileDescription(const TileDescription& description)
 {
-    m_tileDescriptionRenderer.setDescription(description);
-    displayTileDescriptionWindow();
+    m_playerUi.showTileDescription(description);
 }
 void Player::showTileDescription(TileDescription&& description)
 {
-    m_tileDescriptionRenderer.setDescription(std::move(description));
-    displayTileDescriptionWindow();
+    m_playerUi.showTileDescription(std::move(description));
 }
 
 void Player::attack(World& world, const ls::Vec2F& pos)
@@ -102,24 +99,4 @@ void Player::attack(World& world, const ls::Vec2F& pos)
 
     weapon.erase(attackResult.weaponUsed);
     ammo().erase(attackResult.ammoUsed);
-}
-void Player::displayTileDescriptionWindow()
-{
-    const ls::Rectangle2I contentRect = m_tileDescriptionRenderer.requiredContentRect(m_wsm->rect());
-
-    Scene& scene = m_wsm->currentScene();
-    Scene::FreeWindowHandle h = scene.findFreeWindow("TileDescription");
-    if (!scene.isValid(h))
-    {
-        WindowParams params = m_tileDescriptionRenderer.requiredWindowParams();
-        auto wnd = InternalWindow::createWithContentRect(*m_wsm, contentRect, "TileDescription", params);
-        wnd->attachContent(m_tileDescriptionRenderer);
-        scene.addFreeWindow(std::move(wnd));
-    }
-    else
-    {
-        InternalWindow& wnd = **h;
-        wnd.setContentRect(contentRect);
-        scene.setWindowFocus(h);
-    }
 }
