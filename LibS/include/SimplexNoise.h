@@ -253,18 +253,5 @@ namespace ls
 
     using SimplexNoise4D = SimplexNoise<double, 4>;
     using SimplexNoise4F = SimplexNoise<float, 4>;
-
-
-    extern template class SimplexNoise<double, 1>;
-    extern template class SimplexNoise<float, 1>;
-
-    extern template class SimplexNoise<double, 2>;
-    extern template class SimplexNoise<float, 2>;
-
-    extern template class SimplexNoise<double, 2>;
-    extern template class SimplexNoise<float, 2>;
-
-    extern template class SimplexNoise<double, 2>;
-    extern template class SimplexNoise<float, 2>;
 }
 #include "../src/SimplexNoise.cpp"

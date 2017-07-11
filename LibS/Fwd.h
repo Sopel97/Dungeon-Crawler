@@ -19,9 +19,9 @@ namespace ls
     class DefaultEuclideanGraphStorageTypeReference;
     template <class T, class GraphRepresentationTag, bool isDirected, class StorageTypeReference> class Graph;
 
+    namespace {class OriginalPerlinPermTable;}
     template <class T, int Dim, class Hasher = OriginalPerlinPermTable> class SimplexNoise;
 
-    namespace { class OriginalPerlinPermTable; }
     template <int N, class IntType>
     class PermTable;
     template <class T, int Dim, class Hasher = OriginalPerlinPermTable> class PerlinNoise;

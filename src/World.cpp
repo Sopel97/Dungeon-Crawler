@@ -20,12 +20,16 @@
 #include "TileColumn.h"
 #include "MapLayer.h"
 
+#include "GameTime.h"
+
 #include "window/WindowSpaceManager.h"
 
 #include "TallDrawable.h"
 #include "TallEntityDrawable.h"
 #include "TallTileColumnDrawable.h"
 #include "TallProjectileDrawable.h"
+
+#include "Light.h"
 
 #include "TileTransferMediator.h"
 
@@ -276,22 +280,25 @@ void World::drawLightMapToIntermidiate(sf::RenderStates& renderStates)
 
 void World::drawLightsToLightMap()
 {
-    float lightScale = 0.7f;
     sf::Vector2u textureSize = m_lightTexture.get().getSize();
     Vec2F center = m_player.entity().model().position();
 
+    Light playerLight(center, 100.0f, sf::Color::Red, sf::Color::Blue, 1.0); //temp
+    const float lightScale = playerLight.radius() * 2.0f / textureSize.x;
+
     Vec2F topLeft = center - (Vec2F(textureSize.x, textureSize.y) * lightScale) / 2.0f;
 
-    sf::RectangleShape playerLight;
-    playerLight.setTexture(&(m_lightTexture.get()));
-    playerLight.setTextureRect(sf::IntRect(0, 0, static_cast<int>(textureSize.x), static_cast<int>(textureSize.y)));
-    playerLight.setPosition(sf::Vector2f(topLeft.x, topLeft.y));
-    playerLight.setSize(sf::Vector2f(textureSize.x * lightScale, textureSize.y * lightScale));
+    sf::RectangleShape playerLightShape;
+    playerLightShape.setTexture(&(m_lightTexture.get()));
+    playerLightShape.setTextureRect(sf::IntRect(0, 0, static_cast<int>(textureSize.x), static_cast<int>(textureSize.y)));
+    playerLightShape.setPosition(sf::Vector2f(topLeft.x, topLeft.y));
+    playerLightShape.setSize(sf::Vector2f(textureSize.x * lightScale, textureSize.y * lightScale));
+    playerLightShape.setFillColor(playerLight.color(GameTime::instance().now()));
 
     sf::RenderStates lightRenderStates;
     lightRenderStates.blendMode = sf::BlendAdd;
 
-    m_lightMap.draw(playerLight, lightRenderStates);
+    m_lightMap.draw(playerLightShape, lightRenderStates);
 
     m_lightMap.display();
 }

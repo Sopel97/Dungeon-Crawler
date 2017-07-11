@@ -1,5 +1,7 @@
 #pragma once
 
+#include <memory>
+
 #include "../../Util.h"
 #include "../Vec2.h"
 #include "../Vec3.h"
