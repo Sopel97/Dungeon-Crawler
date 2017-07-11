@@ -269,6 +269,7 @@ void World::drawLightMapToIntermidiate(sf::RenderStates& renderStates)
 
     sf::RenderStates lightMapRenderStates = renderStates;
     lightMapRenderStates.shader = &m_lightShader;
+    lightMapRenderStates.blendMode = sf::BlendMultiply;
 
     m_intermidiateRenderTarget.draw(lightMapSprite, lightMapRenderStates);
 }
@@ -287,7 +288,10 @@ void World::drawLightsToLightMap()
     playerLight.setPosition(sf::Vector2f(topLeft.x, topLeft.y));
     playerLight.setSize(sf::Vector2f(textureSize.x * lightScale, textureSize.y * lightScale));
 
-    m_lightMap.draw(playerLight);
+    sf::RenderStates lightRenderStates;
+    lightRenderStates.blendMode = sf::BlendAdd;
+
+    m_lightMap.draw(playerLight, lightRenderStates);
 
     m_lightMap.display();
 }

@@ -16,7 +16,6 @@ void main()
     );
 
     vec4 texPixel = texture2D(texture, lightTexCoords);
-    float a = 1.0 - texPixel.a;
-
-    gl_FragColor = vec4(0.0, 0.0, 0.0, a);
+    
+    gl_FragColor = texPixel;
 }
