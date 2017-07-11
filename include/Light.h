@@ -4,6 +4,8 @@
 #include "../LibS/Noise.h"
 
 #include <SFML/Graphics/Color.hpp>
+#include <SFML/Graphics/RenderTarget.hpp>
+#include <SFML/Graphics/RenderStates.hpp>
 
 class Light
 {
@@ -16,6 +18,8 @@ public:
     const sf::Color& firstColor() const;
     const sf::Color& secondColor() const;
     sf::Color color(double t) const;
+
+    void draw(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates, const sf::Texture& texture, double t) const;
 
 private:
     ls::Vec2F m_position;

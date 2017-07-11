@@ -1,5 +1,7 @@
 #include "Light.h"
 
+#include <SFML/Graphics.hpp>
+
 Light::Light(const ls::Vec2F& position, float radius, const sf::Color& firstColor) :
     m_position(position),
     m_radius(radius),
@@ -41,7 +43,7 @@ sf::Color Light::color(double t) const
     noiseSampler.setLowerBound(0.0);
     noiseSampler.setUpperBound(1.0);
     noiseSampler.setOctaves(2);
-    noiseSampler.setScale(1.0 / m_frequency);
+    noiseSampler.setScale(m_frequency);
 
     const float r1 = m_firstColor.r;
     const float g1 = m_firstColor.g;
@@ -57,4 +59,16 @@ sf::Color Light::color(double t) const
     const float b = b1 + (b2 - b1)*sample;
 
     return sf::Color(static_cast<sf::Uint8>(r), static_cast<sf::Uint8>(g), static_cast<sf::Uint8>(b));
+}
+void Light::draw(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates, const sf::Texture& texture, double t) const
+{
+    const ls::Vec2F topLeft = m_position - ls::Vec2F(m_radius, m_radius);
+
+    sf::RectangleShape playerLightShape;
+    playerLightShape.setTexture(&texture, true);
+    playerLightShape.setPosition(sf::Vector2f(topLeft.x, topLeft.y));
+    playerLightShape.setSize(sf::Vector2f(m_radius * 2.0f, m_radius * 2.0f));
+    playerLightShape.setFillColor(color(t));
+
+    renderTarget.draw(playerLightShape, renderStates);
 }

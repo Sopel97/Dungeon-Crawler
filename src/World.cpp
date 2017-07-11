@@ -280,25 +280,14 @@ void World::drawLightMapToIntermidiate(sf::RenderStates& renderStates)
 
 void World::drawLightsToLightMap()
 {
-    sf::Vector2u textureSize = m_lightTexture.get().getSize();
     Vec2F center = m_player.entity().model().position();
 
-    Light playerLight(center, 100.0f, sf::Color::Red, sf::Color::Blue, 1.0); //temp
-    const float lightScale = playerLight.radius() * 2.0f / textureSize.x;
-
-    Vec2F topLeft = center - (Vec2F(textureSize.x, textureSize.y) * lightScale) / 2.0f;
-
-    sf::RectangleShape playerLightShape;
-    playerLightShape.setTexture(&(m_lightTexture.get()));
-    playerLightShape.setTextureRect(sf::IntRect(0, 0, static_cast<int>(textureSize.x), static_cast<int>(textureSize.y)));
-    playerLightShape.setPosition(sf::Vector2f(topLeft.x, topLeft.y));
-    playerLightShape.setSize(sf::Vector2f(textureSize.x * lightScale, textureSize.y * lightScale));
-    playerLightShape.setFillColor(playerLight.color(GameTime::instance().now()));
+    Light playerLight(center, 100.0f, sf::Color::Red, sf::Color::Blue, 0.5); //temp
 
     sf::RenderStates lightRenderStates;
     lightRenderStates.blendMode = sf::BlendAdd;
 
-    m_lightMap.draw(playerLightShape, lightRenderStates);
+    playerLight.draw(m_lightMap, lightRenderStates, m_lightTexture.get(), GameTime::instance().now());
 
     m_lightMap.display();
 }
