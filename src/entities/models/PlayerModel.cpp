@@ -102,6 +102,10 @@ const AttributeArray& PlayerModel::attributes() const
 
     return attributes;
 }
+std::optional<Light> PlayerModel::light() const
+{
+    return Light(m_position, 128.0f, sf::Color::Red, sf::Color::Blue, 0.5);
+}
 
 float PlayerModel::maxSpeed() const
 {

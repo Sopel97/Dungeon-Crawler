@@ -21,6 +21,7 @@ class Camera;
 class World;
 class Player;
 class EntityPrefab;
+class Light;
 
 class EntitySystem
 {
@@ -29,6 +30,7 @@ public:
 
     std::vector<Entity*> query(const ls::Rectangle2F& rect);
     std::vector<EntityCollider> queryColliders(const ls::Rectangle2F& rect);
+    std::vector<Light> queryLights(const ls::Rectangle2F& rect);
     const std::vector<std::unique_ptr<Entity>>& entities() const;
 
     Entity& entity(int i);

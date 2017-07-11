@@ -35,6 +35,7 @@ public:
     AggroGroupId group() const override;
     TileStack& ammo() override;
     const AttributeArray& attributes() const override;
+    std::optional<Light> light() const override;
 
     float maxSpeed() const override;
 

@@ -4,9 +4,12 @@
 #include <Configuration.h>
 
 #include <memory>
+#include <optional>
 
 #include "entities/EntityComponent.h"
 #include "AggroGroup.h"
+
+#include "Light.h"
 
 #include "tiles/TileStack.h"
 
@@ -49,6 +52,7 @@ public:
     virtual AggroGroupId group() const;
     virtual TileStack& ammo();
     virtual const AttributeArray& attributes() const;
+    virtual std::optional<Light> light() const;
 
     void onEntityInstantiated(const ls::Vec2F& pos) override;
 

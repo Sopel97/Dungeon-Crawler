@@ -48,6 +48,7 @@ public:
     TileStack createCorpse() const override;
     AggroGroupId group() const override;
     const AttributeArray& attributes() const override;
+    std::optional<Light> light() const override; // temp, for light testing
 
     float maxSpeed() const override;
 

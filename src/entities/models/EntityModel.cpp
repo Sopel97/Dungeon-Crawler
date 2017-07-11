@@ -85,6 +85,10 @@ const AttributeArray& EntityModel::attributes() const
     static AttributeArray a;
     return a;
 }
+std::optional<Light> EntityModel::light() const
+{
+    return std::nullopt;
+}
 
 void EntityModel::onEntityInstantiated(const ls::Vec2F& pos)
 {

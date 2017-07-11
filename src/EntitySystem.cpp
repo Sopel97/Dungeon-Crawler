@@ -19,6 +19,8 @@
 
 #include "Camera.h"
 
+#include "Light.h"
+
 #include <vector>
 #include <algorithm>
 #include <memory>
@@ -105,6 +107,51 @@ std::vector<EntityCollider> EntitySystem::queryColliders(const ls::Rectangle2F& 
     }
 
     return collidersInRegion;
+}
+std::vector<Light> EntitySystem::queryLights(const ls::Rectangle2F& rect)
+{
+    std::vector<Light> lightsInRange;
+
+    const Vec2F rectCenter = rect.centerOfMass();
+    const float halfRectWidth = rect.width() / 2.0f;
+    const float halfRectHeight = rect.height() / 2.0f;
+
+    for (std::unique_ptr<Entity>& entity : m_entities)
+    {
+        std::optional<Light> lightOpt = entity->model().light();
+        if (!lightOpt.has_value()) continue;
+
+        Light& light = lightOpt.value();
+
+        const Vec2F pos = light.position();
+        const float radius = light.radius();
+        const float xDist = std::abs(rectCenter.x - pos.x) - halfRectWidth;
+        const float yDist = std::abs(rectCenter.y - pos.y) - halfRectHeight;
+        if (xDist < radius && yDist < radius)
+        {
+            lightsInRange.push_back(light);
+        }
+    }
+
+    {
+        Entity& playerEntity = m_player->entity();
+        std::optional<Light> lightOpt = playerEntity.model().light();
+        if (lightOpt.has_value())
+        {
+            Light& light = lightOpt.value();
+
+            const Vec2F pos = light.position();
+            const float radius = light.radius();
+            const float xDist = std::abs(rectCenter.x - pos.x) - halfRectWidth;
+            const float yDist = std::abs(rectCenter.y - pos.y) - halfRectHeight;
+            if (xDist < radius && yDist < radius)
+            {
+                lightsInRange.push_back(light);
+            }
+        }
+    }
+
+    return lightsInRange;
 }
 const std::vector<std::unique_ptr<Entity>>& EntitySystem::entities() const
 {

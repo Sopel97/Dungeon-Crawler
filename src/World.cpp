@@ -280,14 +280,14 @@ void World::drawLightMapToIntermidiate(sf::RenderStates& renderStates)
 
 void World::drawLightsToLightMap()
 {
-    Vec2F center = m_player.entity().model().position();
-
-    Light playerLight(center, 100.0f, sf::Color::Red, sf::Color::Blue, 0.5); //temp
-
     sf::RenderStates lightRenderStates;
     lightRenderStates.blendMode = sf::BlendAdd;
 
-    playerLight.draw(m_lightMap, lightRenderStates, m_lightTexture.get(), GameTime::instance().now());
+    auto lights = m_entitySystem.queryLights(m_camera.viewRectangle());
+    for (auto& light : lights)
+    {
+        light.draw(m_lightMap, lightRenderStates, m_lightTexture.get(), GameTime::instance().now());
+    }
 
     m_lightMap.display();
 }

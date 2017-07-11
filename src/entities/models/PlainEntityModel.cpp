@@ -106,6 +106,10 @@ const AttributeArray& PlainEntityModel::attributes() const
 {
     return m_commonData->attributes;
 }
+std::optional<Light> PlainEntityModel::light() const
+{
+    return Light(m_position, 128.0f, sf::Color::Green, sf::Color::Yellow, 1.0);
+}
 
 float PlainEntityModel::maxSpeed() const
 {
