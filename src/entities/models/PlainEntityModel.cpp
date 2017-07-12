@@ -116,7 +116,7 @@ std::optional<Light> PlainEntityModel::light() const
         Light(m_position, 128.0f, sf::Color::Green),
         Light(m_position, 100.0f, sf::Color::Yellow),
         1.0
-    ).at(GameTime::instance().now());
+    ).at(GameTime::instance().now(), static_cast<double>(reinterpret_cast<intptr_t>(this))); //TODO: better way to get per entity constant value
 }
 
 float PlainEntityModel::maxSpeed() const
