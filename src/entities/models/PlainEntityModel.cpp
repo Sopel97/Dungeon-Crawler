@@ -1,5 +1,9 @@
 #include "entities/models/PlainEntityModel.h"
 
+#include "OscillatingLightSource.h"
+
+#include "GameTime.h"
+
 using namespace ls;
 
 REGISTER_ENTITY_MODEL_TYPE(PlainEntityModel)
@@ -108,7 +112,11 @@ const AttributeArray& PlainEntityModel::attributes() const
 }
 std::optional<Light> PlainEntityModel::light() const
 {
-    return Light(m_position, 128.0f, sf::Color::Green, sf::Color::Yellow, 1.0);
+    return OscillatingLightSource(
+        Light(m_position, 128.0f, sf::Color::Green),
+        Light(m_position, 100.0f, sf::Color::Yellow),
+        1.0
+    ).at(GameTime::instance().now());
 }
 
 float PlainEntityModel::maxSpeed() const

@@ -5,6 +5,10 @@
 #include "AttributeArray.h"
 #include "AttributeSet.h"
 
+#include "GameTime.h"
+
+#include "OscillatingLightSource.h"
+
 using namespace ls;
 
 REGISTER_ENTITY_MODEL_TYPE(PlayerModel)
@@ -104,7 +108,11 @@ const AttributeArray& PlayerModel::attributes() const
 }
 std::optional<Light> PlayerModel::light() const
 {
-    return Light(m_position, 128.0f, sf::Color::Red, sf::Color::Blue, 0.5);
+    return OscillatingLightSource(
+        Light(m_position, 128.0f, sf::Color::Red),
+        Light(m_position, 100.0f, sf::Color::Blue),
+        0.5
+    ).at(GameTime::instance().now());
 }
 
 float PlayerModel::maxSpeed() const

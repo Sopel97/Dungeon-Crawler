@@ -10,21 +10,16 @@
 class Light
 {
 public:
-    Light(const ls::Vec2F& position, float radius, const sf::Color& firstColor);
-    Light(const ls::Vec2F& position, float radius, const sf::Color& firstColor, const sf::Color& secondColor, double frequency);
+    Light(const ls::Vec2F& position, float radius, const sf::Color& color);
 
     const ls::Vec2F& position() const;
     float radius() const;
-    const sf::Color& firstColor() const;
-    const sf::Color& secondColor() const;
-    sf::Color color(double t) const;
+    const sf::Color& color() const;
 
-    void draw(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates, const sf::Texture& texture, double t) const;
+    void draw(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates, const sf::Texture& texture) const;
 
 private:
     ls::Vec2F m_position;
     float m_radius;
-    sf::Color m_firstColor;
-    sf::Color m_secondColor;
-    double m_frequency;
+    sf::Color m_color;
 };

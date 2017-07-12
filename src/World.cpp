@@ -286,7 +286,7 @@ void World::drawLightsToLightMap()
     auto lights = m_entitySystem.queryLights(m_camera.viewRectangle());
     for (auto& light : lights)
     {
-        light.draw(m_lightMap, lightRenderStates, m_lightTexture.get(), GameTime::instance().now());
+        light.draw(m_lightMap, lightRenderStates, m_lightTexture.get());
     }
 
     m_lightMap.display();
