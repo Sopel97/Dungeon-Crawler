@@ -36,6 +36,7 @@
 #include "TileTransferMediator.h"
 
 #include <SFML/System.hpp>
+#include <SFML/OpenGL.hpp>
 
 #include "../LibS/Util.h"
 
@@ -51,11 +52,32 @@ WorldRenderer::WorldRenderer(Root& root, World& world) :
     m_camera(Vec2F(World::m_worldWidth * GameConstants::tileSize / 2.0f, World::m_worldHeight * GameConstants::tileSize / 2.0f), m_viewWidth * GameConstants::tileSize, m_viewHeight * GameConstants::tileSize),
     m_windowSpaceManager(root.windowSpaceManager())
 {
-    m_intermidiateRenderTarget.create(m_viewWidth * GameConstants::tileSize, m_viewHeight * GameConstants::tileSize);
+    m_intermidiateRenderTarget.create(m_viewWidth * GameConstants::tileSize, m_viewHeight * GameConstants::tileSize, true);
+    m_intermidiateRenderTarget.resetGLStates();
+    m_intermidiateRenderTarget.setActive(true);
+    glEnable(GL_DEPTH_TEST);
+    glDepthMask(GL_TRUE);
+    glDepthFunc(GL_LEQUAL);
+    glDepthRange(0.0f, 1.0f);
+    glClearDepth(1.0f);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
+    m_metaTexture.create((m_viewWidth + 2) * GameConstants::tileSize, (m_viewHeight + 2) * GameConstants::tileSize, true);
+    m_metaTexture.resetGLStates();
+    m_metaTexture.setActive(true);
+    glEnable(GL_DEPTH_TEST);
+    glDepthMask(GL_TRUE);
+    glDepthFunc(GL_LEQUAL);
+    glDepthRange(0.0f, 1.0f);
+    glClearDepth(1.0f);
+    glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
+
     //light map stretches one more tile, because some of the visible tiles need lighting of the tiles not seen
     //also adds one tile length on top and left to keep symmetry
     m_lightMap.create((m_viewWidth + 2) * GameConstants::tileSize, (m_viewHeight + 2) * GameConstants::tileSize);
-    m_metaTexture.create((m_viewWidth + 2) * GameConstants::tileSize, (m_viewHeight + 2) * GameConstants::tileSize);
+
+    m_intermidiateDepthShader.loadFromFile("assets/shaders/intermidiate_depth.vert", "assets/shaders/intermidiate_depth.frag");
+    m_metaDepthShader.loadFromFile("assets/shaders/meta_depth.vert", "assets/shaders/meta_depth.frag");
 
     //TODO: maybe as a resource
     m_prettyStretchShader.loadFromFile("assets/shaders/pretty_stretch.vert", "assets/shaders/pretty_stretch.frag");
@@ -89,6 +111,9 @@ void WorldRenderer::draw(sf::RenderTarget& renderTarget, sf::RenderStates& rende
     prepareMetaTexture();
     updateShaderUniforms();
 
+    sf::RenderStates colorRenderStates = renderStates;
+    colorRenderStates.shader = &m_intermidiateDepthShader;
+
     MapLayer& mapLayer = *(m_world.m_mapLayer);
     const Rectangle2F cameraRect = m_camera.viewRectangle();
     const Vec2F& cameraTopLeft = cameraRect.min;
@@ -120,18 +145,18 @@ void WorldRenderer::draw(sf::RenderTarget& renderTarget, sf::RenderStates& rende
                 {
                     if (tileStack.tile().renderer().coversOuterBorders())
                     {
-                        drawOuterBorder(m_intermidiateRenderTarget, renderStates, location);
-                        tileStack.tile().draw(m_intermidiateRenderTarget, renderStates, location);
+                        drawOuterBorder(m_intermidiateRenderTarget, colorRenderStates, location);
+                        tileStack.tile().draw(m_intermidiateRenderTarget, colorRenderStates, location);
                     }
                     else
                     {
-                        tileStack.tile().draw(m_intermidiateRenderTarget, renderStates, location);
-                        drawOuterBorder(m_intermidiateRenderTarget, renderStates, location);
+                        tileStack.tile().draw(m_intermidiateRenderTarget, colorRenderStates, location);
+                        drawOuterBorder(m_intermidiateRenderTarget, colorRenderStates, location);
                     }
                 }
                 else
                 {
-                    tileStack.tile().draw(m_intermidiateRenderTarget, renderStates, location);
+                    tileStack.tile().draw(m_intermidiateRenderTarget, colorRenderStates, location);
                 }
 
                 ++z;
@@ -150,11 +175,11 @@ void WorldRenderer::draw(sf::RenderTarget& renderTarget, sf::RenderStates& rende
 
     //TODO: sorting does not work 100%. It gives wrong ordering when going by long walls.
     //      Fixing this may be impossible in compare method and may require other methods.
-    std::sort(tallDrawables.begin(), tallDrawables.end(), TallDrawable::ptrCompare);
+    //std::sort(tallDrawables.begin(), tallDrawables.end(), TallDrawable::ptrCompare);
 
     for (auto& tallDrawable : tallDrawables)
     {
-        tallDrawable->draw(m_intermidiateRenderTarget, renderStates);
+        tallDrawable->draw(m_intermidiateRenderTarget, colorRenderStates);
     }
     m_intermidiateRenderTarget.display();
 
@@ -179,6 +204,9 @@ void WorldRenderer::prepareIntermidiateRenderTarget()
     intermidiateView.setCenter(cameraCenter.x, cameraCenter.y);
     intermidiateView.setSize(cameraRect.width(), cameraRect.height());
     m_intermidiateRenderTarget.setView(intermidiateView);
+
+    m_intermidiateRenderTarget.setActive(true);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 void WorldRenderer::prepareLightMap()
 {
@@ -190,19 +218,20 @@ void WorldRenderer::prepareLightMap()
     lightMapView.setSize(cameraRect.width() + 2 * GameConstants::tileSize, cameraRect.height() + 2 * GameConstants::tileSize);
     m_lightMap.setView(lightMapView);
 
-    m_lightMap.clear(sf::Color::Transparent);
+    m_lightMap.clear(sf::Color::Black);
 }
 void WorldRenderer::prepareMetaTexture()
 {
     const Rectangle2F cameraRect = m_camera.viewRectangle();
     const Vec2F cameraCenter = cameraRect.centerOfMass();
 
-    sf::View metaTextureView = m_lightMap.getDefaultView();
+    sf::View metaTextureView = m_metaTexture.getDefaultView();
     metaTextureView.setCenter(cameraCenter.x, cameraCenter.y);
     metaTextureView.setSize(cameraRect.width() + 2 * GameConstants::tileSize, cameraRect.height() + 2 * GameConstants::tileSize);
     m_metaTexture.setView(metaTextureView);
 
-    m_metaTexture.clear(sf::Color::Black);
+    m_metaTexture.setActive(true);
+    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 }
 void WorldRenderer::updateShaderUniforms()
 {
@@ -217,6 +246,9 @@ void WorldRenderer::updateShaderUniforms()
 }
 void WorldRenderer::drawMeta(sf::RenderStates& renderStates, const std::vector<TallDrawable*>& tallDrawables)
 {
+    sf::RenderStates metaRenderStates = renderStates;
+    metaRenderStates.shader = &m_metaDepthShader;
+
     const Rectangle2F cameraRect = m_camera.viewRectangle();
 
     MapLayer& mapLayer = *(m_world.m_mapLayer);
@@ -237,7 +269,7 @@ void WorldRenderer::drawMeta(sf::RenderStates& renderStates, const std::vector<T
             {
                 TileLocation location(mapLayer, x, y, z);
 
-                tileStack.tile().drawMeta(m_metaTexture, renderStates, location);
+                tileStack.tile().drawMeta(m_metaTexture, metaRenderStates, location);
 
                 ++z;
             }
@@ -246,7 +278,7 @@ void WorldRenderer::drawMeta(sf::RenderStates& renderStates, const std::vector<T
 
     for (auto& tallDrawable : tallDrawables)
     {
-        tallDrawable->drawMeta(m_metaTexture, renderStates);
+        tallDrawable->drawMeta(m_metaTexture, metaRenderStates);
     }
 
     m_metaTexture.display();

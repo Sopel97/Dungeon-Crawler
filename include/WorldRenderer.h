@@ -34,8 +34,11 @@ protected:
     Camera m_camera;
     
     sf::RenderTexture m_intermidiateRenderTarget;
-    sf::RenderTexture m_lightMap;
     sf::RenderTexture m_metaTexture;
+    sf::RenderTexture m_lightMap;
+
+    sf::Shader m_intermidiateDepthShader;
+    sf::Shader m_metaDepthShader;
     sf::Shader m_prettyStretchShader;
     sf::Shader m_lightShader;
 
