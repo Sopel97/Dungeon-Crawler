@@ -26,11 +26,6 @@
 
 #include "window/WindowSpaceManager.h"
 
-#include "TallDrawable.h"
-#include "TallEntityDrawable.h"
-#include "TallTileColumnDrawable.h"
-#include "TallProjectileDrawable.h"
-
 #include "Light.h"
 
 #include "TileTransferMediator.h"
@@ -123,8 +118,6 @@ void WorldRenderer::draw(sf::RenderTarget& renderTarget, sf::RenderStates& rende
     int lastTileX = std::min(Util::fastFloor(cameraBottomRight.x / GameConstants::tileSize) + 1, m_world.m_width - 1);
     int lastTileY = std::min(Util::fastFloor(cameraBottomRight.y / GameConstants::tileSize) + 1, m_world.m_height - 1);
 
-    std::vector<TallDrawable*> tallDrawables;
-
     //x,y are inverted here because we want to draw top down
     for (int y = firstTileY; y <= lastTileY; ++y)
     {
@@ -136,11 +129,6 @@ void WorldRenderer::draw(sf::RenderTarget& renderTarget, sf::RenderStates& rende
             {
                 TileLocation location(mapLayer, x, y, z);
 
-                if (tileStack.tile().renderer().isTall())
-                {
-                    tallDrawables.push_back(new TallTileColumnDrawable(tileColumn, location));
-                    break;
-                }
                 if (z == 0)
                 {
                     if (tileStack.tile().renderer().coversOuterBorders())
@@ -166,30 +154,17 @@ void WorldRenderer::draw(sf::RenderTarget& renderTarget, sf::RenderStates& rende
 
     for (Entity* visibleEntity : m_world.m_entitySystem.getVisibleEntities(m_camera))
     {
-        tallDrawables.push_back(new TallEntityDrawable(visibleEntity));
+        visibleEntity->draw(m_intermidiateRenderTarget, colorRenderStates);
     }
     for (Projectile* visibleProjectile : m_world.m_projectileSystem.getVisibleProjectiles(m_camera))
     {
-        tallDrawables.push_back(new TallProjectileDrawable(visibleProjectile));
+        visibleProjectile->draw(m_intermidiateRenderTarget, colorRenderStates);
     }
 
-    //TODO: sorting does not work 100%. It gives wrong ordering when going by long walls.
-    //      Fixing this may be impossible in compare method and may require other methods.
-    //std::sort(tallDrawables.begin(), tallDrawables.end(), TallDrawable::ptrCompare);
-
-    for (auto& tallDrawable : tallDrawables)
-    {
-        tallDrawable->draw(m_intermidiateRenderTarget, colorRenderStates);
-    }
     m_intermidiateRenderTarget.display();
 
-    drawMeta(renderStates, tallDrawables);
+    drawMeta(renderStates);
     drawLightsToLightMap();
-
-    for (auto& tallDrawable : tallDrawables)
-    {
-        delete tallDrawable;
-    }
 
     drawLightMapToIntermidiate(renderStates);
     drawIntermidiate(renderTarget, renderStates);
@@ -244,14 +219,13 @@ void WorldRenderer::updateShaderUniforms()
     m_prettyStretchShader.setParameter("viewOffset", sf::Vector2f(viewRect.min.x, viewRect.min.y));
     m_prettyStretchShader.setParameter("destinationTextureSize", sf::Vector2f(viewRect.width(), viewRect.height()));
 }
-void WorldRenderer::drawMeta(sf::RenderStates& renderStates, const std::vector<TallDrawable*>& tallDrawables)
+void WorldRenderer::drawMeta(sf::RenderStates& renderStates)
 {
     sf::RenderStates metaRenderStates = renderStates;
     metaRenderStates.shader = &m_metaDepthShader;
 
-    const Rectangle2F cameraRect = m_camera.viewRectangle();
-
     MapLayer& mapLayer = *(m_world.m_mapLayer);
+    const Rectangle2F cameraRect = m_camera.viewRectangle();
     const Vec2F& cameraTopLeft = cameraRect.min;
     const Vec2F& cameraBottomRight = cameraRect.max;
     int firstTileX = std::max(Util::fastFloor(cameraTopLeft.x / GameConstants::tileSize), 0);
@@ -259,13 +233,14 @@ void WorldRenderer::drawMeta(sf::RenderStates& renderStates, const std::vector<T
     int lastTileX = std::min(Util::fastFloor(cameraBottomRight.x / GameConstants::tileSize) + 1, m_world.m_width - 1);
     int lastTileY = std::min(Util::fastFloor(cameraBottomRight.y / GameConstants::tileSize) + 1, m_world.m_height - 1);
 
+    //x,y are inverted here because we want to draw top down
     for (int y = firstTileY; y <= lastTileY; ++y)
     {
         for (int x = firstTileX; x <= lastTileX; ++x)
         {
-            const TileColumn& tileColumn = mapLayer.at(x, y);
+            TileColumn& tileColumn = mapLayer.at(x, y);
             int z = 0;
-            for (const TileStack& tileStack : tileColumn.tiles())
+            for (TileStack& tileStack : tileColumn.tiles())
             {
                 TileLocation location(mapLayer, x, y, z);
 
@@ -276,9 +251,13 @@ void WorldRenderer::drawMeta(sf::RenderStates& renderStates, const std::vector<T
         }
     }
 
-    for (auto& tallDrawable : tallDrawables)
+    for (Entity* visibleEntity : m_world.m_entitySystem.getVisibleEntities(m_camera))
     {
-        tallDrawable->drawMeta(m_metaTexture, metaRenderStates);
+        visibleEntity->drawMeta(m_metaTexture, metaRenderStates);
+    }
+    for (Projectile* visibleProjectile : m_world.m_projectileSystem.getVisibleProjectiles(m_camera))
+    {
+        visibleProjectile->drawMeta(m_metaTexture, metaRenderStates);
     }
 
     m_metaTexture.display();

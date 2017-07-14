@@ -17,6 +17,9 @@
 DRAWING RELATED, kinda important
 - make world drawing cleaner, parametrize intermidiate targets' sizes
 
+- gather vertices to vertex buffer instead of making a lot of drawing calls from each tile
+-- would also help the fact that shader bindings are not cached and ruin performance
+
 - reduce repetitions in rendering code
 -- a tile renderer helper that takes sprite position, size and returns sf::RectangleShape
 -- later may be adapted to other rendering methods

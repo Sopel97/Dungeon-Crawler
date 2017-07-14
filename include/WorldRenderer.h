@@ -14,6 +14,8 @@ class WindowSpaceManager;
 class TallDrawable;
 class TileLocation;
 
+
+// IMPORTANT: SFML makes redundant shader binds that result in very bad fps when many calls are made with the same shader. Should be improved later when vertex array is used.
 class WorldRenderer
 {
 public:
@@ -53,7 +55,7 @@ protected:
     void prepareMetaTexture();
     void updateShaderUniforms();
     void drawOuterBorder(sf::RenderTarget & renderTarget, sf::RenderStates & renderStates, const TileLocation & tileLocation);
-    void drawMeta(sf::RenderStates& renderStates, const std::vector<TallDrawable*>& tallDrawables);
+    void drawMeta(sf::RenderStates& renderStates);
     void drawIntermidiate(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
     void drawLightMapToIntermidiate(sf::RenderStates& renderStates);
     void drawLightsToLightMap();

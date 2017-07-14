@@ -24,11 +24,6 @@
 
 #include "window/WindowSpaceManager.h"
 
-#include "TallDrawable.h"
-#include "TallEntityDrawable.h"
-#include "TallTileColumnDrawable.h"
-#include "TallProjectileDrawable.h"
-
 #include "Light.h"
 
 #include "TileTransferMediator.h"
