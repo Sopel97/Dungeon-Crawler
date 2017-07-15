@@ -36,7 +36,7 @@ public:
 
     virtual void drawMeta(SpriteBatch& spriteBatch, const TileLocation& location) const;
 
-    virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const InventorySlotView& slot) const;
+    virtual void draw(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates, const InventorySlotView& slot) const;
 
     virtual TileInnerBorderGroupType innerBorderGroup() const;
     virtual int outerBorderPriority() const;

@@ -285,7 +285,7 @@ bool Scene::tryDispatchEvent(sf::Event& event, const Vec2I& mousePos)
         return false;
     }
 }
-void Scene::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
+void Scene::draw(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates)
 {
     for (BackgroundWindowHandle h : m_topmostRegions)
     {

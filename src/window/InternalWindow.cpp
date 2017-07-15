@@ -476,7 +476,7 @@ ls::Vec2I InternalWindow::localContentCoords(const ls::Vec2I& globalCoords) cons
     return globalCoords - this->absoluteContentRect().min;
 }
 
-void InternalWindow::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
+void InternalWindow::draw(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates)
 {
     if (m_isMinimized)
     {
@@ -512,7 +512,7 @@ int InternalWindow::maximizeButtonId()
     return m_maximizeButtonId;
 }
 
-void InternalWindow::drawSkeleton(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
+void InternalWindow::drawSkeleton(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates)
 {
     if (isContentOnly()) return;
 
@@ -641,7 +641,7 @@ void InternalWindow::drawSkeleton(sf::RenderTarget& renderTarget, sf::RenderStat
     }
 }
 
-void InternalWindow::drawSkeletonMinimized(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
+void InternalWindow::drawSkeletonMinimized(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates)
 {
     ResourceHandle<sf::Texture> horizontalBarsSprites = ResourceManager::instance().get<sf::Texture>("UiHorizontalBars");
     ResourceHandle<sf::Texture> nonRepeatingSprites = ResourceManager::instance().get<sf::Texture>("UiNonRepeating");
@@ -679,7 +679,7 @@ void InternalWindow::drawSkeletonMinimized(sf::RenderTarget& renderTarget, sf::R
     renderTarget.draw(topRightCornerSprite, renderStates);
 }
 
-void InternalWindow::drawHeaderButtons(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
+void InternalWindow::drawHeaderButtons(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates)
 {
     m_wsm->setDefaultView();
 

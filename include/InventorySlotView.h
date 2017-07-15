@@ -38,7 +38,7 @@ public:
     Inventory& inventory();
     const Inventory& inventory() const;
 
-    void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, SlotContentRequirement contentRequirement);
+    void draw(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates, SlotContentRequirement contentRequirement);
 
     static const ls::Vec2I& slotSize();
 
@@ -56,5 +56,5 @@ protected:
     size_t m_slotId;
     ls::Vec2I m_position; //relative to inventory inner region
 
-    void drawQuantity(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, int quantity);
+    void drawQuantity(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates, int quantity);
 };

@@ -32,7 +32,7 @@ public:
 
     EventResult onMouseButtonPressed(sf::Event::MouseButtonEvent& event, EventContext context) override;
 
-    void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) override;
+    void draw(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates) override;
 
 private:
     void updateLines();

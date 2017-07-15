@@ -132,7 +132,7 @@ public:
     ls::Vec2I localWindowCoords(const ls::Vec2I& globalCoords) const;
     ls::Vec2I localContentCoords(const ls::Vec2I& globalCoords) const;
 
-    virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
+    virtual void draw(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates);
 
     static int closeButtonId();
     static int minimizeButtonId();
@@ -141,9 +141,9 @@ public:
 private:
     static ls::Rectangle2I windowRectWithContentRect(const ls::Rectangle2I& contentRect, const WindowParams& params);
 
-    void drawSkeleton(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
-    void drawSkeletonMinimized(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
-    void drawHeaderButtons(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
+    void drawSkeleton(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates);
+    void drawSkeletonMinimized(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates);
+    void drawHeaderButtons(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates);
     std::vector<ls::Vec2I> absoluteButtonsPositions();
     InternalWindowHeaderButton* queryButton(const ls::Vec2I& pos);
 

@@ -31,5 +31,5 @@ public:
     virtual void onDetached(InternalWindow& wnd);
     virtual void onDetachedAndWindowClosing(InternalWindow& wnd);
 
-    virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) {};
+    virtual void draw(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates) {};
 };

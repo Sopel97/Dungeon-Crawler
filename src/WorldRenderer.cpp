@@ -107,7 +107,7 @@ const Camera& WorldRenderer::camera() const
     return m_camera;
 }
 
-void WorldRenderer::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
+void WorldRenderer::draw(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates)
 {
     prepareIntermidiateRenderTarget();
     prepareLightMap();
@@ -122,7 +122,7 @@ void WorldRenderer::draw(sf::RenderTarget& renderTarget, sf::RenderStates& rende
     drawIntermidiate(renderTarget, renderStates);
 }
 
-void WorldRenderer::drawMain(sf::RenderStates& renderStates)
+void WorldRenderer::drawMain(const sf::RenderStates& renderStates)
 {
     sf::RenderStates colorRenderStates = renderStates;
     colorRenderStates.shader = &m_intermidiateDepthShader;
@@ -235,7 +235,7 @@ void WorldRenderer::updateShaderUniforms()
     m_prettyStretchShader.setParameter("viewOffset", sf::Vector2f(viewRect.min.x, viewRect.min.y));
     m_prettyStretchShader.setParameter("destinationTextureSize", sf::Vector2f(viewRect.width(), viewRect.height()));
 }
-void WorldRenderer::drawMeta(sf::RenderStates& renderStates)
+void WorldRenderer::drawMeta(const sf::RenderStates& renderStates)
 {
     sf::RenderStates metaRenderStates = renderStates;
     metaRenderStates.shader = &m_metaDepthShader;
@@ -282,7 +282,7 @@ void WorldRenderer::drawMeta(sf::RenderStates& renderStates)
 
     m_metaTexture.display();
 }
-void WorldRenderer::drawIntermidiate(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
+void WorldRenderer::drawIntermidiate(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates)
 {
     sf::Sprite intermidiateFinal(m_intermidiateRenderTarget.getTexture());
     sf::RenderStates intermidiateRenderStates = renderStates;
@@ -292,7 +292,7 @@ void WorldRenderer::drawIntermidiate(sf::RenderTarget& renderTarget, sf::RenderS
 
     renderTarget.draw(intermidiateFinal, intermidiateRenderStates);
 }
-void WorldRenderer::drawLightMapToIntermidiate(sf::RenderStates& renderStates)
+void WorldRenderer::drawLightMapToIntermidiate(const sf::RenderStates& renderStates)
 {
     const Rectangle2F cameraRect = m_camera.viewRectangle();
     const Vec2F cameraCenter = cameraRect.centerOfMass();

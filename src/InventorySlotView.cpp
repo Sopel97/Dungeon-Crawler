@@ -68,7 +68,7 @@ const Inventory& InventorySlotView::inventory() const
     return *m_inventory;
 }
 
-void InventorySlotView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, SlotContentRequirement contentRequirement)
+void InventorySlotView::draw(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates, SlotContentRequirement contentRequirement)
 {
     sf::Sprite slotSprite;
     slotSprite.setPosition(static_cast<float>(m_position.x), static_cast<float>(m_position.y));
@@ -104,7 +104,7 @@ const Vec2I& InventorySlotView::slotSize()
     return m_slotTextureSize;
 }
 
-void InventorySlotView::drawQuantity(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, int quantity)
+void InventorySlotView::drawQuantity(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates, int quantity)
 {
     constexpr int padding = 2;
 

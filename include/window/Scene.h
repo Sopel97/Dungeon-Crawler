@@ -71,7 +71,7 @@ public:
 
     bool tryDispatchEvent(sf::Event& event, const ls::Vec2I& mousePos);
 
-    void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
+    void draw(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates);
 
     bool isValid(FreeWindowHandle& h) const;
     bool isValid(ConstFreeWindowHandle& h) const;

@@ -97,7 +97,7 @@ bool WindowSpaceManager::tryDispatchEvent(sf::Event& event)
     return m_currentScene->tryDispatchEvent(event, mousePos);
 }
 
-void WindowSpaceManager::drawCurrentScene(sf::RenderStates& renderStates)
+void WindowSpaceManager::drawCurrentScene(const sf::RenderStates& renderStates)
 {
     m_currentScene->draw(m_window, renderStates);
 }

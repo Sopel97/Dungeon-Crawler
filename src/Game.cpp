@@ -59,7 +59,7 @@ void Game::tick(float dt)
     m_world->update(dt);
 }
 
-void Game::draw(sf::RenderStates& renderStates)
+void Game::draw(const sf::RenderStates& renderStates)
 {
     WindowSpaceManager& windowSpaceManager = m_root.windowSpaceManager();
 

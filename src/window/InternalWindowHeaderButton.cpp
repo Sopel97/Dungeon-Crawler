@@ -40,7 +40,7 @@ void InternalWindowHeaderButton::setEnabled(bool enable)
     m_isEnabled = enable;
 }
 
-void InternalWindowHeaderButton::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const ls::Vec2I& pos)
+void InternalWindowHeaderButton::draw(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates, const ls::Vec2I& pos)
 {
     ResourceHandle<sf::Texture> nonRepeatingSprites = ResourceManager::instance().get<sf::Texture>("UiNonRepeating");
 

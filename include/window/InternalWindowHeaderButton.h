@@ -48,5 +48,5 @@ public:
     }
     void setEnabled(bool enable);
 
-    void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const ls::Vec2I& pos);
+    void draw(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates, const ls::Vec2I& pos);
 };

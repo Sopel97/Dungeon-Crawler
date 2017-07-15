@@ -59,7 +59,7 @@ World::~World()
 
 }
 
-void World::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
+void World::draw(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates)
 {
     m_worldRenderer.draw(renderTarget, renderStates);
 }

@@ -69,7 +69,7 @@ void PlainTileRenderer::draw(SpriteBatch& spriteBatch, const TileLocation& locat
 
     spriteBatch.emplaceRectangle(&(texture()), pos, sprite + textureOffset, size);
 }
-void PlainTileRenderer::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const InventorySlotView& slot) const
+void PlainTileRenderer::draw(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates, const InventorySlotView& slot) const
 {
     const ls::Vec2I sprite = m_currentAnimatedSprite->now();
     const ls::Vec2I slotCenter = slot.center();

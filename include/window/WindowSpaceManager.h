@@ -41,7 +41,7 @@ public:
 
     bool tryDispatchEvent(sf::Event& event);
 
-    void drawCurrentScene(sf::RenderStates& renderStates);
+    void drawCurrentScene(const sf::RenderStates& renderStates);
 
     sf::RenderWindow& window();
 

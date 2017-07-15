@@ -31,7 +31,7 @@ void TileRenderer::drawMeta(SpriteBatch& spriteBatch, const TileLocation& locati
 {
 
 }
-void TileRenderer::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const InventorySlotView& slot) const
+void TileRenderer::draw(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates, const InventorySlotView& slot) const
 {
 
 }

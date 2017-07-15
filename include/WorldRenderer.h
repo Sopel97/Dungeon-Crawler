@@ -26,7 +26,7 @@ public:
 
     const Camera& camera() const;
 
-    void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
+    void draw(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates);
 
 protected:
     Root& m_root;
@@ -55,9 +55,9 @@ protected:
     void prepareMetaTexture();
     void updateShaderUniforms();
     void drawOuterBorder(SpriteBatch& spriteBatch, const TileLocation & tileLocation);
-    void drawMain(sf::RenderStates& renderStates);
-    void drawMeta(sf::RenderStates& renderStates);
-    void drawIntermidiate(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
-    void drawLightMapToIntermidiate(sf::RenderStates& renderStates);
+    void drawMain(const sf::RenderStates& renderStates);
+    void drawMeta(const sf::RenderStates& renderStates);
+    void drawIntermidiate(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates);
+    void drawLightMapToIntermidiate(const sf::RenderStates& renderStates);
     void drawLightsToLightMap();
 };

@@ -48,7 +48,7 @@ public:
     void draw(SpriteBatch& spriteBatch, const TileLocation& location) const override;
     void drawMeta(SpriteBatch& spriteBatch, const TileLocation& location) const override;
 
-    void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const InventorySlotView& slot) const override;
+    void draw(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates, const InventorySlotView& slot) const override;
 
     const sf::Texture& texture() const;
 

@@ -81,7 +81,7 @@ SfmlEventHandler::EventResult TileDescriptionRenderer::onMouseButtonPressed(sf::
     return EventResult{}.setConsumeEvent(false).setTakeFocus(false);
 }
 
-void TileDescriptionRenderer::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
+void TileDescriptionRenderer::draw(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates)
 {
     for (const auto& line : m_lines)
     {

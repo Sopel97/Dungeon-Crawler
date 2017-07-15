@@ -28,7 +28,7 @@ public:
     Game(Root& root);
 
     void tick(float dt);
-    void draw(sf::RenderStates& renderStates);
+    void draw(const sf::RenderStates& renderStates);
 
     Player& player();
 

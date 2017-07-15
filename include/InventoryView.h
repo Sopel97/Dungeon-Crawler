@@ -43,5 +43,5 @@ public:
 
     void onDetachedAndWindowClosing(InternalWindow& wnd) override;
 
-    void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) override;
+    void draw(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates) override;
 };

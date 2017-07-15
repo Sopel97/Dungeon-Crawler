@@ -138,7 +138,7 @@ void InventoryView::onDetachedAndWindowClosing(InternalWindow& wnd)
     m_inventorySystem->onInventoryWindowClosed(*m_inventory);
 }
 
-void InventoryView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
+void InventoryView::draw(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates)
 {
     int numberOfSlots = m_slotViews.size();
     for (int i = 0; i < numberOfSlots; ++i)

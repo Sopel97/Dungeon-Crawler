@@ -39,7 +39,7 @@ public:
     World(Root& root, Player& player, TileTransferMediator& tileTransferMediator);
     ~World();
 
-    void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
+    void draw(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates) override;
 
     int width() const;
     int height() const;
