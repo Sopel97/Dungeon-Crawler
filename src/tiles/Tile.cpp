@@ -79,24 +79,6 @@ void Tile::loadFromConfiguration(ConfigurationNode& config)
     m_controller->loadFromConfiguration(config);
 }
 
-void Tile::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const
-{
-    m_renderer->draw(renderTarget, renderStates, location);
-}
-void Tile::drawOutside(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const
-{
-    m_renderer->drawOutside(renderTarget, renderStates, location);
-}
-void Tile::drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const
-{
-    m_renderer->drawMeta(renderTarget, renderStates, location);
-}
-
-void Tile::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const InventorySlotView& slot) const
-{
-    m_renderer->draw(renderTarget, renderStates, slot);
-}
-
 const TileModel& Tile::model() const
 {
     return *m_model;

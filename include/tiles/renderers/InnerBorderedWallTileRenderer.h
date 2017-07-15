@@ -58,8 +58,8 @@ public:
 
     void loadFromConfiguration(ConfigurationNode& config) override;
 
-    void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const override;
-    void drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const override;
+    void draw(SpriteBatch& spriteBatch, const TileLocation& location) const override;
+    void drawMeta(SpriteBatch& spriteBatch, const TileLocation& location) const override;
 
     const sf::Texture& texture() const;
     TileInnerBorderGroupType innerBorderGroup() const override;
@@ -72,5 +72,5 @@ public:
 protected:
     CommonData* m_commonData;
 
-    virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location, const ls::Vec2I& textureOffset) const;
+    virtual void draw(SpriteBatch& spriteBatch, const TileLocation& location, const ls::Vec2I& textureOffset) const;
 };

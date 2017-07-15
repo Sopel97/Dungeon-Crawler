@@ -15,11 +15,11 @@ ProjectileRenderer::~ProjectileRenderer()
 
 }
 
-void ProjectileRenderer::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) const
+void ProjectileRenderer::draw(SpriteBatch& spriteBatch) const
 {
 
 }
-void ProjectileRenderer::drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) const
+void ProjectileRenderer::drawMeta(SpriteBatch& spriteBatch) const
 {
 
 }

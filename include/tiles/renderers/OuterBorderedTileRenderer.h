@@ -43,8 +43,8 @@ public:
 
     void loadFromConfiguration(ConfigurationNode& config) override;
 
-    void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const override;
-    void drawOutside(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const override;
+    void draw(SpriteBatch& spriteBatch, const TileLocation& location) const override;
+    void drawOutside(SpriteBatch& spriteBatch, const TileLocation& location) const override;
 
     const sf::Texture& texture() const;
 

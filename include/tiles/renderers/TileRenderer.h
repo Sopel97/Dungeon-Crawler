@@ -18,6 +18,7 @@ class MapLayer;
 class Tile;
 class TileLocation;
 class InventorySlotView;
+class SpriteBatch;
 
 struct InnerBorderGroup;
 using TileInnerBorderGroupType = RuntimeIdentifier<InnerBorderGroup>;
@@ -30,10 +31,10 @@ public:
     TileRenderer(const TileRenderer& other, Tile& owner);
     ~TileRenderer() override;
 
-    virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const;
-    virtual void drawOutside(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const;
+    virtual void draw(SpriteBatch& spriteBatch, const TileLocation& location) const;
+    virtual void drawOutside(SpriteBatch& spriteBatch, const TileLocation& location) const;
 
-    virtual void drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const;
+    virtual void drawMeta(SpriteBatch& spriteBatch, const TileLocation& location) const;
 
     virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const InventorySlotView& slot) const;
 

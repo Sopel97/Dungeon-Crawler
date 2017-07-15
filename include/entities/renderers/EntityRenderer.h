@@ -13,6 +13,7 @@ namespace sf
     class RenderStates;
 }
 class Entity;
+class SpriteBatch;
 
 class EntityRenderer : public EntityComponent<EntityRenderer, Entity>
 {
@@ -21,8 +22,8 @@ public:
     EntityRenderer(const EntityRenderer& other, Entity& owner);
     ~EntityRenderer() override;
 
-    virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) const;
-    virtual void drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) const;
+    virtual void draw(SpriteBatch& spriteBatch) const;
+    virtual void drawMeta(SpriteBatch& spriteBatch) const;
 
     std::unique_ptr<EntityRenderer> clone(Entity& owner) const override;
 };

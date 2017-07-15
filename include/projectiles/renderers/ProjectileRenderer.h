@@ -13,6 +13,7 @@ namespace sf
     class RenderStates;
 }
 class Projectile;
+class SpriteBatch;
 
 class ProjectileRenderer : public ProjectileComponent<ProjectileRenderer, Projectile>
 {
@@ -21,8 +22,8 @@ public:
     ProjectileRenderer(const ProjectileRenderer& other, Projectile& owner);
     ~ProjectileRenderer() override;
 
-    virtual void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) const;
-    virtual void drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) const;
+    virtual void draw(SpriteBatch& spriteBatch) const;
+    virtual void drawMeta(SpriteBatch& spriteBatch) const;
 
     std::unique_ptr<ProjectileRenderer> clone(Projectile& owner) const override;
 };

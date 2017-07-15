@@ -41,9 +41,6 @@ public:
 
     void loadFromConfiguration(ConfigurationNode& config);
 
-    void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) const;
-    void drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) const;
-
     const EntityModel& model() const;
     EntityModel& model();
     const EntityRenderer& renderer() const;

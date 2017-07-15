@@ -3,6 +3,8 @@
 #include "entities/Entity.h"
 #include "entities/models/EntityModel.h"
 
+#include "SpriteBatch.h"
+
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 
@@ -45,16 +47,16 @@ void PlayerRenderer::loadFromConfiguration(ConfigurationNode& config)
 {
 }
 
-void PlayerRenderer::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) const
+void PlayerRenderer::draw(SpriteBatch& spriteBatch) const
 {
-    draw(renderTarget, renderStates, m_sprites);
+    draw(spriteBatch, m_sprites);
 }
 
-void PlayerRenderer::drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) const
+void PlayerRenderer::drawMeta(SpriteBatch& spriteBatch) const
 {
-    draw(renderTarget, renderStates, m_sprites + ls::Vec2I(m_texture.get().getSize().x/2, 0));
+    draw(spriteBatch, m_sprites + ls::Vec2I(m_texture.get().getSize().x/2, 0));
 }
-void PlayerRenderer::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const ls::Vec2I& sprites) const
+void PlayerRenderer::draw(SpriteBatch& spriteBatch, const ls::Vec2I& sprites) const
 {
     const Vec2I offsetToOrigin = Vec2I(-25, -26);
     constexpr float steppingSpeedThreshold = 16.0f;
@@ -73,15 +75,13 @@ void PlayerRenderer::draw(sf::RenderTarget& renderTarget, sf::RenderStates& rend
         steppingSpriteVariant = static_cast<int>(distanceTravelled / distanceTravelledPerStep) % numberOfSteppingSprites + 1;
     }
 
-    Vec2F position = m_owner->model().position();
-    position.x = std::floor(position.x);
-    position.y = std::floor(position.y);
-    const Vec2I spriteSize(GameConstants::tileSize, GameConstants::tileSize);
-    sf::Sprite spr;
-    spr.setPosition(sf::Vector2f(position.x + offsetToOrigin.x, position.y + offsetToOrigin.y));
-    spr.setTexture(texture());
-    spr.setTextureRect(sf::IntRect(sf::Vector2i(sprites.x + steppingSpriteVariant * GameConstants::tileFullSpriteSize, sprites.y + direction * GameConstants::tileFullSpriteSize), sf::Vector2i(spriteSize.x, spriteSize.y)));
-    renderTarget.draw(spr, renderStates);
+    const ls::Vec2F sprite(sprites.x + steppingSpriteVariant * GameConstants::tileFullSpriteSize, sprites.y + direction * GameConstants::tileFullSpriteSize);
+    const ls::Vec2F size(GameConstants::tileSize, GameConstants::tileSize);
+    ls::Vec2F pos = m_owner->model().position() + offsetToOrigin;
+    pos.x = std::floor(pos.x);
+    pos.y = std::floor(pos.y);
+
+    spriteBatch.emplaceRectangle(&(texture()), pos, sprite, size);
 }
 
 const sf::Texture& PlayerRenderer::texture() const

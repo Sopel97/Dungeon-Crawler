@@ -15,11 +15,11 @@ EntityRenderer::~EntityRenderer()
 
 }
 
-void EntityRenderer::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) const
+void EntityRenderer::draw(SpriteBatch& spriteBatch) const
 {
 
 }
-void EntityRenderer::drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) const
+void EntityRenderer::drawMeta(SpriteBatch& spriteBatch) const
 {
 
 }

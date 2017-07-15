@@ -19,15 +19,15 @@ TileRenderer::~TileRenderer()
 
 }
 
-void TileRenderer::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const
+void TileRenderer::draw(SpriteBatch& spriteBatch, const TileLocation& location) const
 {
 
 }
-void TileRenderer::drawOutside(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const
+void TileRenderer::drawOutside(SpriteBatch& spriteBatch, const TileLocation& location) const
 {
 
 }
-void TileRenderer::drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const
+void TileRenderer::drawMeta(SpriteBatch& spriteBatch, const TileLocation& location) const
 {
 
 }

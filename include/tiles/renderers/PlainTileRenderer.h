@@ -45,8 +45,8 @@ public:
 
     void loadFromConfiguration(ConfigurationNode& config) override;
 
-    void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const override;
-    void drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const override;
+    void draw(SpriteBatch& spriteBatch, const TileLocation& location) const override;
+    void drawMeta(SpriteBatch& spriteBatch, const TileLocation& location) const override;
 
     void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const InventorySlotView& slot) const override;
 
@@ -65,5 +65,5 @@ protected:
     CommonData* m_commonData;
     const TimeAnimatedSprite* m_currentAnimatedSprite;
 
-    void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location, const ls::Vec2I& textureOffset) const;
+    void draw(SpriteBatch& spriteBatch, const TileLocation& location, const ls::Vec2I& textureOffset) const;
 };

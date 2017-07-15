@@ -8,6 +8,8 @@
 
 #include "TileLocation.h"
 
+#include "SpriteBatch.h"
+
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 
@@ -60,18 +62,18 @@ void InnerBorderedWallTileRenderer::loadFromConfiguration(ConfigurationNode& con
     m_commonData->innerBorderGroup = config["innerBorderGroup"].get<std::string>();
 }
 
-void InnerBorderedWallTileRenderer::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const
+void InnerBorderedWallTileRenderer::draw(SpriteBatch& spriteBatch, const TileLocation& location) const
 {
     if (!m_commonData->texture) return;
-    draw(renderTarget, renderStates, location, ls::Vec2I(0, 0));
+    draw(spriteBatch, location, ls::Vec2I(0, 0));
 }
 
-void InnerBorderedWallTileRenderer::drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const
+void InnerBorderedWallTileRenderer::drawMeta(SpriteBatch& spriteBatch, const TileLocation& location) const
 {
     if (!m_commonData->texture || !m_commonData->hasMetaTexture) return;
-    draw(renderTarget, renderStates, location, ls::Vec2I(texture().getSize().x / 2, 0));
+    draw(spriteBatch, location, ls::Vec2I(texture().getSize().x / 2, 0));
 }
-void InnerBorderedWallTileRenderer::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location, const ls::Vec2I& textureOffset) const
+void InnerBorderedWallTileRenderer::draw(SpriteBatch& spriteBatch, const TileLocation& location, const ls::Vec2I& textureOffset) const
 {
     enum Indices
     {
@@ -122,11 +124,11 @@ void InnerBorderedWallTileRenderer::draw(sf::RenderTarget& renderTarget, sf::Ren
 
         if (resultSprite != nullptr)
         {
-            sf::Sprite spr;
-            spr.setPosition(sf::Vector2f(static_cast<float>(x * GameConstants::tileSize), static_cast<float>(y * GameConstants::tileSize)));
-            spr.setTexture(texture());
-            spr.setTextureRect(sf::IntRect(sf::Vector2i(resultSprite->x + textureOffset.x, resultSprite->y + textureOffset.y), sf::Vector2i(GameConstants::tileSize, GameConstants::tileSize)));
-            renderTarget.draw(spr, renderStates);
+            const ls::Vec2F sprite(*resultSprite);
+            const ls::Vec2F size(GameConstants::tileSize, GameConstants::tileSize);
+            const ls::Vec2F pos(x * size.x, y * size.y);
+
+            spriteBatch.emplaceRectangle(&(texture()), pos, sprite + textureOffset, size);
         }
     }
 
@@ -144,11 +146,11 @@ void InnerBorderedWallTileRenderer::draw(sf::RenderTarget& renderTarget, sf::Ren
 
         if (resultSprite != nullptr)
         {
-            sf::Sprite spr;
-            spr.setPosition(sf::Vector2f(static_cast<float>((x - 1) * GameConstants::tileSize), static_cast<float>(y * GameConstants::tileSize)));
-            spr.setTexture(texture());
-            spr.setTextureRect(sf::IntRect(sf::Vector2i(resultSprite->x + textureOffset.x, resultSprite->y + textureOffset.y), sf::Vector2i(GameConstants::tileSize, GameConstants::tileSize)));
-            renderTarget.draw(spr, renderStates);
+            const ls::Vec2F sprite(*resultSprite);
+            const ls::Vec2F size(GameConstants::tileSize, GameConstants::tileSize);
+            const ls::Vec2F pos((x-1) * size.x, y * size.y);
+
+            spriteBatch.emplaceRectangle(&(texture()), pos, sprite + textureOffset, size);
         }
     }
 
@@ -166,11 +168,11 @@ void InnerBorderedWallTileRenderer::draw(sf::RenderTarget& renderTarget, sf::Ren
 
         if (resultSprite != nullptr)
         {
-            sf::Sprite spr;
-            spr.setPosition(sf::Vector2f(static_cast<float>(x * GameConstants::tileSize), static_cast<float>((y - 1) * GameConstants::tileSize)));
-            spr.setTexture(texture());
-            spr.setTextureRect(sf::IntRect(sf::Vector2i(resultSprite->x + textureOffset.x, resultSprite->y + textureOffset.y), sf::Vector2i(GameConstants::tileSize, GameConstants::tileSize)));
-            renderTarget.draw(spr, renderStates);
+            const ls::Vec2F sprite(*resultSprite);
+            const ls::Vec2F size(GameConstants::tileSize, GameConstants::tileSize);
+            const ls::Vec2F pos(x * size.x, (y-1) * size.y);
+
+            spriteBatch.emplaceRectangle(&(texture()), pos, sprite + textureOffset, size);
         }
     }
 
@@ -184,11 +186,11 @@ void InnerBorderedWallTileRenderer::draw(sf::RenderTarget& renderTarget, sf::Ren
 
         if (resultSprite != nullptr)
         {
-            sf::Sprite spr;
-            spr.setPosition(sf::Vector2f(static_cast<float>((x - 1) * GameConstants::tileSize), static_cast<float>((y - 1) * GameConstants::tileSize)));
-            spr.setTexture(texture());
-            spr.setTextureRect(sf::IntRect(sf::Vector2i(resultSprite->x + textureOffset.x, resultSprite->y + textureOffset.y), sf::Vector2i(GameConstants::tileSize, GameConstants::tileSize)));
-            renderTarget.draw(spr, renderStates);
+            const ls::Vec2F sprite(*resultSprite);
+            const ls::Vec2F size(GameConstants::tileSize, GameConstants::tileSize);
+            const ls::Vec2F pos((x-1) * size.x, (y-1) * size.y);
+
+            spriteBatch.emplaceRectangle(&(texture()), pos, sprite + textureOffset, size);
         }
     }
 

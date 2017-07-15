@@ -19,6 +19,12 @@
 #include "entities/renderers/EntityRenderer.h"
 #include "entities/controllers/EntityController.h"
 
+#include "projectiles/Projectile.h"
+#include "projectiles/ProjectilePrefab.h"
+#include "projectiles/models/ProjectileModel.h"
+#include "projectiles/renderers/ProjectileRenderer.h"
+#include "projectiles/controllers/ProjectileController.h"
+
 #include "TileColumn.h"
 #include "MapLayer.h"
 
@@ -29,6 +35,8 @@
 #include "Light.h"
 
 #include "TileTransferMediator.h"
+
+#include "SpriteBatch.h"
 
 #include <SFML/System.hpp>
 #include <SFML/OpenGL.hpp>
@@ -106,6 +114,16 @@ void WorldRenderer::draw(sf::RenderTarget& renderTarget, sf::RenderStates& rende
     prepareMetaTexture();
     updateShaderUniforms();
 
+    drawMain(renderStates);
+    drawMeta(renderStates);
+    drawLightsToLightMap();
+
+    drawLightMapToIntermidiate(renderStates);
+    drawIntermidiate(renderTarget, renderStates);
+}
+
+void WorldRenderer::drawMain(sf::RenderStates& renderStates)
+{
     sf::RenderStates colorRenderStates = renderStates;
     colorRenderStates.shader = &m_intermidiateDepthShader;
 
@@ -118,6 +136,8 @@ void WorldRenderer::draw(sf::RenderTarget& renderTarget, sf::RenderStates& rende
     int lastTileX = std::min(Util::fastFloor(cameraBottomRight.x / GameConstants::tileSize) + 1, m_world.m_width - 1);
     int lastTileY = std::min(Util::fastFloor(cameraBottomRight.y / GameConstants::tileSize) + 1, m_world.m_height - 1);
 
+    SpriteBatch spriteBatch;
+    
     //x,y are inverted here because we want to draw top down
     for (int y = firstTileY; y <= lastTileY; ++y)
     {
@@ -133,18 +153,18 @@ void WorldRenderer::draw(sf::RenderTarget& renderTarget, sf::RenderStates& rende
                 {
                     if (tileStack.tile().renderer().coversOuterBorders())
                     {
-                        drawOuterBorder(m_intermidiateRenderTarget, colorRenderStates, location);
-                        tileStack.tile().draw(m_intermidiateRenderTarget, colorRenderStates, location);
+                        drawOuterBorder(spriteBatch, location);
+                        tileStack.tile().renderer().draw(spriteBatch, location);
                     }
                     else
                     {
-                        tileStack.tile().draw(m_intermidiateRenderTarget, colorRenderStates, location);
-                        drawOuterBorder(m_intermidiateRenderTarget, colorRenderStates, location);
+                        tileStack.tile().renderer().draw(spriteBatch, location);
+                        drawOuterBorder(spriteBatch, location);
                     }
                 }
                 else
                 {
-                    tileStack.tile().draw(m_intermidiateRenderTarget, colorRenderStates, location);
+                    tileStack.tile().renderer().draw(spriteBatch, location);
                 }
 
                 ++z;
@@ -154,20 +174,16 @@ void WorldRenderer::draw(sf::RenderTarget& renderTarget, sf::RenderStates& rende
 
     for (Entity* visibleEntity : m_world.m_entitySystem.getVisibleEntities(m_camera))
     {
-        visibleEntity->draw(m_intermidiateRenderTarget, colorRenderStates);
+        visibleEntity->renderer().draw(spriteBatch);
     }
     for (Projectile* visibleProjectile : m_world.m_projectileSystem.getVisibleProjectiles(m_camera))
     {
-        visibleProjectile->draw(m_intermidiateRenderTarget, colorRenderStates);
+        visibleProjectile->renderer().draw(spriteBatch);
     }
 
+    m_intermidiateRenderTarget.draw(spriteBatch, colorRenderStates);
+
     m_intermidiateRenderTarget.display();
-
-    drawMeta(renderStates);
-    drawLightsToLightMap();
-
-    drawLightMapToIntermidiate(renderStates);
-    drawIntermidiate(renderTarget, renderStates);
 }
 
 void WorldRenderer::prepareIntermidiateRenderTarget()
@@ -233,6 +249,8 @@ void WorldRenderer::drawMeta(sf::RenderStates& renderStates)
     int lastTileX = std::min(Util::fastFloor(cameraBottomRight.x / GameConstants::tileSize) + 1, m_world.m_width - 1);
     int lastTileY = std::min(Util::fastFloor(cameraBottomRight.y / GameConstants::tileSize) + 1, m_world.m_height - 1);
 
+    SpriteBatch spriteBatch;
+
     //x,y are inverted here because we want to draw top down
     for (int y = firstTileY; y <= lastTileY; ++y)
     {
@@ -244,7 +262,7 @@ void WorldRenderer::drawMeta(sf::RenderStates& renderStates)
             {
                 TileLocation location(mapLayer, x, y, z);
 
-                tileStack.tile().drawMeta(m_metaTexture, metaRenderStates, location);
+                tileStack.tile().renderer().drawMeta(spriteBatch, location);
 
                 ++z;
             }
@@ -253,12 +271,14 @@ void WorldRenderer::drawMeta(sf::RenderStates& renderStates)
 
     for (Entity* visibleEntity : m_world.m_entitySystem.getVisibleEntities(m_camera))
     {
-        visibleEntity->drawMeta(m_metaTexture, metaRenderStates);
+        visibleEntity->renderer().drawMeta(spriteBatch);
     }
     for (Projectile* visibleProjectile : m_world.m_projectileSystem.getVisibleProjectiles(m_camera))
     {
-        visibleProjectile->drawMeta(m_metaTexture, metaRenderStates);
+        visibleProjectile->renderer().drawMeta(spriteBatch);
     }
+
+    m_metaTexture.draw(spriteBatch, metaRenderStates);
 
     m_metaTexture.display();
 }
@@ -305,7 +325,7 @@ void WorldRenderer::drawLightsToLightMap()
     m_lightMap.display();
 }
 
-void WorldRenderer::drawOuterBorder(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& tileLocation)
+void WorldRenderer::drawOuterBorder(SpriteBatch& spriteBatch, const TileLocation& tileLocation)
 {
     auto areTilesEqual = [](const TileStack * lhs, const TileStack * rhs)->bool {return lhs->tile().id() == rhs->tile().id(); };
     auto borderPriorityCompare = [](const TileStack * lhs, const TileStack * rhs)->bool {return lhs->tile().renderer().outerBorderPriority() < rhs->tile().renderer().outerBorderPriority(); };
@@ -345,6 +365,6 @@ void WorldRenderer::drawOuterBorder(sf::RenderTarget& renderTarget, sf::RenderSt
 
     for (const auto& neighbour : differentNeigbourTiles)
     {
-        neighbour->tile().drawOutside(renderTarget, renderStates, tileLocation);
+        neighbour->tile().renderer().drawOutside(spriteBatch, tileLocation);
     }
 }

@@ -18,7 +18,7 @@ public:
 
 private:
     static constexpr int m_defaultNumBuffers = 32;
-    static constexpr int m_defaultBufferSize = 256;
+    static constexpr int m_defaultBufferSize = 4092;
 
     void draw(sf::RenderTarget& renderTarget, sf::RenderStates renderStates) const override;
 

@@ -84,15 +84,6 @@ void Entity::loadFromConfiguration(ConfigurationNode& config)
     m_controller->loadFromConfiguration(config);
 }
 
-void Entity::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) const
-{
-    m_renderer->draw(renderTarget, renderStates);
-}
-void Entity::drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) const
-{
-    m_renderer->drawMeta(renderTarget, renderStates);
-}
-
 const EntityModel& Entity::model() const
 {
     return *m_model;

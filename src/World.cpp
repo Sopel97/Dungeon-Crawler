@@ -64,50 +64,6 @@ void World::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
     m_worldRenderer.draw(renderTarget, renderStates);
 }
 
-void World::drawOuterBorder(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& tileLocation)
-{
-    auto areTilesEqual = [](const TileStack * lhs, const TileStack * rhs)->bool {return lhs->tile().id() == rhs->tile().id(); };
-    auto borderPriorityCompare = [](const TileStack * lhs, const TileStack * rhs)->bool {return lhs->tile().renderer().outerBorderPriority() < rhs->tile().renderer().outerBorderPriority(); };
-
-    int x = tileLocation.x;
-    int y = tileLocation.y;
-    const MapLayer& map = *tileLocation.map;
-
-    std::vector<const TileStack*> differentNeigbourTiles;
-    int thisTileOuterBorderPriority = map.at(x, y, 0).tile().renderer().outerBorderPriority();
-    for (int xoffset = -1; xoffset <= 1; ++xoffset)
-    {
-        for (int yoffset = -1; yoffset <= 1; ++yoffset)
-        {
-            if (xoffset == 0 && yoffset == 0) continue;
-            int xx = x + xoffset;
-            int yy = y + yoffset;
-            const TileStack& tileStack = map.at(xx, yy, 0);
-            if (!tileStack.tile().renderer().hasOuterBorder() || tileStack.tile().renderer().outerBorderPriority() <= thisTileOuterBorderPriority) continue;
-
-            bool firstSuchNeighbour = true;
-            for (const auto& neighbour : differentNeigbourTiles)
-            {
-                if (areTilesEqual(&tileStack, neighbour))
-                {
-                    firstSuchNeighbour = false;
-                    break;
-                }
-            }
-            if (firstSuchNeighbour)
-            {
-                differentNeigbourTiles.push_back(&tileStack);
-            }
-        }
-    }
-    std::sort(differentNeigbourTiles.begin(), differentNeigbourTiles.end(), borderPriorityCompare);
-
-    for (const auto& neighbour : differentNeigbourTiles)
-    {
-        neighbour->tile().drawOutside(renderTarget, renderStates, tileLocation);
-    }
-}
-
 int World::width() const
 {
     return m_width;

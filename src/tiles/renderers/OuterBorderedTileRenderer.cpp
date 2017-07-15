@@ -9,6 +9,8 @@
 
 #include "TileLocation.h"
 
+#include "SpriteBatch.h"
+
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 
@@ -48,18 +50,16 @@ void OuterBorderedTileRenderer::loadFromConfiguration(ConfigurationNode& config)
     m_commonData->outerBorderPriority = config["outerBorderPriority"].get<int>();
 }
 
-void OuterBorderedTileRenderer::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const
+void OuterBorderedTileRenderer::draw(SpriteBatch& spriteBatch, const TileLocation& location) const
 {
-    const Vec2I& spritePos = m_currentAnimatedSprite->now();
+    const ls::Vec2F sprite(m_currentAnimatedSprite->now());
+    const ls::Vec2F size(GameConstants::tileSize, GameConstants::tileSize);
+    const ls::Vec2F pos(location.x * size.x, location.y * size.y);
 
-    sf::Sprite spr;
-    spr.setPosition(sf::Vector2f(static_cast<float>(location.x * GameConstants::tileSize), static_cast<float>(location.y * GameConstants::tileSize)));
-    spr.setTexture(texture());
-    spr.setTextureRect(sf::IntRect(sf::Vector2i(spritePos.x, spritePos.y), sf::Vector2i(GameConstants::tileSize, GameConstants::tileSize)));
-    renderTarget.draw(spr, renderStates);
+    spriteBatch.emplaceRectangle(&(texture()), pos, sprite, size);
 }
 
-void OuterBorderedTileRenderer::drawOutside(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const
+void OuterBorderedTileRenderer::drawOutside(SpriteBatch& spriteBatch, const TileLocation& location) const
 {
     enum Indices
     {
@@ -108,11 +108,11 @@ void OuterBorderedTileRenderer::drawOutside(sf::RenderTarget& renderTarget, sf::
 
     if(sideBorderSpriteIndex != -1)
     {
-        sf::Sprite convexBorderSprite;
-        convexBorderSprite.setPosition(sf::Vector2f(static_cast<float>(x * GameConstants::tileSize), static_cast<float>(y * GameConstants::tileSize)));
-        convexBorderSprite.setTexture(texture());
-        convexBorderSprite.setTextureRect(sf::IntRect(sf::Vector2i(sideBorderSpritePosition.x, sideBorderSpritePosition.y), sf::Vector2i(GameConstants::tileSize, GameConstants::tileSize)));
-        renderTarget.draw(convexBorderSprite, renderStates);
+        const ls::Vec2F sprite(sideBorderSpritePosition);
+        const ls::Vec2F size(GameConstants::tileSize, GameConstants::tileSize);
+        const ls::Vec2F pos(x * size.x, y * size.y);
+
+        spriteBatch.emplaceRectangle(&(texture()), pos, sprite, size);
     }
 
 
@@ -127,11 +127,11 @@ void OuterBorderedTileRenderer::drawOutside(sf::RenderTarget& renderTarget, sf::
 
     if(cornerBorderSpriteIndex != -1)
     {
-        sf::Sprite concaveBorderSprite;
-        concaveBorderSprite.setPosition(sf::Vector2f(static_cast<float>(x) * static_cast<float>(GameConstants::tileSize), static_cast<float>(y) * static_cast<float>(GameConstants::tileSize)));
-        concaveBorderSprite.setTexture(texture());
-        concaveBorderSprite.setTextureRect(sf::IntRect(sf::Vector2i(cornerBorderSpritePosition.x, cornerBorderSpritePosition.y), sf::Vector2i(GameConstants::tileSize, GameConstants::tileSize)));
-        renderTarget.draw(concaveBorderSprite, renderStates);
+        const ls::Vec2F sprite(cornerBorderSpritePosition);
+        const ls::Vec2F size(GameConstants::tileSize, GameConstants::tileSize);
+        const ls::Vec2F pos(x * size.x, y * size.y);
+
+        spriteBatch.emplaceRectangle(&(texture()), pos, sprite, size);
     }
 }
 

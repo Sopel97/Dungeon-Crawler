@@ -40,7 +40,6 @@ public:
     ~World();
 
     void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
-    void drawOuterBorder(sf::RenderTarget & renderTarget, sf::RenderStates & renderStates, const TileLocation & tileLocation);
 
     int width() const;
     int height() const;

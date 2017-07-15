@@ -5,6 +5,8 @@
 #include "TileLocation.h"
 #include "InventorySlotView.h"
 
+#include "SpriteBatch.h"
+
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 
@@ -49,25 +51,23 @@ void PlainTileRenderer::loadFromConfiguration(ConfigurationNode& config)
     m_commonData->coversOuterBorders = config["coversOuterBorders"].getDefault<bool>(defaultForBorderCovering);
 }
 
-void PlainTileRenderer::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const
+void PlainTileRenderer::draw(SpriteBatch& spriteBatch, const TileLocation& location) const
 {
     if (!m_commonData->texture) return;
-    draw(renderTarget, renderStates, location, Vec2I(0, 0));
+    draw(spriteBatch, location, Vec2I(0, 0));
 }
-void PlainTileRenderer::drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location) const
+void PlainTileRenderer::drawMeta(SpriteBatch& spriteBatch, const TileLocation& location) const
 {
     if (!m_commonData->texture || !m_commonData->hasMetaTexture) return;
-    draw(renderTarget, renderStates, location, Vec2I(texture().getSize().x / 2, 0));
+    draw(spriteBatch, location, Vec2I(texture().getSize().x / 2, 0));
 }
-void PlainTileRenderer::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const TileLocation& location, const ls::Vec2I& textureOffset) const
+void PlainTileRenderer::draw(SpriteBatch& spriteBatch, const TileLocation& location, const ls::Vec2I& textureOffset) const
 {
-    const ls::Vec2I sprite = m_currentAnimatedSprite->now();
+    const ls::Vec2F sprite(m_currentAnimatedSprite->now());
+    const ls::Vec2F size(GameConstants::tileSize, GameConstants::tileSize);
+    const ls::Vec2F pos(location.x * size.x, location.y * size.y);
 
-    sf::Sprite spr;
-    spr.setPosition(sf::Vector2f(static_cast<float>(location.x) * GameConstants::tileSize, static_cast<float>(location.y) * GameConstants::tileSize));
-    spr.setTexture(texture());
-    spr.setTextureRect(sf::IntRect(sf::Vector2i(sprite.x + textureOffset.x, sprite.y + textureOffset.y), sf::Vector2i(GameConstants::tileSize, GameConstants::tileSize)));
-    renderTarget.draw(spr, renderStates);
+    spriteBatch.emplaceRectangle(&(texture()), pos, sprite + textureOffset, size);
 }
 void PlainTileRenderer::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const InventorySlotView& slot) const
 {

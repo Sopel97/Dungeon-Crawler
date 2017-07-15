@@ -73,15 +73,6 @@ void Projectile::loadFromConfiguration(ConfigurationNode& config)
     m_controller->loadFromConfiguration(config);
 }
 
-void Projectile::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) const
-{
-    m_renderer->draw(renderTarget, renderStates);
-}
-void Projectile::drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) const
-{
-    m_renderer->drawMeta(renderTarget, renderStates);
-}
-
 const ProjectileModel& Projectile::model() const
 {
     return *m_model;

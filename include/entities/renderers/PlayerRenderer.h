@@ -29,8 +29,8 @@ public:
 
     void loadFromConfiguration(ConfigurationNode& config) override;
 
-    void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) const override;
-    void drawMeta(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates) const override;
+    void draw(SpriteBatch& spriteBatch) const override;
+    void drawMeta(SpriteBatch& spriteBatch) const override;
 
     const sf::Texture& texture() const;
 
@@ -40,5 +40,5 @@ protected:
     ResourceHandle<sf::Texture> m_texture;
     ls::Vec2I m_sprites;
 
-    void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates, const ls::Vec2I& sprites) const;
+    void draw(SpriteBatch& spriteBatch, const ls::Vec2I& sprites) const;
 };

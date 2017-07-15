@@ -2,6 +2,7 @@
 
 #include "tiles/Tile.h"
 #include "tiles/TileStack.h"
+#include "tiles/renderers/TileRenderer.h"
 
 #include "Inventory.h"
 
@@ -90,7 +91,7 @@ void InventorySlotView::draw(sf::RenderTarget& renderTarget, sf::RenderStates& r
     
     if (!tileStack.isEmpty())
     {
-        tileStack.tile().draw(renderTarget, renderStates, *this);
+        tileStack.tile().renderer().draw(renderTarget, renderStates, *this);
         if (tileStack.quantity() > 1)
         {
             drawQuantity(renderTarget, renderStates, tileStack.quantity());

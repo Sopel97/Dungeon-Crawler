@@ -17,9 +17,6 @@
 DRAWING RELATED, kinda important
 - make world drawing cleaner, parametrize intermidiate targets' sizes
 
-- gather vertices to vertex buffer instead of making a lot of drawing calls from each tile
--- would also help the fact that shader bindings are not cached and ruin performance
-
 - make it possible for tiles to specify what size they are (1 - 1x1, 2 - 2x2, more should not be needed)
 
 - try dim light depending on height from the ground
