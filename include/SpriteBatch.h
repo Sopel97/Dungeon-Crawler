@@ -22,11 +22,9 @@ private:
 
     void draw(sf::RenderTarget& renderTarget, sf::RenderStates renderStates) const override;
 
-    unsigned textureHandle(const sf::Texture* texture) const;
-
     std::vector<sf::Vertex>& createBuffer(const sf::Texture* texture);
 
     std::vector<sf::Vertex>& findBuffer(const sf::Texture* texture);
 
-    std::unordered_map<unsigned, std::vector<sf::Vertex>> m_vertexBuffersByTexture;
+    std::unordered_map<const sf::Texture*, std::vector<sf::Vertex>> m_vertexBuffersByTexture;
 };

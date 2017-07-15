@@ -36,20 +36,14 @@ void SpriteBatch::draw(sf::RenderTarget& renderTarget, sf::RenderStates renderSt
         auto& buffer = p.second;
 
         if (buffer.size() == 0) continue;
+
+        renderStates.texture = p.first;
         renderTarget.draw(buffer.data(), buffer.size(), sf::PrimitiveType::Triangles, renderStates);
     }
 }
-
-unsigned SpriteBatch::textureHandle(const sf::Texture* texture) const
-{
-    if (texture == nullptr) return 0u;
-    
-    return texture->getNativeHandle();
-}
 std::vector<sf::Vertex>& SpriteBatch::createBuffer(const sf::Texture* texture)
 {
-    const unsigned handle = textureHandle(texture);
-    auto iter = m_vertexBuffersByTexture.emplace(handle, std::vector<sf::Vertex>{});
+    auto iter = m_vertexBuffersByTexture.emplace(texture, std::vector<sf::Vertex>{});
 
     std::vector<sf::Vertex>& buffer = iter.first->second;
     buffer.reserve(m_defaultBufferSize);
@@ -58,8 +52,7 @@ std::vector<sf::Vertex>& SpriteBatch::createBuffer(const sf::Texture* texture)
 
 std::vector<sf::Vertex>& SpriteBatch::findBuffer(const sf::Texture* texture)
 {
-    const unsigned handle = textureHandle(texture);
-    auto iter = m_vertexBuffersByTexture.find(handle);
+    auto iter = m_vertexBuffersByTexture.find(texture);
     if (iter == m_vertexBuffersByTexture.end()) return createBuffer(texture);
 
     return iter->second;
