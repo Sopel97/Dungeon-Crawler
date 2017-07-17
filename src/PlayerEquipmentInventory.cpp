@@ -76,11 +76,19 @@ std::unique_ptr<InventoryWindow> PlayerEquipmentInventory::createInventoryWindow
 }
 TileStack& PlayerEquipmentInventory::ammo()
 {
-    return m_contents[2];
+    return m_contents[ammoSlot()];
 }
 TileStack& PlayerEquipmentInventory::weapon()
 {
-    return m_contents[1];
+    return m_contents[weaponSlot()];
+}
+int PlayerEquipmentInventory::ammoSlot() const
+{
+    return 2;
+}
+int PlayerEquipmentInventory::weaponSlot() const
+{
+    return 1;
 }
 int PlayerEquipmentInventory::size() const
 {

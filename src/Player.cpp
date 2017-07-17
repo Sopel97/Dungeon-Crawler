@@ -97,6 +97,6 @@ void Player::attack(World& world, const ls::Vec2F& pos)
     
     auto attackResult = weapon.tile().controller().attack(world, *this, pos);
 
-    weapon.erase(attackResult.weaponUsed);
-    ammo().erase(attackResult.ammoUsed);
+    if(attackResult.ammoUsed > 0) m_equipmentInventory.removeTiles(m_equipmentInventory.ammoSlot(), attackResult.ammoUsed);
+    if(attackResult.weaponUsed > 0) m_equipmentInventory.removeTiles(m_equipmentInventory.weaponSlot(), attackResult.weaponUsed);
 }

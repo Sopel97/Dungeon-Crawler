@@ -28,8 +28,8 @@ public:
     int maxQuantity() const;
 
     void setQuantity(int newQuantity);
-    void insert(int delta);
-    void erase(int delta);
+    void addTiles(int delta);
+    void removeTiles(int delta);
     int spaceLeft() const;
 
     Tile& tile();

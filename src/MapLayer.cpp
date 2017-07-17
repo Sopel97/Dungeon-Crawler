@@ -89,7 +89,7 @@ TileStack MapLayer::takeTile(int x, int y)
 
 void MapLayer::addTiles(int x, int y, int z, int count)
 {
-    at(x, y, z).insert(count);
+    at(x, y, z).addTiles(count);
 }
 void MapLayer::removeTiles(int x, int y, int z, int count)
 {
@@ -103,7 +103,7 @@ void MapLayer::removeTiles(int x, int y, int z, int count)
     }
     else
     {
-        stack.erase(count);
+        stack.removeTiles(count);
     }
 }
 TileStack MapLayer::splitTiles(int x, int y, int z, int count)

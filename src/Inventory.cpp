@@ -51,19 +51,21 @@ TileStack Inventory::takeTile(int slot)
 
 void Inventory::addTiles(int slot, int count)
 {
-    at(slot).insert(count);
+    at(slot).addTiles(count);
 }
 void Inventory::removeTiles(int slot, int count)
 {
     TileStack& stack = at(slot);
+    if (stack.isEmpty()) return;
 
     if (stack.quantity() <= count) onTileRemoved(stack, slot);
 
-    stack.erase(count);
+    stack.removeTiles(count);
 }
 TileStack Inventory::splitTiles(int slot, int count)
 {
     TileStack& stack = at(slot);
+    if (stack.isEmpty()) return TileStack();
 
     if (stack.quantity() <= count) onTileRemoved(stack, slot);
 

@@ -27,6 +27,9 @@ public:
     TileStack& ammo();
     TileStack& weapon();
 
+    int ammoSlot() const;
+    int weaponSlot() const;
+
     int size() const override;
 
 protected:

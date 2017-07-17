@@ -9,19 +9,13 @@ IMPOERTANT:
 
 - restructure TileTransferMediator, make it cleaner
 
-- better interface in map and inventory regarding actions that should cause events (currently onTilePlaced, onTileRemoved)
-
-- rename TileStack::insert/erase to addTiles, removeTiles
-
-IMPORTANT:
-- revise tile related events. onTilePlaced, onTileRemoved as global events should be called ALWAYS, every action that can result in it (including changing a tile in place) should be done on one place only and be encapsulated such that there is no workaround to omit event (currently tile placing is not encapsulated at all).
--- basically every change of tiles' count in the stack should be processed by world or inventory and cause an event if is goes to 0 or from 0
+- better interface in map and inventory regarding actions that should cause events (currently onTilePlaced, onTileRemoved). Mainly make it safer and easier to work with.
 
 - unify tile location
 
 - TileDescriptionGenerator should query additional (only information) attributes and description from tile instead of building it itself (like capacity, later potion time etc.)
 
-- when tile is places in world or moved to it/within it it remembers all tiles that are potential light sources (divide the world to a grid, like 32x32 or something for faster lookup) and query lights for rendering
+- when tile is placed in world or moved to it/within it it remembers all tiles that are potential light sources (divide the world to a grid, like 32x32 or something for faster lookup) and query lights for rendering
 -- needs revision on how these events are generated. Make it so they arise in possibly as few places as possible
 -- possibly have a number for each tile that specifies how much light that is emitted by tile somewhere below is blocked (reduces radius by factor (sum of all reductions | max reduction))
 

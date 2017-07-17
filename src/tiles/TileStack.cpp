@@ -43,11 +43,11 @@ void TileStack::setQuantity(int newQuantity)
         m_tile->onTileQuantityChanged(m_quantity, newQuantity);
     }
 }
-void TileStack::insert(int delta)
+void TileStack::addTiles(int delta)
 {
     setQuantity(m_quantity + delta);
 }
-void TileStack::erase(int delta)
+void TileStack::removeTiles(int delta)
 {
     setQuantity(m_quantity - delta);
 }
