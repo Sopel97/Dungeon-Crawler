@@ -31,10 +31,17 @@ public:
     virtual const TileStack& at(size_t slotId) const;
     virtual bool meetsRequirements(const Tile& tile, int slot) const;
 
+    void placeTile(TileStack&& tile, int slot);
+    TileStack takeTile(int slot);
+
+    void addTiles(int slot, int count);
+    void removeTiles(int slot, int count);
+
     virtual int size() const = 0;
 
 protected:
-
+    void onTilePlaced(TileStack& stack, int slot);
+    void onTileRemoved(TileStack& stack, int slot);
 };
 
 #endif // INVENTORY_H
