@@ -14,19 +14,18 @@ using namespace ls;
 PlayerEquipmentInventory::PlayerEquipmentInventory()
 {
     m_contents.resize(10);
-    m_contentRequirements.reserve(10);
-    m_contentRequirements.push_back(SlotContentRequirement::Necklace);
-    m_contentRequirements.push_back(SlotContentRequirement::RightHand);
-    m_contentRequirements.push_back(SlotContentRequirement::Ammo);
+    m_contentRequirements.resize(10);
 
-    m_contentRequirements.push_back(SlotContentRequirement::Helmet);
-    m_contentRequirements.push_back(SlotContentRequirement::Chestplate);
-    m_contentRequirements.push_back(SlotContentRequirement::Pants);
-    m_contentRequirements.push_back(SlotContentRequirement::Boots);
-
-    m_contentRequirements.push_back(SlotContentRequirement::Container);
-    m_contentRequirements.push_back(SlotContentRequirement::LeftHand);
-    m_contentRequirements.push_back(SlotContentRequirement::Ring);
+    m_contentRequirements[static_cast<int>(SlotType::Necklace)]      = SlotContentRequirement::Necklace;
+    m_contentRequirements[static_cast<int>(SlotType::PrimaryWeapon)] = SlotContentRequirement::RightHand;
+    m_contentRequirements[static_cast<int>(SlotType::Ammo)]          = SlotContentRequirement::Ammo;
+    m_contentRequirements[static_cast<int>(SlotType::Helmet)]        = SlotContentRequirement::Helmet;
+    m_contentRequirements[static_cast<int>(SlotType::Chestplate)]    = SlotContentRequirement::Chestplate;
+    m_contentRequirements[static_cast<int>(SlotType::Pants)]         = SlotContentRequirement::Pants;
+    m_contentRequirements[static_cast<int>(SlotType::Boots)]         = SlotContentRequirement::Boots;
+    m_contentRequirements[static_cast<int>(SlotType::Container)]     = SlotContentRequirement::Container;
+    m_contentRequirements[static_cast<int>(SlotType::SecondaryHand)] = SlotContentRequirement::LeftHand;
+    m_contentRequirements[static_cast<int>(SlotType::Ring)]          = SlotContentRequirement::Ring;
 }
 
 std::vector<TileStack>& PlayerEquipmentInventory::contents()
@@ -74,21 +73,17 @@ std::unique_ptr<InventoryWindow> PlayerEquipmentInventory::createInventoryWindow
     window->setScrollBarEnabled(false);
     return window;
 }
-TileStack& PlayerEquipmentInventory::ammo()
+TileStack& PlayerEquipmentInventory::at(SlotType slot)
 {
-    return m_contents[ammoSlot()];
+    return m_contents[static_cast<int>(slot)];
 }
-TileStack& PlayerEquipmentInventory::weapon()
+const TileStack& PlayerEquipmentInventory::at(SlotType slot) const
 {
-    return m_contents[weaponSlot()];
+    return m_contents[static_cast<int>(slot)];
 }
-int PlayerEquipmentInventory::ammoSlot() const
+int PlayerEquipmentInventory::slotId(SlotType slot) const
 {
-    return 2;
-}
-int PlayerEquipmentInventory::weaponSlot() const
-{
-    return 1;
+    return static_cast<int>(slot);
 }
 int PlayerEquipmentInventory::size() const
 {

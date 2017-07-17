@@ -71,11 +71,11 @@ const InventorySystem& Player::inventorySystem() const
 }
 TileStack& Player::ammo()
 {
-    return m_equipmentInventory.ammo();
+    return m_equipmentInventory.at(PlayerEquipmentInventory::SlotType::Ammo);
 }
 TileStack& Player::weapon()
 {
-    return m_equipmentInventory.weapon();
+    return m_equipmentInventory.at(PlayerEquipmentInventory::SlotType::PrimaryWeapon);
 }
 const PlayerEquipmentInventory& Player::equipmentInventory() const
 {
@@ -92,11 +92,13 @@ void Player::showTileDescription(TileDescription&& description)
 
 void Player::attack(World& world, const ls::Vec2F& pos)
 {
-    TileStack& weapon = m_equipmentInventory.weapon();
+    TileStack& weapon = this->weapon();
     if (weapon.isEmpty()) return;
     
     auto attackResult = weapon.tile().controller().attack(world, *this, pos);
 
-    if(attackResult.ammoUsed > 0) m_equipmentInventory.removeTiles(m_equipmentInventory.ammoSlot(), attackResult.ammoUsed);
-    if(attackResult.weaponUsed > 0) m_equipmentInventory.removeTiles(m_equipmentInventory.weaponSlot(), attackResult.weaponUsed);
+    const int ammoSlot = m_equipmentInventory.slotId(PlayerEquipmentInventory::SlotType::Ammo);
+    const int weaponSlot = m_equipmentInventory.slotId(PlayerEquipmentInventory::SlotType::PrimaryWeapon);
+    if(attackResult.ammoUsed > 0) m_equipmentInventory.removeTiles(ammoSlot, attackResult.ammoUsed);
+    if(attackResult.weaponUsed > 0) m_equipmentInventory.removeTiles(weaponSlot, attackResult.weaponUsed);
 }
