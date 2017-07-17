@@ -134,24 +134,28 @@ void Tile::onTileCloned()
 }
 void Tile::onTilePlaced(const TileLocation& location)
 {
+    std::cout << "tile placed, world\n";
     m_model->onTilePlaced(location);
     m_renderer->onTilePlaced(location);
     m_controller->onTilePlaced(location);
 }
 void Tile::onTilePlaced(const Inventory& inventory, int slot)
 {
+    std::cout << "tile placed, inventory\n";
     m_model->onTilePlaced(inventory, slot);
     m_renderer->onTilePlaced(inventory, slot);
     m_controller->onTilePlaced(inventory, slot);
 }
 void Tile::onTileRemoved(const TileLocation& location)
 {
+    std::cout << "tile removed, world\n";
     m_model->onTileRemoved(location);
     m_renderer->onTileRemoved(location);
     m_controller->onTileRemoved(location);
 }
 void Tile::onTileRemoved(const Inventory& inventory, int slot)
 {
+    std::cout << "tile removed, inventory\n";
     m_model->onTileRemoved(inventory, slot);
     m_renderer->onTileRemoved(inventory, slot);
     m_controller->onTileRemoved(inventory, slot);

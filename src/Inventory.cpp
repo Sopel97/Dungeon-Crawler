@@ -61,6 +61,14 @@ void Inventory::removeTiles(int slot, int count)
 
     stack.erase(count);
 }
+TileStack Inventory::splitTiles(int slot, int count)
+{
+    TileStack& stack = at(slot);
+
+    if (stack.quantity() <= count) onTileRemoved(stack, slot);
+
+    return stack.split(count);
+}
 void Inventory::onTilePlaced(TileStack& stack, int slot)
 {
     stack.tile().onTilePlaced(*this, slot);

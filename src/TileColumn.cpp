@@ -31,7 +31,13 @@ TileStack TileColumn::takeFromTop()
 {
     TileStack tileStack = std::move(m_tiles.back());
     m_tiles.pop_back();
-    return std::move(tileStack);
+    return tileStack;
+}
+TileStack TileColumn::take(int z)
+{
+    TileStack tileStack = std::move(m_tiles[z]);
+    m_tiles.erase(std::next(m_tiles.begin(), z));
+    return tileStack;
 }
 
 const std::vector<TileStack>& TileColumn::tiles() const

@@ -7,6 +7,12 @@ IMPOERTANT:
 
 - Make camera like the one in Carcassone. Move there everything involving camera (for example conversion between coordinates)
 
+- restructure TileTransferMediator, make it cleaner
+
+- better interface in map and inventory regarding actions that should cause events (currently onTilePlaced, onTileRemoved)
+
+- rename TileStack::insert/erase to addTiles, removeTiles
+
 IMPORTANT:
 - revise tile related events. onTilePlaced, onTileRemoved as global events should be called ALWAYS, every action that can result in it (including changing a tile in place) should be done on one place only and be encapsulated such that there is no workaround to omit event (currently tile placing is not encapsulated at all).
 -- basically every change of tiles' count in the stack should be processed by world or inventory and cause an event if is goes to 0 or from 0

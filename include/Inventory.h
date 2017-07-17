@@ -36,6 +36,7 @@ public:
 
     void addTiles(int slot, int count);
     void removeTiles(int slot, int count);
+    TileStack splitTiles(int slot, int count);
 
     virtual int size() const = 0;
 

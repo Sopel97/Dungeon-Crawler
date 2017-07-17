@@ -96,9 +96,30 @@ void MapLayer::removeTiles(int x, int y, int z, int count)
     TileColumn& column = at(x, y);
     TileStack& stack = column.at(z);
 
-    if (stack.quantity() <= count) onTileRemoved(stack, x, y, z);
+    if (stack.quantity() <= count)
+    {
+        onTileRemoved(stack, x, y, z);
+        column.take(z);
+    }
+    else
+    {
+        stack.erase(count);
+    }
+}
+TileStack MapLayer::splitTiles(int x, int y, int z, int count)
+{
+    TileColumn& column = at(x, y);
+    TileStack& stack = column.at(z);
 
-    stack.erase(count);
+    if (stack.quantity() <= count)
+    {
+        onTileRemoved(stack, x, y, z);
+        return column.take(z);
+    }
+    else
+    {
+        return stack.split(count);
+    }
 }
 
 std::vector<TileCollider> MapLayer::queryTileColliders(const Rectangle2F& queryRegion)

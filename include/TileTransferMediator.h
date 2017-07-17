@@ -60,7 +60,10 @@ public:
     void operator()(const FromInventory& from, const ToWorld& to);
     void operator()(const FromInventory& from, const ToInventory& to);
 private:
-    std::vector<int> move(TileStack& from, TileColumn& to, int max);
-    bool move(TileStack& from, TileStack& to, int max);
-    std::vector<int> move(TileStack& from, Inventory& to, int max);
+    static std::vector<int> move(MapLayer& map, int fromX, int fromY, int toX, int toY, int max);
+    static int move(MapLayer& map, int fromX, int fromY, Inventory& inventory, int toSlot, int max);
+    static std::vector<int> move(MapLayer& map, int fromX, int fromY, Inventory& inventory, int max);
+    static int move(Inventory& fromInventory, int fromSlot, Inventory& toInventory, int toSlot, int max);
+    static std::vector<int> move(Inventory& fromInventory, int fromSlot, Inventory& toInventory, int max);
+    static std::vector<int> move(Inventory& fromInventory, int fromSlot, MapLayer& map, int toX, int toY, int max);
 };

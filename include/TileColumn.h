@@ -19,6 +19,7 @@ public:
     TileStack& placeOnTop(TileStack&& tile);
 
     TileStack takeFromTop();
+    TileStack take(int z);
         
     bool isValid(int z) const;
     //it is up to the user to ensure m_emptyTile is not modified
