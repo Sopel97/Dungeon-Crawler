@@ -16,7 +16,7 @@ public:
     const TileStack& top() const;
     TileStack& top();
 
-    void placeOnTop(TileStack&& tile);
+    TileStack& placeOnTop(TileStack&& tile);
 
     TileStack takeFromTop();
         

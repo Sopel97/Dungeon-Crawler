@@ -20,9 +20,11 @@ TileStack& TileColumn::top()
     return m_tiles.back();
 }
 
-void TileColumn::placeOnTop(TileStack&& tile)
+TileStack& TileColumn::placeOnTop(TileStack&& tile)
 {
     m_tiles.emplace_back(std::move(tile));
+
+    return m_tiles.back();
 }
 
 TileStack TileColumn::takeFromTop()

@@ -9,7 +9,12 @@
 #include "tiles/TileStack.h"
 #include "tiles/Tile.h"
 
+#include "events/TilePlacedInWorld.h"
+#include "events/TileRemovedFromWorld.h"
+
 #include "TileLocation.h"
+
+#include "EventDispatcher.h"
 
 #include "../LibS/Util.h"
 
@@ -68,11 +73,32 @@ TileStack& MapLayer::at(int x, int y, int z)
 
 void MapLayer::placeTile(TileStack&& tileStack, int x, int y)
 {
-    at(x, y).placeOnTop(std::move(tileStack));
+    TileColumn& column = at(x, y);
+    TileStack& stack = column.placeOnTop(std::move(tileStack));
+
+    onTilePlaced(stack, x, y, column.topZ());
 }
 TileStack MapLayer::takeTile(int x, int y)
 {
-    return at(x, y).takeFromTop();
+    TileColumn& column = at(x, y);
+
+    onTileRemoved(column.top(), x, y, column.topZ());
+
+    return column.takeFromTop();
+}
+
+void MapLayer::addTiles(int x, int y, int z, int count)
+{
+    at(x, y, z).insert(count);
+}
+void MapLayer::removeTiles(int x, int y, int z, int count)
+{
+    TileColumn& column = at(x, y);
+    TileStack& stack = column.at(z);
+
+    if (stack.quantity() <= count) onTileRemoved(stack, x, y, z);
+
+    stack.erase(count);
 }
 
 std::vector<TileCollider> MapLayer::queryTileColliders(const Rectangle2F& queryRegion)
@@ -94,4 +120,19 @@ std::vector<TileCollider> MapLayer::queryTileColliders(const Rectangle2F& queryR
         }
     }
     return colliders;
+}
+
+void MapLayer::onTilePlaced(TileStack& stack, int x, int y, int z)
+{
+    TileLocation location(*this, x, y, z);
+
+    stack.tile().onTilePlaced(location);
+    EventDispatcher::instance().broadcast<TilePlacedInWorld>(TilePlacedInWorld{ &stack, location });
+}
+void MapLayer::onTileRemoved(TileStack& stack, int x, int y, int z)
+{
+    TileLocation location(*this, x, y, z);
+
+    stack.tile().onTileRemoved(location);
+    EventDispatcher::instance().broadcast<TileRemovedFromWorld>(TileRemovedFromWorld{ &stack, location });
 }

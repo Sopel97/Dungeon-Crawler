@@ -31,6 +31,8 @@ public:
     void placeTile(TileStack&& tile, int x, int y);
     TileStack takeTile(int x, int y);
 
+    void addTiles(int x, int y, int z, int count);
+    void removeTiles(int x, int y, int z, int count);
 
     std::vector<TileCollider> queryTileColliders(const ls::Rectangle2F& queryRegion);
 
@@ -41,6 +43,9 @@ protected:
     ls::Array2<TileColumn> m_tileColumns;
 
     static TileColumn m_emptyTileColumn;
+
+    void onTilePlaced(TileStack& stack, int x, int y, int z);
+    void onTileRemoved(TileStack& stack, int x, int y, int z);
 };
 
 #endif // MAPLAYER_H
