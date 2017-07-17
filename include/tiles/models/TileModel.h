@@ -19,6 +19,7 @@ class Tile;
 class TileLocation;
 class Inventory;
 class AttributeSet;
+class TileInformation;
 
 class TileModel : public TileComponent<TileModel, Tile>
 	//must be functional (ie. all methods return resonable values and there is no pure virtual member functions)
@@ -41,6 +42,7 @@ public:
     virtual bool meetsRequirements(SlotContentRequirement req) const;
     virtual const std::string& displayedName() const;
     virtual const AttributeSet& attributes() const;
+    virtual TileInformation additionalInformation() const;
 
     virtual Inventory* inventory();
     virtual const Inventory* inventory() const;

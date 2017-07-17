@@ -116,10 +116,11 @@ public:
     bool tryInteractWithExternalInventory(Tile& tile, Inventory& inventory, const TileLocation& location);
     bool tryInteractWithInternalInventory(Tile& tile, Inventory& inventory, const InventorySlotView& slot);
 
+    // requires inventory to be tracked, otherwise returns false
     bool canStore(const Inventory& inventory, const Tile& tile) const;
-    bool canStore(const Inventory& inventory, const Tile& tile, const Inventory& parent) const;
 
-    PlayerEquipmentInventory& equipmentInventory();
+    // does not require inventory to be tracked, but requires parent to be parent of inventory and it to be tracked
+    bool canStore(const Inventory& inventory, const Tile& tile, const Inventory& parent) const;
 
     TileTransferMediator& tileTransferMediator();
 

@@ -289,5 +289,5 @@ void InventorySystem::closeInventory(TrackedInventoryHandle& inventoryHandle)
 {
     if (!inventoryHandle.isValid() || !inventoryHandle.data().isOpened) return; //nothing to do
 
-    m_playerUi.closeWindow(inventoryHandle.data().inventoryWindow); // eventually invokes onInventoryWindowClosed(...)
+    m_playerUi.closeWindow(inventoryHandle.data().inventoryWindow); // eventually invokes onInventoryWindowClosed(...) so it shouldn't be done here
 }

@@ -9,11 +9,7 @@ IMPOERTANT:
 
 - restructure TileTransferMediator, make it cleaner
 
-- better interface in map and inventory regarding actions that should cause events (currently onTilePlaced, onTileRemoved). Mainly make it safer and easier to work with.
-
-- unify tile location
-
-- TileDescriptionGenerator should query additional (only information) attributes and description from tile instead of building it itself (like capacity, later potion time etc.)
+- continue to make better interface in map and inventory (if something old that should be removed or changed pops up) regarding actions that should cause events (currently onTilePlaced, onTileRemoved). Mainly make it safer and easier to work with.
 
 - when tile is placed in world or moved to it/within it it remembers all tiles that are potential light sources (divide the world to a grid, like 32x32 or something for faster lookup) and query lights for rendering
 -- needs revision on how these events are generated. Make it so they arise in possibly as few places as possible

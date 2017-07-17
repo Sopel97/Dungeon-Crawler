@@ -7,6 +7,8 @@
 #include "tiles/Tile.h"
 #include "tiles/models/TileModel.h"
 
+#include "tiles/TileInformation.h"
+
 #include "Inventory.h"
 
 TileDescription TileDescriptionGenerator::generate(const Tile& tile)
@@ -15,11 +17,10 @@ TileDescription TileDescriptionGenerator::generate(const Tile& tile)
     
     desc.emplaceLine(tile.model().displayedName(), sf::Color::Red, sf::Text::Style::Regular, 26);
 
-    if (const Inventory* inv = tile.model().inventory())
+    TileInformation information = tile.model().additionalInformation();
+    for (const auto& line : information)
     {
-        const Inventory& inventory = *inv;
-        const int inventorySize = inventory.size();
-        desc.emplaceLine(std::string("Capacity: ") + std::to_string(inventorySize), sf::Color::Green, sf::Text::Style::Regular, 16);
+        desc.emplaceLine(line.text, line.color, sf::Text::Style::Regular, 16);
     }
 
     const AttributeSet& attributes = tile.model().attributes();

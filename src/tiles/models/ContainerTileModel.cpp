@@ -2,6 +2,8 @@
 
 #include "GameConstants.h"
 
+#include "tiles/TileInformation.h"
+
 using namespace ls;
 
 REGISTER_TILE_MODEL_TYPE(ContainerTileModel)
@@ -94,6 +96,10 @@ bool ContainerTileModel::meetsRequirements(SlotContentRequirement req) const
 const std::string& ContainerTileModel::displayedName() const
 {
     return m_commonData->displayedName;
+}
+TileInformation ContainerTileModel::additionalInformation() const
+{
+    return TileInformation({ { std::string("Capacity: ") + std::to_string(m_inventory.size()), sf::Color::Green } });
 }
 
 Inventory* ContainerTileModel::inventory()

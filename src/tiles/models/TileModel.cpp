@@ -2,6 +2,8 @@
 
 #include "AttributeSet.h"
 
+#include "tiles/TileInformation.h"
+
 using namespace ls;
 
 const Rectangle2F TileModel::m_emptyCollider(Vec2F(0.0f, 0.0f), Vec2F(32.0f, 32.0f));
@@ -72,6 +74,10 @@ const AttributeSet& TileModel::attributes() const
 {
     static AttributeSet empty;
     return empty;
+}
+TileInformation TileModel::additionalInformation() const
+{
+    return {};
 }
 
 Inventory* TileModel::inventory()

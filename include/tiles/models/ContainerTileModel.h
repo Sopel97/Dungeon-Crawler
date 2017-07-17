@@ -17,6 +17,7 @@
 
 class Tile;
 class TileLocation;
+class TileInformation;
 
 class ContainerTileModel : public TileModel
 {
@@ -49,6 +50,7 @@ public:
     int maxQuantity() const override;
     bool meetsRequirements(SlotContentRequirement req) const override;
     const std::string& displayedName() const override;
+    TileInformation additionalInformation() const override;
 
     Inventory* inventory() override;
     const Inventory* inventory() const override;
