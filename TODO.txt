@@ -1,16 +1,23 @@
+IMPOERTANT:
 - merge controllers and models because they are hardly separable
+
+- mark common data pointers const ?
 
 - Clear world generation code //little priority since it is waiting for libs still
 
-- Pass RenderStates by CONST reference
-
 - Make camera like the one in Carcassone. Move there everything involving camera (for example conversion between coordinates)
+
+IMPORTANT:
+- revise tile related events. onTilePlaced, onTileRemoved as global events should be called ALWAYS, every action that can result in it (including changing a tile in place) should be done on one place only and be encapsulated such that there is no workaround to omit event (currently tile placing is not encapsulated at all).
+-- basically every change of tiles' count in the stack should be processed by world or inventory and cause an event if is goes to 0 or from 0
+
+- unify tile location
+
+- TileDescriptionGenerator should query additional (only information) attributes and description from tile instead of building it itself (like capacity, later potion time etc.)
 
 - when tile is places in world or moved to it/within it it remembers all tiles that are potential light sources (divide the world to a grid, like 32x32 or something for faster lookup) and query lights for rendering
 -- needs revision on how these events are generated. Make it so they arise in possibly as few places as possible
 -- possibly have a number for each tile that specifies how much light that is emitted by tile somewhere below is blocked (reduces radius by factor (sum of all reductions | max reduction))
-
-- player's line of sight using raycasting
 
 - window resizing (should be done fully by the window being resized. Relying only on min,max size parameters)
 
@@ -20,7 +27,6 @@ DRAWING RELATED, kinda important
 - make it possible for tiles to specify what size they are (1 - 1x1, 2 - 2x2, more should not be needed)
 
 - try dim light depending on height from the ground
+- player's line of sight using raycasting
 
 - '%' sign missing in tibia font
-
-- clean up tall drawables and everything related (may not be needed at all if depth buffer approach works as expected)

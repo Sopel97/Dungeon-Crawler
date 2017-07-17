@@ -19,6 +19,7 @@ class TileController;
 class TileLocation;
 class InventorySlotView;
 class ComponentCommonData;
+class Inventory;
 
 class Tile
 {
@@ -51,6 +52,11 @@ public:
     void onTileQuantityChanged(int oldQuantity, int newQuantity);
     void onTileInstantiated();
     void onTileCloned();
+
+    void onTilePlaced(const TileLocation& location);
+    void onTilePlaced(const Inventory& inventory, int slot);
+    void onTileRemoved(const TileLocation& location);
+    void onTileRemoved(const Inventory& inventory, int slot);
 
     int id() const;
 

@@ -17,7 +17,6 @@ public:
     MapLayer(World& world, int width, int height);
 
     const ls::Array2<TileColumn>& tileColumns() const;
-    ls::Array2<TileColumn>& tileColumns();
     int width() const;
     int height() const;
 

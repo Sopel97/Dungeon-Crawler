@@ -32,10 +32,6 @@ const Array2<TileColumn>& MapLayer::tileColumns() const
 {
     return m_tileColumns;
 }
-Array2<TileColumn>& MapLayer::tileColumns()
-{
-    return m_tileColumns;
-}
 
 int MapLayer::width() const
 {
