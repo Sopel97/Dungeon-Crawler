@@ -28,7 +28,7 @@ PlayerUi::~PlayerUi()
 
 }
 
-void PlayerUi::draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates)
+void PlayerUi::draw(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates)
 {
     for (auto& wnd : m_windows)
     {

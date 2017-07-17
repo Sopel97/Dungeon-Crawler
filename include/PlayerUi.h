@@ -59,7 +59,7 @@ public:
     PlayerUi(WindowSpaceManager& wsm, Player& player);
     ~PlayerUi();
 
-    void draw(sf::RenderTarget& renderTarget, sf::RenderStates& renderStates);
+    void draw(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates) override;
 
     void closeWindow(PanelWindow* window);
     void openWindow(std::unique_ptr<PanelWindow>&& wnd);
