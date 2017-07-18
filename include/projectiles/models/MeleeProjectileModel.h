@@ -48,8 +48,7 @@ public:
     std::unique_ptr<ProjectileModel> clone(Projectile& owner) const override;
 
 private:
-
-    CommonData* m_commonData;
+    CommonData* const m_commonData;
     ls::Vec2F m_position;
     float m_radius;
     int m_health;

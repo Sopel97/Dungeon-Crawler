@@ -5,8 +5,6 @@ IMPOERTANT:
 - think about ugly GameConstants namespace, particularly the tile sprite size constant
 -- consider making a class that encapsulates grid based spritesheet, instead of passing pixel coordinates pass grid coordinates
 
-- mark common data pointers const
-
 - Clear world generation code //little priority since it is waiting for libs still
 
 - Make camera like the one in Carcassone. Move there everything involving camera (for example conversion between coordinates)

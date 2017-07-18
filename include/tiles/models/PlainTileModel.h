@@ -49,7 +49,7 @@ public:
 
     std::unique_ptr<TileModel> clone(Tile& owner) const override;
 protected:
-    CommonData* m_commonData;
+    CommonData* const m_commonData;
 };
 
 #endif // PLAINTILEMODEL_H

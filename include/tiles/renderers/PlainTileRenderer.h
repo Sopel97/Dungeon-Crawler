@@ -60,7 +60,7 @@ public:
 
     std::unique_ptr<TileRenderer> clone(Tile& owner) const override;
 protected:
-    CommonData* m_commonData;
+    CommonData* const m_commonData;
     const TimeAnimatedSprite* m_currentAnimatedSprite;
 
     void draw(SpriteBatch& spriteBatch, const TileLocation& location, const ls::Vec2I& textureOffset) const;

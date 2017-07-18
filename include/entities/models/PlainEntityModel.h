@@ -56,9 +56,9 @@ public:
     void setDirectionOfMovement(EntityModel::Direction newDirection) override;
 
     std::unique_ptr<EntityModel> clone(Entity& owner) const override;
-protected:
 
-    CommonData* m_commonData;
+protected:
+    CommonData* const m_commonData;
     ls::Vec2F m_position;
     ls::Vec2F m_velocity;
     Direction m_directionOfMove;
