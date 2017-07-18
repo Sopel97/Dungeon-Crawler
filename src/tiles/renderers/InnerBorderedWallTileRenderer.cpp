@@ -209,11 +209,6 @@ bool InnerBorderedWallTileRenderer::isTall() const
     return true;
 }
 
-std::unique_ptr<ComponentCommonData> InnerBorderedWallTileRenderer::createCommonDataStorage()
-{
-    return std::make_unique<CommonData>();
-}
-
 std::unique_ptr<TileRenderer> InnerBorderedWallTileRenderer::clone(Tile& owner) const
 {
     return std::make_unique<InnerBorderedWallTileRenderer>(*this, owner);

@@ -162,11 +162,6 @@ void OuterBorderedTileRenderer::onTileQuantityChanged(int oldQuantity, int newQu
     m_currentAnimatedSprite = &(m_commonData->spriteSelector.onTileQuantityChanged(newQuantity, *m_currentAnimatedSprite));
 }
 
-std::unique_ptr<ComponentCommonData> OuterBorderedTileRenderer::createCommonDataStorage()
-{
-    return std::make_unique<CommonData>();
-}
-
 std::unique_ptr<TileRenderer> OuterBorderedTileRenderer::clone(Tile& owner) const
 {
     return std::make_unique<OuterBorderedTileRenderer>(*this, owner);

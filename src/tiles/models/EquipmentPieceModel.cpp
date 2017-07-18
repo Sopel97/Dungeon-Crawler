@@ -112,11 +112,6 @@ void EquipmentPieceModel::onTileInstantiated()
     m_attributes = m_commonData->attributeRandomizer.randomize();
 }
 
-std::unique_ptr<ComponentCommonData> EquipmentPieceModel::createCommonDataStorage()
-{
-    return std::make_unique<CommonData>();
-}
-
 std::unique_ptr<TileModel> EquipmentPieceModel::clone(Tile& owner) const
 {
     return std::make_unique<EquipmentPieceModel>(*this, owner);

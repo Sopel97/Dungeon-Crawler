@@ -45,8 +45,6 @@ public:
     void onProjectileInstantiated(World& world, Entity& parentEntity, const ls::Vec2F& hintedPosition) override;
     void onCollidedWithEntity(EntityCollider& entityCollider) override;
 
-    static std::unique_ptr<ComponentCommonData> createCommonDataStorage();
-
     std::unique_ptr<ProjectileModel> clone(Projectile& owner) const override;
 
 private:

@@ -55,8 +55,6 @@ public:
     EntityModel::Direction directionOfMove() const override;
     void setDirectionOfMovement(EntityModel::Direction newDirection) override;
 
-    static std::unique_ptr<ComponentCommonData> createCommonDataStorage();
-
     std::unique_ptr<EntityModel> clone(Entity& owner) const override;
 protected:
 

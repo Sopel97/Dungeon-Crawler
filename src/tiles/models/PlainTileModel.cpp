@@ -90,10 +90,6 @@ float PlainTileModel::drag() const
 {
     return  m_commonData->drag;
 }
-std::unique_ptr<ComponentCommonData> PlainTileModel::createCommonDataStorage()
-{
-    return std::make_unique<CommonData>();
-}
 
 std::unique_ptr<TileModel> PlainTileModel::clone(Tile& owner) const
 {

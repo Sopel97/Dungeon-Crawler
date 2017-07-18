@@ -116,11 +116,6 @@ void MeleeProjectileModel::onCollidedWithEntity(EntityCollider& entityCollider)
     entity.controller().dealDamage(damage);
 }
 
-std::unique_ptr<ComponentCommonData> MeleeProjectileModel::createCommonDataStorage()
-{
-    return std::make_unique<CommonData>();
-}
-
 std::unique_ptr<ProjectileModel> MeleeProjectileModel::clone(Projectile& owner) const
 {
     return std::make_unique<MeleeProjectileModel>(*this, owner);

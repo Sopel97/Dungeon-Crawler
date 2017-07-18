@@ -116,10 +116,6 @@ float ContainerTileModel::drag() const
 {
     return  m_commonData->drag;
 }
-std::unique_ptr<ComponentCommonData> ContainerTileModel::createCommonDataStorage()
-{
-    return std::make_unique<CommonData>();
-}
 
 std::unique_ptr<TileModel> ContainerTileModel::clone(Tile& owner) const
 {

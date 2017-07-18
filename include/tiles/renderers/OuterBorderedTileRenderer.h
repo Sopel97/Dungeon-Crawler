@@ -55,8 +55,6 @@ public:
     void onTileInstantiated() override;
     void onTileQuantityChanged(int oldQuantity, int newQuantity) override;
 
-    static std::unique_ptr<ComponentCommonData> createCommonDataStorage();
-
     std::unique_ptr<TileRenderer> clone(Tile& owner) const override;
 
 protected:

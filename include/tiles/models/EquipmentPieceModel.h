@@ -56,8 +56,6 @@ public:
 
     void onTileInstantiated() override;
 
-    static std::unique_ptr<ComponentCommonData> createCommonDataStorage();
-
     std::unique_ptr<TileModel> clone(Tile& owner) const override;
 protected:
     CommonData* m_commonData;

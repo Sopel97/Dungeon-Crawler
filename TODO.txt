@@ -1,7 +1,11 @@
 IMPOERTANT:
-- merge controllers and models because they are hardly separable
+- merge controllers and models because they are hardly separable (will also allow better encapsulation)
+-- eventually encapsulate compontents in Tile, Entity, Projectile o they are not visible from outside
 
-- mark common data pointers const ?
+- think about ugly GameConstants namespace, particularly the tile sprite size constant
+-- consider making a class that encapsulates grid based spritesheet, instead of passing pixel coordinates pass grid coordinates
+
+- mark common data pointers const
 
 - Clear world generation code //little priority since it is waiting for libs still
 
@@ -9,7 +13,9 @@ IMPOERTANT:
 
 - restructure TileTransferMediator, make it cleaner
 
-- continue to make better interface in map and inventory (if something old that should be removed or changed pops up) regarding actions that should cause events (currently onTilePlaced, onTileRemoved). Mainly make it safer and easier to work with.
+- continue to make better interface in (world) map and inventory (if something old that should be removed or changed pops up) regarding actions that should cause events (currently onTilePlaced, onTileRemoved). Mainly make it safer and easier to work with.
+
+- consider using ls::Vec2I/ls::Vec3I to pass tile coordinates
 
 - when tile is placed in world or moved to it/within it it remembers all tiles that are potential light sources (divide the world to a grid, like 32x32 or something for faster lookup) and query lights for rendering
 -- needs revision on how these events are generated. Make it so they arise in possibly as few places as possible

@@ -36,11 +36,6 @@ public:
 		return *m_owner;
 	}
 
-	static std::unique_ptr<ComponentCommonData> createCommonDataStorage()
-	{
-        return nullptr;
-	}
-
 	virtual std::unique_ptr<ComponentType> clone(OwnerType& owner) const = 0;
 
 protected:

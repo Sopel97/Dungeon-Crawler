@@ -132,10 +132,6 @@ void PlainEntityModel::setDirectionOfMovement(EntityModel::Direction newDirectio
 {
     m_directionOfMove = newDirection;
 }
-std::unique_ptr<ComponentCommonData> PlainEntityModel::createCommonDataStorage()
-{
-    return std::make_unique<CommonData>();
-}
 std::unique_ptr<EntityModel> PlainEntityModel::clone(Entity& owner) const
 {
     return std::make_unique<PlainEntityModel>(*this, owner);

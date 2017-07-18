@@ -104,11 +104,6 @@ void PlainTileRenderer::onTileQuantityChanged(int oldQuantity, int newQuantity)
     m_currentAnimatedSprite = &(m_commonData->spriteSelector.onTileQuantityChanged(newQuantity, *m_currentAnimatedSprite));
 }
 
-std::unique_ptr<ComponentCommonData> PlainTileRenderer::createCommonDataStorage()
-{
-    return std::make_unique<CommonData>();
-}
-
 std::unique_ptr<TileRenderer> PlainTileRenderer::clone(Tile& owner) const
 {
     return std::make_unique<PlainTileRenderer>(*this, owner);
