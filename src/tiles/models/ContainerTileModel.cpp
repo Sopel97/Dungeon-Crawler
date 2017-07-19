@@ -53,12 +53,10 @@ void ContainerTileModel::loadFromConfiguration(ConfigurationNode& config)
     m_inventory.setSize(config["inventorySize"].get<int>());
 }
 
-bool ContainerTileModel::hasCollider() const
+std::optional<TileCollider> ContainerTileModel::collider(const ls::Vec2I& pos)
 {
-    return m_commonData->hasCollider;
-}
-TileCollider ContainerTileModel::collider(const ls::Vec2I& pos)
-{
+    if (!m_commonData->hasCollider) return std::nullopt;
+
     const ls::Rectangle2F aabb = m_commonData->collider.translated(static_cast<ls::Vec2F>(pos) * GameConstants::tileSize);
     return TileCollider(*m_owner, aabb);
 }

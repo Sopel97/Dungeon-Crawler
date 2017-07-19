@@ -6,7 +6,6 @@
 
 using namespace ls;
 
-const Rectangle2F TileModel::m_emptyCollider(Vec2F(0.0f, 0.0f), Vec2F(32.0f, 32.0f));
 TileModel::TileModel(Tile& owner) :
     TileComponent(owner)
 {
@@ -27,13 +26,9 @@ bool TileModel::equals(const TileModel& other) const
     return true;
 }
 
-bool TileModel::hasCollider() const
+std::optional<TileCollider> TileModel::collider(const ls::Vec2I& pos)
 {
-    return false;
-}
-TileCollider TileModel::collider(const ls::Vec2I& pos)
-{
-    return TileCollider(*m_owner, m_emptyCollider);
+    return std::nullopt;
 }
 bool TileModel::isMovableFrom() const
 {

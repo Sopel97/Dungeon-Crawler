@@ -48,12 +48,10 @@ void PlainTileModel::loadFromConfiguration(ConfigurationNode& config)
     m_commonData->maxQuantity = config["maxQuantity"].getDefault<int>(1);
 }
 
-bool PlainTileModel::hasCollider() const
+std::optional<TileCollider> PlainTileModel::collider(const ls::Vec2I& pos)
 {
-    return m_commonData->hasCollider;
-}
-TileCollider PlainTileModel::collider(const ls::Vec2I& pos)
-{
+    if (!m_commonData->hasCollider) return std::nullopt;
+
     const ls::Rectangle2F aabb = m_commonData->collider.translated(static_cast<ls::Vec2F>(pos) * GameConstants::tileSize);
     return TileCollider(*m_owner, aabb);
 }

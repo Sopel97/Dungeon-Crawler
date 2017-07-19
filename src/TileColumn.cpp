@@ -77,23 +77,15 @@ bool TileColumn::isTall() const
     return false;
 }
 
-bool TileColumn::hasCollider() const
-{
-    for (const TileStack& tileStack : m_tiles)
-    {
-        if (tileStack.tile().model().hasCollider()) return true;
-    }
-
-    return false;
-}
-TileCollider TileColumn::collider(const ls::Vec2I& pos)
+std::optional<TileCollider> TileColumn::collider(const ls::Vec2I& pos)
 {
     for (TileStack& tileStack : m_tiles)
     {
-        if (tileStack.tile().model().hasCollider()) return tileStack.tile().model().collider(pos);
+        if (std::optional<TileCollider> collider = tileStack.tile().model().collider(pos)) 
+            return collider;
     }
 
-    return m_emptyTile.tile().model().collider(pos);
+    return std::nullopt;
 }
 
 int TileColumn::topZ() const

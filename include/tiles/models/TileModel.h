@@ -8,6 +8,7 @@
 #include "ComponentCommonData.h"
 
 #include <memory>
+#include <optional>
 
 #include "tiles/TileComponent.h"
 
@@ -31,8 +32,7 @@ public:
 
     virtual bool equals(const TileModel& other) const; //NOTE: assume that the type of other is the same as the type of *this
 
-    virtual bool hasCollider() const;
-    virtual TileCollider collider(const ls::Vec2I& pos);
+    virtual std::optional<TileCollider> collider(const ls::Vec2I& pos);
     virtual bool isMovableFrom() const;
     virtual bool isThrowableThrough() const;
     virtual bool isMovableTo() const;
@@ -52,7 +52,6 @@ public:
     virtual std::unique_ptr<TileModel> clone(Tile& owner) const;
 
 private:
-    static const ls::Rectangle2F m_emptyCollider;
 };
 
 #endif // TILEMODEL_H

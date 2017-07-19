@@ -41,7 +41,6 @@ public:
 
     bool equals(const TileModel& other) const override;
 
-    bool hasCollider() const override;
     bool isMovableFrom() const override;
     bool isThrowableThrough() const override;
     bool isMovableTo() const override;

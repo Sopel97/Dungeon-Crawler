@@ -61,10 +61,6 @@ bool EquipmentPieceModel::equals(const TileModel& other) const
 
     return true;
 }
-bool EquipmentPieceModel::hasCollider() const
-{
-    return false;
-}
 bool EquipmentPieceModel::isMovableFrom() const
 {
     return true;

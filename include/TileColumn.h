@@ -3,6 +3,7 @@
 
 #include <vector>
 #include <memory>
+#include <optional>
 
 #include "colliders/TileCollider.h"
 
@@ -29,8 +30,7 @@ public:
 
     bool isTall() const;
 
-    bool hasCollider() const;
-    TileCollider collider(const ls::Vec2I& pos);
+    std::optional<TileCollider> collider(const ls::Vec2I& pos);
 
     const std::vector<TileStack>& tiles() const;
     std::vector<TileStack>& tiles();

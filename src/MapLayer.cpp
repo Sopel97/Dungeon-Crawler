@@ -137,7 +137,8 @@ std::vector<TileCollider> MapLayer::queryTileColliders(const Rectangle2F& queryR
         for(int y = firstTileY; y <= lastTileY; ++y)
         {
             TileColumn& tileColumn = at(x, y);
-            if (tileColumn.hasCollider()) colliders.emplace_back(tileColumn.collider({ x, y }));
+            if (std::optional<TileCollider> collider = tileColumn.collider({ x,y }))
+                colliders.emplace_back(collider.value());
         }
     }
     return colliders;
