@@ -2,7 +2,7 @@
 
 #include "Configuration.h"
 
-#include "CompactIdentifier.h"
+#include "DynamicEnum.h"
 
 #include "ComponentCommonData.h"
 #include "tiles/TileComponent.h"

@@ -3,7 +3,7 @@
 #include "Configuration.h"
 #include "tiles/TileComponent.h"
 #include "ComponentCommonData.h"
-#include "CompactIdentifier.h"
+#include "DynamicEnum.h"
 
 #include <memory>
 

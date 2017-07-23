@@ -11,6 +11,9 @@ IMPOERTANT:
 
 - restructure TileTransferMediator, make it cleaner
 
+CONSIDER:
+hook up StaticEmbeddedHomogenousMemoryPool for components, tiles, entities, projectiles, see how it behaves
+
 - group tile (and entity, and projectile) flags in one place (struct with bitfields or something)
 
 - continue to make better interface in (world) map and inventory (if something old that should be removed or changed pops up) regarding actions that should cause events (currently onTilePlaced, onTileRemoved). Mainly make it safer and easier to work with.

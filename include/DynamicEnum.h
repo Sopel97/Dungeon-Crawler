@@ -3,7 +3,7 @@
 #include <map>
 
 template <class GroupType, class FromType, class IntType>
-class CompactIdentifier
+class DynamicEnum
 {
 private:
     IntType m_id;
@@ -31,13 +31,13 @@ private:
     static constexpr IntType m_invalidId = -1;
 
 public:
-    CompactIdentifier() : m_id(m_invalidId) {}
-    CompactIdentifier(const CompactIdentifier&) = default;
-    CompactIdentifier(CompactIdentifier&&) = default;
-    CompactIdentifier(const FromType& from) : m_id(hash(from)) {}
-    CompactIdentifier& operator=(const CompactIdentifier&) = default;
-    CompactIdentifier& operator=(CompactIdentifier&&) = default;
-    CompactIdentifier& operator=(const FromType& from)
+    DynamicEnum() : m_id(m_invalidId) {}
+    DynamicEnum(const DynamicEnum&) = default;
+    DynamicEnum(DynamicEnum&&) = default;
+    DynamicEnum(const FromType& from) : m_id(hash(from)) {}
+    DynamicEnum& operator=(const DynamicEnum&) = default;
+    DynamicEnum& operator=(DynamicEnum&&) = default;
+    DynamicEnum& operator=(const FromType& from)
     {
         m_id = hash(from);
         return *this;
@@ -55,4 +55,4 @@ public:
 };
 
 template <class GroupType>
-using RuntimeIdentifier = CompactIdentifier<GroupType, std::string, int>;
+using RuntimeIdentifier = DynamicEnum<GroupType, std::string, int>;
