@@ -11,6 +11,8 @@ IMPOERTANT:
 
 - restructure TileTransferMediator, make it cleaner
 
+- make using a tile return something, for example that the item should be transformed to be something else (try insert it to inventory, leave on the ground), or just used, and more requests that tile can't do on it's own and are somewhat generic and common
+
 CONSIDER:
 hook up StaticEmbeddedHomogenousMemoryPool for components, tiles, entities, projectiles, see how it behaves
 

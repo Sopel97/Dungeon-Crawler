@@ -2,7 +2,6 @@
 
 #include "entities/models/PlayerModel.h"
 #include "entities/renderers/PlayerRenderer.h"
-#include "entities/controllers/PlayerController.h"
 
 #include "window/Scene.h"
 
@@ -18,7 +17,7 @@ using namespace ls;
 
 Player::Player(WindowSpaceManager& wsm, Game& game, TileTransferMediator& tileTransferMediator) :
     m_wsm(&wsm),
-    m_playerEntity(-1, std::make_unique<PlayerModel>(*this, m_playerEntity), std::make_unique<PlayerRenderer>(*this, m_playerEntity), std::make_unique<PlayerController>(*this, m_playerEntity)),
+    m_playerEntity(-1, std::make_unique<PlayerModel>(*this, m_playerEntity), std::make_unique<PlayerRenderer>(*this, m_playerEntity)),
     m_playerUi(wsm, *this),
     m_inventorySystem(wsm, *this, tileTransferMediator),
     m_equipmentInventory()
@@ -39,10 +38,10 @@ void Player::processAsyncKeyboardInput(World& world, float dt) //TODO: make it u
 {
     constexpr float acc = 200.0f;
     float drag = world.drag(m_playerEntity.model().position());
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) m_playerEntity.controller().accelerate(Vec2F(-acc * dt * drag, 0.0f));
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) m_playerEntity.controller().accelerate(Vec2F(acc * dt * drag, 0.0f));
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) m_playerEntity.controller().accelerate(Vec2F(0.0f, -acc * dt * drag));
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) m_playerEntity.controller().accelerate(Vec2F(0.0f, acc * dt * drag));
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) m_playerEntity.model().accelerate(Vec2F(-acc * dt * drag, 0.0f));
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) m_playerEntity.model().accelerate(Vec2F(acc * dt * drag, 0.0f));
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) m_playerEntity.model().accelerate(Vec2F(0.0f, -acc * dt * drag));
+    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) m_playerEntity.model().accelerate(Vec2F(0.0f, acc * dt * drag));
 }
 
 PlayerUi& Player::playerUi()

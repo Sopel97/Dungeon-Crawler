@@ -11,7 +11,6 @@
 #include "entities/EntityPrefab.h"
 #include "entities/models/EntityModel.h"
 #include "entities/renderers/EntityRenderer.h"
-#include "entities/controllers/EntityController.h"
 
 #include "colliders/Collisions.h"
 
@@ -233,12 +232,12 @@ void EntitySystem::updateEntity(Entity& entity, float dt)
     auto& model = entity.model();
 
     const Vec2F positionBeforeUpdate = model.position();
-    entity.controller().update(*m_world, dt);
+    entity.model().update(*m_world, dt);
     const Vec2F positionAfterUpdate = model.position();
     EntityCollider entityCollider = model.collider();
 
     const ls::Vec2F pushing = pushingForce(entityCollider);
-    entity.controller().accelerate(pushing);
+    entity.model().accelerate(pushing);
 
     Vec2F currentPosition = positionAfterUpdate;
     Vec2F currentVelocity = model.velocity();

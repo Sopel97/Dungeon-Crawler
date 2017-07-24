@@ -25,8 +25,7 @@ class EntityPrefab
 public:
     EntityPrefab(
         const ComponentFactory<Entity, EntityModel>& modelFac,
-        const ComponentFactory<Entity, EntityRenderer>& rendererFac,
-        const ComponentFactory<Entity, EntityController>& controllerFac);
+        const ComponentFactory<Entity, EntityRenderer>& rendererFac);
     ~EntityPrefab();
 
     void loadFromConfiguration(ConfigurationNode& config);
@@ -37,7 +36,6 @@ protected:
 
     const ComponentFactory<Entity, EntityModel>* m_modelFactory;
     const ComponentFactory<Entity, EntityRenderer>* m_rendererFactory;
-    const ComponentFactory<Entity, EntityController>* m_controllerFactory;
 
     static int m_lastId;
 };

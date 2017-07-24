@@ -12,7 +12,6 @@
 #include "entities/EntityPrefab.h"
 #include "entities/models/EntityModel.h"
 #include "entities/renderers/EntityRenderer.h"
-#include "entities/controllers/EntityController.h"
 
 #include "projectiles/Projectile.h"
 #include "projectiles/ProjectilePrefab.h"
@@ -143,12 +142,6 @@ protected:
         const ResourceLoader<EntityPrefab>::EntityRendererTypeRegistrar<TYPE> TYPE ## _renderer_var (#TYPE); \
     }
 
-#define REGISTER_ENTITY_CONTROLLER_TYPE(TYPE)  \
-    namespace ___EntityControllerTypeRegistering \
-    { \
-        const ResourceLoader<EntityPrefab>::EntityControllerTypeRegistrar<TYPE> TYPE ## _controller_var (#TYPE); \
-    } 
-
 template <>
 class ResourceLoader<EntityPrefab>
 {
@@ -177,26 +170,13 @@ public:
             ResourceLoader<EntityPrefab>::entityRenderers().insert(std::make_pair(name, std::make_unique<ComponentFactory<Entity, EntityRenderer, T>>()));
         }
     };
-
-    template<class T>
-    struct EntityControllerTypeRegistrar
-    {
-        EntityControllerTypeRegistrar(const std::string& name)
-        {
-            Logger::instance().logLazy(Logger::Priority::Info, [&]()->std::string {return 
-                "Registered entity controller type: " + name; 
-            });
-            ResourceLoader<EntityPrefab>::entityControllers().insert(std::make_pair(name, std::make_unique<ComponentFactory<Entity, EntityController, T>>()));
-        }
-    };
-
+    
     static std::pair<std::string, std::unique_ptr<EntityPrefab>> load(const std::string& path); //should return nullptr when resource was not loaded
 
 protected:
 
     using EntityModelFactory = ComponentFactory<Entity, EntityModel>;
     using EntityRendererFactory = ComponentFactory<Entity, EntityRenderer>;
-    using EntityControllerFactory = ComponentFactory<Entity, EntityController>;
 
     static std::map<std::string, std::unique_ptr<EntityModelFactory>>& entityModels() //to ensure that they are created during registation process. (When they are static members they get defined too late)
     {
@@ -207,11 +187,6 @@ protected:
     {
         static std::map<std::string, std::unique_ptr<EntityRendererFactory>> _entityRenderers;
         return _entityRenderers;
-    }
-    static std::map<std::string, std::unique_ptr<EntityControllerFactory>>& entityControllers()
-    {
-        static std::map<std::string, std::unique_ptr<EntityControllerFactory>> _entityControllers;
-        return _entityControllers;
     }
 };
 

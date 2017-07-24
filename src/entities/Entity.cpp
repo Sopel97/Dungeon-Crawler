@@ -2,7 +2,6 @@
 
 #include "entities/models/EntityModel.h"
 #include "entities/renderers/EntityRenderer.h"
-#include "entities/controllers/EntityController.h"
 
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
@@ -14,47 +13,39 @@
 Entity::Entity(
     int id,
     const ComponentFactory<Entity, EntityModel>& modelFac,
-    const ComponentFactory<Entity, EntityRenderer>& rendererFac,
-    const ComponentFactory<Entity, EntityController>& controllerFac) :
+    const ComponentFactory<Entity, EntityRenderer>& rendererFac) :
     m_model(modelFac.createWithNewCommonData(*this)),
     m_renderer(rendererFac.createWithNewCommonData(*this)),
-    m_controller(controllerFac.createWithNewCommonData(*this)),
     m_id(id)
 {
 }
 Entity::Entity(
     int id,
     std::unique_ptr<EntityModel> model,
-    std::unique_ptr<EntityRenderer> renderer,
-    std::unique_ptr<EntityController> controller) :
+    std::unique_ptr<EntityRenderer> renderer) :
     m_model(std::move(model)),
     m_renderer(std::move(renderer)),
-    m_controller(std::move(controller)),
     m_id(id)
 {
 }
 Entity::Entity(const Entity& other) :
     m_model(other.m_model->clone(*this)),
     m_renderer(other.m_renderer->clone(*this)),
-    m_controller(other.m_controller->clone(*this)),
     m_id(other.m_id)
 {
 }
 Entity::Entity(Entity&& other) :
     m_model(std::move(other.m_model)),
     m_renderer(std::move(other.m_renderer)),
-    m_controller(std::move(other.m_controller)),
     m_id(other.m_id)
 {
     m_model->setOwner(this);
     m_renderer->setOwner(this);
-    m_controller->setOwner(this);
 }
 Entity& Entity::operator=(const Entity& other)
 {
     m_model = other.m_model->clone(*this);
     m_renderer = other.m_renderer->clone(*this);
-    m_controller = other.m_controller->clone(*this);
     m_id = other.m_id;
 
     return *this;
@@ -63,12 +54,10 @@ Entity& Entity::operator=(Entity&& other)
 {
     m_model = std::move(other.m_model);
     m_renderer = std::move(other.m_renderer);
-    m_controller = std::move(other.m_controller);
     m_id = other.m_id;
 
     m_model->setOwner(this);
     m_renderer->setOwner(this);
-    m_controller->setOwner(this);
 
     return *this;
 }
@@ -81,7 +70,6 @@ void Entity::loadFromConfiguration(ConfigurationNode& config)
 {
     m_model->loadFromConfiguration(config);
     m_renderer->loadFromConfiguration(config);
-    m_controller->loadFromConfiguration(config);
 }
 
 const EntityModel& Entity::model() const
@@ -100,14 +88,6 @@ EntityRenderer& Entity::renderer()
 {
     return *m_renderer;
 }
-const EntityController& Entity::controller() const
-{
-    return *m_controller;
-}
-EntityController& Entity::controller()
-{
-    return *m_controller;
-}
 
 int Entity::id() const
 {
@@ -117,13 +97,11 @@ void Entity::onEntityInstantiated(const ls::Vec2F& pos)
 {
     m_model->onEntityInstantiated(pos);
     m_renderer->onEntityInstantiated(pos);
-    m_controller->onEntityInstantiated(pos);
 }
 void Entity::onEntityCloned()
 {
     m_model->onEntityCloned();
     m_renderer->onEntityCloned();
-    m_controller->onEntityCloned();
 }
 
 std::unique_ptr<Entity> Entity::clone() const

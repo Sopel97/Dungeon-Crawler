@@ -17,7 +17,6 @@
 #include "entities/EntityPrefab.h"
 #include "entities/models/EntityModel.h"
 #include "entities/renderers/EntityRenderer.h"
-#include "entities/controllers/EntityController.h"
 
 #include "projectiles/Projectile.h"
 #include "projectiles/ProjectilePrefab.h"

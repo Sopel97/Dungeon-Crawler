@@ -17,7 +17,6 @@ namespace sf
 class MapLayer;
 class EntityModel;
 class EntityRenderer;
-class EntityController;
 class ComponentCommonData;
 
 class Entity
@@ -26,13 +25,11 @@ public:
     Entity(
         int id,
         const ComponentFactory<Entity, EntityModel>& modelFac,
-        const ComponentFactory<Entity, EntityRenderer>& rendererFac,
-        const ComponentFactory<Entity, EntityController>& controllerFac);
+        const ComponentFactory<Entity, EntityRenderer>& rendererFac);
     Entity( //temporary to allow easy creation of the player entity
         int id,
         std::unique_ptr<EntityModel> model,
-        std::unique_ptr<EntityRenderer> renderer,
-        std::unique_ptr<EntityController> controller);
+        std::unique_ptr<EntityRenderer> renderer);
     Entity(const Entity& other);
     Entity(Entity&& other);
     Entity& operator=(const Entity& other);
@@ -45,8 +42,6 @@ public:
     EntityModel& model();
     const EntityRenderer& renderer() const;
     EntityRenderer& renderer();
-    const EntityController& controller() const;
-    EntityController& controller();
 
     int id() const;
 
@@ -58,7 +53,6 @@ public:
 protected:
     std::unique_ptr<EntityModel> m_model;
     std::unique_ptr<EntityRenderer> m_renderer;
-    std::unique_ptr<EntityController> m_controller;
     int m_id;
 };
 

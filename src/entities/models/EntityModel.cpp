@@ -2,6 +2,8 @@
 
 #include "AttributeArray.h"
 
+#include "Logger.h"
+
 using namespace ls;
 
 const ls::Vec2F EntityModel::m_someVector {0.0f, 0.0f};
@@ -107,6 +109,24 @@ EntityModel::Direction EntityModel::directionOfMove() const
 void EntityModel::setDirectionOfMovement(EntityModel::Direction newDirection)
 {
 
+}
+
+void EntityModel::update(World& world, float dt)
+{
+
+}
+
+void EntityModel::accelerate(const ls::Vec2F& dv)
+{
+
+}
+
+void EntityModel::dealDamage(int damage)
+{
+    const int currentHealth = health();
+    setHealth(currentHealth - damage);
+
+    Logger::instance().log(Logger::Priority::Debug, std::to_string(damage) + " damage dealt");
 }
 std::unique_ptr<EntityModel> EntityModel::clone(Entity& owner) const
 {

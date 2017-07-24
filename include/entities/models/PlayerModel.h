@@ -13,6 +13,7 @@
 
 class Entity;
 class Player;
+class World;
 
 class PlayerModel : public EntityModel
 {
@@ -42,6 +43,10 @@ public:
     EntityModel::Direction directionOfMove() const override;
     void setDirectionOfMovement(EntityModel::Direction newDirection) override;
 
+    void update(World& world, float dt) override;
+
+    void accelerate(const ls::Vec2F& dv) override;
+
     std::unique_ptr<EntityModel> clone(Entity& owner) const override;
 protected:
     Player* m_playerOwner;
@@ -49,6 +54,11 @@ protected:
     ls::Vec2F m_velocity;
     Direction m_directionOfMove;
     float m_distanceTravelled;
+
+    bool m_acceleratedHorizontallyInLastFrame;
+    bool m_acceleratedVerticallyInLastFrame;
+
+    void move(float dt);
 };
 
 #endif // PLAYERMODEL_H

@@ -7,6 +7,8 @@
 
 #include "GameTime.h"
 
+#include "World.h"
+
 #include "OscillatingLightSource.h"
 
 using namespace ls;
@@ -127,6 +129,89 @@ EntityModel::Direction PlayerModel::directionOfMove() const
 void PlayerModel::setDirectionOfMovement(EntityModel::Direction newDirection)
 {
     m_directionOfMove = newDirection;
+}
+void PlayerModel::update(World& world, float dt)
+{
+    float speed = m_velocity.magnitude();
+    if (speed > maxSpeed())
+    {
+        m_velocity *= maxSpeed() / speed;
+        speed = maxSpeed();
+    }
+
+    float deceleration = 200.0f;
+    if (!m_acceleratedHorizontallyInLastFrame && !m_acceleratedVerticallyInLastFrame)
+        deceleration /= 1.41f;
+    float d = deceleration * dt * world.drag(m_position);
+    if (!m_acceleratedHorizontallyInLastFrame)
+    {
+        float avx = std::abs(m_velocity.x);
+        if (d > avx)
+        {
+            m_velocity.x = 0.0f;
+        }
+        else
+        {
+            m_velocity.x *= (avx - d) / avx;
+        }
+    }
+    if (!m_acceleratedVerticallyInLastFrame)
+    {
+        float avy = std::abs(m_velocity.y);
+        if (d > avy)
+        {
+            m_velocity.y = 0.0f;
+        }
+        else
+        {
+            m_velocity.y *= (avy - d) / avy;
+        }
+    }
+
+    m_acceleratedHorizontallyInLastFrame = false;
+    m_acceleratedVerticallyInLastFrame = false;
+
+    move(dt);
+}
+
+void PlayerModel::move(float dt)
+{
+    Vec2F displacement = m_velocity * dt;
+
+    m_position += displacement;
+    m_distanceTravelled += displacement.magnitude();
+
+    //set direction facing based on displacement if it there. If not just on velocity
+    if (displacement.magnitude() > 0.1f)
+    {
+        if (displacement.x < -0.01f && std::abs(displacement.x) > std::abs(displacement.y)) m_directionOfMove = EntityModel::Direction::West;
+        if (displacement.x > 0.01f && std::abs(displacement.x) > std::abs(displacement.y))  m_directionOfMove = EntityModel::Direction::East;
+        if (displacement.y < -0.01f && std::abs(displacement.y) > std::abs(displacement.x)) m_directionOfMove = EntityModel::Direction::North;
+        if (displacement.y > 0.01f && std::abs(displacement.y) > std::abs(displacement.x))  m_directionOfMove = EntityModel::Direction::South;
+    }
+    else
+    {
+        if (m_velocity.magnitude() > 0.1f)
+        {
+            if (m_velocity.x < -0.01f && std::abs(m_velocity.x) > std::abs(m_velocity.y)) m_directionOfMove = EntityModel::Direction::West;
+            if (m_velocity.x > 0.01f && std::abs(m_velocity.x) > std::abs(m_velocity.y))  m_directionOfMove = EntityModel::Direction::East;
+            if (m_velocity.y < -0.01f && std::abs(m_velocity.y) > std::abs(m_velocity.x)) m_directionOfMove = EntityModel::Direction::North;
+            if (m_velocity.y > 0.01f && std::abs(m_velocity.y) > std::abs(m_velocity.x))  m_directionOfMove = EntityModel::Direction::South;
+        }
+    }
+}
+void PlayerModel::accelerate(const ls::Vec2F& dv)
+{
+    m_velocity += dv;
+
+    if (std::abs(dv.x) > 0.0f)
+    {
+        m_acceleratedHorizontallyInLastFrame = true;
+    }
+    if (std::abs(dv.y) > 0.0f)
+    {
+        m_acceleratedVerticallyInLastFrame = true;
+    }
 }
 std::unique_ptr<EntityModel> PlayerModel::clone(Entity& owner) const
 {

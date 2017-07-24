@@ -55,6 +55,10 @@ public:
     EntityModel::Direction directionOfMove() const override;
     void setDirectionOfMovement(EntityModel::Direction newDirection) override;
 
+    void update(World& world, float dt) override;
+
+    void accelerate(const ls::Vec2F& dv) override;
+
     std::unique_ptr<EntityModel> clone(Entity& owner) const override;
 
 protected:

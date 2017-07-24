@@ -77,7 +77,6 @@ std::pair<std::string, std::unique_ptr<EntityPrefab>> ResourceLoader<EntityPrefa
 
     ComponentFactory<Entity, EntityModel>* modelFac = nullptr;
     ComponentFactory<Entity, EntityRenderer>* rendererFac = nullptr;
-    ComponentFactory<Entity, EntityController>* controllerFac = nullptr;
 
     std::string modelName = entityConfig["model"].get<std::string>();
     try
@@ -99,26 +98,16 @@ std::pair<std::string, std::unique_ptr<EntityPrefab>> ResourceLoader<EntityPrefa
         throw std::runtime_error("No entity renderer with name " + rendererName);
     }
 
-    std::string controllerName = entityConfig["controller"].get<std::string>();
-    try
-    {
-        controllerFac = entityControllers().at(controllerName).get();
-    }
-    catch (std::out_of_range&)
-    {
-        throw std::runtime_error("No entity controller with name " + controllerName);
-    }
 
     std::unique_ptr<EntityPrefab> entity = std::make_unique<EntityPrefab>(
         *modelFac,
-        *rendererFac,
-        *controllerFac
+        *rendererFac
     );
 
     entity->loadFromConfiguration(entityConfig);
 
     Logger::instance().logLazy(Logger::Priority::Info, [&]()->std::string {return
-        "Loaded entity: " + entityName + ";model: " + modelName + ";renderer: " + rendererName + "; controller: " + controllerName; 
+        "Loaded entity: " + entityName + ";model: " + modelName + ";renderer: " + rendererName; 
     });
 
     return std::make_pair(entityName, std::move(entity));

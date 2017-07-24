@@ -132,6 +132,17 @@ void PlainEntityModel::setDirectionOfMovement(EntityModel::Direction newDirectio
 {
     m_directionOfMove = newDirection;
 }
+void PlainEntityModel::update(World& world, float dt)
+{
+    //--m_health;
+
+    m_position += m_velocity * dt;
+}
+
+void PlainEntityModel::accelerate(const ls::Vec2F& dv)
+{
+    m_velocity += dv;
+}
 std::unique_ptr<EntityModel> PlainEntityModel::clone(Entity& owner) const
 {
     return std::make_unique<PlainEntityModel>(*this, owner);

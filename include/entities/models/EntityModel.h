@@ -19,6 +19,7 @@
 
 class Entity;
 class AttributeArray;
+class World;
 
 class EntityModel : public EntityComponent<EntityModel, Entity>
 {
@@ -60,6 +61,12 @@ public:
 
     virtual Direction directionOfMove() const;
     virtual void setDirectionOfMovement(Direction newDirection);
+
+    virtual void update(World& world, float dt);
+
+    virtual void accelerate(const ls::Vec2F& dv);
+
+    virtual void dealDamage(int damage);
 
     std::unique_ptr<EntityModel> clone(Entity& owner) const override;
 protected:

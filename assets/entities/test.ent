@@ -4,7 +4,6 @@ entity = {
 
     model = "PlainEntityModel",
     renderer = "MovingEntityRenderer",
-    controller = "StationaryEntityController",
 
     maxHealth = 10,
 

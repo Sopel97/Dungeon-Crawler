@@ -113,7 +113,7 @@ void MeleeProjectileModel::onCollidedWithEntity(EntityCollider& entityCollider)
     
     --m_health;
     const int damage = DamageCalculator::calculateDamage(m_attributes, entity.model().attributes());
-    entity.controller().dealDamage(damage);
+    entity.model().dealDamage(damage);
 }
 
 std::unique_ptr<ProjectileModel> MeleeProjectileModel::clone(Projectile& owner) const
