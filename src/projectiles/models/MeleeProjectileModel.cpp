@@ -26,7 +26,8 @@ MeleeProjectileModel::MeleeProjectileModel(const MeleeProjectileModel& other, Pr
     m_radius(other.m_radius),
     m_health(other.m_health),
     m_group(other.m_group),
-    m_attributes(other.m_attributes)
+    m_attributes(other.m_attributes),
+    m_timeLeft(other.m_timeLeft)
 {
 
 }
@@ -44,6 +45,8 @@ void MeleeProjectileModel::loadFromConfiguration(ConfigurationNode& config)
         const std::string attributeName = inheritedAttributesConfig[i].get<std::string>();
         m_commonData->inheritedAttributes.emplace_back(AttributeIdHelper::stringToEnum(attributeName));
     }
+
+    m_timeLeft = config["lifetime"].get<float>();
 }
 
 bool MeleeProjectileModel::canCollideWithTiles() const
@@ -114,6 +117,11 @@ void MeleeProjectileModel::onCollidedWithEntity(EntityCollider& entityCollider)
     --m_health;
     const int damage = DamageCalculator::calculateDamage(m_attributes, entity.model().attributes());
     entity.model().dealDamage(damage);
+}
+void MeleeProjectileModel::update(World& world, float dt)
+{
+    m_timeLeft -= dt;
+    if (m_timeLeft <= 0.0f) m_health = 0;
 }
 
 std::unique_ptr<ProjectileModel> MeleeProjectileModel::clone(Projectile& owner) const

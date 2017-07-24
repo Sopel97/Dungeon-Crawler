@@ -16,7 +16,6 @@ namespace sf
 class MapLayer;
 class ProjectileModel;
 class ProjectileRenderer;
-class ProjectileController;
 class Projectile;
 class ComponentCommonData;
 class World;
@@ -27,8 +26,7 @@ class ProjectilePrefab
 public:
     ProjectilePrefab(
         const ComponentFactory<Projectile, ProjectileModel>& modelFac,
-        const ComponentFactory<Projectile, ProjectileRenderer>& rendererFac,
-        const ComponentFactory<Projectile, ProjectileController>& controllerFac);
+        const ComponentFactory<Projectile, ProjectileRenderer>& rendererFac);
     ~ProjectilePrefab();
 
     void loadFromConfiguration(ConfigurationNode& config);
@@ -39,7 +37,6 @@ protected:
 
     const ComponentFactory<Projectile, ProjectileModel>* m_modelFactory;
     const ComponentFactory<Projectile, ProjectileRenderer>* m_rendererFactory;
-    const ComponentFactory<Projectile, ProjectileController>* m_controllerFactory;
 
     static int m_lastId;
 };

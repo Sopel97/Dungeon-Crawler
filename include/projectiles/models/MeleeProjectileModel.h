@@ -45,6 +45,8 @@ public:
     void onProjectileInstantiated(World& world, Entity& parentEntity, const ls::Vec2F& hintedPosition) override;
     void onCollidedWithEntity(EntityCollider& entityCollider) override;
 
+    void update(World& world, float dt) override;
+
     std::unique_ptr<ProjectileModel> clone(Projectile& owner) const override;
 
 private:
@@ -55,4 +57,5 @@ private:
     AggroGroupId m_group;
     AttributeArray m_attributes;
     std::vector<Entity*> m_hitEntities;
+    float m_timeLeft;
 };

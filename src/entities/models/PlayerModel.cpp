@@ -19,7 +19,9 @@ PlayerModel::PlayerModel(Entity& owner) :
     EntityModel(owner),
     m_playerOwner(),
     m_directionOfMove(Direction::South),
-    m_distanceTravelled(0.0f)
+    m_distanceTravelled(0.0f),
+    m_acceleratedHorizontallyInLastFrame(false),
+    m_acceleratedVerticallyInLastFrame(false)
 {
 
 }
@@ -27,7 +29,9 @@ PlayerModel::PlayerModel(Player& player, Entity& owner) :
     EntityModel(owner),
     m_playerOwner(&player),
     m_directionOfMove(Direction::South),
-    m_distanceTravelled(0.0f)
+    m_distanceTravelled(0.0f),
+    m_acceleratedHorizontallyInLastFrame(false),
+    m_acceleratedVerticallyInLastFrame(false)
 {
 
 }
@@ -35,7 +39,9 @@ PlayerModel::PlayerModel(const PlayerModel& other, Entity& owner) :
     EntityModel(other, owner),
     m_playerOwner(other.m_playerOwner),
     m_directionOfMove(other.m_directionOfMove),
-    m_distanceTravelled(other.m_distanceTravelled)
+    m_distanceTravelled(other.m_distanceTravelled),
+    m_acceleratedHorizontallyInLastFrame(other.m_acceleratedHorizontallyInLastFrame),
+    m_acceleratedVerticallyInLastFrame(other.m_acceleratedVerticallyInLastFrame)
 {
 
 }

@@ -22,7 +22,6 @@
 #include "projectiles/ProjectilePrefab.h"
 #include "projectiles/models/ProjectileModel.h"
 #include "projectiles/renderers/ProjectileRenderer.h"
-#include "projectiles/controllers/ProjectileController.h"
 
 #include "TileColumn.h"
 #include "MapLayer.h"

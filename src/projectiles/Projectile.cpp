@@ -2,7 +2,6 @@
 
 #include "projectiles/models/ProjectileModel.h"
 #include "projectiles/renderers/ProjectileRenderer.h"
-#include "projectiles/controllers/ProjectileController.h"
 
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
@@ -14,36 +13,30 @@
 Projectile::Projectile(
     int id,
     const ComponentFactory<Projectile, ProjectileModel>& modelFac,
-    const ComponentFactory<Projectile, ProjectileRenderer>& rendererFac,
-    const ComponentFactory<Projectile, ProjectileController>& controllerFac) :
+    const ComponentFactory<Projectile, ProjectileRenderer>& rendererFac) :
     m_model(modelFac.createWithNewCommonData(*this)),
     m_renderer(rendererFac.createWithNewCommonData(*this)),
-    m_controller(controllerFac.createWithNewCommonData(*this)),
     m_id(id)
 {
 }
 Projectile::Projectile(const Projectile& other) :
     m_model(other.m_model->clone(*this)),
     m_renderer(other.m_renderer->clone(*this)),
-    m_controller(other.m_controller->clone(*this)),
     m_id(other.m_id)
 {
 }
 Projectile::Projectile(Projectile&& other) :
     m_model(std::move(other.m_model)),
     m_renderer(std::move(other.m_renderer)),
-    m_controller(std::move(other.m_controller)),
     m_id(other.m_id)
 {
     m_model->setOwner(this);
     m_renderer->setOwner(this);
-    m_controller->setOwner(this);
 }
 Projectile& Projectile::operator=(const Projectile& other)
 {
     m_model = other.m_model->clone(*this);
     m_renderer = other.m_renderer->clone(*this);
-    m_controller = other.m_controller->clone(*this);
     m_id = other.m_id;
 
     return *this;
@@ -52,12 +45,10 @@ Projectile& Projectile::operator=(Projectile&& other)
 {
     m_model = std::move(other.m_model);
     m_renderer = std::move(other.m_renderer);
-    m_controller = std::move(other.m_controller);
     m_id = other.m_id;
 
     m_model->setOwner(this);
     m_renderer->setOwner(this);
-    m_controller->setOwner(this);
 
     return *this;
 }
@@ -70,7 +61,6 @@ void Projectile::loadFromConfiguration(ConfigurationNode& config)
 {
     m_model->loadFromConfiguration(config);
     m_renderer->loadFromConfiguration(config);
-    m_controller->loadFromConfiguration(config);
 }
 
 const ProjectileModel& Projectile::model() const
@@ -89,14 +79,6 @@ ProjectileRenderer& Projectile::renderer()
 {
     return *m_renderer;
 }
-const ProjectileController& Projectile::controller() const
-{
-    return *m_controller;
-}
-ProjectileController& Projectile::controller()
-{
-    return *m_controller;
-}
 
 int Projectile::id() const
 {
@@ -106,31 +88,26 @@ void Projectile::onProjectileInstantiated(World& world, Entity& parentEntity, co
 {
     m_model->onProjectileInstantiated(world, parentEntity, hintedPosition);
     m_renderer->onProjectileInstantiated(world, parentEntity, hintedPosition);
-    m_controller->onProjectileInstantiated(world, parentEntity, hintedPosition);
 }
 void Projectile::onProjectileCloned()
 {
     m_model->onProjectileCloned();
     m_renderer->onProjectileCloned();
-    m_controller->onProjectileCloned();
 }
 void Projectile::onCollidedWithEntity(EntityCollider& entityCollider)
 {
     m_model->onCollidedWithEntity(entityCollider);
     m_renderer->onCollidedWithEntity(entityCollider);
-    m_controller->onCollidedWithEntity(entityCollider);
 }
 void Projectile::onCollidedWithTile(TileCollider& tileCollider)
 {
     m_model->onCollidedWithTile(tileCollider);
     m_renderer->onCollidedWithTile(tileCollider);
-    m_controller->onCollidedWithTile(tileCollider);
 }
 void Projectile::onParentEntityDeleted()
 {
     m_model->onParentEntityDeleted();
     m_renderer->onParentEntityDeleted();
-    m_controller->onParentEntityDeleted();
 }
 
 std::unique_ptr<Projectile> Projectile::clone() const

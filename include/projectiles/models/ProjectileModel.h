@@ -35,5 +35,7 @@ public:
 
     virtual const Entity* parentEntity() const;
 
+    virtual void update(World& world, float dt);
+
     std::unique_ptr<ProjectileModel> clone(Projectile& owner) const override;
 };

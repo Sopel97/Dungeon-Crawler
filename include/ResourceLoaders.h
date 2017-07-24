@@ -17,7 +17,6 @@
 #include "projectiles/ProjectilePrefab.h"
 #include "projectiles/models/ProjectileModel.h"
 #include "projectiles/renderers/ProjectileRenderer.h"
-#include "projectiles/controllers/ProjectileController.h"
 
 #include "Configuration.h"
 
@@ -202,12 +201,6 @@ protected:
         const ResourceLoader<ProjectilePrefab>::ProjectileRendererTypeRegistrar<TYPE> TYPE ## _renderer_var (#TYPE); \
     }
 
-#define REGISTER_PROJECTILE_CONTROLLER_TYPE(TYPE)  \
-    namespace ___ProjectileControllerTypeRegistering \
-    { \
-        const ResourceLoader<ProjectilePrefab>::ProjectileControllerTypeRegistrar<TYPE> TYPE ## _controller_var (#TYPE); \
-    } 
-
 template <>
 class ResourceLoader<ProjectilePrefab>
 {
@@ -237,25 +230,12 @@ public:
         }
     };
 
-    template<class T>
-    struct ProjectileControllerTypeRegistrar
-    {
-        ProjectileControllerTypeRegistrar(const std::string& name)
-        {
-            Logger::instance().logLazy(Logger::Priority::Info, [&]()->std::string {return
-                "Registered projectile controller type: " + name;
-            });
-            ResourceLoader<ProjectilePrefab>::projectileControllers().insert(std::make_pair(name, std::make_unique<ComponentFactory<Projectile, ProjectileController, T>>()));
-        }
-    };
-
     static std::pair<std::string, std::unique_ptr<ProjectilePrefab>> load(const std::string& path); //should return nullptr when resource was not loaded
 
 protected:
 
     using ProjectileModelFactory = ComponentFactory<Projectile, ProjectileModel>;
     using ProjectileRendererFactory = ComponentFactory<Projectile, ProjectileRenderer>;
-    using ProjectileControllerFactory = ComponentFactory<Projectile, ProjectileController>;
 
     static std::map<std::string, std::unique_ptr<ProjectileModelFactory>>& projectileModels() //to ensure that they are created during registation process. (When they are static members they get defined too late)
     {
@@ -266,11 +246,6 @@ protected:
     {
         static std::map<std::string, std::unique_ptr<ProjectileRendererFactory>> _projectileRenderers;
         return _projectileRenderers;
-    }
-    static std::map<std::string, std::unique_ptr<ProjectileControllerFactory>>& projectileControllers()
-    {
-        static std::map<std::string, std::unique_ptr<ProjectileControllerFactory>> _projectileControllers;
-        return _projectileControllers;
     }
 };
 

@@ -122,7 +122,6 @@ std::pair<std::string, std::unique_ptr<ProjectilePrefab>> ResourceLoader<Project
 
     ComponentFactory<Projectile, ProjectileModel>* modelFac = nullptr;
     ComponentFactory<Projectile, ProjectileRenderer>* rendererFac = nullptr;
-    ComponentFactory<Projectile, ProjectileController>* controllerFac = nullptr;
 
     std::string modelName = projectileConfig["model"].get<std::string>();
     try
@@ -143,27 +142,16 @@ std::pair<std::string, std::unique_ptr<ProjectilePrefab>> ResourceLoader<Project
     {
         throw std::runtime_error("No projectile renderer with name " + rendererName);
     }
-
-    std::string controllerName = projectileConfig["controller"].get<std::string>();
-    try
-    {
-        controllerFac = projectileControllers().at(controllerName).get();
-    }
-    catch (std::out_of_range&)
-    {
-        throw std::runtime_error("No projectile controller with name " + controllerName);
-    }
-
+    
     std::unique_ptr<ProjectilePrefab> projectile = std::make_unique<ProjectilePrefab>(
         *modelFac,
-        *rendererFac,
-        *controllerFac
+        *rendererFac
     );
 
     projectile->loadFromConfiguration(projectileConfig);
 
     Logger::instance().logLazy(Logger::Priority::Info, [&]()->std::string {return
-        "Loaded projectile: " + projectileName + ";model: " + modelName + ";renderer: " + rendererName + "; controller: " + controllerName;
+        "Loaded projectile: " + projectileName + ";model: " + modelName + ";renderer: " + rendererName;
     });
 
     return std::make_pair(projectileName, std::move(projectile));

@@ -12,12 +12,10 @@
 #include "entities/Entity.h"
 #include "entities/models/EntityModel.h"
 #include "entities/renderers/EntityRenderer.h"
-#include "entities/controllers/EntityController.h"
 
 #include "projectiles/ProjectilePrefab.h"
 #include "projectiles/models/ProjectileModel.h"
 #include "projectiles/renderers/ProjectileRenderer.h"
-#include "projectiles/controllers/ProjectileController.h"
 
 #include "colliders/Collisions.h"
 #include "colliders/EntityCollider.h"
@@ -137,7 +135,7 @@ void ProjectileSystem::onEntityDeleted(Entity& entity)
 }
 void ProjectileSystem::update(Projectile& projectile, float dt)
 {
-    projectile.controller().update(*m_world, dt);
+    projectile.model().update(*m_world, dt);
 
     if (projectile.model().canCollideWithEntities()) resolveCollisionsWithEntities(projectile);
     if (projectile.model().canCollideWithTiles()) resolveCollisionsWithTiles(projectile);

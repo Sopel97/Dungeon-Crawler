@@ -63,6 +63,11 @@ const Entity* ProjectileModel::parentEntity() const
     return nullptr;
 }
 
+void ProjectileModel::update(World& world, float dt)
+{
+
+}
+
 std::unique_ptr<ProjectileModel> ProjectileModel::clone(Projectile& owner) const
 {
     return std::make_unique<ProjectileModel>(*this, owner);
