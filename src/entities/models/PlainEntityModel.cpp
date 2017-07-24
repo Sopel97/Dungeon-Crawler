@@ -80,10 +80,6 @@ float PlainEntityModel::distanceTravelled() const
 {
     return m_distanceTravelled;
 }
-void PlainEntityModel::setDistanceTravelled(float newDistanceTravelled)
-{
-    m_distanceTravelled = newDistanceTravelled;
-}
 int PlainEntityModel::health() const
 {
     return m_health;
@@ -119,18 +115,9 @@ std::optional<Light> PlainEntityModel::light() const
     ).at(GameTime::instance().now(), static_cast<double>(reinterpret_cast<intptr_t>(this))); //TODO: better way to get per entity constant value
 }
 
-float PlainEntityModel::maxSpeed() const
-{
-    return m_commonData->maxSpeed;
-}
-
 EntityModel::Direction PlainEntityModel::directionOfMove() const
 {
     return m_directionOfMove;
-}
-void PlainEntityModel::setDirectionOfMovement(EntityModel::Direction newDirection)
-{
-    m_directionOfMove = newDirection;
 }
 void PlainEntityModel::update(World& world, float dt)
 {

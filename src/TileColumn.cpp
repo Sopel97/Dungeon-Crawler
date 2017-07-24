@@ -68,14 +68,6 @@ int TileColumn::size() const
     return m_tiles.size();
 }
 
-bool TileColumn::isTall() const
-{
-    for (const TileStack& tileStack : m_tiles)
-        if (tileStack.tile().renderer().isTall()) return true;
-
-    return false;
-}
-
 std::optional<TileCollider> TileColumn::collider(const ls::Vec2I& pos)
 {
     for (TileStack& tileStack : m_tiles)

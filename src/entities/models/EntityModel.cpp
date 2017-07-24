@@ -53,10 +53,6 @@ float EntityModel::distanceTravelled() const
 {
     return 0.0f;
 }
-void EntityModel::setDistanceTravelled(float newDistanceTravelled)
-{
-
-}
 int EntityModel::health() const
 {
     return 1;
@@ -97,18 +93,9 @@ void EntityModel::onEntityInstantiated(const ls::Vec2F& pos)
     this->setPosition(pos);
 }
 
-float EntityModel::maxSpeed() const
-{
-    return 10.0f;
-}
-
 EntityModel::Direction EntityModel::directionOfMove() const
 {
     return Direction::South;
-}
-void EntityModel::setDirectionOfMovement(EntityModel::Direction newDirection)
-{
-
 }
 
 void EntityModel::update(World& world, float dt)

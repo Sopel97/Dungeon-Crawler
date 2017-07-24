@@ -64,8 +64,6 @@ public:
     const sf::Texture& texture() const;
     TileInnerBorderGroupType innerBorderGroup() const override;
 
-    bool isTall() const override;
-
     std::unique_ptr<TileRenderer> clone(Tile& owner) const override;
 protected:
     CommonData* const m_commonData;

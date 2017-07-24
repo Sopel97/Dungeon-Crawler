@@ -81,13 +81,13 @@ WorldRenderer::WorldRenderer(Root& root, World& world) :
 
     //TODO: maybe as a resource
     m_prettyStretchShader.loadFromFile("assets/shaders/pretty_stretch.vert", "assets/shaders/pretty_stretch.frag");
-    m_prettyStretchShader.setParameter("sourceTextureSize", sf::Vector2f(m_intermidiateRenderTarget.getSize().x, m_intermidiateRenderTarget.getSize().y));
+    m_prettyStretchShader.setParameter("sourceTextureSize", sf::Vector2f(static_cast<float>(m_intermidiateRenderTarget.getSize().x), static_cast<float>(m_intermidiateRenderTarget.getSize().y)));
 
     m_lightTexture = ResourceManager::instance().get<sf::Texture>("LightDisc");
 
     m_lightShader.loadFromFile("assets/shaders/light.vert", "assets/shaders/light.frag");
-    m_lightShader.setParameter("lightTextureSize", sf::Vector2f(m_lightMap.getSize().x, m_lightMap.getSize().y));
-    m_lightShader.setParameter("metaTextureSize", sf::Vector2f(m_metaTexture.getSize().x, m_metaTexture.getSize().y));
+    m_lightShader.setParameter("lightTextureSize", sf::Vector2f(static_cast<float>(m_lightMap.getSize().x), static_cast<float>(m_lightMap.getSize().y)));
+    m_lightShader.setParameter("metaTextureSize", sf::Vector2f(static_cast<float>(m_metaTexture.getSize().x), static_cast<float>(m_metaTexture.getSize().y)));
     m_lightShader.setParameter("metaTexture", m_metaTexture.getTexture());
 }
 
@@ -229,8 +229,8 @@ void WorldRenderer::updateShaderUniforms()
     const auto& viewRect = m_world.window().absoluteContentRect();
     // TODO: for some complicated reason the shader does not work properly when windows have borders (not very problematic since they shouldn't)
     // TODO: investigate
-    m_prettyStretchShader.setParameter("viewOffset", sf::Vector2f(viewRect.min.x, viewRect.min.y));
-    m_prettyStretchShader.setParameter("destinationTextureSize", sf::Vector2f(viewRect.width(), viewRect.height()));
+    m_prettyStretchShader.setParameter("viewOffset", sf::Vector2f(static_cast<float>(viewRect.min.x), static_cast<float>(viewRect.min.y)));
+    m_prettyStretchShader.setParameter("destinationTextureSize", sf::Vector2f(static_cast<float>(viewRect.width()), static_cast<float>(viewRect.height())));
 }
 void WorldRenderer::drawMeta(const sf::RenderStates& renderStates)
 {
@@ -285,7 +285,7 @@ void WorldRenderer::drawIntermidiate(sf::RenderTarget& renderTarget, const sf::R
     sf::RenderStates intermidiateRenderStates = renderStates;
     intermidiateRenderStates.shader = &m_prettyStretchShader;
 
-    m_windowSpaceManager.setContentView(m_world.window(), Rectangle2F::withSize(Vec2F(0, 0), m_intermidiateRenderTarget.getSize().x, m_intermidiateRenderTarget.getSize().y));
+    m_windowSpaceManager.setContentView(m_world.window(), Rectangle2F::withSize(Vec2F(0.0f, 0.0f), static_cast<float>(m_intermidiateRenderTarget.getSize().x), static_cast<float>(m_intermidiateRenderTarget.getSize().y)));
 
     renderTarget.draw(intermidiateFinal, intermidiateRenderStates);
 }
@@ -299,7 +299,7 @@ void WorldRenderer::drawLightMapToIntermidiate(const sf::RenderStates& renderSta
     lightMapSprite.setSize(sf::Vector2f(cameraRect.width(), cameraRect.height()));
     //converts to world coordinates
     lightMapSprite.setPosition(sf::Vector2f(cameraCenter.x - cameraRect.width() / 2, cameraCenter.y - cameraRect.height() / 2));
-    lightMapSprite.setTextureRect(sf::IntRect(GameConstants::tileSize, GameConstants::tileSize, cameraRect.width(), cameraRect.height()));
+    lightMapSprite.setTextureRect(sf::IntRect(GameConstants::tileSize, GameConstants::tileSize, static_cast<int>(cameraRect.width()), static_cast<int>(cameraRect.height())));
 
     sf::RenderStates lightMapRenderStates = renderStates;
     lightMapRenderStates.shader = &m_lightShader;

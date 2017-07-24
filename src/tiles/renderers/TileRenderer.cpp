@@ -54,11 +54,6 @@ bool TileRenderer::coversOuterBorders() const
     return true;
 }
 
-bool TileRenderer::isTall() const
-{
-    return false;
-}
-
 std::unique_ptr<TileRenderer> TileRenderer::clone(Tile& owner) const
 {
     return std::make_unique<TileRenderer>(*this, owner);

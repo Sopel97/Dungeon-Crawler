@@ -32,16 +32,12 @@ public:
     const ls::Vec2F& velocity() const override;
     void setVelocity(const ls::Vec2F& newVelocity) override;
     float distanceTravelled() const override;
-    void setDistanceTravelled(float newDistanceTravelled) override;
     AggroGroupId group() const override;
     TileStack& ammo() override;
     const AttributeArray& attributes() const override;
     std::optional<Light> light() const override;
 
-    float maxSpeed() const override;
-
     EntityModel::Direction directionOfMove() const override;
-    void setDirectionOfMovement(EntityModel::Direction newDirection) override;
 
     void update(World& world, float dt) override;
 
@@ -49,6 +45,8 @@ public:
 
     std::unique_ptr<EntityModel> clone(Entity& owner) const override;
 protected:
+    static constexpr float m_maxSpeed = 64.0f;
+
     Player* m_playerOwner;
     ls::Vec2F m_position;
     ls::Vec2F m_velocity;

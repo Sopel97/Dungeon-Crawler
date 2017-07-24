@@ -81,10 +81,6 @@ float PlayerModel::distanceTravelled() const
 {
     return m_distanceTravelled;
 }
-void PlayerModel::setDistanceTravelled(float newDistanceTravelled)
-{
-    m_distanceTravelled = newDistanceTravelled;
-}
 AggroGroupId PlayerModel::group() const
 {
     return AggroGroupId::Friendly;
@@ -123,26 +119,17 @@ std::optional<Light> PlayerModel::light() const
     ).at(GameTime::instance().now());
 }
 
-float PlayerModel::maxSpeed() const
-{
-    return 64.0f;
-}
-
 EntityModel::Direction PlayerModel::directionOfMove() const
 {
     return m_directionOfMove;
 }
-void PlayerModel::setDirectionOfMovement(EntityModel::Direction newDirection)
-{
-    m_directionOfMove = newDirection;
-}
 void PlayerModel::update(World& world, float dt)
 {
     float speed = m_velocity.magnitude();
-    if (speed > maxSpeed())
+    if (speed > m_maxSpeed)
     {
-        m_velocity *= maxSpeed() / speed;
-        speed = maxSpeed();
+        m_velocity *= m_maxSpeed / speed;
+        speed = m_maxSpeed;
     }
 
     float deceleration = 200.0f;

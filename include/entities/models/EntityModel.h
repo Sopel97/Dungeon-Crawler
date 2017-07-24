@@ -45,7 +45,6 @@ public:
     virtual const ls::Vec2F& velocity() const;
     virtual void setVelocity(const ls::Vec2F& newVelocity);
     virtual float distanceTravelled() const;
-    virtual void setDistanceTravelled(float newDistanceTravelled);
     virtual int health() const;
     virtual int maxHealth() const;
     virtual void setHealth(int newHealth);
@@ -57,10 +56,7 @@ public:
 
     void onEntityInstantiated(const ls::Vec2F& pos) override;
 
-    virtual float maxSpeed() const;
-
     virtual Direction directionOfMove() const;
-    virtual void setDirectionOfMovement(Direction newDirection);
 
     virtual void update(World& world, float dt);
 

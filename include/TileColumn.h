@@ -28,8 +28,6 @@ public:
     TileStack& at(int z);
     int size() const;
 
-    bool isTall() const;
-
     std::optional<TileCollider> collider(const ls::Vec2I& pos);
 
     const std::vector<TileStack>& tiles() const;

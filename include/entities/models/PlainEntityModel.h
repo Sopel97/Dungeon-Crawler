@@ -41,7 +41,6 @@ public:
     const ls::Vec2F& velocity() const override;
     void setVelocity(const ls::Vec2F& newVelocity) override;
     float distanceTravelled() const override;
-    void setDistanceTravelled(float newDistanceTravelled) override;
     int health() const override;
     int maxHealth() const override;
     void setHealth(int newHealth) override;
@@ -50,10 +49,7 @@ public:
     const AttributeArray& attributes() const override;
     std::optional<Light> light() const override; // temp, for light testing
 
-    float maxSpeed() const override;
-
     EntityModel::Direction directionOfMove() const override;
-    void setDirectionOfMovement(EntityModel::Direction newDirection) override;
 
     void update(World& world, float dt) override;
 

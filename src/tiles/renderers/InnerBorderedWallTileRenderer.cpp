@@ -125,7 +125,7 @@ void InnerBorderedWallTileRenderer::draw(SpriteBatch& spriteBatch, const TileLoc
         if (resultSprite != nullptr)
         {
             const ls::Vec2F sprite(*resultSprite);
-            const ls::Vec2F size(GameConstants::tileSize, GameConstants::tileSize);
+            const ls::Vec2F size(static_cast<float>(GameConstants::tileSize), static_cast<float>(GameConstants::tileSize));
             const ls::Vec2F pos(x * size.x, y * size.y);
 
             spriteBatch.emplaceRectangle(&(texture()), pos, sprite + textureOffset, size);
@@ -147,7 +147,7 @@ void InnerBorderedWallTileRenderer::draw(SpriteBatch& spriteBatch, const TileLoc
         if (resultSprite != nullptr)
         {
             const ls::Vec2F sprite(*resultSprite);
-            const ls::Vec2F size(GameConstants::tileSize, GameConstants::tileSize);
+            const ls::Vec2F size(static_cast<float>(GameConstants::tileSize), static_cast<float>(GameConstants::tileSize));
             const ls::Vec2F pos((x-1) * size.x, y * size.y);
 
             spriteBatch.emplaceRectangle(&(texture()), pos, sprite + textureOffset, size);
@@ -169,7 +169,7 @@ void InnerBorderedWallTileRenderer::draw(SpriteBatch& spriteBatch, const TileLoc
         if (resultSprite != nullptr)
         {
             const ls::Vec2F sprite(*resultSprite);
-            const ls::Vec2F size(GameConstants::tileSize, GameConstants::tileSize);
+            const ls::Vec2F size(static_cast<float>(GameConstants::tileSize), static_cast<float>(GameConstants::tileSize));
             const ls::Vec2F pos(x * size.x, (y-1) * size.y);
 
             spriteBatch.emplaceRectangle(&(texture()), pos, sprite + textureOffset, size);
@@ -187,7 +187,7 @@ void InnerBorderedWallTileRenderer::draw(SpriteBatch& spriteBatch, const TileLoc
         if (resultSprite != nullptr)
         {
             const ls::Vec2F sprite(*resultSprite);
-            const ls::Vec2F size(GameConstants::tileSize, GameConstants::tileSize);
+            const ls::Vec2F size(static_cast<float>(GameConstants::tileSize), static_cast<float>(GameConstants::tileSize));
             const ls::Vec2F pos((x-1) * size.x, (y-1) * size.y);
 
             spriteBatch.emplaceRectangle(&(texture()), pos, sprite + textureOffset, size);
@@ -202,11 +202,6 @@ const sf::Texture& InnerBorderedWallTileRenderer::texture() const
 TileInnerBorderGroupType InnerBorderedWallTileRenderer::innerBorderGroup() const
 {
     return m_commonData->innerBorderGroup;
-}
-
-bool InnerBorderedWallTileRenderer::isTall() const
-{
-    return true;
 }
 
 std::unique_ptr<TileRenderer> InnerBorderedWallTileRenderer::clone(Tile& owner) const

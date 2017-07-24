@@ -70,8 +70,11 @@ void MovingEntityRenderer::draw(SpriteBatch& spriteBatch, const ls::Vec2I& textu
         steppingSpriteVariant = static_cast<int>(distanceTravelled / distanceTravelledPerStep) % numberOfSteppingSprites + 1;
     }
 
-    const ls::Vec2F sprite(m_sprites.x + textureOffset.x + steppingSpriteVariant * GameConstants::tileFullSpriteSize, m_sprites.y + textureOffset.y + direction * GameConstants::tileFullSpriteSize);
-    const ls::Vec2F size(GameConstants::tileSize, GameConstants::tileSize);
+    const ls::Vec2F sprite(
+        static_cast<float>(m_sprites.x + textureOffset.x + steppingSpriteVariant * GameConstants::tileFullSpriteSize), 
+        static_cast<float>(m_sprites.y + textureOffset.y + direction * GameConstants::tileFullSpriteSize)
+    );
+    const ls::Vec2F size(static_cast<float>(GameConstants::tileSize), static_cast<float>(GameConstants::tileSize));
     ls::Vec2F pos = m_owner->model().position() + offsetToOrigin;
     pos.x = std::floor(pos.x);
     pos.y = std::floor(pos.y);
