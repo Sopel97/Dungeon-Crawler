@@ -121,7 +121,7 @@ void TileDescriptionRenderer::updateLines()
             spaceBetweenLines = m_spaceBetweenLines;
         }
 
-        m_contentSize = ls::Vec2I(maxWidth + 2 * m_padding, height + 2 * m_padding);
+        m_contentSize = ls::Vec2I(static_cast<int>(maxWidth) + 2 * m_padding, static_cast<int>(height) + 2 * m_padding);
 
         float posY = m_padding;
         for (auto& line : m_lines)
@@ -133,7 +133,7 @@ void TileDescriptionRenderer::updateLines()
                 std::floor(rect.top)
             );
             line.setPosition(
-                std::floor(m_contentSize.x / 2), 
+                std::floor(m_contentSize.x / 2.0f), 
                 std::floor(posY)
             );
 

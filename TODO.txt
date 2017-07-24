@@ -1,4 +1,7 @@
-IMPOERTANT:
+IMPORTANT:
+- replace completely current usage of sf::Texture with Spritesheet
+-- drawing functions receive 'unit length' that says how large is one unit in world coords (for tiles it will be 32)
+
 -- eventually encapsulate compontents in Tile, Entity, Projectile o they are not visible from outside
 
 - think about ugly GameConstants namespace, particularly the tile sprite size constant
@@ -11,6 +14,8 @@ IMPOERTANT:
 - remove out of bounds tile from tile column?
 
 - restructure TileTransferMediator, make it cleaner
+
+- rethink ResourceManager so it can easly accept many parameters in load methods. They can't be deduced with current code so they are passed explicitly.
 
 - make using a tile return something, for example that the item should be transformed to be something else (try insert it to inventory, leave on the ground), or just used, and more requests that tile can't do on it's own and are somewhat generic and common
 

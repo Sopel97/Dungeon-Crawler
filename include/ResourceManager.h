@@ -44,8 +44,10 @@ public:
     template <class T>
     ResourceHandle<T> get(const std::string& name);
 
-    template <class T>
-    ResourceHandle<T> load(const std::string& path, const std::string& name); //this name has bigger priority than name given by resource loader
+    template <class T, class... Args>
+    ResourceHandle<T> load(Args&&... args, const char* name); //this name has bigger priority than name given by resource loader
+    template <class T, class... Args>
+    ResourceHandle<T> load(Args&&... args, const std::string& name); //this name has bigger priority than name given by resource loader
     template <class T>
     ResourceHandle<T> load(const std::string& path);
 
@@ -137,12 +139,18 @@ ResourceHandle<T> ResourceManager::get(const std::string& name)
     else throw std::runtime_error(std::string("No resource found with name ") + name);
 }
 
-template <class T>
-ResourceHandle<T> ResourceManager::load(const std::string& path, const std::string& name)
+template <class T, class... Args>
+ResourceHandle<T> ResourceManager::load(Args&&... args, const char* name)
 {
-    std::pair<std::string, std::unique_ptr<T>> resource = ResourceLoader<T>::load(path);
+    return load<T, Args...>(std::forward<Args>(args)..., std::string(name));
+}
+
+template <class T, class... Args>
+ResourceHandle<T> ResourceManager::load(Args&&... args, const std::string& name)
+{
+    std::pair<std::string, std::unique_ptr<T>> resource = ResourceLoader<T>::load(std::forward<Args>(args)...);
     T* ptr = resource.second.get();
-    if(ptr == nullptr) throw std::runtime_error(std::string("Could not load resource from path ") + path);
+    if(ptr == nullptr) throw std::runtime_error(std::string("Could not load resource with name ") + name);
     SpecificResources<T>::add(name, std::move(resource.second));
     return ResourceHandle<T>(ptr);
 }

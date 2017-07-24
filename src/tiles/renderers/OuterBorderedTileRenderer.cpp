@@ -53,7 +53,7 @@ void OuterBorderedTileRenderer::loadFromConfiguration(ConfigurationNode& config)
 void OuterBorderedTileRenderer::draw(SpriteBatch& spriteBatch, const TileLocation& location) const
 {
     const ls::Vec2F sprite(m_currentAnimatedSprite->now());
-    const ls::Vec2F size(GameConstants::tileSize, GameConstants::tileSize);
+    const ls::Vec2F size(static_cast<float>(GameConstants::tileSize), static_cast<float>(GameConstants::tileSize));
     const ls::Vec2F pos(location.x * size.x, location.y * size.y);
 
     spriteBatch.emplaceRectangle(&(texture()), pos, sprite, size);
@@ -109,7 +109,7 @@ void OuterBorderedTileRenderer::drawOutside(SpriteBatch& spriteBatch, const Tile
     if(sideBorderSpriteIndex != -1)
     {
         const ls::Vec2F sprite(sideBorderSpritePosition);
-        const ls::Vec2F size(GameConstants::tileSize, GameConstants::tileSize);
+        const ls::Vec2F size(static_cast<float>(GameConstants::tileSize), static_cast<float>(GameConstants::tileSize));
         const ls::Vec2F pos(x * size.x, y * size.y);
 
         spriteBatch.emplaceRectangle(&(texture()), pos, sprite, size);
@@ -128,7 +128,7 @@ void OuterBorderedTileRenderer::drawOutside(SpriteBatch& spriteBatch, const Tile
     if(cornerBorderSpriteIndex != -1)
     {
         const ls::Vec2F sprite(cornerBorderSpritePosition);
-        const ls::Vec2F size(GameConstants::tileSize, GameConstants::tileSize);
+        const ls::Vec2F size(static_cast<float>(GameConstants::tileSize), static_cast<float>(GameConstants::tileSize));
         const ls::Vec2F pos(x * size.x, y * size.y);
 
         spriteBatch.emplaceRectangle(&(texture()), pos, sprite, size);

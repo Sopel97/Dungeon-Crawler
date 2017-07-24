@@ -64,7 +64,7 @@ void PlainTileRenderer::drawMeta(SpriteBatch& spriteBatch, const TileLocation& l
 void PlainTileRenderer::draw(SpriteBatch& spriteBatch, const TileLocation& location, const ls::Vec2I& textureOffset) const
 {
     const ls::Vec2F sprite(m_currentAnimatedSprite->now());
-    const ls::Vec2F size(GameConstants::tileSize, GameConstants::tileSize);
+    const ls::Vec2F size(static_cast<float>(GameConstants::tileSize), static_cast<float>(GameConstants::tileSize));
     const ls::Vec2F pos(location.x * size.x, location.y * size.y);
 
     spriteBatch.emplaceRectangle(&(texture()), pos, sprite + textureOffset, size);
@@ -73,8 +73,8 @@ void PlainTileRenderer::draw(sf::RenderTarget& renderTarget, const sf::RenderSta
 {
     const ls::Vec2I sprite = m_currentAnimatedSprite->now();
     const ls::Vec2I slotCenter = slot.center();
-    const float x = slotCenter.x - GameConstants::tileSize / 2;
-    const float y = slotCenter.y - GameConstants::tileSize / 2;
+    const float x = slotCenter.x - GameConstants::tileSize / 2.0f;
+    const float y = slotCenter.y - GameConstants::tileSize / 2.0f;
     sf::Sprite spr;
     spr.setPosition(sf::Vector2f(x, y));
     spr.setTexture(texture());

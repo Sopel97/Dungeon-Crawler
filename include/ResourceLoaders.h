@@ -21,6 +21,8 @@
 
 #include "Logger.h"
 
+#include "sprite/Spritesheet.h"
+
 #include "ComponentFactory.h"
 
 #include <SFML/Graphics.hpp>
@@ -42,6 +44,13 @@ class ResourceLoader<sf::Texture>
 {
 public:
     static std::pair<std::string, std::unique_ptr<sf::Texture>> load(const std::string& path); //should return nullptr when resource was not loaded
+};
+
+template <>
+class ResourceLoader<Spritesheet>
+{
+public:
+    static std::pair<std::string, std::unique_ptr<Spritesheet>> load(const std::string& path, int gridSize, int padding, bool repeated); //should return nullptr when resource was not loaded
 };
 
 #define REGISTER_TILE_MODEL_TYPE(TYPE) \

@@ -12,6 +12,13 @@ std::pair<std::string, std::unique_ptr<sf::Texture>> ResourceLoader<sf::Texture>
     return std::make_pair(path, std::move(texture));
 }
 
+std::pair<std::string, std::unique_ptr<Spritesheet>> ResourceLoader<Spritesheet>::load(const std::string& path, int gridSize, int padding, bool repeated)
+{
+    std::unique_ptr<Spritesheet> spritesheet = std::make_unique<Spritesheet>(path, gridSize, padding);
+    spritesheet->setRepeated(repeated);
+    return std::make_pair(path, std::move(spritesheet));
+}
+
 std::pair<std::string, std::unique_ptr<TilePrefab>> ResourceLoader<TilePrefab>::load(const std::string& path)
 {
     Configuration config = Configuration(path);

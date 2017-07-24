@@ -107,7 +107,7 @@ void Root::loadAssets()
     loadTiles();
     loadEntities();
 
-    ResourceManager::instance().load<sf::Font>("assets\\fonts\\standard_font2.ttf", "Font");
+    ResourceManager::instance().load<sf::Font, std::string>("assets\\fonts\\standard_font2.ttf", "Font");
 }
 void Root::loadTextures()
 {
@@ -119,7 +119,7 @@ void Root::loadTextures()
         const std::string path = textureList[i]["path"].get<std::string>();
         const std::string name = textureList[i]["name"].get<std::string>();
         const bool isRepeated = textureList[i]["repeated"].getDefault<bool>(false);
-        if (ResourceHandle<sf::Texture> texture = ResourceManager::instance().load<sf::Texture>(std::string("assets/gfx/") + path, name))
+        if (ResourceHandle<sf::Texture> texture = ResourceManager::instance().load<sf::Texture, std::string>(std::string("assets/gfx/") + path, name))
         {
             texture->setRepeated(isRepeated);
         }
