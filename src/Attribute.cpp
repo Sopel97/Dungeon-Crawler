@@ -19,6 +19,15 @@ std::string AttributeIdHelper::enumToString(AttributeId id)
     return m_enumToString[static_cast<int>(id)];
 }
 
+bool Attribute::operator==(const Attribute& other) const
+{
+    return id == other.id && value == other.value;
+}
+bool Attribute::operator!=(const Attribute& other) const
+{
+    return !operator==(other);
+}
+
 std::string Attribute::formatToString() const
 {
     const auto& traits = AttributeHelper::traits(id);

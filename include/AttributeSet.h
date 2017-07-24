@@ -19,6 +19,9 @@ public:
     AttributeSet& operator=(const AttributeSet&) = default;
     AttributeSet& operator=(AttributeSet&&) = default;
 
+    bool operator==(const AttributeSet& rhs) const;
+    bool operator!=(const AttributeSet& rhs) const;
+
     AttributeSet& operator+=(const AttributeSet& rhs);
     AttributeSet& operator-=(const AttributeSet& rhs);
     AttributeSet operator+(const AttributeSet& rhs) const;

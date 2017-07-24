@@ -64,7 +64,9 @@ void AmmoTileModel::loadFromConfiguration(ConfigurationNode& config)
 
 bool AmmoTileModel::equals(const TileModel& other) const
 {
-    // TODO: compare better
+    const AmmoTileModel& otherModel = static_cast<const AmmoTileModel&>(other);
+
+    return m_attributes == otherModel.m_attributes;
 
     return true;
 }

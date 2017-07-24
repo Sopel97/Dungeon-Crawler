@@ -53,6 +53,9 @@ struct Attribute
     AttributeId id;
     ValueType value;
 
+    bool operator==(const Attribute& other) const;
+    bool operator!=(const Attribute& other) const;
+
     std::string formatToString() const;
     sf::Color color() const;
 };

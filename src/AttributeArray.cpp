@@ -44,6 +44,15 @@ AttributeArray::AttributeArray(const AttributeArray& other, const std::vector<At
     }
 }
 
+bool AttributeArray::operator==(const AttributeArray& rhs) const
+{
+    return std::equal(m_values.begin(), m_values.end(), rhs.m_values.begin());
+}
+bool AttributeArray::operator!=(const AttributeArray& rhs) const
+{
+    return !operator==(rhs);
+}
+
 AttributeArray& AttributeArray::operator+=(const AttributeArray& rhs)
 {
     for (int i = 0; i < numAttributes; ++i)

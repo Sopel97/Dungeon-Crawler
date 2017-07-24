@@ -24,6 +24,9 @@ public:
     AttributeArray& operator=(const AttributeArray&) = default;
     AttributeArray& operator=(AttributeArray&&) = default;
 
+    bool operator==(const AttributeArray& rhs) const;
+    bool operator!=(const AttributeArray& rhs) const;
+
     AttributeArray& operator+=(const AttributeArray& rhs);
     AttributeArray& operator-=(const AttributeArray& rhs);
     AttributeArray operator+(const AttributeArray& rhs) const;

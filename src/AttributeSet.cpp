@@ -2,6 +2,14 @@
 
 #include <algorithm>
 
+bool AttributeSet::operator==(const AttributeSet& rhs) const
+{
+    return std::equal(m_attributes.begin(), m_attributes.end(), rhs.m_attributes.begin(), rhs.m_attributes.end());
+}
+bool AttributeSet::operator!=(const AttributeSet& rhs) const
+{
+    return !operator==(rhs);
+}
 AttributeSet& AttributeSet::operator+=(const AttributeSet& rhs)
 {
     auto lhsCurrent = begin();

@@ -32,7 +32,7 @@ tile = {
             exponent = 1.0,
             probability = 1.0,
             min = 3,
-            max = 3
+            max = 5
         }
     },
 

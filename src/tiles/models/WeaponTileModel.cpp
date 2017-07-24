@@ -80,7 +80,9 @@ void WeaponTileModel::loadFromConfiguration(ConfigurationNode& config)
 
 bool WeaponTileModel::equals(const TileModel& other) const
 {
-    // TODO: compare better
+    const WeaponTileModel& otherModel = static_cast<const WeaponTileModel&>(other);
+
+    return m_attributes == otherModel.m_attributes;
 
     return true;
 }

@@ -56,7 +56,9 @@ void EquipmentPieceModel::loadFromConfiguration(ConfigurationNode& config)
 
 bool EquipmentPieceModel::equals(const TileModel& other) const
 {
-    // TODO: compare better
+    const EquipmentPieceModel& otherModel = static_cast<const EquipmentPieceModel&>(other);
+
+    return m_attributes == otherModel.m_attributes;
 
     return true;
 }
