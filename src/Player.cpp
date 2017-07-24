@@ -94,7 +94,7 @@ void Player::attack(World& world, const ls::Vec2F& pos)
     TileStack& weapon = this->weapon();
     if (weapon.isEmpty()) return;
     
-    auto attackResult = weapon.tile().controller().attack(world, *this, pos);
+    auto attackResult = weapon.tile().model().attack(world, *this, pos);
 
     const int ammoSlot = m_equipmentInventory.slotId(PlayerEquipmentInventory::SlotType::Ammo);
     const int weaponSlot = m_equipmentInventory.slotId(PlayerEquipmentInventory::SlotType::PrimaryWeapon);

@@ -7,7 +7,6 @@
 #include "tiles/TileStack.h"
 #include "tiles/renderers/TileRenderer.h"
 #include "tiles/models/TileModel.h"
-#include "tiles/controllers/TileController.h"
 
 #include "TileLocation.h"
 
@@ -118,12 +117,12 @@ ls::Vec2F World::tileCenterToWorld(const ls::Vec2I& tilePosition) const
 void World::useTile(const ls::Vec2I& tilePosition)
 {
     TileColumn& tileColumn = m_mapLayer->at(tilePosition.x, tilePosition.y);
-    tileColumn.top().tile().controller().use(m_root.game().player(), TileLocation(*m_mapLayer, tilePosition.x, tilePosition.y, tileColumn.topZ()));
+    tileColumn.top().tile().model().use(m_root.game().player(), TileLocation(*m_mapLayer, tilePosition.x, tilePosition.y, tileColumn.topZ()));
 }
 void World::lookTile(const ls::Vec2I& tilePosition)
 {
     TileColumn& tileColumn = m_mapLayer->at(tilePosition.x, tilePosition.y);
-    tileColumn.top().tile().controller().look(m_root.game().player(), TileLocation(*m_mapLayer, tilePosition.x, tilePosition.y, tileColumn.topZ()));
+    tileColumn.top().tile().model().look(m_root.game().player(), TileLocation(*m_mapLayer, tilePosition.x, tilePosition.y, tileColumn.topZ()));
 }
 
 void World::update(float dt)

@@ -4,6 +4,8 @@
 
 #include "tiles/TileInformation.h"
 
+#include "Player.h"
+
 using namespace ls;
 
 REGISTER_TILE_MODEL_TYPE(ContainerTileModel)
@@ -113,6 +115,16 @@ const Inventory* ContainerTileModel::inventory() const
 float ContainerTileModel::drag() const
 {
     return  m_commonData->drag;
+}
+
+void ContainerTileModel::use(Player& player, const TileLocation& location)
+{
+    player.tryInteractWithExternalInventory(owner(), *(m_owner->model().inventory()), location);
+}
+
+void ContainerTileModel::use(Player& player, const InventorySlotView& slot)
+{
+    player.tryInteractWithInternalInventory(owner(), *(m_owner->model().inventory()), slot);
 }
 
 std::unique_ptr<TileModel> ContainerTileModel::clone(Tile& owner) const

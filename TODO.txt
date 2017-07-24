@@ -1,5 +1,4 @@
 IMPOERTANT:
-- merge controllers and models because they are hardly separable (will also allow better encapsulation)
 -- eventually encapsulate compontents in Tile, Entity, Projectile o they are not visible from outside
 
 - think about ugly GameConstants namespace, particularly the tile sprite size constant

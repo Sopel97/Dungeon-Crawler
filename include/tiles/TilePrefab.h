@@ -24,8 +24,7 @@ class TilePrefab
 public:
     TilePrefab(
         const ComponentFactory<Tile, TileModel>& modelFac, 
-        const ComponentFactory<Tile, TileRenderer>& rendererFac, 
-        const ComponentFactory<Tile, TileController>& controllerFac);
+        const ComponentFactory<Tile, TileRenderer>& rendererFac);
     ~TilePrefab();
 
     void loadFromConfiguration(ConfigurationNode& config);
@@ -36,7 +35,6 @@ protected:
 
     const ComponentFactory<Tile, TileModel>* m_modelFactory;
     const ComponentFactory<Tile, TileRenderer>* m_rendererFactory;
-    const ComponentFactory<Tile, TileController>* m_controllerFactory;
 
     static int m_lastId;
 };

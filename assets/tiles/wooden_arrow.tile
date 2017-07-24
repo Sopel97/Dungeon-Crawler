@@ -3,9 +3,8 @@ tile = {
     name = "Wooden Arrow",
     displayedName = "Wooden Arrow",
     
-    model = "EquipmentPieceModel",
+    model = "AmmoTileModel",
     renderer = "PlainTileRenderer",
-    controller = "AmmoTileController",
 
     texture = "Spritesheet",
     

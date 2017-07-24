@@ -1,11 +1,8 @@
-#ifndef CONTAINERTILEMODEL_H
-#define CONTAINERTILEMODEL_H
+#pragma once
 
 #include "TileModel.h"
 
 #include "ResourceLoaders.h"
-
-#include "ContainerInventory.h"
 
 #include "Configuration.h"
 
@@ -13,34 +10,42 @@
 
 #include "../../ComponentCommonData.h"
 
+#include "AttributeSet.h"
+#include "AttributeRandomizer.h"
+
 #include <memory>
 
 class Tile;
 class TileLocation;
-class TileInformation;
 
-class ContainerTileModel : public TileModel
+class WeaponTileModel : public TileModel
 {
 public:
     struct CommonData : public ComponentCommonData
     {
         std::string displayedName;
-        bool hasCollider;
-        ls::Rectangle2F collider;
+        std::set<SlotContentRequirement> validSlots;
+        std::set<SlotContentRequirement> correctSlots;
+        AttributeRandomizer attributeRandomizer;
+        int maxQuantity;
         float drag;
         int maxThrowDistance;
-        bool isThrowableThrough;
-        bool isMovableTo;
         bool canBeStored;
+        bool requiresAmmo;
+        int ammoPerAttack;
+        float chanceToBreak;
+        std::vector<TileAmmoGroupType> allowedAmmoGroups;
+        ResourceHandle<ProjectilePrefab> projectile;
     };
 
-    ContainerTileModel(Tile& owner, CommonData& commonData);
-    ContainerTileModel(const ContainerTileModel& other, Tile& owner);
-    ~ContainerTileModel() override;
+    WeaponTileModel(Tile& owner, CommonData& commonData);
+    WeaponTileModel(const WeaponTileModel& other, Tile& owner);
+    ~WeaponTileModel() override;
 
     void loadFromConfiguration(ConfigurationNode& config) override;
 
-    std::optional<TileCollider> collider(const ls::Vec2I& pos) override;
+    bool equals(const TileModel& other) const override;
+
     bool isMovableFrom() const override;
     bool isThrowableThrough() const override;
     bool isMovableTo() const override;
@@ -49,21 +54,17 @@ public:
     int maxQuantity() const override;
     bool meetsRequirements(SlotContentRequirement req) const override;
     const std::string& displayedName() const override;
-    TileInformation additionalInformation() const override;
-
-    Inventory* inventory() override;
-    const Inventory* inventory() const override;
+    const AttributeSet& attributes() const override;
 
     float drag() const override;
 
-    void use(Player& player, const TileLocation& location) override;
-    void use(Player& player, const InventorySlotView& slot) override;
+    AttackResult attack(World& world, Player& player, const ls::Vec2F& hintedPosition) override;
+
+    void onTileInstantiated() override;
 
     std::unique_ptr<TileModel> clone(Tile& owner) const override;
 protected:
     CommonData* const m_commonData;
 
-    ContainerInventory m_inventory;
+    AttributeSet m_attributes;
 };
-
-#endif // CONTAINERTILEMODEL_H

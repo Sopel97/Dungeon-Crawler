@@ -8,7 +8,7 @@
 #include "TileTransferMediator.h"
 
 #include "tiles/Tile.h"
-#include "tiles/controllers/TileController.h"
+#include "tiles/models/TileModel.h"
 
 #include "Logger.h"
 
@@ -83,7 +83,7 @@ SfmlEventHandler::EventResult InventoryView::onMouseButtonPressed(sf::Event::Mou
             {
                 if (!slot->content().isEmpty())
                 {
-                    slot->content().tile().controller().look(m_inventorySystem->player(), *slot);
+                    slot->content().tile().model().look(m_inventorySystem->player(), *slot);
                 }
             }
             else
@@ -98,7 +98,7 @@ SfmlEventHandler::EventResult InventoryView::onMouseButtonPressed(sf::Event::Mou
             if (!slot->content().isEmpty())
             {
                 Tile& tile = slot->content().tile();
-                tile.controller().use(m_inventorySystem->player(), *slot);
+                tile.model().use(m_inventorySystem->player(), *slot);
             }
         }
     }

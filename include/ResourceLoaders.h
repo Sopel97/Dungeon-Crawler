@@ -6,7 +6,6 @@
 #include "tiles/TilePrefab.h"
 #include "tiles/models/TileModel.h"
 #include "tiles/renderers/TileRenderer.h"
-#include "tiles/controllers/TileController.h"
 
 #include "entities/Entity.h"
 #include "entities/EntityPrefab.h"
@@ -57,12 +56,6 @@ public:
         const ResourceLoader<TilePrefab>::TileRendererTypeRegistrar<TYPE> TYPE ## _renderer_var (#TYPE); \
     }
 
-#define REGISTER_TILE_CONTROLLER_TYPE(TYPE)  \
-    namespace ___TileControllerTypeRegistering \
-    { \
-        const ResourceLoader<TilePrefab>::TileControllerTypeRegistrar<TYPE> TYPE ## _controller_var (#TYPE); \
-    }
-
 template <>
 class ResourceLoader<TilePrefab>
 {
@@ -92,24 +85,11 @@ public:
         }
     };
 
-    template<class T>
-    struct TileControllerTypeRegistrar
-    {
-        TileControllerTypeRegistrar(const std::string& name)
-        {
-            Logger::instance().logLazy(Logger::Priority::Info, [&]()->std::string {return 
-                "Registered tile controller type: " + name; 
-            });
-            ResourceLoader<TilePrefab>::tileControllers().insert(std::make_pair(name, std::make_unique<ComponentFactory<Tile, TileController, T>>()));
-        }
-    };
-
     static std::pair<std::string, std::unique_ptr<TilePrefab>> load(const std::string& path); //should return nullptr when resource was not loaded
 protected:
 
     using TileModelFactory = ComponentFactory<Tile, TileModel>;
     using TileRendererFactory = ComponentFactory<Tile, TileRenderer>;
-    using TileControllerFactory = ComponentFactory<Tile, TileController>;
 
     static std::map<std::string, std::unique_ptr<TileModelFactory>>& tileModels() //to ensure that they are created during registation process. (When they are static members they get defined too late)
     {
@@ -120,11 +100,6 @@ protected:
     {
         static std::map<std::string, std::unique_ptr<TileRendererFactory>> _tileRenderers;
         return _tileRenderers;
-    }
-    static std::map<std::string, std::unique_ptr<TileControllerFactory>>& tileControllers()
-    {
-        static std::map<std::string, std::unique_ptr<TileControllerFactory>> _tileControllers;
-        return _tileControllers;
     }
 
 };

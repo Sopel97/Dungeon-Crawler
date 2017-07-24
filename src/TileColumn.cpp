@@ -5,7 +5,6 @@
 
 #include "tiles/models/TileModel.h"
 #include "tiles/renderers/TileRenderer.h"
-#include "tiles/controllers/TileController.h"
 
 using namespace ls;
 

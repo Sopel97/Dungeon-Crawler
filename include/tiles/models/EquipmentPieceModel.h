@@ -27,7 +27,6 @@ public:
         std::set<SlotContentRequirement> validSlots;
         std::set<SlotContentRequirement> correctSlots;
         AttributeRandomizer attributeRandomizer;
-        int maxQuantity;
         float drag;
         int maxThrowDistance;
         bool canBeStored;

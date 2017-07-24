@@ -5,7 +5,6 @@ tile = {
     
     model = "PlainTileModel",
     renderer = "OuterBorderedTileRenderer",
-    controller = "PlainTileController",
 
     texture = "Spritesheet",
     

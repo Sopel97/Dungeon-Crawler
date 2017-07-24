@@ -1,27 +1,31 @@
-#include "tiles/models/EquipmentPieceModel.h"
+#include "tiles/models/AmmoTileModel.h"
 
 #include <algorithm>
 
 #include "SlotContentRequirement.h"
 
-REGISTER_TILE_MODEL_TYPE(EquipmentPieceModel)
+#include "World.h"
 
-EquipmentPieceModel::EquipmentPieceModel(Tile& owner, CommonData& commonData) :
+#include "Player.h"
+
+REGISTER_TILE_MODEL_TYPE(AmmoTileModel)
+
+AmmoTileModel::AmmoTileModel(Tile& owner, CommonData& commonData) :
     TileModel(owner),
     m_commonData(&commonData)
 {
 }
-EquipmentPieceModel::EquipmentPieceModel(const EquipmentPieceModel& other, Tile& owner) :
+AmmoTileModel::AmmoTileModel(const AmmoTileModel& other, Tile& owner) :
     TileModel(other, owner),
     m_commonData(other.m_commonData),
     m_attributes(other.m_attributes)
 {
 }
-EquipmentPieceModel::~EquipmentPieceModel()
+AmmoTileModel::~AmmoTileModel()
 {
 }
 
-void EquipmentPieceModel::loadFromConfiguration(ConfigurationNode& config)
+void AmmoTileModel::loadFromConfiguration(ConfigurationNode& config)
 {
     ConfigurationNode validSlotsConfiguration = config["validSlots"];
     m_commonData->validSlots.insert(SlotContentRequirement::None);
@@ -49,65 +53,77 @@ void EquipmentPieceModel::loadFromConfiguration(ConfigurationNode& config)
     m_commonData->attributeRandomizer.loadFromConfiguration(attributeParams);
 
     m_commonData->displayedName = config["displayedName"].getDefault<std::string>("");
+    m_commonData->maxQuantity = config["maxQuantity"].getDefault<int>(1);
     m_commonData->drag = config["drag"].get<float>();
     m_commonData->maxThrowDistance = config["maxThrowDistance"].getDefault<int>(0);
     m_commonData->canBeStored = config["canBeStored"].getDefault<bool>(false);
+
+    m_commonData->ammoGroup = config["ammoGroup"].get<std::string>();
+    m_commonData->projectile = ResourceManager::instance().get<ProjectilePrefab>(config["projectile"].get<std::string>());
 }
 
-bool EquipmentPieceModel::equals(const TileModel& other) const
+bool AmmoTileModel::equals(const TileModel& other) const
 {
     // TODO: compare better
 
     return true;
 }
-bool EquipmentPieceModel::isMovableFrom() const
+bool AmmoTileModel::isMovableFrom() const
 {
     return true;
 }
-bool EquipmentPieceModel::isThrowableThrough() const
+bool AmmoTileModel::isThrowableThrough() const
 {
     return true;
 }
-bool EquipmentPieceModel::isMovableTo() const
+bool AmmoTileModel::isMovableTo() const
 {
     return true;
 }
-int EquipmentPieceModel::maxThrowDistance() const
+int AmmoTileModel::maxThrowDistance() const
 {
     return m_commonData->maxThrowDistance;
 }
-bool EquipmentPieceModel::canBeStored() const
+bool AmmoTileModel::canBeStored() const
 {
     return true;
 }
-int EquipmentPieceModel::maxQuantity() const
+int AmmoTileModel::maxQuantity() const
 {
-    return 1;
+    return m_commonData->maxQuantity;
 }
-bool EquipmentPieceModel::meetsRequirements(SlotContentRequirement req) const
+bool AmmoTileModel::meetsRequirements(SlotContentRequirement req) const
 {
     return m_commonData->validSlots.count(req) > 0;
 }
-const std::string& EquipmentPieceModel::displayedName() const
+const std::string& AmmoTileModel::displayedName() const
 {
     return m_commonData->displayedName;
 }
-const AttributeSet& EquipmentPieceModel::attributes() const
+const AttributeSet& AmmoTileModel::attributes() const
 {
     return m_attributes;
 }
 
-float EquipmentPieceModel::drag() const
+float AmmoTileModel::drag() const
 {
     return m_commonData->drag;
 }
+void AmmoTileModel::indirectAttack(World& world, Player& player, const ls::Vec2F& hintedPosition)
+{
+    world.spawnProjectile(m_commonData->projectile.get(), world, player.entity(), hintedPosition);
+}
+TileAmmoGroupType AmmoTileModel::ammoGroup() const
+{
+    return m_commonData->ammoGroup;
+}
 
-void EquipmentPieceModel::onTileInstantiated()
+void AmmoTileModel::onTileInstantiated()
 {
     m_attributes = m_commonData->attributeRandomizer.randomize();
 }
 
-std::unique_ptr<TileModel> EquipmentPieceModel::clone(Tile& owner) const
+std::unique_ptr<TileModel> AmmoTileModel::clone(Tile& owner) const
 {
-    return std::make_unique<EquipmentPieceModel>(*this, owner);
+    return std::make_unique<AmmoTileModel>(*this, owner);
 }

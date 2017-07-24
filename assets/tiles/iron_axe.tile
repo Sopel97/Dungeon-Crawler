@@ -3,9 +3,8 @@ tile = {
     name = "Iron Axe",
     displayedName = "Iron Axe",
     
-    model = "EquipmentPieceModel",
+    model = "WeaponTileModel",
     renderer = "PlainTileRenderer",
-    controller = "WeaponTileController",
 
     texture = "Spritesheet",
     

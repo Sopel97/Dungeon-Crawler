@@ -21,7 +21,6 @@ std::pair<std::string, std::unique_ptr<TilePrefab>> ResourceLoader<TilePrefab>::
 
     ComponentFactory<Tile, TileModel>* modelFac = nullptr;
     ComponentFactory<Tile, TileRenderer>* rendererFac = nullptr;
-    ComponentFactory<Tile, TileController>* controllerFac = nullptr;
 
     std::string modelName = tileConfig["model"].get<std::string>();
     try
@@ -43,26 +42,15 @@ std::pair<std::string, std::unique_ptr<TilePrefab>> ResourceLoader<TilePrefab>::
         throw std::runtime_error("No tile renderer with name " + rendererName);
     }
 
-    std::string controllerName = tileConfig["controller"].get<std::string>();
-    try
-    {
-        controllerFac = tileControllers().at(controllerName).get();
-    }
-    catch (std::out_of_range&)
-    {
-        throw std::runtime_error("No tile controller with name " + controllerName);
-    }
-
     std::unique_ptr<TilePrefab> tile = std::make_unique<TilePrefab>(
         *modelFac,
-        *rendererFac,
-        *controllerFac
+        *rendererFac
     );
 
     tile->loadFromConfiguration(tileConfig);
 
     Logger::instance().logLazy(Logger::Priority::Info, [&]()->std::string {return 
-        "Loaded tile: " + tileName + ";model: " + modelName + ";renderer: " + rendererName + "; controller: " + controllerName; 
+        "Loaded tile: " + tileName + ";model: " + modelName + ";renderer: " + rendererName; 
     });
 
     return std::make_pair(tileName, std::move(tile));

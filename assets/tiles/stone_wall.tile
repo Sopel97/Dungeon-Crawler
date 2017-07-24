@@ -5,7 +5,6 @@ tile = {
     
     model = "PlainTileModel",
     renderer = "InnerBorderedWallTileRenderer",
-    controller = "PlainTileController",
 
     texture = "Spritesheet",
     hasMetaTexture = true,

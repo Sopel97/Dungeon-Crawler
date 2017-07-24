@@ -15,7 +15,6 @@ namespace sf
 class MapLayer;
 class TileModel;
 class TileRenderer;
-class TileController;
 class TileLocation;
 class InventorySlotView;
 class ComponentCommonData;
@@ -27,8 +26,7 @@ public:
     Tile(
         int id,
         const ComponentFactory<Tile, TileModel>& modelFac,
-        const ComponentFactory<Tile, TileRenderer>& rendererFac,
-        const ComponentFactory<Tile, TileController>& controllerFac);
+        const ComponentFactory<Tile, TileRenderer>& rendererFac);
     Tile(); // temporary for creating 'empty' tile, used to avoid checking if tile exists, tile column just returns this
     Tile(const Tile& other);
     Tile(Tile&& other);
@@ -42,8 +40,6 @@ public:
     TileModel& model();
     const TileRenderer& renderer() const;
     TileRenderer& renderer();
-    const TileController& controller() const;
-    TileController& controller();
 
     bool equals(const Tile& other) const;
 
@@ -66,7 +62,6 @@ public:
 protected:
     std::unique_ptr<TileModel> m_model;
     std::unique_ptr<TileRenderer> m_renderer;
-    std::unique_ptr<TileController> m_controller;
     int m_id;
 };
 

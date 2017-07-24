@@ -4,6 +4,10 @@
 
 #include "tiles/TileInformation.h"
 
+#include "Player.h"
+
+#include "TileDescriptionGenerator.h"
+
 using namespace ls;
 
 TileModel::TileModel(Tile& owner) :
@@ -87,6 +91,35 @@ const Inventory* TileModel::inventory() const
 float TileModel::drag() const
 {
     return 1.0f;
+}
+
+void TileModel::use(Player& player, const TileLocation& location)
+{
+
+}
+void TileModel::use(Player& player, const InventorySlotView& location)
+{
+
+}
+void TileModel::look(Player& player, const TileLocation& location)
+{
+    player.showTileDescription(TileDescriptionGenerator::generate(owner()));
+}
+void TileModel::look(Player& player, const InventorySlotView& location)
+{
+    player.showTileDescription(TileDescriptionGenerator::generate(owner()));
+}
+TileModel::AttackResult TileModel::attack(World& world, Player& player, const ls::Vec2F& hintedPosition)
+{
+    return { 0, 0 };
+}
+void TileModel::indirectAttack(World& world, Player& player, const ls::Vec2F& hintedPosition)
+{
+
+}
+TileAmmoGroupType TileModel::ammoGroup() const
+{
+    return TileAmmoGroupType();
 }
 
 std::unique_ptr<TileModel> TileModel::clone(Tile& owner) const
