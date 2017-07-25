@@ -344,7 +344,7 @@ auto World::onKeyPressed(sf::Event::KeyEvent& event, EventContext context)
     {
         const ls::Vec2I mousePos(sf::Mouse::getPosition(m_windowSpaceManager.window()).x, sf::Mouse::getPosition(m_windowSpaceManager.window()).y);
         const ls::Vec2F worldPos = screenToWorld(mousePos);
-        m_entitySystem.spawnEntity(ResourceManager::instance().get<EntityPrefab>("test").get(), worldPos);
+        m_entitySystem.spawnEntity(ResourceManager<EntityPrefab>::instance().get("test").get(), worldPos);
     
         return EventResult().setConsumeEvent().setTakeFocus(false);
     }

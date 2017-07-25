@@ -10,7 +10,7 @@ TileDescriptionRenderer::TileDescriptionRenderer(WindowSpaceManager& wsm) :
     m_description(std::nullopt),
     m_wsm(&wsm)
 {
-    m_font = ResourceManager::instance().get<sf::Font>("Font");
+    m_font = ResourceManager<sf::Font>::instance().get("Font");
 }
 
 void TileDescriptionRenderer::setDescription(const TileDescription& newDescription)

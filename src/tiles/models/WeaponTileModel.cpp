@@ -74,7 +74,7 @@ void WeaponTileModel::loadFromConfiguration(ConfigurationNode& config)
     else
     {
         m_commonData->chanceToBreak = config["chanceToBreak"].getDefault<float>(0.0f);
-        m_commonData->projectile = ResourceManager::instance().get<ProjectilePrefab>(config["projectile"].get<std::string>());
+        m_commonData->projectile = ResourceManager<ProjectilePrefab>::instance().get(config["projectile"].get<std::string>());
     }
 }
 

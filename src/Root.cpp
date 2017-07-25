@@ -27,7 +27,7 @@ Root::Root() :
 {
     loadAssets();
 
-    m_defaultFont = ResourceManager::instance().get<sf::Font>("Font");
+    m_defaultFont = ResourceManager<sf::Font>::instance().get("Font");
 }
 
 Root& Root::instance()
@@ -107,7 +107,7 @@ void Root::loadAssets()
     loadTiles();
     loadEntities();
 
-    ResourceManager::instance().load<sf::Font, std::string>("assets\\fonts\\standard_font2.ttf", "Font");
+    ResourceManager<sf::Font>::instance().loadWithName("Font", "assets\\fonts\\standard_font2.ttf");
 }
 void Root::loadTextures()
 {
@@ -122,28 +122,28 @@ void Root::loadTextures()
         const int gridSize = textureList[i]["gridSize"].getDefault<int>(1);
         const int padding = textureList[i]["padding"].getDefault<int>(0);
         const bool isRepeated = textureList[i]["repeated"].getDefault<bool>(false);
-        ResourceHandle<Spritesheet> texture = ResourceManager::instance().load<Spritesheet, const std::string&, const int&, const int&, const bool&>(std::string("assets/gfx/") + path, gridSize, padding, isRepeated, name);
+        ResourceHandle<Spritesheet> texture = ResourceManager<Spritesheet>::instance().loadWithName(name, std::string("assets/gfx/") + path, gridSize, padding, isRepeated);
     }
 }
 void Root::loadProjectiles()
 {
     for (const auto& projectilePath : scanForFiles("assets\\projectiles\\", "*.proj"))
     {
-        ResourceManager::instance().load<ProjectilePrefab>(projectilePath);
+        ResourceManager<ProjectilePrefab>::instance().load(projectilePath);
     }
 }
 void Root::loadTiles()
 {
     for (const auto& tilePath : scanForFiles("assets\\tiles\\", "*.tile"))
     {
-        ResourceManager::instance().load<TilePrefab>(tilePath);
+        ResourceManager<TilePrefab>::instance().load(tilePath);
     }
 }
 void Root::loadEntities()
 {
     for (const auto& entityPath : scanForFiles("assets\\entities\\", "*.ent"))
     {
-        ResourceManager::instance().load<EntityPrefab>(entityPath);
+        ResourceManager<EntityPrefab>::instance().load(entityPath);
     }
 }
 

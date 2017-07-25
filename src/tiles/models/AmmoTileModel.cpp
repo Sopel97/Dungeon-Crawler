@@ -59,7 +59,7 @@ void AmmoTileModel::loadFromConfiguration(ConfigurationNode& config)
     m_commonData->canBeStored = config["canBeStored"].getDefault<bool>(false);
 
     m_commonData->ammoGroup = config["ammoGroup"].get<std::string>();
-    m_commonData->projectile = ResourceManager::instance().get<ProjectilePrefab>(config["projectile"].get<std::string>());
+    m_commonData->projectile = ResourceManager<ProjectilePrefab>::instance().get(config["projectile"].get<std::string>());
 }
 
 bool AmmoTileModel::equals(const TileModel& other) const

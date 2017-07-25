@@ -19,7 +19,7 @@ REGISTER_ENTITY_RENDERER_TYPE(PlayerRenderer)
 PlayerRenderer::PlayerRenderer(Entity& owner) :
     EntityRenderer(owner),
     m_playerOwner(nullptr),
-    m_spritesheet(ResourceManager::instance().get<Spritesheet>("Spritesheet")),
+    m_spritesheet(ResourceManager<Spritesheet>::instance().get("Spritesheet")),
     m_sprites(5, 2)
 {
 
@@ -28,7 +28,7 @@ PlayerRenderer::PlayerRenderer(Entity& owner) :
 PlayerRenderer::PlayerRenderer(Player& player, Entity& owner) :
     EntityRenderer(owner),
     m_playerOwner(&player),
-    m_spritesheet(ResourceManager::instance().get<Spritesheet>("Spritesheet")),
+    m_spritesheet(ResourceManager<Spritesheet>::instance().get("Spritesheet")),
     m_sprites(5, 2)
 {
 

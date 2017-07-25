@@ -44,7 +44,7 @@ void InternalWindowHeaderButton::setEnabled(bool enable)
 
 void InternalWindowHeaderButton::draw(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates, const ls::Vec2I& pos)
 {
-    ResourceHandle<Spritesheet> nonRepeatingSprites = ResourceManager::instance().get<Spritesheet>("UiNonRepeating");
+    ResourceHandle<Spritesheet> nonRepeatingSprites = ResourceManager<Spritesheet>::instance().get("UiNonRepeating");
 
     sf::Sprite button;
     button.setPosition(static_cast<float>(pos.x), static_cast<float>(pos.y));

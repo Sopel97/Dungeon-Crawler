@@ -38,8 +38,8 @@ InventorySlotView::InventorySlotView(Inventory* inventory, size_t slotId, const 
     m_slotId(slotId),
     m_position(position)
 {
-    if (!m_spritesheet) m_spritesheet = ResourceManager::instance().get<Spritesheet>("UiNonRepeating");
-    if (!m_font) m_font = ResourceManager::instance().get<sf::Font>("Font");
+    if (!m_spritesheet) m_spritesheet = ResourceManager<Spritesheet>::instance().get("UiNonRepeating");
+    if (!m_font) m_font = ResourceManager<sf::Font>::instance().get("Font");
 }
 TileStack& InventorySlotView::content()
 {

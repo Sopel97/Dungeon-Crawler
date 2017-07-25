@@ -39,7 +39,7 @@ void PlainEntityModel::loadFromConfiguration(ConfigurationNode& config)
 {
     m_health = m_commonData->maxHealth = config["maxHealth"].get<int>();
     m_commonData->maxSpeed = config["maxSpeed"].get<float>();
-    m_commonData->corpseTile = ResourceManager::instance().get<TilePrefab>(config["corpseTile"].get<std::string>());
+    m_commonData->corpseTile = ResourceManager<TilePrefab>::instance().get(config["corpseTile"].get<std::string>());
     m_commonData->lootRandomizer.loadFromConfiguration(config["lootRandomizationGuidelines"]);
     m_commonData->group = AggroGroupIdHelper::stringToEnum(config["group"].get<std::string>());
 

@@ -42,7 +42,7 @@ PlainTileRenderer::~PlainTileRenderer()
 void PlainTileRenderer::loadFromConfiguration(ConfigurationNode& config)
 {
     std::string textureName = config["texture"].get<std::string>();
-    m_commonData->spritesheet = ResourceManager::instance().get<Spritesheet>(textureName);
+    m_commonData->spritesheet = ResourceManager<Spritesheet>::instance().get(textureName);
     m_commonData->hasMetaTexture = config["hasMetaTexture"].getDefault<bool>(false);
 
     m_commonData->spriteSelector.loadFromConfiguration(config);

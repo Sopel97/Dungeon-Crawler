@@ -388,15 +388,15 @@ void MapGenerator::prepareHelperMaps()
 }
 void MapGenerator::generate(MapLayer& map)
 {
-    ResourceHandle<TilePrefab> floorTile = ResourceManager::instance().get<TilePrefab>("Dirt");
-    ResourceHandle<TilePrefab> floorTile2 = ResourceManager::instance().get<TilePrefab>("Black marble floor");
-    ResourceHandle<TilePrefab> wallTile = ResourceManager::instance().get<TilePrefab>("Stone wall");
-    ResourceHandle<TilePrefab> bagTile = ResourceManager::instance().get<TilePrefab>("Bag");
-    ResourceHandle<TilePrefab> backpackTile = ResourceManager::instance().get<TilePrefab>("Backpack");
-    ResourceHandle<TilePrefab> goldCoinTile = ResourceManager::instance().get<TilePrefab>("Gold Coin");
-    ResourceHandle<TilePrefab> platinumCoinTile = ResourceManager::instance().get<TilePrefab>("Platinum Coin");
-    ResourceHandle<TilePrefab> ironAxeTile = ResourceManager::instance().get<TilePrefab>("Iron Axe");
-    ResourceHandle<TilePrefab> steelHelmetTile = ResourceManager::instance().get<TilePrefab>("Steel Helmet");
+    ResourceHandle<TilePrefab> floorTile = ResourceManager<TilePrefab>::instance().get("Dirt");
+    ResourceHandle<TilePrefab> floorTile2 = ResourceManager<TilePrefab>::instance().get("Black marble floor");
+    ResourceHandle<TilePrefab> wallTile = ResourceManager<TilePrefab>::instance().get("Stone wall");
+    ResourceHandle<TilePrefab> bagTile = ResourceManager<TilePrefab>::instance().get("Bag");
+    ResourceHandle<TilePrefab> backpackTile = ResourceManager<TilePrefab>::instance().get("Backpack");
+    ResourceHandle<TilePrefab> goldCoinTile = ResourceManager<TilePrefab>::instance().get("Gold Coin");
+    ResourceHandle<TilePrefab> platinumCoinTile = ResourceManager<TilePrefab>::instance().get("Platinum Coin");
+    ResourceHandle<TilePrefab> ironAxeTile = ResourceManager<TilePrefab>::instance().get("Iron Axe");
+    ResourceHandle<TilePrefab> steelHelmetTile = ResourceManager<TilePrefab>::instance().get("Steel Helmet");
 
     prepareHelperMaps();
 

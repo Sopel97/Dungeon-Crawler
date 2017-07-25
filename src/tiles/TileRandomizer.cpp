@@ -128,7 +128,7 @@ std::vector<TileRandomizer::TileRandomizationParameters> TileRandomizer::loadFro
                 ConfigurationNode choiceConfig = choicesConfig[i];
                 TileRandomizationChoice choice;
 
-                choice.tilePrefab = ResourceManager::instance().get<TilePrefab>(choiceConfig["tileName"].get<std::string>());
+                choice.tilePrefab = ResourceManager<TilePrefab>::instance().get(choiceConfig["tileName"].get<std::string>());
                 choice.exponent = choiceConfig["exponent"].getDefault<double>(1.0);
                 choice.weight = choiceConfig["weight"].getDefault<double>(1.0);
                 choice.min = choiceConfig["min"].get<int>();
@@ -148,7 +148,7 @@ std::vector<TileRandomizer::TileRandomizationParameters> TileRandomizer::loadFro
             TileRandomizationChoice singleChoice;
             singleChoice.weight = 1.0; // does not matter because there is only one choice
 
-            singleChoice.tilePrefab = ResourceManager::instance().get<TilePrefab>(entry["tileName"].get<std::string>());
+            singleChoice.tilePrefab = ResourceManager<TilePrefab>::instance().get(entry["tileName"].get<std::string>());
             singleChoice.exponent = entry["exponent"].getDefault<double>(1.0);
             singleChoice.min = entry["min"].get<int>();
             singleChoice.max = entry["max"].get<int>();

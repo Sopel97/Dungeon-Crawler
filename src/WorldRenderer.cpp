@@ -85,7 +85,7 @@ WorldRenderer::WorldRenderer(Root& root, World& world) :
     m_prettyStretchShader.loadFromFile("assets/shaders/pretty_stretch.vert", "assets/shaders/pretty_stretch.frag");
     m_prettyStretchShader.setParameter("sourceTextureSize", sf::Vector2f(static_cast<float>(m_intermidiateRenderTarget.getSize().x), static_cast<float>(m_intermidiateRenderTarget.getSize().y)));
 
-    m_lightTexture = ResourceManager::instance().get<Spritesheet>("LightDisc");
+    m_lightTexture = ResourceManager<Spritesheet>::instance().get("LightDisc");
 
     m_lightShader.loadFromFile("assets/shaders/light.vert", "assets/shaders/light.frag");
     m_lightShader.setParameter("lightTextureSize", sf::Vector2f(static_cast<float>(m_lightMap.getSize().x), static_cast<float>(m_lightMap.getSize().y)));

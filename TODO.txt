@@ -11,8 +11,6 @@ IMPORTANT:
 
 - restructure TileTransferMediator, make it cleaner
 
-- rethink ResourceManager so it can easly accept many parameters in load methods. They can't be deduced with current code so they are passed explicitly.
-
 - make using a tile return something, for example that the item should be transformed to be something else (try insert it to inventory, leave on the ground), or just used, and more requests that tile can't do on it's own and are somewhat generic and common
 
 CONSIDER:

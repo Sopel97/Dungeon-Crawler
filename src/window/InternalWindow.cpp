@@ -518,10 +518,10 @@ void InternalWindow::drawSkeleton(sf::RenderTarget& renderTarget, const sf::Rend
 {
     if (isContentOnly()) return;
 
-    ResourceHandle<Spritesheet> backgroundTexture = ResourceManager::instance().get<Spritesheet>("UiBackground");
-    ResourceHandle<Spritesheet> verticalBarsSprites = ResourceManager::instance().get<Spritesheet>("UiVerticalBars");
-    ResourceHandle<Spritesheet> horizontalBarsSprites = ResourceManager::instance().get<Spritesheet>("UiHorizontalBars");
-    ResourceHandle<Spritesheet> nonRepeatingSprites = ResourceManager::instance().get<Spritesheet>("UiNonRepeating");
+    ResourceHandle<Spritesheet> backgroundTexture = ResourceManager<Spritesheet>::instance().get("UiBackground");
+    ResourceHandle<Spritesheet> verticalBarsSprites = ResourceManager<Spritesheet>::instance().get("UiVerticalBars");
+    ResourceHandle<Spritesheet> horizontalBarsSprites = ResourceManager<Spritesheet>::instance().get("UiHorizontalBars");
+    ResourceHandle<Spritesheet> nonRepeatingSprites = ResourceManager<Spritesheet>::instance().get("UiNonRepeating");
 
     const auto windowRect = absoluteWindowRect();
     const auto contentRect = absoluteContentRect();
@@ -645,8 +645,8 @@ void InternalWindow::drawSkeleton(sf::RenderTarget& renderTarget, const sf::Rend
 
 void InternalWindow::drawSkeletonMinimized(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates)
 {
-    ResourceHandle<Spritesheet> horizontalBarsSprites = ResourceManager::instance().get<Spritesheet>("UiHorizontalBars");
-    ResourceHandle<Spritesheet> nonRepeatingSprites = ResourceManager::instance().get<Spritesheet>("UiNonRepeating");
+    ResourceHandle<Spritesheet> horizontalBarsSprites = ResourceManager<Spritesheet>::instance().get("UiHorizontalBars");
+    ResourceHandle<Spritesheet> nonRepeatingSprites = ResourceManager<Spritesheet>::instance().get("UiNonRepeating");
 
     const auto windowRect = absoluteWindowRect();
 

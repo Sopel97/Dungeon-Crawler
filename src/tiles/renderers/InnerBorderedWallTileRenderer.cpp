@@ -41,7 +41,7 @@ InnerBorderedWallTileRenderer::~InnerBorderedWallTileRenderer()
 void InnerBorderedWallTileRenderer::loadFromConfiguration(ConfigurationNode& config)
 {
     std::string textureName = config["texture"].get<std::string>();
-    m_commonData->spritesheet = ResourceManager::instance().get<Spritesheet>(textureName);
+    m_commonData->spritesheet = ResourceManager<Spritesheet>::instance().get(textureName);
     m_commonData->hasMetaTexture = config["hasMetaTexture"].get<bool>();
 
     Vec2I spriteSet{ config["spriteSet"][1].get<int>(), config["spriteSet"][2].get<int>() };
