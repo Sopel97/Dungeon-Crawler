@@ -10,6 +10,8 @@
 
 #include "SpriteBatch.h"
 
+#include "World.h"
+
 #include "sprite/Spritesheet.h"
 
 #include <SFML/Graphics.hpp>
@@ -127,7 +129,7 @@ void InnerBorderedWallTileRenderer::draw(SpriteBatch& spriteBatch, const TileLoc
         if (resultSprite != nullptr)
         {
             const ls::Vec2F sprite = static_cast<ls::Vec2F>(spritesheet().gridCoordsToTexCoords(*resultSprite));
-            const ls::Vec2F size(static_cast<float>(GameConstants::tileSize), static_cast<float>(GameConstants::tileSize));
+            const ls::Vec2F size(World::tileSize, World::tileSize);
             const ls::Vec2F pos(x * size.x, y * size.y);
 
             spriteBatch.emplaceRectangle(&(texture()), pos, sprite + textureOffset, size);
@@ -149,7 +151,7 @@ void InnerBorderedWallTileRenderer::draw(SpriteBatch& spriteBatch, const TileLoc
         if (resultSprite != nullptr)
         {
             const ls::Vec2F sprite = static_cast<ls::Vec2F>(spritesheet().gridCoordsToTexCoords(*resultSprite));
-            const ls::Vec2F size(static_cast<float>(GameConstants::tileSize), static_cast<float>(GameConstants::tileSize));
+            const ls::Vec2F size(World::tileSize, World::tileSize);
             const ls::Vec2F pos((x-1) * size.x, y * size.y);
 
             spriteBatch.emplaceRectangle(&(texture()), pos, sprite + textureOffset, size);
@@ -171,7 +173,7 @@ void InnerBorderedWallTileRenderer::draw(SpriteBatch& spriteBatch, const TileLoc
         if (resultSprite != nullptr)
         {
             const ls::Vec2F sprite = static_cast<ls::Vec2F>(spritesheet().gridCoordsToTexCoords(*resultSprite));
-            const ls::Vec2F size(static_cast<float>(GameConstants::tileSize), static_cast<float>(GameConstants::tileSize));
+            const ls::Vec2F size(World::tileSize, World::tileSize);
             const ls::Vec2F pos(x * size.x, (y-1) * size.y);
 
             spriteBatch.emplaceRectangle(&(texture()), pos, sprite + textureOffset, size);
@@ -189,7 +191,7 @@ void InnerBorderedWallTileRenderer::draw(SpriteBatch& spriteBatch, const TileLoc
         if (resultSprite != nullptr)
         {
             const ls::Vec2F sprite = static_cast<ls::Vec2F>(spritesheet().gridCoordsToTexCoords(*resultSprite));
-            const ls::Vec2F size(static_cast<float>(GameConstants::tileSize), static_cast<float>(GameConstants::tileSize));
+            const ls::Vec2F size(World::tileSize, World::tileSize);
             const ls::Vec2F pos((x-1) * size.x, (y-1) * size.y);
 
             spriteBatch.emplaceRectangle(&(texture()), pos, sprite + textureOffset, size);

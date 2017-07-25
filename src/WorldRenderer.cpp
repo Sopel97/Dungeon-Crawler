@@ -51,10 +51,10 @@ using namespace ls;
 WorldRenderer::WorldRenderer(Root& root, World& world) :
     m_root(root),
     m_world(world),
-    m_camera(Vec2F(World::m_worldWidth * GameConstants::tileSize / 2.0f, World::m_worldHeight * GameConstants::tileSize / 2.0f), m_viewWidth * GameConstants::tileSize, m_viewHeight * GameConstants::tileSize),
+    m_camera(Vec2F(World::m_worldWidth * World::tileSize / 2.0f, World::m_worldHeight * World::tileSize / 2.0f), m_viewWidth * World::tileSize, m_viewHeight * World::tileSize),
     m_windowSpaceManager(root.windowSpaceManager())
 {
-    m_intermidiateRenderTarget.create(m_viewWidth * GameConstants::tileSize, m_viewHeight * GameConstants::tileSize, true);
+    m_intermidiateRenderTarget.create(m_viewWidth * World::tileSize, m_viewHeight * World::tileSize, true);
     m_intermidiateRenderTarget.resetGLStates();
     m_intermidiateRenderTarget.setActive(true);
     glEnable(GL_DEPTH_TEST);
@@ -64,7 +64,7 @@ WorldRenderer::WorldRenderer(Root& root, World& world) :
     glClearDepth(1.0f);
     glClearColor(0.0f, 0.0f, 0.0f, 1.0f);
 
-    m_metaTexture.create((m_viewWidth + 2) * GameConstants::tileSize, (m_viewHeight + 2) * GameConstants::tileSize, true);
+    m_metaTexture.create((m_viewWidth + 2) * World::tileSize, (m_viewHeight + 2) * World::tileSize, true);
     m_metaTexture.resetGLStates();
     m_metaTexture.setActive(true);
     glEnable(GL_DEPTH_TEST);
@@ -76,7 +76,7 @@ WorldRenderer::WorldRenderer(Root& root, World& world) :
 
     //light map stretches one more tile, because some of the visible tiles need lighting of the tiles not seen
     //also adds one tile length on top and left to keep symmetry
-    m_lightMap.create((m_viewWidth + 2) * GameConstants::tileSize, (m_viewHeight + 2) * GameConstants::tileSize);
+    m_lightMap.create((m_viewWidth + 2) * World::tileSize, (m_viewHeight + 2) * World::tileSize);
 
     m_intermidiateDepthShader.loadFromFile("assets/shaders/intermidiate_depth.vert", "assets/shaders/intermidiate_depth.frag");
     m_metaDepthShader.loadFromFile("assets/shaders/meta_depth.vert", "assets/shaders/meta_depth.frag");
@@ -130,10 +130,10 @@ void WorldRenderer::drawMain(const sf::RenderStates& renderStates)
     const Rectangle2F cameraRect = m_camera.viewRectangle();
     const Vec2F& cameraTopLeft = cameraRect.min;
     const Vec2F& cameraBottomRight = cameraRect.max;
-    int firstTileX = std::max(Util::fastFloor(cameraTopLeft.x / GameConstants::tileSize), 0);
-    int firstTileY = std::max(Util::fastFloor(cameraTopLeft.y / GameConstants::tileSize), 0);
-    int lastTileX = std::min(Util::fastFloor(cameraBottomRight.x / GameConstants::tileSize) + 1, m_world.m_width - 1);
-    int lastTileY = std::min(Util::fastFloor(cameraBottomRight.y / GameConstants::tileSize) + 1, m_world.m_height - 1);
+    int firstTileX = std::max(Util::fastFloor(cameraTopLeft.x / World::tileSize), 0);
+    int firstTileY = std::max(Util::fastFloor(cameraTopLeft.y / World::tileSize), 0);
+    int lastTileX = std::min(Util::fastFloor(cameraBottomRight.x / World::tileSize) + 1, m_world.m_width - 1);
+    int lastTileY = std::min(Util::fastFloor(cameraBottomRight.y / World::tileSize) + 1, m_world.m_height - 1);
 
     SpriteBatch spriteBatch;
     
@@ -205,7 +205,7 @@ void WorldRenderer::prepareLightMap()
 
     sf::View lightMapView = m_lightMap.getDefaultView();
     lightMapView.setCenter(cameraCenter.x, cameraCenter.y);
-    lightMapView.setSize(cameraRect.width() + 2 * GameConstants::tileSize, cameraRect.height() + 2 * GameConstants::tileSize);
+    lightMapView.setSize(cameraRect.width() + 2 * World::tileSize, cameraRect.height() + 2 * World::tileSize);
     m_lightMap.setView(lightMapView);
 
     m_lightMap.clear(sf::Color::Black);
@@ -217,7 +217,7 @@ void WorldRenderer::prepareMetaTexture()
 
     sf::View metaTextureView = m_metaTexture.getDefaultView();
     metaTextureView.setCenter(cameraCenter.x, cameraCenter.y);
-    metaTextureView.setSize(cameraRect.width() + 2 * GameConstants::tileSize, cameraRect.height() + 2 * GameConstants::tileSize);
+    metaTextureView.setSize(cameraRect.width() + 2 * World::tileSize, cameraRect.height() + 2 * World::tileSize);
     m_metaTexture.setView(metaTextureView);
 
     m_metaTexture.setActive(true);
@@ -243,10 +243,10 @@ void WorldRenderer::drawMeta(const sf::RenderStates& renderStates)
     const Rectangle2F cameraRect = m_camera.viewRectangle();
     const Vec2F& cameraTopLeft = cameraRect.min;
     const Vec2F& cameraBottomRight = cameraRect.max;
-    int firstTileX = std::max(Util::fastFloor(cameraTopLeft.x / GameConstants::tileSize), 0);
-    int firstTileY = std::max(Util::fastFloor(cameraTopLeft.y / GameConstants::tileSize), 0);
-    int lastTileX = std::min(Util::fastFloor(cameraBottomRight.x / GameConstants::tileSize) + 1, m_world.m_width - 1);
-    int lastTileY = std::min(Util::fastFloor(cameraBottomRight.y / GameConstants::tileSize) + 1, m_world.m_height - 1);
+    int firstTileX = std::max(Util::fastFloor(cameraTopLeft.x / World::tileSize), 0);
+    int firstTileY = std::max(Util::fastFloor(cameraTopLeft.y / World::tileSize), 0);
+    int lastTileX = std::min(Util::fastFloor(cameraBottomRight.x / World::tileSize) + 1, m_world.m_width - 1);
+    int lastTileY = std::min(Util::fastFloor(cameraBottomRight.y / World::tileSize) + 1, m_world.m_height - 1);
 
     SpriteBatch spriteBatch;
 
@@ -301,7 +301,7 @@ void WorldRenderer::drawLightMapToIntermidiate(const sf::RenderStates& renderSta
     lightMapSprite.setSize(sf::Vector2f(cameraRect.width(), cameraRect.height()));
     //converts to world coordinates
     lightMapSprite.setPosition(sf::Vector2f(cameraCenter.x - cameraRect.width() / 2, cameraCenter.y - cameraRect.height() / 2));
-    lightMapSprite.setTextureRect(sf::IntRect(GameConstants::tileSize, GameConstants::tileSize, static_cast<int>(cameraRect.width()), static_cast<int>(cameraRect.height())));
+    lightMapSprite.setTextureRect(sf::IntRect(World::tileSize, World::tileSize, static_cast<int>(cameraRect.width()), static_cast<int>(cameraRect.height())));
 
     sf::RenderStates lightMapRenderStates = renderStates;
     lightMapRenderStates.shader = &m_lightShader;

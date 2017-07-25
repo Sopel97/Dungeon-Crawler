@@ -23,6 +23,7 @@ class Spritesheet;
 class InventorySlotView
 {
 public:
+    static constexpr int tileSize = 32;
 
     InventorySlotView(Inventory* inventory, size_t slotId, const ls::Vec2I& position);
 

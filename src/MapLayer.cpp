@@ -121,14 +121,14 @@ TileStack MapLayer::splitTiles(int x, int y, int z, int count)
     }
 }
 
-std::vector<TileCollider> MapLayer::queryTileColliders(const Rectangle2F& queryRegion)
+std::vector<TileCollider> MapLayer::queryTileColliders(const Rectangle2F& queryRegion, float tileSize)
 {
     const Vec2F& queryRegionTopLeft     = queryRegion.min;
     const Vec2F& queryRegionBottomRight = queryRegion.max;
-    int firstTileX = std::max(Util::fastFloor(queryRegionTopLeft.x / GameConstants::tileSize), 0);
-    int firstTileY = std::max(Util::fastFloor(queryRegionTopLeft.y / GameConstants::tileSize), 0);
-    int lastTileX = std::min(Util::fastFloor(queryRegionBottomRight.x / GameConstants::tileSize), m_width - 1);
-    int lastTileY = std::min(Util::fastFloor(queryRegionBottomRight.y / GameConstants::tileSize), m_height - 1);
+    int firstTileX = std::max(Util::fastFloor(queryRegionTopLeft.x / tileSize), 0);
+    int firstTileY = std::max(Util::fastFloor(queryRegionTopLeft.y / tileSize), 0);
+    int lastTileX = std::min(Util::fastFloor(queryRegionBottomRight.x / tileSize), m_width - 1);
+    int lastTileY = std::min(Util::fastFloor(queryRegionBottomRight.y / tileSize), m_height - 1);
 
     std::vector<TileCollider> colliders;
     for(int x = firstTileX; x <= lastTileX; ++x)

@@ -5,6 +5,8 @@
 
 #include "SpriteBatch.h"
 
+#include "World.h"
+
 #include "sprite/Spritesheet.h"
 
 #include <SFML/Graphics.hpp>
@@ -85,7 +87,7 @@ void PlayerRenderer::draw(SpriteBatch& spriteBatch, const ls::Vec2I& textureOffs
             )
         )
     );
-    const ls::Vec2F size(static_cast<float>(GameConstants::tileSize), static_cast<float>(GameConstants::tileSize));
+    const ls::Vec2F size(World::tileSize, World::tileSize);
     ls::Vec2F pos = m_owner->model().position() + offsetToOrigin;
     pos.x = std::floor(pos.x);
     pos.y = std::floor(pos.y);

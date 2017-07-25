@@ -1,6 +1,3 @@
-IMPORTANT:
--- drawing functions receive 'unit length' that says how large is one unit in world coords (for tiles it will be 32) instead of having a global constant
-
 -- eventually encapsulate compontents in Tile, Entity, Projectile o they are not visible from outside
 
 - Clear world generation code //little priority since it is waiting for libs still
@@ -10,6 +7,12 @@ IMPORTANT:
 - remove out of bounds tile from tile column?
 
 - restructure TileTransferMediator, make it cleaner
+
+- replace InventorySlotView with InventorySlotLocation where drawing is not needed
+
+- tile colliders should be specified with range <0, 1>, tile converts length on loading based on World::m_tileSize (also applies for entites and projectiles)
+
+- check if loot can be placed on the tile, if not search for possible location nearby
 
 - make using a tile return something, for example that the item should be transformed to be something else (try insert it to inventory, leave on the ground), or just used, and more requests that tile can't do on it's own and are somewhat generic and common
 

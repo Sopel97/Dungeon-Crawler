@@ -6,6 +6,8 @@
 
 #include "Player.h"
 
+#include "World.h"
+
 using namespace ls;
 
 REGISTER_TILE_MODEL_TYPE(ContainerTileModel)
@@ -59,7 +61,7 @@ std::optional<TileCollider> ContainerTileModel::collider(const ls::Vec2I& pos)
 {
     if (!m_commonData->hasCollider) return std::nullopt;
 
-    const ls::Rectangle2F aabb = m_commonData->collider.translated(static_cast<ls::Vec2F>(pos) * GameConstants::tileSize);
+    const ls::Rectangle2F aabb = m_commonData->collider.translated(static_cast<ls::Vec2F>(pos) * World::tileSize);
     return TileCollider(*m_owner, aabb);
 }
 bool ContainerTileModel::isMovableFrom() const

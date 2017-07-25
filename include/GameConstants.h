@@ -3,7 +3,7 @@
 
 namespace GameConstants
 {
-    constexpr int tileSize = 32;
+    //constexpr int tileSize = 32;
 }
 
 #endif // GAMECONSTANTS_H_INCLUDED

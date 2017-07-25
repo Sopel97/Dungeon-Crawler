@@ -7,6 +7,8 @@
 
 #include "SpriteBatch.h"
 
+#include "World.h"
+
 #include "sprite/Spritesheet.h"
 
 #include <SFML/Graphics.hpp>
@@ -66,7 +68,7 @@ void PlainTileRenderer::drawMeta(SpriteBatch& spriteBatch, const TileLocation& l
 void PlainTileRenderer::draw(SpriteBatch& spriteBatch, const TileLocation& location, const ls::Vec2I& textureOffset) const
 {
     const ls::Vec2F sprite = static_cast<ls::Vec2F>(spritesheet().gridCoordsToTexCoords(m_currentAnimatedSprite->now()));
-    const ls::Vec2F size(static_cast<float>(GameConstants::tileSize), static_cast<float>(GameConstants::tileSize));
+    const ls::Vec2F size(World::tileSize, World::tileSize);
     const ls::Vec2F pos(location.x * size.x, location.y * size.y);
 
     spriteBatch.emplaceRectangle(&(texture()), pos, sprite + textureOffset, size);
@@ -75,12 +77,12 @@ void PlainTileRenderer::draw(sf::RenderTarget& renderTarget, const sf::RenderSta
 {
     const ls::Vec2I sprite = spritesheet().gridCoordsToTexCoords(m_currentAnimatedSprite->now());
     const ls::Vec2I slotCenter = slot.center();
-    const float x = slotCenter.x - GameConstants::tileSize / 2.0f;
-    const float y = slotCenter.y - GameConstants::tileSize / 2.0f;
+    const float x = slotCenter.x - World::tileSize / 2.0f;
+    const float y = slotCenter.y - World::tileSize / 2.0f;
     sf::Sprite spr;
     spr.setPosition(sf::Vector2f(x, y));
     spr.setTexture(texture());
-    spr.setTextureRect(sf::IntRect(sf::Vector2i(sprite.x, sprite.y), sf::Vector2i(GameConstants::tileSize, GameConstants::tileSize)));
+    spr.setTextureRect(sf::IntRect(sf::Vector2i(sprite.x, sprite.y), sf::Vector2i(InventorySlotView::tileSize, InventorySlotView::tileSize)));
     renderTarget.draw(spr, renderStates);
 }
 
