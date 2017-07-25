@@ -11,7 +11,7 @@ entity = {
 
     texture = "Spritesheet",
     hasMetaTexture = true,
-    sprites = {272, 68},
+    sprites = {8, 2},
 
     maxSpeed = 64.0,
 

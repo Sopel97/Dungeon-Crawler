@@ -7,6 +7,8 @@
 
 #include "SpriteBatch.h"
 
+#include "sprite/Spritesheet.h"
+
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 
@@ -40,7 +42,7 @@ PlainTileRenderer::~PlainTileRenderer()
 void PlainTileRenderer::loadFromConfiguration(ConfigurationNode& config)
 {
     std::string textureName = config["texture"].get<std::string>();
-    m_commonData->texture = ResourceManager::instance().get<sf::Texture>(textureName);
+    m_commonData->spritesheet = ResourceManager::instance().get<Spritesheet>(textureName);
     m_commonData->hasMetaTexture = config["hasMetaTexture"].getDefault<bool>(false);
 
     m_commonData->spriteSelector.loadFromConfiguration(config);
@@ -53,17 +55,17 @@ void PlainTileRenderer::loadFromConfiguration(ConfigurationNode& config)
 
 void PlainTileRenderer::draw(SpriteBatch& spriteBatch, const TileLocation& location) const
 {
-    if (!m_commonData->texture) return;
+    if (!m_commonData->spritesheet) return;
     draw(spriteBatch, location, Vec2I(0, 0));
 }
 void PlainTileRenderer::drawMeta(SpriteBatch& spriteBatch, const TileLocation& location) const
 {
-    if (!m_commonData->texture || !m_commonData->hasMetaTexture) return;
+    if (!m_commonData->spritesheet || !m_commonData->hasMetaTexture) return;
     draw(spriteBatch, location, Vec2I(texture().getSize().x / 2, 0));
 }
 void PlainTileRenderer::draw(SpriteBatch& spriteBatch, const TileLocation& location, const ls::Vec2I& textureOffset) const
 {
-    const ls::Vec2F sprite(m_currentAnimatedSprite->now());
+    const ls::Vec2F sprite = static_cast<ls::Vec2F>(spritesheet().gridCoordsToTexCoords(m_currentAnimatedSprite->now()));
     const ls::Vec2F size(static_cast<float>(GameConstants::tileSize), static_cast<float>(GameConstants::tileSize));
     const ls::Vec2F pos(location.x * size.x, location.y * size.y);
 
@@ -71,7 +73,7 @@ void PlainTileRenderer::draw(SpriteBatch& spriteBatch, const TileLocation& locat
 }
 void PlainTileRenderer::draw(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates, const InventorySlotView& slot) const
 {
-    const ls::Vec2I sprite = m_currentAnimatedSprite->now();
+    const ls::Vec2I sprite = spritesheet().gridCoordsToTexCoords(m_currentAnimatedSprite->now());
     const ls::Vec2I slotCenter = slot.center();
     const float x = slotCenter.x - GameConstants::tileSize / 2.0f;
     const float y = slotCenter.y - GameConstants::tileSize / 2.0f;
@@ -84,7 +86,11 @@ void PlainTileRenderer::draw(sf::RenderTarget& renderTarget, const sf::RenderSta
 
 const sf::Texture& PlainTileRenderer::texture() const
 {
-    return m_commonData->texture.get();
+    return m_commonData->spritesheet.get().texture();
+}
+const Spritesheet& PlainTileRenderer::spritesheet() const
+{
+    return m_commonData->spritesheet.get();
 }
 bool PlainTileRenderer::coversOuterBorders() const
 {

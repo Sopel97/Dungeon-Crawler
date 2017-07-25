@@ -14,7 +14,7 @@ public:
     ls::Vec2I gridCoordsToTexCoords(const ls::Vec2I& gridCoords) const;
     ls::Vec2I gridSizeToTexSize(const ls::Vec2I& onGridSize) const;
 
-    const sf::Texture& texture();
+    const sf::Texture& texture() const;
     int gridSize() const;
     int padding() const;
 

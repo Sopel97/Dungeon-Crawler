@@ -9,7 +9,7 @@ tile = {
     texture = "Spritesheet",
     hasMetaTexture = true,
     
-    spriteSet = {34, 0},
+    spriteSet = {1, 0},
 
     innerBorderGroup = "Stone wall",
 	

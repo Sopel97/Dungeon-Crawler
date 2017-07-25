@@ -25,13 +25,14 @@ class MapLayer;
 class Tile;
 class TileLocation;
 class InventorySlotView;
+class Spritesheet;
 
 class PlainTileRenderer : public TileRenderer
 {
 public:
     struct CommonData : public ComponentCommonData
     {
-        ResourceHandle<sf::Texture> texture;
+        ResourceHandle<Spritesheet> spritesheet;
         TileSpriteSelector spriteSelector;
 
         int outerBorderPriority;
@@ -51,6 +52,7 @@ public:
     void draw(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates, const InventorySlotView& slot) const override;
 
     const sf::Texture& texture() const;
+    const Spritesheet& spritesheet() const;
 
     bool coversOuterBorders() const override;
     int outerBorderPriority() const override;

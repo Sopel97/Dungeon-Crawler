@@ -40,13 +40,6 @@ namespace sf
 }
 
 template <>
-class ResourceLoader<sf::Texture>
-{
-public:
-    static std::pair<std::string, std::unique_ptr<sf::Texture>> load(const std::string& path); //should return nullptr when resource was not loaded
-};
-
-template <>
 class ResourceLoader<Spritesheet>
 {
 public:

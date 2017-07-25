@@ -14,6 +14,7 @@ class WindowSpaceManager;
 class TallDrawable;
 class TileLocation;
 class SpriteBatch;
+class Spritesheet;
 
 // IMPORTANT: SFML makes redundant shader binds that result in very bad fps when many calls are made with the same shader. Should be improved later when vertex array is used.
 class WorldRenderer
@@ -44,7 +45,7 @@ protected:
     sf::Shader m_prettyStretchShader;
     sf::Shader m_lightShader;
 
-    ResourceHandle<sf::Texture> m_lightTexture;
+    ResourceHandle<Spritesheet> m_lightTexture;
 
     static constexpr int m_viewWidth = 15;
     static constexpr int m_viewHeight = 15;

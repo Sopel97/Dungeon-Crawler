@@ -7,6 +7,8 @@
 #include <stdexcept>
 #include <memory>
 
+namespace sf { class Texture; }
+
 template <class T>
 class ResourceLoader
 {
@@ -134,6 +136,7 @@ void ResourceManager::SpecificResources<ResourceType>::add(const std::string& na
 template <class T>
 ResourceHandle<T> ResourceManager::get(const std::string& name)
 {
+    static_assert(!std::is_same<T, sf::Texture>::value);
     T* resource = SpecificResources<T>::get(name);
     if(resource != nullptr) return ResourceHandle<T>(resource);
     else throw std::runtime_error(std::string("No resource found with name ") + name);

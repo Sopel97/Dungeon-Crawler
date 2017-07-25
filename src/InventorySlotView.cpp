@@ -6,12 +6,14 @@
 
 #include "Inventory.h"
 
+#include "sprite/Spritesheet.h"
+
 #include <SFML/Window.hpp>
 #include <SFML/Graphics.hpp>
 
 using namespace ls;
 
-ResourceHandle<sf::Texture> InventorySlotView::m_texture {nullptr};
+ResourceHandle<Spritesheet> InventorySlotView::m_spritesheet{nullptr};
 ResourceHandle<sf::Font> InventorySlotView::m_font{ nullptr };
 Vec2I InventorySlotView::m_slotTexture {0, 19};
 Vec2I InventorySlotView::m_slotTextureSize {38, 38};
@@ -36,7 +38,7 @@ InventorySlotView::InventorySlotView(Inventory* inventory, size_t slotId, const 
     m_slotId(slotId),
     m_position(position)
 {
-    if (!m_texture) m_texture = ResourceManager::instance().get<sf::Texture>("UiNonRepeating");
+    if (!m_spritesheet) m_spritesheet = ResourceManager::instance().get<Spritesheet>("UiNonRepeating");
     if (!m_font) m_font = ResourceManager::instance().get<sf::Font>("Font");
 }
 TileStack& InventorySlotView::content()
@@ -72,7 +74,7 @@ void InventorySlotView::draw(sf::RenderTarget& renderTarget, const sf::RenderSta
 {
     sf::Sprite slotSprite;
     slotSprite.setPosition(static_cast<float>(m_position.x), static_cast<float>(m_position.y));
-    slotSprite.setTexture(m_texture.get());
+    slotSprite.setTexture(m_spritesheet.get().texture());
     slotSprite.setTextureRect(sf::IntRect(sf::Vector2i(m_slotTexture.x, m_slotTexture.y), sf::Vector2i(m_slotTextureSize.x, m_slotTextureSize.y)));
     renderTarget.draw(slotSprite, renderStates);
 
@@ -84,7 +86,7 @@ void InventorySlotView::draw(sf::RenderTarget& renderTarget, const sf::RenderSta
 
         sf::Sprite requirementIconSprite;
         requirementIconSprite.setPosition(static_cast<float>(m_position.x + iconOffset.x), static_cast<float>(m_position.y + iconOffset.y));
-        requirementIconSprite.setTexture(m_texture.get());
+        requirementIconSprite.setTexture(m_spritesheet.get().texture());
         requirementIconSprite.setTextureRect(sf::IntRect(sf::Vector2i(iconSpritePosition.x, iconSpritePosition.y), sf::Vector2i(m_requirementIconSize.x, m_requirementIconSize.y)));
         renderTarget.draw(requirementIconSprite, renderStates);
     }

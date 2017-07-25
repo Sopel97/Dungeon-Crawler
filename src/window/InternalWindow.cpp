@@ -5,6 +5,8 @@
 #include "window/WindowContent.h"
 #include "window/WindowSpaceManager.h"
 
+#include "sprite/Spritesheet.h"
+
 using namespace ls;
 
 const int InternalWindow::m_closeButtonId = 0;
@@ -516,10 +518,10 @@ void InternalWindow::drawSkeleton(sf::RenderTarget& renderTarget, const sf::Rend
 {
     if (isContentOnly()) return;
 
-    ResourceHandle<sf::Texture> backgroundTexture = ResourceManager::instance().get<sf::Texture>("UiBackground");
-    ResourceHandle<sf::Texture> verticalBarsSprites = ResourceManager::instance().get<sf::Texture>("UiVerticalBars");
-    ResourceHandle<sf::Texture> horizontalBarsSprites = ResourceManager::instance().get<sf::Texture>("UiHorizontalBars");
-    ResourceHandle<sf::Texture> nonRepeatingSprites = ResourceManager::instance().get<sf::Texture>("UiNonRepeating");
+    ResourceHandle<Spritesheet> backgroundTexture = ResourceManager::instance().get<Spritesheet>("UiBackground");
+    ResourceHandle<Spritesheet> verticalBarsSprites = ResourceManager::instance().get<Spritesheet>("UiVerticalBars");
+    ResourceHandle<Spritesheet> horizontalBarsSprites = ResourceManager::instance().get<Spritesheet>("UiHorizontalBars");
+    ResourceHandle<Spritesheet> nonRepeatingSprites = ResourceManager::instance().get<Spritesheet>("UiNonRepeating");
 
     const auto windowRect = absoluteWindowRect();
     const auto contentRect = absoluteContentRect();
@@ -547,55 +549,55 @@ void InternalWindow::drawSkeleton(sf::RenderTarget& renderTarget, const sf::Rend
 
     sf::Sprite topBarSprite;
     topBarSprite.setPosition(static_cast<float>(windowInteriorTopLeft.x), static_cast<float>(windowTopLeft.y));
-    topBarSprite.setTexture(horizontalBarsSprites.get());
+    topBarSprite.setTexture(horizontalBarsSprites.get().texture());
     topBarSprite.setTextureRect(sf::IntRect(sf::Vector2i(topBarSpritePosition.x, topBarSpritePosition.y), sf::Vector2i(windowInteriorWidth, topBarHeight)));
     renderTarget.draw(topBarSprite, renderStates);
 
     sf::Sprite bottomBarSprite;
     bottomBarSprite.setPosition(static_cast<float>(windowInteriorTopLeft.x), static_cast<float>(windowInteriorBottomRight.y));
-    bottomBarSprite.setTexture(horizontalBarsSprites.get());
+    bottomBarSprite.setTexture(horizontalBarsSprites.get().texture());
     bottomBarSprite.setTextureRect(sf::IntRect(sf::Vector2i(m_windowBottomBarSpritePosition.x, m_windowBottomBarSpritePosition.y), sf::Vector2i(windowInteriorWidth, m_windowBottomBarHeight)));
     renderTarget.draw(bottomBarSprite, renderStates);
 
     sf::Sprite leftBarSprite;
     leftBarSprite.setPosition(static_cast<float>(windowTopLeft.x), static_cast<float>(windowInteriorTopLeft.y));
-    leftBarSprite.setTexture(verticalBarsSprites.get());
+    leftBarSprite.setTexture(verticalBarsSprites.get().texture());
     leftBarSprite.setTextureRect(sf::IntRect(sf::Vector2i(m_windowLeftBarSpritePosition.x, m_windowLeftBarSpritePosition.y), sf::Vector2i(m_windowLeftBarWidth, windowInteriorHeight)));
     renderTarget.draw(leftBarSprite, renderStates);
 
     sf::Sprite rightBarSprite;
     rightBarSprite.setPosition(static_cast<float>(windowInteriorBottomRight.x), static_cast<float>(windowInteriorTopLeft.y));
-    rightBarSprite.setTexture(verticalBarsSprites.get());
+    rightBarSprite.setTexture(verticalBarsSprites.get().texture());
     rightBarSprite.setTextureRect(sf::IntRect(sf::Vector2i(m_windowRightBarSpritePosition.x, m_windowRightBarSpritePosition.y), sf::Vector2i(m_windowRightBarWidth, windowInteriorHeight)));
     renderTarget.draw(rightBarSprite, renderStates);
 
     sf::Sprite topLeftCornerSprite;
     topLeftCornerSprite.setPosition(static_cast<float>(windowTopLeft.x), static_cast<float>(windowTopLeft.y));
-    topLeftCornerSprite.setTexture(nonRepeatingSprites.get());
+    topLeftCornerSprite.setTexture(nonRepeatingSprites.get().texture());
     topLeftCornerSprite.setTextureRect(sf::IntRect(sf::Vector2i(topLeftCornerSpritePosition.x, topLeftCornerSpritePosition.y), sf::Vector2i(m_windowHighTopLeftCornerSize.x, topBarHeight)));
     renderTarget.draw(topLeftCornerSprite, renderStates);
 
     sf::Sprite topRightCornerSprite;
     topRightCornerSprite.setPosition(static_cast<float>(windowInteriorBottomRight.x), static_cast<float>(windowTopLeft.y));
-    topRightCornerSprite.setTexture(nonRepeatingSprites.get());
+    topRightCornerSprite.setTexture(nonRepeatingSprites.get().texture());
     topRightCornerSprite.setTextureRect(sf::IntRect(sf::Vector2i(topRightCornerSpritePosition.x, topRightCornerSpritePosition.y), sf::Vector2i(m_windowHighTopRightCornerSize.x, topBarHeight)));
     renderTarget.draw(topRightCornerSprite, renderStates);
 
     sf::Sprite bottomLeftCornerSprite;
     bottomLeftCornerSprite.setPosition(static_cast<float>(windowTopLeft.x), static_cast<float>(windowInteriorBottomRight.y));
-    bottomLeftCornerSprite.setTexture(nonRepeatingSprites.get());
+    bottomLeftCornerSprite.setTexture(nonRepeatingSprites.get().texture());
     bottomLeftCornerSprite.setTextureRect(sf::IntRect(sf::Vector2i(m_windowBottomLeftCornerSpritePosition.x, m_windowBottomLeftCornerSpritePosition.y), sf::Vector2i(m_windowBottomLeftCornerSize.x, m_windowBottomLeftCornerSize.y)));
     renderTarget.draw(bottomLeftCornerSprite, renderStates);
 
     sf::Sprite bottomRightCornerSprite;
     bottomRightCornerSprite.setPosition(static_cast<float>(windowInteriorBottomRight.x), static_cast<float>(windowInteriorBottomRight.y));
-    bottomRightCornerSprite.setTexture(nonRepeatingSprites.get());
+    bottomRightCornerSprite.setTexture(nonRepeatingSprites.get().texture());
     bottomRightCornerSprite.setTextureRect(sf::IntRect(sf::Vector2i(m_windowBottomRightCornerSpritePosition.x, m_windowBottomRightCornerSpritePosition.y), sf::Vector2i(m_windowBottomRightCornerSize.x, m_windowBottomRightCornerSize.y)));
     renderTarget.draw(bottomRightCornerSprite, renderStates);
 
     sf::Sprite backgroundSprite;
     backgroundSprite.setPosition(static_cast<float>(windowInteriorTopLeft.x), static_cast<float>(windowInteriorTopLeft.y));
-    backgroundSprite.setTexture(backgroundTexture.get());
+    backgroundSprite.setTexture(backgroundTexture.get().texture());
     backgroundSprite.setTextureRect(sf::IntRect(sf::Vector2i(0, this->verticalScroll()), sf::Vector2i(windowContentWidth, windowContentHeight)));
     renderTarget.draw(backgroundSprite, renderStates);
 
@@ -607,19 +609,19 @@ void InternalWindow::drawSkeleton(sf::RenderTarget& renderTarget, const sf::Rend
 
         sf::Sprite scrollBarSprite;
         scrollBarSprite.setPosition(static_cast<float>(scrollBarTopLeft.x), static_cast<float>(scrollBarTopLeft.y));
-        scrollBarSprite.setTexture(verticalBarsSprites.get());
+        scrollBarSprite.setTexture(verticalBarsSprites.get().texture());
         scrollBarSprite.setTextureRect(sf::IntRect(sf::Vector2i(m_windowScrollBarSpritePosition.x, m_windowScrollBarSpritePosition.y), sf::Vector2i(m_windowScrollBarWidth, scrollBarHeight)));
         renderTarget.draw(scrollBarSprite, renderStates);
 
         sf::Sprite scrollBarUpButtonSprite;
         scrollBarUpButtonSprite.setPosition(static_cast<float>(scrollBarTopLeft.x), static_cast<float>(scrollBarTopLeft.y));
-        scrollBarUpButtonSprite.setTexture(nonRepeatingSprites.get());
+        scrollBarUpButtonSprite.setTexture(nonRepeatingSprites.get().texture());
         scrollBarUpButtonSprite.setTextureRect(sf::IntRect(sf::Vector2i(m_windowScrollBarUpButtonSpritePosition.x, m_windowScrollBarUpButtonSpritePosition.y), sf::Vector2i(m_windowButtonSize.x, m_windowButtonSize.y)));
         renderTarget.draw(scrollBarUpButtonSprite, renderStates);
 
         sf::Sprite scrollBarDownButtonSprite;
         scrollBarDownButtonSprite.setPosition(static_cast<float>(scrollBarTopLeft.x), static_cast<float>(scrollBarTopLeft.y + scrollBarHeight - m_windowButtonSize.y));
-        scrollBarDownButtonSprite.setTexture(nonRepeatingSprites.get());
+        scrollBarDownButtonSprite.setTexture(nonRepeatingSprites.get().texture());
         scrollBarDownButtonSprite.setTextureRect(sf::IntRect(sf::Vector2i(m_windowScrollBarDownButtonSpritePosition.x, m_windowScrollBarDownButtonSpritePosition.y), sf::Vector2i(m_windowButtonSize.x, m_windowButtonSize.y)));
         renderTarget.draw(scrollBarDownButtonSprite, renderStates);
 
@@ -634,7 +636,7 @@ void InternalWindow::drawSkeleton(sf::RenderTarget& renderTarget, const sf::Rend
 
             sf::Sprite scrollBarSliderButtonSprite;
             scrollBarSliderButtonSprite.setPosition(static_cast<float>(scrollBarTopLeft.x), static_cast<float>(sliderPosition - m_windowButtonSize.y / 2));
-            scrollBarSliderButtonSprite.setTexture(nonRepeatingSprites.get());
+            scrollBarSliderButtonSprite.setTexture(nonRepeatingSprites.get().texture());
             scrollBarSliderButtonSprite.setTextureRect(sf::IntRect(sf::Vector2i(m_windowScrollBarSliderSpritePosition.x, m_windowScrollBarSliderSpritePosition.y), sf::Vector2i(m_windowButtonSize.x, m_windowButtonSize.y)));
             renderTarget.draw(scrollBarSliderButtonSprite, renderStates);
         }
@@ -643,8 +645,8 @@ void InternalWindow::drawSkeleton(sf::RenderTarget& renderTarget, const sf::Rend
 
 void InternalWindow::drawSkeletonMinimized(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates)
 {
-    ResourceHandle<sf::Texture> horizontalBarsSprites = ResourceManager::instance().get<sf::Texture>("UiHorizontalBars");
-    ResourceHandle<sf::Texture> nonRepeatingSprites = ResourceManager::instance().get<sf::Texture>("UiNonRepeating");
+    ResourceHandle<Spritesheet> horizontalBarsSprites = ResourceManager::instance().get<Spritesheet>("UiHorizontalBars");
+    ResourceHandle<Spritesheet> nonRepeatingSprites = ResourceManager::instance().get<Spritesheet>("UiNonRepeating");
 
     const auto windowRect = absoluteWindowRect();
 
@@ -662,19 +664,19 @@ void InternalWindow::drawSkeletonMinimized(sf::RenderTarget& renderTarget, const
     int windowHeight = windowRect.height();
     sf::Sprite topBarSprite;
     topBarSprite.setPosition(static_cast<float>(windowTopLeft.x + m_windowLeftBarWidth), static_cast<float>(windowTopLeft.y));
-    topBarSprite.setTexture(horizontalBarsSprites.get());
+    topBarSprite.setTexture(horizontalBarsSprites.get().texture());
     topBarSprite.setTextureRect(sf::IntRect(sf::Vector2i(topBarSpritePosition.x, topBarSpritePosition.y), sf::Vector2i(windowWidth - (m_windowLeftBarWidth + m_windowRightBarWidth), topBarHeight)));
     renderTarget.draw(topBarSprite, renderStates);
 
     sf::Sprite topLeftCornerSprite;
     topLeftCornerSprite.setPosition(static_cast<float>(windowTopLeft.x), static_cast<float>(windowTopLeft.y));
-    topLeftCornerSprite.setTexture(nonRepeatingSprites.get());
+    topLeftCornerSprite.setTexture(nonRepeatingSprites.get().texture());
     topLeftCornerSprite.setTextureRect(sf::IntRect(sf::Vector2i(topLeftCornerSpritePosition.x, topLeftCornerSpritePosition.y), sf::Vector2i(m_windowHighTopLeftCornerSize.x, topBarHeight)));
     renderTarget.draw(topLeftCornerSprite, renderStates);
 
     sf::Sprite topRightCornerSprite;
     topRightCornerSprite.setPosition(static_cast<float>(windowBottomRight.x - m_windowRightBarWidth), static_cast<float>(windowTopLeft.y));
-    topRightCornerSprite.setTexture(nonRepeatingSprites.get());
+    topRightCornerSprite.setTexture(nonRepeatingSprites.get().texture());
     topRightCornerSprite.setTextureRect(sf::IntRect(sf::Vector2i(topRightCornerSpritePosition.x, topRightCornerSpritePosition.y), sf::Vector2i(m_windowHighTopRightCornerSize.x, topBarHeight)));
     renderTarget.draw(topRightCornerSprite, renderStates);
 }

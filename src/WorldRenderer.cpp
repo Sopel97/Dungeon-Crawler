@@ -35,6 +35,8 @@
 
 #include "SpriteBatch.h"
 
+#include "sprite/Spritesheet.h"
+
 #include <SFML/System.hpp>
 #include <SFML/OpenGL.hpp>
 
@@ -83,7 +85,7 @@ WorldRenderer::WorldRenderer(Root& root, World& world) :
     m_prettyStretchShader.loadFromFile("assets/shaders/pretty_stretch.vert", "assets/shaders/pretty_stretch.frag");
     m_prettyStretchShader.setParameter("sourceTextureSize", sf::Vector2f(static_cast<float>(m_intermidiateRenderTarget.getSize().x), static_cast<float>(m_intermidiateRenderTarget.getSize().y)));
 
-    m_lightTexture = ResourceManager::instance().get<sf::Texture>("LightDisc");
+    m_lightTexture = ResourceManager::instance().get<Spritesheet>("LightDisc");
 
     m_lightShader.loadFromFile("assets/shaders/light.vert", "assets/shaders/light.frag");
     m_lightShader.setParameter("lightTextureSize", sf::Vector2f(static_cast<float>(m_lightMap.getSize().x), static_cast<float>(m_lightMap.getSize().y)));
@@ -316,7 +318,7 @@ void WorldRenderer::drawLightsToLightMap()
     auto lights = m_world.m_entitySystem.queryLights(m_camera.viewRectangle());
     for (auto& light : lights)
     {
-        light.draw(m_lightMap, lightRenderStates, m_lightTexture.get());
+        light.draw(m_lightMap, lightRenderStates, m_lightTexture.get().texture());
     }
 
     m_lightMap.display();

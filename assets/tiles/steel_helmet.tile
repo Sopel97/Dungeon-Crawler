@@ -10,7 +10,7 @@ tile = {
     
     spriteSelector = "WeightedRandom",
     sprites = {
-        {{{238, 238}}},
+        {{{7, 7}}},
     },
 
     validSlots = {"None", "Helmet", "LeftHand", "RightHand"},

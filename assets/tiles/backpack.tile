@@ -10,7 +10,7 @@ tile = {
     
     spriteSelector = "WeightedRandom",
     sprites = {
-        {{{340, 204}}},
+        {{{10, 6}}},
     },
 	
     inventorySize = 15,

@@ -10,7 +10,7 @@ tile = {
     
     spriteSelector = "WeightedRandom",
     sprites = {
-        {{{272, 238}}},
+        {{{8, 7}}},
     },
 
     requiresAmmo = false,

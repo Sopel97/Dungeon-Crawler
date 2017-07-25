@@ -10,6 +10,8 @@
 
 #include "SpriteBatch.h"
 
+#include "sprite/Spritesheet.h"
+
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 
@@ -39,38 +41,38 @@ InnerBorderedWallTileRenderer::~InnerBorderedWallTileRenderer()
 void InnerBorderedWallTileRenderer::loadFromConfiguration(ConfigurationNode& config)
 {
     std::string textureName = config["texture"].get<std::string>();
-    m_commonData->texture = ResourceManager::instance().get<sf::Texture>(textureName);
+    m_commonData->spritesheet = ResourceManager::instance().get<Spritesheet>(textureName);
     m_commonData->hasMetaTexture = config["hasMetaTexture"].get<bool>();
 
     Vec2I spriteSet{ config["spriteSet"][1].get<int>(), config["spriteSet"][2].get<int>() };
 
-    m_commonData->spriteSet.full = spriteSet + Vec2I(2 * GameConstants::tileFullSpriteSize, 3 * GameConstants::tileFullSpriteSize);
-    m_commonData->spriteSet.top = spriteSet + Vec2I(2 * GameConstants::tileFullSpriteSize, 1 * GameConstants::tileFullSpriteSize);
-    m_commonData->spriteSet.left = spriteSet + Vec2I(1 * GameConstants::tileFullSpriteSize, 2 * GameConstants::tileFullSpriteSize);
-    m_commonData->spriteSet.topLeft = spriteSet + Vec2I(1 * GameConstants::tileFullSpriteSize, 1 * GameConstants::tileFullSpriteSize);
-    m_commonData->spriteSet.bottomRight = spriteSet + Vec2I(3 * GameConstants::tileFullSpriteSize, 3 * GameConstants::tileFullSpriteSize);
+    m_commonData->spriteSet.full = spriteSet + Vec2I(2, 3);
+    m_commonData->spriteSet.top = spriteSet + Vec2I(2, 1);
+    m_commonData->spriteSet.left = spriteSet + Vec2I(1, 2);
+    m_commonData->spriteSet.topLeft = spriteSet + Vec2I(1, 1);
+    m_commonData->spriteSet.bottomRight = spriteSet + Vec2I(3, 3);
 
-    m_commonData->spriteSet.outerLeft = spriteSet + Vec2I(0 * GameConstants::tileFullSpriteSize, 1 * GameConstants::tileFullSpriteSize);
-    m_commonData->spriteSet.innerTopRight = spriteSet + Vec2I(3 * GameConstants::tileFullSpriteSize, 1 * GameConstants::tileFullSpriteSize);
-    m_commonData->spriteSet.innerBottomLeft = spriteSet + Vec2I(1 * GameConstants::tileFullSpriteSize, 3 * GameConstants::tileFullSpriteSize);
-    m_commonData->spriteSet.outerTopRight = spriteSet + Vec2I(3 * GameConstants::tileFullSpriteSize, 0 * GameConstants::tileFullSpriteSize);
-    m_commonData->spriteSet.outerBottomLeft = spriteSet + Vec2I(0 * GameConstants::tileFullSpriteSize, 3 * GameConstants::tileFullSpriteSize);
-    m_commonData->spriteSet.outerTop = spriteSet + Vec2I(1 * GameConstants::tileFullSpriteSize, 0 * GameConstants::tileFullSpriteSize);
-    m_commonData->spriteSet.outerTopLeft = spriteSet + Vec2I(2 * GameConstants::tileFullSpriteSize, 2 * GameConstants::tileFullSpriteSize);
-    m_commonData->spriteSet.innerBottomRight = spriteSet + Vec2I(0 * GameConstants::tileFullSpriteSize, 0 * GameConstants::tileFullSpriteSize);
+    m_commonData->spriteSet.outerLeft = spriteSet + Vec2I(0, 1);
+    m_commonData->spriteSet.innerTopRight = spriteSet + Vec2I(3, 1);
+    m_commonData->spriteSet.innerBottomLeft = spriteSet + Vec2I(1, 3);
+    m_commonData->spriteSet.outerTopRight = spriteSet + Vec2I(3, 0);
+    m_commonData->spriteSet.outerBottomLeft = spriteSet + Vec2I(0, 3);
+    m_commonData->spriteSet.outerTop = spriteSet + Vec2I(1, 0);
+    m_commonData->spriteSet.outerTopLeft = spriteSet + Vec2I(2, 2);
+    m_commonData->spriteSet.innerBottomRight = spriteSet + Vec2I(0, 0);
 
     m_commonData->innerBorderGroup = config["innerBorderGroup"].get<std::string>();
 }
 
 void InnerBorderedWallTileRenderer::draw(SpriteBatch& spriteBatch, const TileLocation& location) const
 {
-    if (!m_commonData->texture) return;
+    if (!m_commonData->spritesheet) return;
     draw(spriteBatch, location, ls::Vec2I(0, 0));
 }
 
 void InnerBorderedWallTileRenderer::drawMeta(SpriteBatch& spriteBatch, const TileLocation& location) const
 {
-    if (!m_commonData->texture || !m_commonData->hasMetaTexture) return;
+    if (!m_commonData->spritesheet || !m_commonData->hasMetaTexture) return;
     draw(spriteBatch, location, ls::Vec2I(texture().getSize().x / 2, 0));
 }
 void InnerBorderedWallTileRenderer::draw(SpriteBatch& spriteBatch, const TileLocation& location, const ls::Vec2I& textureOffset) const
@@ -124,7 +126,7 @@ void InnerBorderedWallTileRenderer::draw(SpriteBatch& spriteBatch, const TileLoc
 
         if (resultSprite != nullptr)
         {
-            const ls::Vec2F sprite(*resultSprite);
+            const ls::Vec2F sprite = static_cast<ls::Vec2F>(spritesheet().gridCoordsToTexCoords(*resultSprite));
             const ls::Vec2F size(static_cast<float>(GameConstants::tileSize), static_cast<float>(GameConstants::tileSize));
             const ls::Vec2F pos(x * size.x, y * size.y);
 
@@ -146,7 +148,7 @@ void InnerBorderedWallTileRenderer::draw(SpriteBatch& spriteBatch, const TileLoc
 
         if (resultSprite != nullptr)
         {
-            const ls::Vec2F sprite(*resultSprite);
+            const ls::Vec2F sprite = static_cast<ls::Vec2F>(spritesheet().gridCoordsToTexCoords(*resultSprite));
             const ls::Vec2F size(static_cast<float>(GameConstants::tileSize), static_cast<float>(GameConstants::tileSize));
             const ls::Vec2F pos((x-1) * size.x, y * size.y);
 
@@ -168,7 +170,7 @@ void InnerBorderedWallTileRenderer::draw(SpriteBatch& spriteBatch, const TileLoc
 
         if (resultSprite != nullptr)
         {
-            const ls::Vec2F sprite(*resultSprite);
+            const ls::Vec2F sprite = static_cast<ls::Vec2F>(spritesheet().gridCoordsToTexCoords(*resultSprite));
             const ls::Vec2F size(static_cast<float>(GameConstants::tileSize), static_cast<float>(GameConstants::tileSize));
             const ls::Vec2F pos(x * size.x, (y-1) * size.y);
 
@@ -186,7 +188,7 @@ void InnerBorderedWallTileRenderer::draw(SpriteBatch& spriteBatch, const TileLoc
 
         if (resultSprite != nullptr)
         {
-            const ls::Vec2F sprite(*resultSprite);
+            const ls::Vec2F sprite = static_cast<ls::Vec2F>(spritesheet().gridCoordsToTexCoords(*resultSprite));
             const ls::Vec2F size(static_cast<float>(GameConstants::tileSize), static_cast<float>(GameConstants::tileSize));
             const ls::Vec2F pos((x-1) * size.x, (y-1) * size.y);
 
@@ -197,7 +199,11 @@ void InnerBorderedWallTileRenderer::draw(SpriteBatch& spriteBatch, const TileLoc
 }
 const sf::Texture& InnerBorderedWallTileRenderer::texture() const
 {
-    return m_commonData->texture.get();
+    return m_commonData->spritesheet.get().texture();
+}
+const Spritesheet& InnerBorderedWallTileRenderer::spritesheet() const
+{
+    return m_commonData->spritesheet.get();
 }
 TileInnerBorderGroupType InnerBorderedWallTileRenderer::innerBorderGroup() const
 {

@@ -19,6 +19,7 @@ namespace sf
 class MapLayer;
 class Tile;
 class TileLocation;
+class Spritesheet;
 
 class InnerBorderedWallTileRenderer : public TileRenderer
 {
@@ -45,7 +46,7 @@ public:
 
         }spriteSet;
 
-        ResourceHandle<sf::Texture> texture;
+        ResourceHandle<Spritesheet> spritesheet;
 
         TileInnerBorderGroupType innerBorderGroup;
 
@@ -62,6 +63,8 @@ public:
     void drawMeta(SpriteBatch& spriteBatch, const TileLocation& location) const override;
 
     const sf::Texture& texture() const;
+    const Spritesheet& spritesheet() const;
+
     TileInnerBorderGroupType innerBorderGroup() const override;
 
     std::unique_ptr<TileRenderer> clone(Tile& owner) const override;

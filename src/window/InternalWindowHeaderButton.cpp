@@ -2,6 +2,8 @@
 
 #include "ResourceManager.h"
 
+#include "sprite/Spritesheet.h"
+
 #include <iostream>
 
 InternalWindowHeaderButton::InternalWindowHeaderButton(InternalWindow& parent, int id, const ls::Rectangle2I& sprite, bool enabled) :
@@ -42,11 +44,11 @@ void InternalWindowHeaderButton::setEnabled(bool enable)
 
 void InternalWindowHeaderButton::draw(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates, const ls::Vec2I& pos)
 {
-    ResourceHandle<sf::Texture> nonRepeatingSprites = ResourceManager::instance().get<sf::Texture>("UiNonRepeating");
+    ResourceHandle<Spritesheet> nonRepeatingSprites = ResourceManager::instance().get<Spritesheet>("UiNonRepeating");
 
     sf::Sprite button;
     button.setPosition(static_cast<float>(pos.x), static_cast<float>(pos.y));
-    button.setTexture(nonRepeatingSprites.get());
+    button.setTexture(nonRepeatingSprites.get().texture());
     button.setTextureRect(sf::IntRect(sf::Vector2i(m_spriteRect.min.x, m_spriteRect.min.y), sf::Vector2i(m_spriteRect.width(), m_spriteRect.height())));
     renderTarget.draw(button, renderStates);
 }

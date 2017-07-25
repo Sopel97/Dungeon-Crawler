@@ -24,13 +24,14 @@ namespace sf
 class MapLayer;
 class Tile;
 class TileLocation;
+class Spritesheet;
 
 class OuterBorderedTileRenderer : public TileRenderer
 {
 public:
     struct CommonData : public ComponentCommonData
     {
-        ResourceHandle<sf::Texture> texture;
+        ResourceHandle<Spritesheet> spritesheet;
         TileSpriteSelector spriteSelector;
         ls::Vec2I borderSprites;
 
@@ -47,6 +48,7 @@ public:
     void drawOutside(SpriteBatch& spriteBatch, const TileLocation& location) const override;
 
     const sf::Texture& texture() const;
+    const Spritesheet& spritesheet() const;
 
     int outerBorderPriority() const override;
     bool hasOuterBorder() const override;

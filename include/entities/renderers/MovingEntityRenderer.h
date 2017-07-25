@@ -34,7 +34,7 @@ public:
 
     std::unique_ptr<EntityRenderer> clone(Entity& owner) const override;
 protected:
-    ResourceHandle<sf::Texture> m_texture;
+    ResourceHandle<Spritesheet> m_spritesheet;
     ls::Vec2I m_sprites;
     bool m_hasMetaTexture;
 

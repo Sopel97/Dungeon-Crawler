@@ -18,6 +18,7 @@ namespace sf
 }
 class Entity;
 class Player;
+class Spritesheet;
 
 class PlayerRenderer : public EntityRenderer
 {
@@ -37,8 +38,8 @@ public:
     std::unique_ptr<EntityRenderer> clone(Entity& owner) const override;
 protected:
     Player* m_playerOwner;
-    ResourceHandle<sf::Texture> m_texture;
+    ResourceHandle<Spritesheet> m_spritesheet;
     ls::Vec2I m_sprites;
 
-    void draw(SpriteBatch& spriteBatch, const ls::Vec2I& sprites) const;
+    void draw(SpriteBatch& spriteBatch, const ls::Vec2I& textureOffset) const;
 };

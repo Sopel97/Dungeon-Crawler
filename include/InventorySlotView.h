@@ -18,6 +18,8 @@ namespace sf
     class Font;
 }
 
+class Spritesheet;
+
 class InventorySlotView
 {
 public:
@@ -45,7 +47,7 @@ public:
 protected:
     static constexpr int m_fontSize = 16;
 
-    static ResourceHandle<sf::Texture> m_texture;
+    static ResourceHandle<Spritesheet> m_spritesheet;
     static ResourceHandle<sf::Font> m_font;
     static ls::Vec2I m_slotTexture;
     static ls::Vec2I m_slotTextureSize;

@@ -1,11 +1,7 @@
 IMPORTANT:
-- replace completely current usage of sf::Texture with Spritesheet
--- drawing functions receive 'unit length' that says how large is one unit in world coords (for tiles it will be 32)
+-- drawing functions receive 'unit length' that says how large is one unit in world coords (for tiles it will be 32) instead of having a global constant
 
 -- eventually encapsulate compontents in Tile, Entity, Projectile o they are not visible from outside
-
-- think about ugly GameConstants namespace, particularly the tile sprite size constant
--- consider making a class that encapsulates grid based spritesheet, instead of passing pixel coordinates pass grid coordinates
 
 - Clear world generation code //little priority since it is waiting for libs still
 

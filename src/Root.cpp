@@ -113,16 +113,16 @@ void Root::loadTextures()
 {
     Configuration config("assets/gfx/textures.meta");
     ConfigurationNode textureList = config["textures"];
+
     const int numEntries = textureList.length();
     for (int i = 1; i <= numEntries; ++i)
     {
         const std::string path = textureList[i]["path"].get<std::string>();
         const std::string name = textureList[i]["name"].get<std::string>();
+        const int gridSize = textureList[i]["gridSize"].getDefault<int>(1);
+        const int padding = textureList[i]["padding"].getDefault<int>(0);
         const bool isRepeated = textureList[i]["repeated"].getDefault<bool>(false);
-        if (ResourceHandle<sf::Texture> texture = ResourceManager::instance().load<sf::Texture, std::string>(std::string("assets/gfx/") + path, name))
-        {
-            texture->setRepeated(isRepeated);
-        }
+        ResourceHandle<Spritesheet> texture = ResourceManager::instance().load<Spritesheet, const std::string&, const int&, const int&, const bool&>(std::string("assets/gfx/") + path, gridSize, padding, isRepeated, name);
     }
 }
 void Root::loadProjectiles()

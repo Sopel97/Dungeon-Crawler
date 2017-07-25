@@ -11,6 +11,8 @@
 
 #include "SpriteBatch.h"
 
+#include "sprite/Spritesheet.h"
+
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 
@@ -42,7 +44,7 @@ OuterBorderedTileRenderer::~OuterBorderedTileRenderer()
 void OuterBorderedTileRenderer::loadFromConfiguration(ConfigurationNode& config)
 {
     std::string textureName = config["texture"].get<std::string>();
-    m_commonData->texture = ResourceManager::instance().get<sf::Texture>(textureName);
+    m_commonData->spritesheet = ResourceManager::instance().get<Spritesheet>(textureName);
 
     m_commonData->spriteSelector.loadFromConfiguration(config);
 
@@ -52,7 +54,7 @@ void OuterBorderedTileRenderer::loadFromConfiguration(ConfigurationNode& config)
 
 void OuterBorderedTileRenderer::draw(SpriteBatch& spriteBatch, const TileLocation& location) const
 {
-    const ls::Vec2F sprite(m_currentAnimatedSprite->now());
+    const ls::Vec2F sprite = static_cast<ls::Vec2F>(spritesheet().gridCoordsToTexCoords(m_currentAnimatedSprite->now()));
     const ls::Vec2F size(static_cast<float>(GameConstants::tileSize), static_cast<float>(GameConstants::tileSize));
     const ls::Vec2F pos(location.x * size.x, location.y * size.y);
 
@@ -104,11 +106,11 @@ void OuterBorderedTileRenderer::drawOutside(SpriteBatch& spriteBatch, const Tile
     if(isIdSame[Bottom]) sideBorderSpriteIndex += 8;
 
 
-    Vec2I sideBorderSpritePosition = m_commonData->borderSprites + Vec2I {GameConstants::tileFullSpriteSize * sideBorderSpriteIndex, 0};
+    Vec2I sideBorderSpritePosition = m_commonData->borderSprites + Vec2I {sideBorderSpriteIndex, 0};
 
     if(sideBorderSpriteIndex != -1)
     {
-        const ls::Vec2F sprite(sideBorderSpritePosition);
+        const ls::Vec2F sprite = static_cast<ls::Vec2F>(spritesheet().gridCoordsToTexCoords(sideBorderSpritePosition));
         const ls::Vec2F size(static_cast<float>(GameConstants::tileSize), static_cast<float>(GameConstants::tileSize));
         const ls::Vec2F pos(x * size.x, y * size.y);
 
@@ -123,11 +125,11 @@ void OuterBorderedTileRenderer::drawOutside(SpriteBatch& spriteBatch, const Tile
     if(isIdSame[BottomRight] && !isIdSame[Bottom] && !isIdSame[Right]) cornerBorderSpriteIndex += 4;
     if(isIdSame[BottomLeft] && !isIdSame[Bottom] && !isIdSame[Left]) cornerBorderSpriteIndex += 8;
 
-    Vec2I cornerBorderSpritePosition = m_commonData->borderSprites + Vec2I {GameConstants::tileFullSpriteSize * cornerBorderSpriteIndex, GameConstants::tileFullSpriteSize};
+    Vec2I cornerBorderSpritePosition = m_commonData->borderSprites + Vec2I {cornerBorderSpriteIndex, 1};
 
     if(cornerBorderSpriteIndex != -1)
     {
-        const ls::Vec2F sprite(cornerBorderSpritePosition);
+        const ls::Vec2F sprite = static_cast<ls::Vec2F>(spritesheet().gridCoordsToTexCoords(cornerBorderSpritePosition));
         const ls::Vec2F size(static_cast<float>(GameConstants::tileSize), static_cast<float>(GameConstants::tileSize));
         const ls::Vec2F pos(x * size.x, y * size.y);
 
@@ -137,7 +139,11 @@ void OuterBorderedTileRenderer::drawOutside(SpriteBatch& spriteBatch, const Tile
 
 const sf::Texture& OuterBorderedTileRenderer::texture() const
 {
-    return m_commonData->texture.get();
+    return m_commonData->spritesheet.get().texture();
+}
+const Spritesheet& OuterBorderedTileRenderer::spritesheet() const
+{
+    return m_commonData->spritesheet.get();
 }
 
 int OuterBorderedTileRenderer::outerBorderPriority() const

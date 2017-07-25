@@ -17,7 +17,7 @@ ls::Vec2I Spritesheet::gridSizeToTexSize(const ls::Vec2I& onGridSize) const
     return onGridSize * m_gridSize;
 }
 
-const sf::Texture& Spritesheet::texture()
+const sf::Texture& Spritesheet::texture() const
 {
     return m_texture;
 }

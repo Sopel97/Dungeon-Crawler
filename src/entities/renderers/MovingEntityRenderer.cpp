@@ -16,7 +16,7 @@ REGISTER_ENTITY_RENDERER_TYPE(MovingEntityRenderer)
 
 MovingEntityRenderer::MovingEntityRenderer(Entity& owner) :
     EntityRenderer(owner),
-    m_texture(nullptr),
+    m_spritesheet(nullptr),
     m_sprites(0, 0)
 {
 
@@ -24,7 +24,7 @@ MovingEntityRenderer::MovingEntityRenderer(Entity& owner) :
 
 MovingEntityRenderer::MovingEntityRenderer(const MovingEntityRenderer& other, Entity& owner) :
     EntityRenderer(other, owner),
-    m_texture(other.m_texture),
+    m_spritesheet(other.m_spritesheet),
     m_sprites(other.m_sprites)
 {
 
@@ -36,7 +36,7 @@ MovingEntityRenderer::~MovingEntityRenderer()
 
 void MovingEntityRenderer::loadFromConfiguration(ConfigurationNode& config)
 {
-    m_texture = ResourceManager::instance().get<sf::Texture>(config["texture"].get<std::string>());
+    m_spritesheet = ResourceManager::instance().get<Spritesheet>(config["texture"].get<std::string>());
     m_hasMetaTexture = config["hasMetaTexture"].get<bool>();
     m_sprites.x = config["sprites"][1].get<int>();
     m_sprites.y = config["sprites"][2].get<int>();
@@ -49,7 +49,7 @@ void MovingEntityRenderer::draw(SpriteBatch& spriteBatch) const
 
 void MovingEntityRenderer::drawMeta(SpriteBatch& spriteBatch) const
 {
-    draw(spriteBatch, ls::Vec2I(m_texture.get().getSize().x / 2, 0));
+    draw(spriteBatch, ls::Vec2I(m_spritesheet.get().texture().getSize().x / 2, 0));
 }
 void MovingEntityRenderer::draw(SpriteBatch& spriteBatch, const ls::Vec2I& textureOffset) const
 {
@@ -70,9 +70,13 @@ void MovingEntityRenderer::draw(SpriteBatch& spriteBatch, const ls::Vec2I& textu
         steppingSpriteVariant = static_cast<int>(distanceTravelled / distanceTravelledPerStep) % numberOfSteppingSprites + 1;
     }
 
-    const ls::Vec2F sprite(
-        static_cast<float>(m_sprites.x + textureOffset.x + steppingSpriteVariant * GameConstants::tileFullSpriteSize), 
-        static_cast<float>(m_sprites.y + textureOffset.y + direction * GameConstants::tileFullSpriteSize)
+    const ls::Vec2F sprite = static_cast<ls::Vec2F>(
+        m_spritesheet.get().gridCoordsToTexCoords(
+            ls::Vec2I(
+                m_sprites.x + steppingSpriteVariant, 
+                m_sprites.y + direction
+            )
+        ) + textureOffset
     );
     const ls::Vec2F size(static_cast<float>(GameConstants::tileSize), static_cast<float>(GameConstants::tileSize));
     ls::Vec2F pos = m_owner->model().position() + offsetToOrigin;
@@ -84,7 +88,7 @@ void MovingEntityRenderer::draw(SpriteBatch& spriteBatch, const ls::Vec2I& textu
 
 const sf::Texture& MovingEntityRenderer::texture() const
 {
-    return m_texture.get();
+    return m_spritesheet.get().texture();
 }
 
 std::unique_ptr<EntityRenderer> MovingEntityRenderer::clone(Entity& owner) const
