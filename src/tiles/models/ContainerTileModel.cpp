@@ -1,7 +1,5 @@
 #include "tiles/models/ContainerTileModel.h"
 
-#include "GameConstants.h"
-
 #include "tiles/TileInformation.h"
 
 #include "Player.h"

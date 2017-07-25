@@ -26,8 +26,6 @@
 #include <algorithm>
 #include <memory>
 
-#include "GameConstants.h"
-
 using namespace ls;
 
 ProjectileSystem::ProjectileSystem(World& world, EntitySystem& entitySystem) :

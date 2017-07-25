@@ -12,8 +12,6 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 
-#include "GameConstants.h"
-
 using namespace ls;
 
 REGISTER_ENTITY_RENDERER_TYPE(PlayerRenderer)

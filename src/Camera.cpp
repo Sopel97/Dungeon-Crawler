@@ -2,8 +2,6 @@
 
 #include <cmath>
 
-#include "GameConstants.h"
-
 using namespace ls;
 
 Camera::Camera(const Vec2F& center, float width, float height) :

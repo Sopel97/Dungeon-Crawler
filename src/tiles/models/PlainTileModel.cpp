@@ -1,7 +1,5 @@
 #include "tiles/models/PlainTileModel.h"
 
-#include "GameConstants.h"
-
 #include "World.h"
 
 using namespace ls;

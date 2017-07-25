@@ -2,7 +2,6 @@
 
 #include "SFML/Graphics.hpp"
 #include "TileLocation.h"
-#include "GameConstants.h"
 
 TileRenderer::TileRenderer(Tile& owner) :
     TileComponent(owner)

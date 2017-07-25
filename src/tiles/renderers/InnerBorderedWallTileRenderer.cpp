@@ -17,8 +17,6 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 
-#include "GameConstants.h"
-
 using namespace ls;
 
 REGISTER_TILE_RENDERER_TYPE(InnerBorderedWallTileRenderer)

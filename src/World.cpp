@@ -30,8 +30,6 @@
 
 #include "../LibS/Util.h"
 
-#include "GameConstants.h"
-
 #include "Logger.h"
 
 using namespace ls;

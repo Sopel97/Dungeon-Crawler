@@ -17,8 +17,6 @@
 
 #include "../LibS/Util.h"
 
-#include "GameConstants.h"
-
 using namespace ls;
 
 TileColumn MapLayer::m_emptyTileColumn {};

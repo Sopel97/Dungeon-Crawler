@@ -24,8 +24,6 @@
 #include <algorithm>
 #include <memory>
 
-#include "GameConstants.h"
-
 using namespace ls;
 
 EntitySystem::EntitySystem(World& world, Player& player) :

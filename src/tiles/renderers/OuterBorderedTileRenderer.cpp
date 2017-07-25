@@ -20,8 +20,6 @@
 
 #include <algorithm>
 
-#include "GameConstants.h"
-
 using namespace ls;
 
 REGISTER_TILE_RENDERER_TYPE(OuterBorderedTileRenderer)
