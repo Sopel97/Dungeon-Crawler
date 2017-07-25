@@ -129,10 +129,11 @@ void InnerBorderedWallTileRenderer::draw(SpriteBatch& spriteBatch, const TileLoc
         if (resultSprite != nullptr)
         {
             const ls::Vec2F sprite = static_cast<ls::Vec2F>(spritesheet().gridCoordsToTexCoords(*resultSprite));
+            const ls::Vec2F spriteSize = static_cast<ls::Vec2F>(spritesheet().gridSizeToTexSize({ 1, 1 }));
             const ls::Vec2F size(World::tileSize, World::tileSize);
             const ls::Vec2F pos(x * size.x, y * size.y);
 
-            spriteBatch.emplaceRectangle(&(texture()), pos, sprite + textureOffset, size);
+            spriteBatch.emplaceRectangle(&(texture()), pos, size, sprite + textureOffset, spriteSize);
         }
     }
 
@@ -151,10 +152,11 @@ void InnerBorderedWallTileRenderer::draw(SpriteBatch& spriteBatch, const TileLoc
         if (resultSprite != nullptr)
         {
             const ls::Vec2F sprite = static_cast<ls::Vec2F>(spritesheet().gridCoordsToTexCoords(*resultSprite));
+            const ls::Vec2F spriteSize = static_cast<ls::Vec2F>(spritesheet().gridSizeToTexSize({ 1, 1 }));
             const ls::Vec2F size(World::tileSize, World::tileSize);
             const ls::Vec2F pos((x-1) * size.x, y * size.y);
 
-            spriteBatch.emplaceRectangle(&(texture()), pos, sprite + textureOffset, size);
+            spriteBatch.emplaceRectangle(&(texture()), pos, size, sprite + textureOffset, spriteSize);
         }
     }
 
@@ -173,10 +175,11 @@ void InnerBorderedWallTileRenderer::draw(SpriteBatch& spriteBatch, const TileLoc
         if (resultSprite != nullptr)
         {
             const ls::Vec2F sprite = static_cast<ls::Vec2F>(spritesheet().gridCoordsToTexCoords(*resultSprite));
+            const ls::Vec2F spriteSize = static_cast<ls::Vec2F>(spritesheet().gridSizeToTexSize({ 1, 1 }));
             const ls::Vec2F size(World::tileSize, World::tileSize);
             const ls::Vec2F pos(x * size.x, (y-1) * size.y);
 
-            spriteBatch.emplaceRectangle(&(texture()), pos, sprite + textureOffset, size);
+            spriteBatch.emplaceRectangle(&(texture()), pos, size, sprite + textureOffset, spriteSize);
         }
     }
 
@@ -191,10 +194,11 @@ void InnerBorderedWallTileRenderer::draw(SpriteBatch& spriteBatch, const TileLoc
         if (resultSprite != nullptr)
         {
             const ls::Vec2F sprite = static_cast<ls::Vec2F>(spritesheet().gridCoordsToTexCoords(*resultSprite));
+            const ls::Vec2F spriteSize = static_cast<ls::Vec2F>(spritesheet().gridSizeToTexSize({ 1, 1 }));
             const ls::Vec2F size(World::tileSize, World::tileSize);
             const ls::Vec2F pos((x-1) * size.x, (y-1) * size.y);
 
-            spriteBatch.emplaceRectangle(&(texture()), pos, sprite + textureOffset, size);
+            spriteBatch.emplaceRectangle(&(texture()), pos, size, sprite + textureOffset, spriteSize);
         }
     }
 

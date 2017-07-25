@@ -80,12 +80,13 @@ void MovingEntityRenderer::draw(SpriteBatch& spriteBatch, const ls::Vec2I& textu
             )
         ) + textureOffset
     );
+    const ls::Vec2F spriteSize = static_cast<ls::Vec2F>(m_spritesheet.get().gridSizeToTexSize({ 1, 1 }));
     const ls::Vec2F size(World::tileSize, World::tileSize);
     ls::Vec2F pos = m_owner->model().position() + offsetToOrigin;
     pos.x = std::floor(pos.x);
     pos.y = std::floor(pos.y);
 
-    spriteBatch.emplaceRectangle(&(texture()), pos, sprite, size);
+    spriteBatch.emplaceRectangle(&(texture()), pos, size, sprite + textureOffset, spriteSize);
 }
 
 const sf::Texture& MovingEntityRenderer::texture() const

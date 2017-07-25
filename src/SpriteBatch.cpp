@@ -7,12 +7,12 @@ SpriteBatch::SpriteBatch() :
 
 }
 
-void SpriteBatch::emplaceRectangle(const sf::Texture* texture, const ls::Vec2F& position, const ls::Vec2F& texCoords, const ls::Vec2F& size, const sf::Color& color)
+void SpriteBatch::emplaceRectangle(const sf::Texture* texture, const ls::Vec2F& position, const ls::Vec2F& size, const ls::Vec2F& texCoords, const ls::Vec2F& texSize, const sf::Color& color)
 {
     const sf::Vertex topLeft(sf::Vector2f(position.x, position.y), color, sf::Vector2f(texCoords.x, texCoords.y));
-    const sf::Vertex topRight(sf::Vector2f(position.x + size.x, position.y), color, sf::Vector2f(texCoords.x + size.x, texCoords.y));
-    const sf::Vertex bottomLeft(sf::Vector2f(position.x, position.y + size.y), color, sf::Vector2f(texCoords.x, texCoords.y + size.y));
-    const sf::Vertex bottomRight(sf::Vector2f(position.x + size.x, position.y + size.y), color, sf::Vector2f(texCoords.x + size.x, texCoords.y + size.y));
+    const sf::Vertex topRight(sf::Vector2f(position.x + size.x, position.y), color, sf::Vector2f(texCoords.x + texSize.x, texCoords.y));
+    const sf::Vertex bottomLeft(sf::Vector2f(position.x, position.y + size.y), color, sf::Vector2f(texCoords.x, texCoords.y + texSize.y));
+    const sf::Vertex bottomRight(sf::Vector2f(position.x + size.x, position.y + size.y), color, sf::Vector2f(texCoords.x + texSize.x, texCoords.y + texSize.y));
 
     auto& buffer = findBuffer(texture);
 

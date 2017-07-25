@@ -57,10 +57,11 @@ void OuterBorderedTileRenderer::loadFromConfiguration(ConfigurationNode& config)
 void OuterBorderedTileRenderer::draw(SpriteBatch& spriteBatch, const TileLocation& location) const
 {
     const ls::Vec2F sprite = static_cast<ls::Vec2F>(spritesheet().gridCoordsToTexCoords(m_currentAnimatedSprite->now()));
+    const ls::Vec2F spriteSize = static_cast<ls::Vec2F>(spritesheet().gridSizeToTexSize({ 1, 1 }));
     const ls::Vec2F size(World::tileSize, World::tileSize);
     const ls::Vec2F pos(location.x * size.x, location.y * size.y);
 
-    spriteBatch.emplaceRectangle(&(texture()), pos, sprite, size);
+    spriteBatch.emplaceRectangle(&(texture()), pos, size, sprite, spriteSize);
 }
 
 void OuterBorderedTileRenderer::drawOutside(SpriteBatch& spriteBatch, const TileLocation& location) const
@@ -113,10 +114,11 @@ void OuterBorderedTileRenderer::drawOutside(SpriteBatch& spriteBatch, const Tile
     if(sideBorderSpriteIndex != -1)
     {
         const ls::Vec2F sprite = static_cast<ls::Vec2F>(spritesheet().gridCoordsToTexCoords(sideBorderSpritePosition));
+        const ls::Vec2F spriteSize = static_cast<ls::Vec2F>(spritesheet().gridSizeToTexSize({ 1, 1 }));
         const ls::Vec2F size(World::tileSize, World::tileSize);
         const ls::Vec2F pos(x * size.x, y * size.y);
 
-        spriteBatch.emplaceRectangle(&(texture()), pos, sprite, size);
+        spriteBatch.emplaceRectangle(&(texture()), pos, size, sprite, spriteSize);
     }
 
 
@@ -132,10 +134,11 @@ void OuterBorderedTileRenderer::drawOutside(SpriteBatch& spriteBatch, const Tile
     if(cornerBorderSpriteIndex != -1)
     {
         const ls::Vec2F sprite = static_cast<ls::Vec2F>(spritesheet().gridCoordsToTexCoords(cornerBorderSpritePosition));
+        const ls::Vec2F spriteSize = static_cast<ls::Vec2F>(spritesheet().gridSizeToTexSize({ 1, 1 }));
         const ls::Vec2F size(World::tileSize, World::tileSize);
         const ls::Vec2F pos(x * size.x, y * size.y);
 
-        spriteBatch.emplaceRectangle(&(texture()), pos, sprite, size);
+        spriteBatch.emplaceRectangle(&(texture()), pos, size, sprite, spriteSize);
     }
 }
 

@@ -68,10 +68,11 @@ void PlainTileRenderer::drawMeta(SpriteBatch& spriteBatch, const TileLocation& l
 void PlainTileRenderer::draw(SpriteBatch& spriteBatch, const TileLocation& location, const ls::Vec2I& textureOffset) const
 {
     const ls::Vec2F sprite = static_cast<ls::Vec2F>(spritesheet().gridCoordsToTexCoords(m_currentAnimatedSprite->now()));
+    const ls::Vec2F spriteSize = static_cast<ls::Vec2F>(spritesheet().gridSizeToTexSize({ 1, 1 }));
     const ls::Vec2F size(World::tileSize, World::tileSize);
     const ls::Vec2F pos(location.x * size.x, location.y * size.y);
 
-    spriteBatch.emplaceRectangle(&(texture()), pos, sprite + textureOffset, size);
+    spriteBatch.emplaceRectangle(&(texture()), pos, size, sprite + textureOffset, spriteSize);
 }
 void PlainTileRenderer::draw(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates, const InventorySlotView& slot) const
 {

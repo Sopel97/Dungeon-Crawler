@@ -12,7 +12,7 @@ class SpriteBatch : public sf::Drawable
 public:
     SpriteBatch();
 
-    void emplaceRectangle(const sf::Texture* texture, const ls::Vec2F& position, const ls::Vec2F& texCoords, const ls::Vec2F& size, const sf::Color& color = sf::Color::White);
+    void emplaceRectangle(const sf::Texture* texture, const ls::Vec2F& position, const ls::Vec2F& size, const ls::Vec2F& texCoords, const ls::Vec2F& texSize, const sf::Color& color = sf::Color::White);
 
     void clear();
 
