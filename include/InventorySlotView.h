@@ -41,7 +41,7 @@ public:
     Inventory& inventory();
     const Inventory& inventory() const;
 
-    void draw(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates, SlotContentRequirement contentRequirement);
+    void draw(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates);
 
     static const ls::Vec2I& slotSize();
 

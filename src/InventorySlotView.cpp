@@ -70,7 +70,7 @@ const Inventory& InventorySlotView::inventory() const
     return *m_inventory;
 }
 
-void InventorySlotView::draw(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates, SlotContentRequirement contentRequirement)
+void InventorySlotView::draw(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates)
 {
     sf::Sprite slotSprite;
     slotSprite.setPosition(static_cast<float>(m_position.x), static_cast<float>(m_position.y));
@@ -79,6 +79,7 @@ void InventorySlotView::draw(sf::RenderTarget& renderTarget, const sf::RenderSta
     renderTarget.draw(slotSprite, renderStates);
 
     const TileStack& tileStack = m_inventory->at(m_slotId);
+    const SlotContentRequirement contentRequirement = m_inventory->slotContentRequirement(m_slotId);
     if(contentRequirement != SlotContentRequirement::None && tileStack.isEmpty())
     {
         Vec2I iconSpritePosition = m_requirementIcons[contentRequirement];

@@ -7,9 +7,9 @@ class TileLocation
 {
 public:
     const MapLayer* map;
-    int x;
-    int y;
-    int z;
+    const int x;
+    const int y;
+    const int z;
 
     TileLocation(const MapLayer& map_, int x_, int y_, int z_);
 };

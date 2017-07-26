@@ -143,6 +143,6 @@ void InventoryView::draw(sf::RenderTarget& renderTarget, const sf::RenderStates&
     int numberOfSlots = m_slotViews.size();
     for (int i = 0; i < numberOfSlots; ++i)
     {
-        m_slotViews[i].draw(renderTarget, renderStates, m_inventory->slotContentRequirement(i));
+        m_slotViews[i].draw(renderTarget, renderStates);
     }
 }
