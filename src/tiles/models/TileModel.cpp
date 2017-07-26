@@ -4,6 +4,8 @@
 
 #include "tiles/TileInformation.h"
 
+#include "InventorySlotLocation.h"
+
 #include "Player.h"
 
 #include "TileDescriptionGenerator.h"
@@ -97,7 +99,7 @@ void TileModel::use(Player& player, const TileLocation& location)
 {
 
 }
-void TileModel::use(Player& player, const InventorySlotView& location)
+void TileModel::use(Player& player, const InventorySlotLocation& location)
 {
 
 }
@@ -105,7 +107,7 @@ void TileModel::look(Player& player, const TileLocation& location)
 {
     player.showTileDescription(TileDescriptionGenerator::generate(owner()));
 }
-void TileModel::look(Player& player, const InventorySlotView& location)
+void TileModel::look(Player& player, const InventorySlotLocation& location)
 {
     player.showTileDescription(TileDescriptionGenerator::generate(owner()));
 }

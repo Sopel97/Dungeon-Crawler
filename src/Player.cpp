@@ -3,6 +3,8 @@
 #include "entities/models/PlayerModel.h"
 #include "entities/renderers/PlayerRenderer.h"
 
+#include "InventorySlotLocation.h"
+
 #include "window/Scene.h"
 
 #include "World.h"
@@ -29,7 +31,7 @@ bool Player::tryInteractWithExternalInventory(Tile& tile, Inventory& inventory, 
 {
     return m_inventorySystem.tryInteractWithExternalInventory(tile, inventory, location);
 }
-bool Player::tryInteractWithInternalInventory(Tile& tile, Inventory& inventory, const InventorySlotView& slot)
+bool Player::tryInteractWithInternalInventory(Tile& tile, Inventory& inventory, const InventorySlotLocation& slot)
 {
     return m_inventorySystem.tryInteractWithInternalInventory(tile, inventory, slot);
 }

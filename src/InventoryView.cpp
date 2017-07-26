@@ -83,7 +83,7 @@ SfmlEventHandler::EventResult InventoryView::onMouseButtonPressed(sf::Event::Mou
             {
                 if (!slot->content().isEmpty())
                 {
-                    slot->content().tile().model().look(m_inventorySystem->player(), *slot);
+                    slot->content().tile().model().look(m_inventorySystem->player(), slot->location());
                 }
             }
             else
@@ -98,7 +98,7 @@ SfmlEventHandler::EventResult InventoryView::onMouseButtonPressed(sf::Event::Mou
             if (!slot->content().isEmpty())
             {
                 Tile& tile = slot->content().tile();
-                tile.model().use(m_inventorySystem->player(), *slot);
+                tile.model().use(m_inventorySystem->player(), slot->location());
             }
         }
     }

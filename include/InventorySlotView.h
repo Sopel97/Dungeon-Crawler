@@ -4,6 +4,8 @@
 
 #include "../LibS/Geometry.h"
 
+#include "InventorySlotLocation.h"
+
 #include <map>
 
 class TileStack;
@@ -44,6 +46,8 @@ public:
     void draw(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates);
 
     static const ls::Vec2I& slotSize();
+
+    InventorySlotLocation location() const;
 
 protected:
     static constexpr int m_fontSize = 16;

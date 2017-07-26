@@ -122,7 +122,7 @@ void ContainerTileModel::use(Player& player, const TileLocation& location)
     player.tryInteractWithExternalInventory(owner(), *(m_owner->model().inventory()), location);
 }
 
-void ContainerTileModel::use(Player& player, const InventorySlotView& slot)
+void ContainerTileModel::use(Player& player, const InventorySlotLocation& slot)
 {
     player.tryInteractWithInternalInventory(owner(), *(m_owner->model().inventory()), slot);
 }

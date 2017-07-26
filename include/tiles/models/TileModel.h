@@ -24,7 +24,7 @@ class Inventory;
 class AttributeSet;
 class TileInformation;
 class Player;
-class InventorySlotView;
+class InventorySlotLocation;
 class World;
 
 struct AmmoGroup;
@@ -64,9 +64,9 @@ public:
     virtual float drag() const; //TODO: make it possible to specify that tile uses the drag of the tile lower
 
     virtual void use(Player& player, const TileLocation& location);
-    virtual void use(Player& player, const InventorySlotView& location);
+    virtual void use(Player& player, const InventorySlotLocation& location);
     virtual void look(Player& player, const TileLocation& location);
-    virtual void look(Player& player, const InventorySlotView& location);
+    virtual void look(Player& player, const InventorySlotLocation& location);
     virtual AttackResult attack(World& world, Player& player, const ls::Vec2F& hintedPosition);
     virtual void indirectAttack(World& world, Player& player, const ls::Vec2F& hintedPosition);
     virtual TileAmmoGroupType ammoGroup() const;

@@ -24,6 +24,7 @@ class TileMovedFromWorldToInventory;
 class TileMovedFromInventoryToInventory;
 class TileMovedFromInventoryToWorld;
 class TileTransferMediator;
+class InventorySlotLocation;
 
 class InventorySystem
 {
@@ -114,7 +115,7 @@ public:
     std::pair<ConstTrackedInventoryTreeHandle, ConstTrackedInventoryHandle> find(const Inventory& inventory) const;
 
     bool tryInteractWithExternalInventory(Tile& tile, Inventory& inventory, const TileLocation& location);
-    bool tryInteractWithInternalInventory(Tile& tile, Inventory& inventory, const InventorySlotView& slot);
+    bool tryInteractWithInternalInventory(Tile& tile, Inventory& inventory, const InventorySlotLocation& slot);
 
     // requires inventory to be tracked, otherwise returns false
     bool canStore(const Inventory& inventory, const Tile& tile) const;

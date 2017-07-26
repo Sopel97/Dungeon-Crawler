@@ -106,6 +106,10 @@ const Vec2I& InventorySlotView::slotSize()
 {
     return m_slotTextureSize;
 }
+InventorySlotLocation InventorySlotView::location() const
+{
+    return InventorySlotLocation(*m_inventory, m_slotId);
+}
 
 void InventorySlotView::drawQuantity(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates, int quantity)
 {

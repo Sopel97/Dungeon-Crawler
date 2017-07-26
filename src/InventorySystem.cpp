@@ -15,6 +15,8 @@
 #include "events/TileMovedFromInventoryToInventory.h"
 #include "events/TileMovedFromInventoryToWorld.h"
 
+#include "InventorySlotLocation.h"
+
 #include "TileTransferMediator.h"
 
 #include <algorithm>
@@ -113,7 +115,7 @@ bool InventorySystem::tryInteractWithExternalInventory(Tile& tile, Inventory& in
         return tryOpenExternalInventory(tile, inventory, ls::Vec2I(location.x, location.y));
     }
 }
-bool InventorySystem::tryInteractWithInternalInventory(Tile& tile, Inventory& inventory, const InventorySlotView& slot)
+bool InventorySystem::tryInteractWithInternalInventory(Tile& tile, Inventory& inventory, const InventorySlotLocation& slot)
 {
     if (isInventoryOpened(inventory))
     {
@@ -122,7 +124,7 @@ bool InventorySystem::tryInteractWithInternalInventory(Tile& tile, Inventory& in
     }
     else
     {
-        return tryOpenInternalInventory(tile, inventory, slot.inventory());
+        return tryOpenInternalInventory(tile, inventory, *slot.inventory);
     }
 }
 

@@ -22,6 +22,7 @@ class TileLocation;
 class WindowSpaceManager;
 class InternalWindow;
 class TileTransferMediator;
+class InventorySlotLocation;
 
 class Player
 {
@@ -31,7 +32,7 @@ public:
     void processAsyncKeyboardInput(World& world, float dt);
 
     bool tryInteractWithExternalInventory(Tile& tile, Inventory& inventory, const TileLocation& location);
-    bool tryInteractWithInternalInventory(Tile& tile, Inventory& inventory, const InventorySlotView& slot);
+    bool tryInteractWithInternalInventory(Tile& tile, Inventory& inventory, const InventorySlotLocation& slot);
 
     PlayerUi& playerUi();
     const PlayerUi& playerUi() const;
