@@ -20,14 +20,14 @@ public:
     {
         Necklace = 0,
         PrimaryWeapon,
-        Ammo,
+        Ring,
         Helmet,
         Chestplate,
         Pants,
         Boots,
         Container,
         SecondaryHand,
-        Ring,
+        Ammo,
         NumSlotTypes
     };
 
