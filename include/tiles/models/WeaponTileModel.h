@@ -6,6 +6,8 @@
 
 #include "Configuration.h"
 
+#include "tiles/TileAttackResult.h"
+
 #include "../LibS/Geometry.h"
 
 #include "../../ComponentCommonData.h"
@@ -58,7 +60,7 @@ public:
 
     float drag() const override;
 
-    AttackResult attack(World& world, Player& player, const ls::Vec2F& hintedPosition) override;
+    TileAttackResult attack(World& world, Player& player, const ls::Vec2F& hintedPosition) override;
 
     void onTileInstantiated() override;
 

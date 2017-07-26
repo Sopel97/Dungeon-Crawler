@@ -56,8 +56,8 @@ public:
 
     float drag() const override;
 
-    void use(Player& player, const TileLocation& location) override;
-    void use(Player& player, const InventorySlotLocation& slot) override;
+    TileUseResult use(Player& player, const TileLocation& location) override;
+    TileUseResult use(Player& player, const InventorySlotLocation& slot) override;
 
     std::unique_ptr<TileModel> clone(Tile& owner) const override;
 protected:

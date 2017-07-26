@@ -13,6 +13,8 @@
 #include "DynamicEnum.h"
 
 #include "tiles/TileComponent.h"
+#include "tiles/TileAttackResult.h"
+#include "tiles/TileUseResult.h"
 
 #include "SlotContentRequirement.h"
 
@@ -34,12 +36,6 @@ class TileModel : public TileComponent<TileModel, Tile>
 	//must be functional (ie. all methods return resonable values and there is no pure virtual member functions)
 {
 public:
-    struct AttackResult
-    {
-        int weaponUsed;
-        int ammoUsed;
-    };
-
     TileModel(Tile& owner);
     TileModel(const TileModel& other, Tile& owner);
     ~TileModel() override;
@@ -63,11 +59,11 @@ public:
 
     virtual float drag() const; //TODO: make it possible to specify that tile uses the drag of the tile lower
 
-    virtual void use(Player& player, const TileLocation& location);
-    virtual void use(Player& player, const InventorySlotLocation& location);
+    virtual TileUseResult use(Player& player, const TileLocation& location);
+    virtual TileUseResult use(Player& player, const InventorySlotLocation& location);
     virtual void look(Player& player, const TileLocation& location);
     virtual void look(Player& player, const InventorySlotLocation& location);
-    virtual AttackResult attack(World& world, Player& player, const ls::Vec2F& hintedPosition);
+    virtual TileAttackResult attack(World& world, Player& player, const ls::Vec2F& hintedPosition);
     virtual void indirectAttack(World& world, Player& player, const ls::Vec2F& hintedPosition);
     virtual TileAmmoGroupType ammoGroup() const;
 

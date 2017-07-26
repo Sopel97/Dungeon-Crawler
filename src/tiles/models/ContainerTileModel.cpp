@@ -117,14 +117,18 @@ float ContainerTileModel::drag() const
     return  m_commonData->drag;
 }
 
-void ContainerTileModel::use(Player& player, const TileLocation& location)
+TileUseResult ContainerTileModel::use(Player& player, const TileLocation& location)
 {
     player.tryInteractWithExternalInventory(owner(), *(m_owner->model().inventory()), location);
+
+    return TileUseResult::noAction();
 }
 
-void ContainerTileModel::use(Player& player, const InventorySlotLocation& slot)
+TileUseResult ContainerTileModel::use(Player& player, const InventorySlotLocation& slot)
 {
     player.tryInteractWithInternalInventory(owner(), *(m_owner->model().inventory()), slot);
+
+    return TileUseResult::noAction();
 }
 
 std::unique_ptr<TileModel> ContainerTileModel::clone(Tile& owner) const

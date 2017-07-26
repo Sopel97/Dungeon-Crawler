@@ -133,9 +133,9 @@ void WeaponTileModel::onTileInstantiated()
     m_attributes = m_commonData->attributeRandomizer.randomize();
 }
 
-WeaponTileModel::AttackResult WeaponTileModel::attack(World& world, Player& player, const ls::Vec2F& hintedPosition)
+TileAttackResult WeaponTileModel::attack(World& world, Player& player, const ls::Vec2F& hintedPosition)
 {
-    AttackResult attackResult{ 0, 0 };
+    TileAttackResult attackResult{ 0, 0 };
 
     if (m_commonData->requiresAmmo)
     {

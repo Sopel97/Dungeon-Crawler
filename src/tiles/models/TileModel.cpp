@@ -95,13 +95,13 @@ float TileModel::drag() const
     return 1.0f;
 }
 
-void TileModel::use(Player& player, const TileLocation& location)
+TileUseResult TileModel::use(Player& player, const TileLocation& location)
 {
-
+    return TileUseResult::noAction();
 }
-void TileModel::use(Player& player, const InventorySlotLocation& location)
+TileUseResult TileModel::use(Player& player, const InventorySlotLocation& location)
 {
-
+    return TileUseResult::noAction();
 }
 void TileModel::look(Player& player, const TileLocation& location)
 {
@@ -111,9 +111,9 @@ void TileModel::look(Player& player, const InventorySlotLocation& location)
 {
     player.showTileDescription(TileDescriptionGenerator::generate(owner()));
 }
-TileModel::AttackResult TileModel::attack(World& world, Player& player, const ls::Vec2F& hintedPosition)
+TileAttackResult TileModel::attack(World& world, Player& player, const ls::Vec2F& hintedPosition)
 {
-    return { 0, 0 };
+    return TileAttackResult::noAction();
 }
 void TileModel::indirectAttack(World& world, Player& player, const ls::Vec2F& hintedPosition)
 {
