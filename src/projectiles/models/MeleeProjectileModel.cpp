@@ -12,7 +12,7 @@ MeleeProjectileModel::MeleeProjectileModel(Projectile& owner, CommonData& common
     ProjectileModel(owner),
     m_commonData(&commonData),
     m_position(0, 0),
-    m_radius(15.0f),
+    m_radius(0.5f),
     m_health(3),
     m_group(AggroGroupId::Neutral),
     m_attributes()
