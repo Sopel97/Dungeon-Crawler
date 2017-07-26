@@ -67,7 +67,7 @@ void PlainTileRenderer::draw(SpriteBatch& spriteBatch, const TileLocation& locat
 {
     const ls::Vec2F sprite = static_cast<ls::Vec2F>(spritesheet().gridCoordsToTexCoords(m_currentAnimatedSprite->now()));
     const ls::Vec2F spriteSize = static_cast<ls::Vec2F>(spritesheet().gridSizeToTexSize({ 1, 1 }));
-    const ls::Vec2F size(World::tileSize, World::tileSize);
+    const ls::Vec2F size(1.0f, 1.0f);
     const ls::Vec2F pos(location.x * size.x, location.y * size.y);
 
     spriteBatch.emplaceRectangle(&(texture()), pos, size, sprite + textureOffset, spriteSize);
@@ -76,8 +76,8 @@ void PlainTileRenderer::draw(sf::RenderTarget& renderTarget, const sf::RenderSta
 {
     const ls::Vec2I sprite = spritesheet().gridCoordsToTexCoords(m_currentAnimatedSprite->now());
     const ls::Vec2I slotCenter = slot.center();
-    const float x = slotCenter.x - World::tileSize / 2.0f;
-    const float y = slotCenter.y - World::tileSize / 2.0f;
+    const float x = slotCenter.x - InventorySlotView::tileSize / 2.0f;
+    const float y = slotCenter.y - InventorySlotView::tileSize / 2.0f;
     sf::Sprite spr;
     spr.setPosition(sf::Vector2f(x, y));
     spr.setTexture(texture());

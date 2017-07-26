@@ -7,6 +7,8 @@ uniform vec2 destinationTextureSize;
 
 void main()
 {
+    worldOffset *= 32.0;
+
     worldOffset.y = -worldOffset.y;
     vec2 fragCoords = floor(gl_FragCoord.xy - viewOffset + worldOffset * (destinationTextureSize/sourceTextureSize)) + vec2(0.5, 0.5);
     vec2 worldCoords = floor(fragCoords * (sourceTextureSize/destinationTextureSize)) + vec2(0.5, 0.5);

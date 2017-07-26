@@ -1,3 +1,5 @@
+- try to change  InventorySlotView::tileSize to 1.0
+
 -- eventually encapsulate compontents in Tile, Entity, Projectile o they are not visible from outside
 
 - Clear world generation code //little priority since it is waiting for libs still
@@ -9,8 +11,6 @@
 - restructure TileTransferMediator, make it cleaner
 
 - replace InventorySlotView with InventorySlotLocation where drawing is not needed
-
-- tile colliders should be specified with range <0, 1>, tile converts length on loading based on World::m_tileSize (also applies for entites and projectiles)
 
 - check if loot can be placed on the tile, if not search for possible location nearby
 

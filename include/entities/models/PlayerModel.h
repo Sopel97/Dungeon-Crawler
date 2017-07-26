@@ -45,7 +45,7 @@ public:
 
     std::unique_ptr<EntityModel> clone(Entity& owner) const override;
 protected:
-    static constexpr float m_maxSpeed = 64.0f;
+    static constexpr float m_maxSpeed = 64.0f / 32.0f;
 
     Player* m_playerOwner;
     ls::Vec2F m_position;

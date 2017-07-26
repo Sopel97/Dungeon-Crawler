@@ -60,8 +60,8 @@ void PlayerRenderer::drawMeta(SpriteBatch& spriteBatch) const
 }
 void PlayerRenderer::draw(SpriteBatch& spriteBatch, const ls::Vec2I& textureOffset) const
 {
-    const Vec2I offsetToOrigin = Vec2I(-25, -26);
-    constexpr float steppingSpeedThreshold = 16.0f;
+    const Vec2F offsetToOrigin = Vec2F(-25 / 32.0f, -26 / 32.0f);
+    constexpr float steppingSpeedThreshold = 16.0f / 32.0f;
 
     const auto& model = m_owner->model();
     const int direction = model.directionOfMove();
@@ -70,7 +70,7 @@ void PlayerRenderer::draw(SpriteBatch& spriteBatch, const ls::Vec2I& textureOffs
 
     if (speed > steppingSpeedThreshold)
     {
-        constexpr float distanceTravelledPerStep = 16.0f;
+        constexpr float distanceTravelledPerStep = 16.0f / 32.0f;
         constexpr int numberOfSteppingSprites = 2;
         const float distanceTravelled = model.distanceTravelled();
 
@@ -86,10 +86,8 @@ void PlayerRenderer::draw(SpriteBatch& spriteBatch, const ls::Vec2I& textureOffs
         )
     );
     const ls::Vec2F spriteSize = static_cast<ls::Vec2F>(m_spritesheet.get().gridSizeToTexSize({ 1, 1 }));
-    const ls::Vec2F size(World::tileSize, World::tileSize);
+    const ls::Vec2F size(1.0f, 1.0f);
     ls::Vec2F pos = m_owner->model().position() + offsetToOrigin;
-    pos.x = std::floor(pos.x);
-    pos.y = std::floor(pos.y);
 
     spriteBatch.emplaceRectangle(&(texture()), pos, size, sprite + textureOffset, spriteSize);
 }

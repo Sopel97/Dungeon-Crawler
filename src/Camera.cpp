@@ -1,5 +1,7 @@
 #include "Camera.h"
 
+#include "WorldRenderer.h"
+
 #include <cmath>
 
 using namespace ls;
@@ -49,6 +51,6 @@ float Camera::height() const
 Rectangle2F Camera::viewRectangle() const
 {
     Vec2F halfSize = Vec2F(m_width, m_height) / 2.0f;
-    Vec2F center(std::floor(m_center.x), std::floor(m_center.y));
+    Vec2F center = WorldRenderer::aligned(m_center);
     return Rectangle2F(center - halfSize, center + halfSize);
 }

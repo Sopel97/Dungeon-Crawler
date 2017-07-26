@@ -16,6 +16,18 @@ public:
 
     void clear();
 
+    template <class Func>
+    void apply(Func&& func)
+    {
+        for (auto& vertexArray : m_vertexBuffersByTexture)
+        {
+            for (auto& vert : vertexArray.second)
+            {
+                std::forward<Func>(func)(vert);
+            }
+        }
+    }
+
 private:
     static constexpr int m_defaultNumBuffers = 32;
     static constexpr int m_defaultBufferSize = 4092;
@@ -25,6 +37,8 @@ private:
     std::vector<sf::Vertex>& createBuffer(const sf::Texture* texture);
 
     std::vector<sf::Vertex>& findBuffer(const sf::Texture* texture);
+
+
 
     std::unordered_map<const sf::Texture*, std::vector<sf::Vertex>> m_vertexBuffersByTexture;
 };

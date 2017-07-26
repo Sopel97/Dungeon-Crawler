@@ -35,7 +35,7 @@ public:
     void removeTiles(int x, int y, int z, int count);
     TileStack splitTiles(int x, int y, int z, int count);
 
-    std::vector<TileCollider> queryTileColliders(const ls::Rectangle2F& queryRegion, float tileSize);
+    std::vector<TileCollider> queryTileColliders(const ls::Rectangle2F& queryRegion);
 
 protected:
     World& m_world;

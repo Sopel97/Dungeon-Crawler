@@ -36,7 +36,7 @@ bool Player::tryInteractWithInternalInventory(Tile& tile, Inventory& inventory, 
 
 void Player::processAsyncKeyboardInput(World& world, float dt) //TODO: make it update the player entity so it moves in the next update. Don't interact with world in this function.
 {
-    constexpr float acc = 200.0f;
+    constexpr float acc = 200.0f / 32.0f;
     float drag = world.drag(m_playerEntity.model().position());
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) m_playerEntity.model().accelerate(Vec2F(-acc * dt * drag, 0.0f));
     if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) m_playerEntity.model().accelerate(Vec2F(acc * dt * drag, 0.0f));

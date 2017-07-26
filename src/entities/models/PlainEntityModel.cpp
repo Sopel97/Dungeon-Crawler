@@ -56,7 +56,7 @@ void PlainEntityModel::loadFromConfiguration(ConfigurationNode& config)
 
 EntityCollider PlainEntityModel::collider()
 {
-    return EntityCollider(*m_owner, ls::Circle2F(m_position, 6.0f));
+    return EntityCollider(*m_owner, ls::Circle2F(m_position, 6.0f / 32.0f));
 }
 
 const Vec2F& PlainEntityModel::position() const
@@ -109,8 +109,8 @@ const AttributeArray& PlainEntityModel::attributes() const
 std::optional<Light> PlainEntityModel::light() const
 {
     return OscillatingLightSource(
-        Light(m_position, 128.0f, sf::Color::Green),
-        Light(m_position, 100.0f, sf::Color::Yellow),
+        Light(m_position, 4.0f, sf::Color::Green),
+        Light(m_position, 3.5f, sf::Color::Yellow),
         1.0
     ).at(GameTime::instance().now(), static_cast<double>(reinterpret_cast<intptr_t>(this))); //TODO: better way to get per entity constant value
 }

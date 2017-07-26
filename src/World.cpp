@@ -48,7 +48,7 @@ World::World(Root& root, Player& player, TileTransferMediator& tileTransferMedia
     m_mapGenerator(m_width, m_height)
 {
     m_mapGenerator.generate(*m_mapLayer);
-    m_player.entity().model().setPosition(Vec2F(m_width * tileSize / 2.0f, m_height * tileSize / 2.0f));
+    m_player.entity().model().setPosition(Vec2F(m_width / 2.0f, m_height / 2.0f));
 }
 World::~World()
 {
@@ -89,7 +89,7 @@ const MapGenerator& World::mapGenerator() const
 
 Vec2I World::worldToTile(const Vec2F& worldPosition) const
 {
-    return Vec2I(Util::fastFloor(worldPosition.x / static_cast<float>(tileSize)), Util::fastFloor(worldPosition.y / static_cast<float>(tileSize)));
+    return Vec2I(Util::fastFloor(worldPosition.x), Util::fastFloor(worldPosition.y));
 }
 ls::Vec2F World::screenToWorld(const ls::Vec2I& screenPosition) const
 {
@@ -107,7 +107,7 @@ ls::Vec2I World::screenToTile(const ls::Vec2I& screenPosition) const
 }
 ls::Vec2F World::tileCenterToWorld(const ls::Vec2I& tilePosition) const
 {
-    const ls::Vec2F tileSize{ static_cast<float>(World::tileSize), static_cast<float>(World::tileSize) };
+    const ls::Vec2F tileSize{ 1.0f, 1.0f };
     const ls::Vec2F tilePos = static_cast<ls::Vec2F>(tilePosition) * tileSize + tileSize / 2.0f;
     return tilePos;
 }
@@ -146,7 +146,7 @@ bool World::isInsideWorldBounds(const ls::Vec2I& pos) const
 
 std::vector<TileCollider> World::queryTileColliders(const Rectangle2F& queryRegion)
 {
-    return m_mapLayer->queryTileColliders(queryRegion, tileSize);
+    return m_mapLayer->queryTileColliders(queryRegion);
 }
 std::vector<ls::Vec2I> World::queryGridPointsBetweenTiles(const ls::Vec2I& from, const ls::Vec2I& to) const
 {
@@ -154,7 +154,7 @@ std::vector<ls::Vec2I> World::queryGridPointsBetweenTiles(const ls::Vec2I& from,
 }
 std::vector<ls::Vec2I> World::queryGridPointsBetweenPlayerAndTile(const ls::Vec2I& to) const
 {
-    return queryGridPoints(ls::LineSegment2F(m_player.entity().model().position() / static_cast<float>(tileSize), ls::Vec2F(to.x + 0.5f, to.y + 0.5f)));
+    return queryGridPoints(ls::LineSegment2F(m_player.entity().model().position(), ls::Vec2F(to.x + 0.5f, to.y + 0.5f)));
 }
 bool World::lineOfSightBetweenTiles(const ls::Vec2I& from, const ls::Vec2I& to) const
 {

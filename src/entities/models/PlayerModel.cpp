@@ -57,7 +57,7 @@ void PlayerModel::loadFromConfiguration(ConfigurationNode& config)
 
 EntityCollider PlayerModel::collider()
 {
-    return EntityCollider(*m_owner, ls::Circle2F(m_position, 6.0f));
+    return EntityCollider(*m_owner, ls::Circle2F(m_position, 6.0f / 32.0f));
 }
 
 const Vec2F& PlayerModel::position() const
@@ -113,8 +113,8 @@ const AttributeArray& PlayerModel::attributes() const
 std::optional<Light> PlayerModel::light() const
 {
     return OscillatingLightSource(
-        Light(m_position, 128.0f, sf::Color::Red),
-        Light(m_position, 100.0f, sf::Color::Blue),
+        Light(m_position, 4.0f, sf::Color::Red),
+        Light(m_position, 3.5f, sf::Color::Blue),
         0.5
     ).at(GameTime::instance().now());
 }
@@ -132,7 +132,7 @@ void PlayerModel::update(World& world, float dt)
         speed = m_maxSpeed;
     }
 
-    float deceleration = 200.0f;
+    float deceleration = 200.0f / 32.0f;
     if (!m_acceleratedHorizontallyInLastFrame && !m_acceleratedVerticallyInLastFrame)
         deceleration /= 1.41f;
     float d = deceleration * dt * world.drag(m_position);
@@ -175,21 +175,21 @@ void PlayerModel::move(float dt)
     m_distanceTravelled += displacement.magnitude();
 
     //set direction facing based on displacement if it there. If not just on velocity
-    if (displacement.magnitude() > 0.1f)
+    if (displacement.magnitude() > 0.1f / 32.0f)
     {
-        if (displacement.x < -0.01f && std::abs(displacement.x) > std::abs(displacement.y)) m_directionOfMove = EntityModel::Direction::West;
-        if (displacement.x > 0.01f && std::abs(displacement.x) > std::abs(displacement.y))  m_directionOfMove = EntityModel::Direction::East;
-        if (displacement.y < -0.01f && std::abs(displacement.y) > std::abs(displacement.x)) m_directionOfMove = EntityModel::Direction::North;
-        if (displacement.y > 0.01f && std::abs(displacement.y) > std::abs(displacement.x))  m_directionOfMove = EntityModel::Direction::South;
+        if (displacement.x < -0.01f / 32.0f && std::abs(displacement.x) > std::abs(displacement.y)) m_directionOfMove = EntityModel::Direction::West;
+        if (displacement.x > 0.01f / 32.0f && std::abs(displacement.x) > std::abs(displacement.y))  m_directionOfMove = EntityModel::Direction::East;
+        if (displacement.y < -0.01f / 32.0f && std::abs(displacement.y) > std::abs(displacement.x)) m_directionOfMove = EntityModel::Direction::North;
+        if (displacement.y > 0.01f / 32.0f && std::abs(displacement.y) > std::abs(displacement.x))  m_directionOfMove = EntityModel::Direction::South;
     }
     else
     {
-        if (m_velocity.magnitude() > 0.1f)
+        if (m_velocity.magnitude() > 0.1f / 32.0f)
         {
-            if (m_velocity.x < -0.01f && std::abs(m_velocity.x) > std::abs(m_velocity.y)) m_directionOfMove = EntityModel::Direction::West;
-            if (m_velocity.x > 0.01f && std::abs(m_velocity.x) > std::abs(m_velocity.y))  m_directionOfMove = EntityModel::Direction::East;
-            if (m_velocity.y < -0.01f && std::abs(m_velocity.y) > std::abs(m_velocity.x)) m_directionOfMove = EntityModel::Direction::North;
-            if (m_velocity.y > 0.01f && std::abs(m_velocity.y) > std::abs(m_velocity.x))  m_directionOfMove = EntityModel::Direction::South;
+            if (m_velocity.x < -0.01f / 32.0f && std::abs(m_velocity.x) > std::abs(m_velocity.y)) m_directionOfMove = EntityModel::Direction::West;
+            if (m_velocity.x > 0.01f / 32.0f && std::abs(m_velocity.x) > std::abs(m_velocity.y))  m_directionOfMove = EntityModel::Direction::East;
+            if (m_velocity.y < -0.01f / 32.0f && std::abs(m_velocity.y) > std::abs(m_velocity.x)) m_directionOfMove = EntityModel::Direction::North;
+            if (m_velocity.y > 0.01f / 32.0f && std::abs(m_velocity.y) > std::abs(m_velocity.x))  m_directionOfMove = EntityModel::Direction::South;
         }
     }
 }

@@ -36,8 +36,6 @@ class World : public WindowContent
     //TEMP?
     friend class WorldRenderer;
 public:
-    static constexpr int tileSize = 32;
-
     World(Root& root, Player& player, TileTransferMediator& tileTransferMediator);
     ~World();
 

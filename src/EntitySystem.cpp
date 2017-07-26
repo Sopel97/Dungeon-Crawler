@@ -271,7 +271,7 @@ void EntitySystem::updateEntity(Entity& entity, float dt)
 }
 ls::Vec2F EntitySystem::pushingForce(EntityCollider& entityCollider)
 {
-    constexpr float contribution = 0.12f; //chosen empirically
+    constexpr float contribution = 0.12f * 32.0f; //chosen empirically
 
     ls::Vec2F force(0.0f, 0.0f);
 
@@ -281,7 +281,7 @@ ls::Vec2F EntitySystem::pushingForce(EntityCollider& entityCollider)
         EntityCollider& otherEntityCollider = entity.model().collider();
 
         ls::Vec2F displacement = entityCollider.volume().origin - otherEntityCollider.volume().origin;
-        if (isAlmostZero(displacement, 1.0f)) displacement.y = 1.0f;
+        if (isAlmostZero(displacement, 1.0f / 32.0f)) displacement.y = 1.0f / 32.0f;
 
         const float radiiSum = entityCollider.volume().radius + otherEntityCollider.volume().radius;
         const float radiiSumSqr = radiiSum*radiiSum;

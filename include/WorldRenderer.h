@@ -29,6 +29,8 @@ public:
 
     void draw(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates);
 
+    static ls::Vec2F aligned(const ls::Vec2F& pos);
+
 protected:
     Root& m_root;
     World& m_world;
@@ -49,6 +51,8 @@ protected:
 
     static constexpr int m_viewWidth = 15;
     static constexpr int m_viewHeight = 15;
+
+    static constexpr int m_tileResolution = 32;
     
 protected:
     void prepareIntermidiateRenderTarget();
@@ -61,4 +65,5 @@ protected:
     void drawIntermidiate(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates);
     void drawLightMapToIntermidiate(const sf::RenderStates& renderStates);
     void drawLightsToLightMap();
+    void alignVertices(SpriteBatch& batch) const;
 };

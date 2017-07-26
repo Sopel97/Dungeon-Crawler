@@ -59,7 +59,7 @@ std::optional<TileCollider> ContainerTileModel::collider(const ls::Vec2I& pos)
 {
     if (!m_commonData->hasCollider) return std::nullopt;
 
-    const ls::Rectangle2F aabb = m_commonData->collider.translated(static_cast<ls::Vec2F>(pos) * World::tileSize);
+    const ls::Rectangle2F aabb = m_commonData->collider.translated(static_cast<ls::Vec2F>(pos));
     return TileCollider(*m_owner, aabb);
 }
 bool ContainerTileModel::isMovableFrom() const
