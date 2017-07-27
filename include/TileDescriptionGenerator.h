@@ -8,5 +8,5 @@ class TileDescriptionGenerator
 {
 private:
 public:
-    static TileDescription generate(const Tile& tile);
+    static TileDescription generate(const Tile& tile, int quantity);
 };

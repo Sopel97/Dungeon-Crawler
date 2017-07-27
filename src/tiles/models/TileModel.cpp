@@ -108,11 +108,11 @@ TileUseResult TileModel::use(Player& player, const InventorySlotLocation& locati
 }
 void TileModel::look(Player& player, const TileLocation& location, int quantity)
 {
-    player.showTileDescription(TileDescriptionGenerator::generate(owner()));
+    player.showTileDescription(TileDescriptionGenerator::generate(owner(), quantity));
 }
 void TileModel::look(Player& player, const InventorySlotLocation& location, int quantity)
 {
-    player.showTileDescription(TileDescriptionGenerator::generate(owner()));
+    player.showTileDescription(TileDescriptionGenerator::generate(owner(), quantity));
 }
 TileAttackResult TileModel::attack(World& world, Player& player, const ls::Vec2F& hintedPosition, int quantity)
 {
