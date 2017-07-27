@@ -206,6 +206,69 @@ Entity& World::spawnEntity(const EntityPrefab& prefab, const ls::Vec2F& position
 {
     return m_entitySystem.spawnEntity(prefab, position);
 }
+bool World::trySpawnTile(const TilePrefab& prefab, int x, int y, int quantity)
+{
+    if (m_mapLayer->at(x, y).top().tile().model().isMovableTo())
+    {
+        TileStack tileStackToPlace(prefab.instantiate(), quantity);
+        m_mapLayer->placeTileMerge(std::move(tileStackToPlace), x, y);
+        return true;
+    }
+
+    return false;
+}
+bool World::trySpawnTileNearby(const TilePrefab& prefab, int x, int y, int quantity)
+{
+    static constexpr ls::Vec2I offsets[] = {
+        {0, 0},
+        {1, 0},
+        {-1, 0},
+        {0, 1},
+        {0, -1},
+        {-1, -1},
+        {-1, 1},
+        {1, -1},
+        {1, 1}
+    };
+
+    for (const auto& offset : offsets)
+    {
+        if (trySpawnTile(prefab, x + offset.x, y + offset.y, quantity)) return true;
+    }
+    
+    return false;
+}
+bool World::tryPlaceTile(TileStack&& tileStack, int x, int y)
+{
+    if (m_mapLayer->at(x, y).top().tile().model().isMovableTo())
+    {
+        m_mapLayer->placeTileMerge(std::move(tileStack), x ,y);
+        return true;
+    }
+
+    return false;
+}
+bool World::tryPlaceTileNearby(TileStack&& tileStack, int x, int y)
+{
+    static constexpr ls::Vec2I offsets[] = {
+        { 0, 0 },
+        { 1, 0 },
+        { -1, 0 },
+        { 0, 1 },
+        { 0, -1 },
+        { -1, -1 },
+        { -1, 1 },
+        { 1, -1 },
+        { 1, 1 }
+    };
+
+    for (const auto& offset : offsets)
+    {
+        if (tryPlaceTile(std::move(tileStack), x + offset.x, y + offset.y)) return true;
+    }
+
+    return false;
+}
 std::vector<ls::Vec2I> World::queryGridPoints(const ls::LineSegment2F& line) const
 {
     constexpr float eps = 0.01f; //tolerance for diagonal moves

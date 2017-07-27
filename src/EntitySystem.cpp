@@ -193,8 +193,6 @@ bool EntitySystem::isDead(const Entity& entity) const
 }
 void EntitySystem::createCorpsesForDeadEntities(World& world) const
 {
-    MapLayer& map = world.map();
-
     for (const std::unique_ptr<Entity>& ent : m_entities)
     {
         const Entity& entity = *ent;
@@ -205,7 +203,7 @@ void EntitySystem::createCorpsesForDeadEntities(World& world) const
             TileStack corpse = createCorpse(entity);
             if (corpse.isEmpty()) continue;
 
-            map.placeTile(std::move(corpse), tilePos.x, tilePos.y);
+            world.tryPlaceTileNearby(std::move(corpse), tilePos.x, tilePos.y);
         }
     }
 }

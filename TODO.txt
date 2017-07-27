@@ -1,7 +1,7 @@
 - try to change  InventorySlotView::tileSize to 1.0
 -- use SpriteBatch too
 
--- eventually encapsulate compontents in Tile, Entity, Projectile o they are not visible from outside
+-- eventually encapsulate compontents in Tile (TileStack), Entity, Projectile so they are not visible from outside
 
 - Clear world generation code //little priority since it is waiting for libs still
 
@@ -9,8 +9,9 @@
 
 - remove out of bounds tile from tile column?
 
-- restructure TileTransferMediator, make it cleaner
+- currently a lot of code from World, Inventory is duplicated in TileTransferMediator, think of a way to simplify it (TileTransferMediator has to call more event that World, Invntory so it is problematic)
 
+THIS
 - check if loot can be placed on the tile, if not search for possible location nearby
 
 THIS
@@ -24,6 +25,8 @@ hook up StaticEmbeddedHomogenousMemoryPool for components, tiles, entities, proj
 - group tile (and entity, and projectile) flags in one place (struct with bitfields or something)
 
 - continue to make better interface in (world) map and inventory (if something old that should be removed or changed pops up) regarding actions that should cause events (currently onTilePlaced, onTileRemoved). Mainly make it safer and easier to work with.
+THIS
+-- rename placeTile in MapLayer (in Inventory too maybe) to something that indicates no merging
 
 - consider using ls::Vec2I/ls::Vec3I to pass tile coordinates
 

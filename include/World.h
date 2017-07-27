@@ -75,6 +75,10 @@ public:
 
     Projectile& spawnProjectile(const ProjectilePrefab& prefab, World& world, Entity& parentEntity, const ls::Vec2F& hintedPosition);
     Entity& spawnEntity(const EntityPrefab& prefab, const ls::Vec2F& position);
+    bool trySpawnTile(const TilePrefab& prefab, int x, int y, int quantity);
+    bool trySpawnTileNearby(const TilePrefab& prefab, int x, int y, int quantity);
+    bool tryPlaceTile(TileStack&& tileStack, int x, int y);
+    bool tryPlaceTileNearby(TileStack&& tileStack, int x, int y);
 
     EventResult onMouseButtonPressed(sf::Event::MouseButtonEvent& event, EventContext context) override;
     EventResult onMouseButtonReleased(sf::Event::MouseButtonEvent& event, EventContext context) override;
