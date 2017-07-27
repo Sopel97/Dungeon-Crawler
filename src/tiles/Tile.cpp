@@ -94,6 +94,30 @@ int Tile::maxQuantity() const
 {
     return m_model->maxQuantity();
 }
+TileUseResult Tile::use(Player& player, const TileLocation& location, int quantity)
+{
+    return model().use(player, location, quantity);
+}
+TileUseResult Tile::use(Player& player, const InventorySlotLocation& location, int quantity)
+{
+    return model().use(player, location, quantity);
+}
+void Tile::look(Player& player, const TileLocation& location, int quantity)
+{
+    return model().look(player, location, quantity);
+}
+void Tile::look(Player& player, const InventorySlotLocation& location, int quantity)
+{
+    return model().look(player, location, quantity);
+}
+TileAttackResult Tile::attack(World& world, Player& player, const ls::Vec2F& hintedPosition, int quantity)
+{
+    return model().attack(world, player, hintedPosition, quantity);
+}
+void Tile::indirectAttack(World& world, Player& player, const ls::Vec2F& hintedPosition, int quantity)
+{
+    return model().indirectAttack(world, player, hintedPosition, quantity);
+}
 
 void Tile::onTileQuantityChanged(int oldQuantity, int newQuantity)
 {

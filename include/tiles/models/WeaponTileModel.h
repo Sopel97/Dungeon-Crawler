@@ -60,7 +60,7 @@ public:
 
     float drag() const override;
 
-    TileAttackResult attack(World& world, Player& player, const ls::Vec2F& hintedPosition) override;
+    TileAttackResult attack(World& world, Player& player, const ls::Vec2F& hintedPosition, int quantity) override;
 
     void onTileInstantiated() override;
 

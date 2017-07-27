@@ -117,14 +117,14 @@ float ContainerTileModel::drag() const
     return  m_commonData->drag;
 }
 
-TileUseResult ContainerTileModel::use(Player& player, const TileLocation& location)
+TileUseResult ContainerTileModel::use(Player& player, const TileLocation& location, int quantity)
 {
     player.tryInteractWithExternalInventory(owner(), *(m_owner->model().inventory()), location);
 
     return TileUseResult::noAction();
 }
 
-TileUseResult ContainerTileModel::use(Player& player, const InventorySlotLocation& slot)
+TileUseResult ContainerTileModel::use(Player& player, const InventorySlotLocation& slot, int quantity)
 {
     player.tryInteractWithInternalInventory(owner(), *(m_owner->model().inventory()), slot);
 

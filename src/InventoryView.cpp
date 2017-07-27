@@ -83,7 +83,7 @@ SfmlEventHandler::EventResult InventoryView::onMouseButtonPressed(sf::Event::Mou
             {
                 if (!slot->content().isEmpty())
                 {
-                    slot->content().tile().model().look(m_inventorySystem->player(), slot->location());
+                    slot->content().look(m_inventorySystem->player(), slot->location());
                 }
             }
             else

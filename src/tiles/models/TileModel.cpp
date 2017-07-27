@@ -96,29 +96,29 @@ float TileModel::drag() const
     return 1.0f;
 }
 
-TileUseResult TileModel::use(Player& player, const TileLocation& location)
+TileUseResult TileModel::use(Player& player, const TileLocation& location, int quantity)
 {
     //return TileUseResult{ 0, {{ResourceManager<TilePrefab>::instance().get("Gold Coin"), 90}} }; test
     return TileUseResult::noAction();
 }
-TileUseResult TileModel::use(Player& player, const InventorySlotLocation& location)
+TileUseResult TileModel::use(Player& player, const InventorySlotLocation& location, int quantity)
 {
     //return TileUseResult{ 0,{ { ResourceManager<TilePrefab>::instance().get("Gold Coin"), 90 } } }; test
     return TileUseResult::noAction();
 }
-void TileModel::look(Player& player, const TileLocation& location)
+void TileModel::look(Player& player, const TileLocation& location, int quantity)
 {
     player.showTileDescription(TileDescriptionGenerator::generate(owner()));
 }
-void TileModel::look(Player& player, const InventorySlotLocation& location)
+void TileModel::look(Player& player, const InventorySlotLocation& location, int quantity)
 {
     player.showTileDescription(TileDescriptionGenerator::generate(owner()));
 }
-TileAttackResult TileModel::attack(World& world, Player& player, const ls::Vec2F& hintedPosition)
+TileAttackResult TileModel::attack(World& world, Player& player, const ls::Vec2F& hintedPosition, int quantity)
 {
     return TileAttackResult::noAction();
 }
-void TileModel::indirectAttack(World& world, Player& player, const ls::Vec2F& hintedPosition)
+void TileModel::indirectAttack(World& world, Player& player, const ls::Vec2F& hintedPosition, int quantity)
 {
 
 }

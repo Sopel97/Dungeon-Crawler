@@ -59,12 +59,12 @@ public:
 
     virtual float drag() const; //TODO: make it possible to specify that tile uses the drag of the tile lower
 
-    virtual TileUseResult use(Player& player, const TileLocation& location);
-    virtual TileUseResult use(Player& player, const InventorySlotLocation& location);
-    virtual void look(Player& player, const TileLocation& location);
-    virtual void look(Player& player, const InventorySlotLocation& location);
-    virtual TileAttackResult attack(World& world, Player& player, const ls::Vec2F& hintedPosition);
-    virtual void indirectAttack(World& world, Player& player, const ls::Vec2F& hintedPosition);
+    virtual TileUseResult use(Player& player, const TileLocation& location, int quantity);
+    virtual TileUseResult use(Player& player, const InventorySlotLocation& location, int quantity);
+    virtual void look(Player& player, const TileLocation& location, int quantity);
+    virtual void look(Player& player, const InventorySlotLocation& location, int quantity);
+    virtual TileAttackResult attack(World& world, Player& player, const ls::Vec2F& hintedPosition, int quantity);
+    virtual void indirectAttack(World& world, Player& player, const ls::Vec2F& hintedPosition, int quantity);
     virtual TileAmmoGroupType ammoGroup() const;
 
     virtual std::unique_ptr<TileModel> clone(Tile& owner) const;

@@ -133,7 +133,7 @@ void WeaponTileModel::onTileInstantiated()
     m_attributes = m_commonData->attributeRandomizer.randomize();
 }
 
-TileAttackResult WeaponTileModel::attack(World& world, Player& player, const ls::Vec2F& hintedPosition)
+TileAttackResult WeaponTileModel::attack(World& world, Player& player, const ls::Vec2F& hintedPosition, int quantity)
 {
     TileAttackResult attackResult{ 0, 0 };
 
@@ -144,7 +144,7 @@ TileAttackResult WeaponTileModel::attack(World& world, Player& player, const ls:
         if (ammo.quantity() < m_commonData->ammoPerAttack) return attackResult;
         if (std::find(m_commonData->allowedAmmoGroups.begin(), m_commonData->allowedAmmoGroups.end(), ammo.tile().model().ammoGroup()) == m_commonData->allowedAmmoGroups.end()) return attackResult;
 
-        ammo.tile().model().indirectAttack(world, player, hintedPosition);
+        ammo.indirectAttack(world, player, hintedPosition);
         attackResult.ammoUsed = m_commonData->ammoPerAttack;
     }
     else

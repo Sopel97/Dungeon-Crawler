@@ -5,6 +5,11 @@
 
 #include "ComponentFactory.h"
 
+#include "../LibS/Shapes.h"
+
+#include "TileUseResult.h"
+#include "TileAttackResult.h"
+
 #include <memory>
 
 namespace sf
@@ -19,6 +24,9 @@ class TileLocation;
 class InventorySlotView;
 class ComponentCommonData;
 class Inventory;
+class Player;
+class InventorySlotLocation;
+class World;
 
 class Tile
 {
@@ -44,6 +52,13 @@ public:
     bool equals(const Tile& other) const;
 
     int maxQuantity() const;
+
+    TileUseResult use(Player& player, const TileLocation& location, int quantity);
+    TileUseResult use(Player& player, const InventorySlotLocation& location, int quantity);
+    void look(Player& player, const TileLocation& location, int quantity);
+    void look(Player& player, const InventorySlotLocation& location, int quantity);
+    TileAttackResult attack(World& world, Player& player, const ls::Vec2F& hintedPosition, int quantity);
+    void indirectAttack(World& world, Player& player, const ls::Vec2F& hintedPosition, int quantity);
 
     void onTileQuantityChanged(int oldQuantity, int newQuantity);
     void onTileInstantiated();

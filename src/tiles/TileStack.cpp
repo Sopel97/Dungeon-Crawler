@@ -55,6 +55,30 @@ int TileStack::spaceLeft() const
 {
     return maxQuantity() - m_quantity;
 }
+TileUseResult TileStack::use(Player& player, const TileLocation& location)
+{
+    return tile().use(player, location, m_quantity);
+}
+TileUseResult TileStack::use(Player& player, const InventorySlotLocation& location)
+{
+    return tile().use(player, location, m_quantity);
+}
+void TileStack::look(Player& player, const TileLocation& location)
+{
+    return tile().look(player, location, m_quantity);
+}
+void TileStack::look(Player& player, const InventorySlotLocation& location)
+{
+    return tile().look(player, location, m_quantity);
+}
+TileAttackResult TileStack::attack(World& world, Player& player, const ls::Vec2F& hintedPosition)
+{
+    return tile().attack(world, player, hintedPosition, m_quantity);
+}
+void TileStack::indirectAttack(World& world, Player& player, const ls::Vec2F& hintedPosition)
+{
+    return tile().indirectAttack(world, player, hintedPosition, m_quantity);
+}
 Tile& TileStack::tile()
 {
     return *m_tile.get();

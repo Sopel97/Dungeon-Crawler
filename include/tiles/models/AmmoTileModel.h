@@ -55,7 +55,7 @@ public:
 
     float drag() const override;
 
-    void indirectAttack(World& world, Player& player, const ls::Vec2F& hintedPosition) override;
+    void indirectAttack(World& world, Player& player, const ls::Vec2F& hintedPosition, int quantity) override;
 
     TileAmmoGroupType ammoGroup() const override;
 

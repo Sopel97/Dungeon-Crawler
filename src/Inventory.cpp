@@ -101,7 +101,7 @@ void Inventory::useTile(Player& player, int slot)
     TileStack& tileStack = at(slot);
     if (tileStack.isEmpty()) return;
 
-    auto result = tileStack.tile().model().use(player, InventorySlotLocation(*this, slot));
+    auto result = tileStack.use(player, InventorySlotLocation(*this, slot));
 
     if (result.numUsed > 0)
     {

@@ -111,7 +111,7 @@ float AmmoTileModel::drag() const
 {
     return m_commonData->drag;
 }
-void AmmoTileModel::indirectAttack(World& world, Player& player, const ls::Vec2F& hintedPosition)
+void AmmoTileModel::indirectAttack(World& world, Player& player, const ls::Vec2F& hintedPosition, int quantity)
 {
     world.spawnProjectile(m_commonData->projectile.get(), world, player.entity(), hintedPosition);
 }
