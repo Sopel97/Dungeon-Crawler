@@ -13,6 +13,7 @@ class InventorySystem;
 class InventoryView;
 class InventoryWindow;
 class Tile;
+class Player;
 
 class Inventory
 {
@@ -31,12 +32,15 @@ public:
     virtual const TileStack& at(size_t slotId) const;
     virtual bool meetsRequirements(const Tile& tile, int slot) const;
 
-    void placeTile(TileStack&& tile, int slot);
+    void placeTile(TileStack&& tileStack, int slot);
+    void insertMerge(TileStack&& tileStack); // if not all tiles were consumed then tile.quantity() > 0
     TileStack takeTile(int slot);
 
     void addTiles(int slot, int count);
     void removeTiles(int slot, int count);
     TileStack splitTiles(int slot, int count);
+
+    void useTile(Player& player, int slot);
 
     virtual int size() const = 0;
 

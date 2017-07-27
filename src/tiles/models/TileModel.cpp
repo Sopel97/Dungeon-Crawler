@@ -3,6 +3,7 @@
 #include "AttributeSet.h"
 
 #include "tiles/TileInformation.h"
+#include "tiles/TilePrefab.h"
 
 #include "InventorySlotLocation.h"
 
@@ -97,10 +98,12 @@ float TileModel::drag() const
 
 TileUseResult TileModel::use(Player& player, const TileLocation& location)
 {
+    //return TileUseResult{ 0, {{ResourceManager<TilePrefab>::instance().get("Gold Coin"), 90}} }; test
     return TileUseResult::noAction();
 }
 TileUseResult TileModel::use(Player& player, const InventorySlotLocation& location)
 {
+    //return TileUseResult{ 0,{ { ResourceManager<TilePrefab>::instance().get("Gold Coin"), 90 } } }; test
     return TileUseResult::noAction();
 }
 void TileModel::look(Player& player, const TileLocation& location)

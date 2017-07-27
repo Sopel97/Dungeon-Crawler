@@ -1,4 +1,5 @@
 - try to change  InventorySlotView::tileSize to 1.0
+-- use SpriteBatch too
 
 -- eventually encapsulate compontents in Tile, Entity, Projectile o they are not visible from outside
 
@@ -13,10 +14,9 @@
 - check if loot can be placed on the tile, if not search for possible location nearby
 
 THIS
-- tiles should be used through
-    1. world
-    2. inventory
--- perform action depending on returned result
+- Inventory should fallback to World when there is no place to spawn tile
+
+- WorldView? currently World is also a WindowContent, which should be decoupled (like inventory is)
 
 CONSIDER:
 hook up StaticEmbeddedHomogenousMemoryPool for components, tiles, entities, projectiles, see how it behaves

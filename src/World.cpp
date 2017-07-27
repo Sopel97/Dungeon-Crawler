@@ -5,6 +5,7 @@
 
 #include "tiles/Tile.h"
 #include "tiles/TileStack.h"
+#include "tiles/TilePrefab.h"
 #include "tiles/renderers/TileRenderer.h"
 #include "tiles/models/TileModel.h"
 
@@ -115,7 +116,18 @@ ls::Vec2F World::tileCenterToWorld(const ls::Vec2I& tilePosition) const
 void World::useTile(const ls::Vec2I& tilePosition)
 {
     TileColumn& tileColumn = m_mapLayer->at(tilePosition.x, tilePosition.y);
-    tileColumn.top().tile().model().use(m_root.game().player(), TileLocation(*m_mapLayer, tilePosition.x, tilePosition.y, tileColumn.topZ()));
+    auto result = tileColumn.top().tile().model().use(m_root.game().player(), TileLocation(*m_mapLayer, tilePosition.x, tilePosition.y, tileColumn.topZ()));
+
+    if (result.numUsed > 0)
+    {
+        m_mapLayer->removeTiles(tilePosition.x, tilePosition.y, tileColumn.topZ(), result.numUsed);
+    }
+
+    for (const auto& creationRequest : result.tileCreationRequests)
+    {
+        TileStack tileStackToPlace(creationRequest.prefab.get().instantiate(), creationRequest.numToCreate);
+        m_mapLayer->placeTileMerge(std::move(tileStackToPlace), tilePosition.x, tilePosition.y);
+    }
 }
 void World::lookTile(const ls::Vec2I& tilePosition)
 {

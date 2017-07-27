@@ -28,7 +28,8 @@ public:
     const TileStack& at(int x, int y, int z) const;
     TileStack& at(int x, int y, int z);
 
-    void placeTile(TileStack&& tile, int x, int y);
+    void placeTile(TileStack&& tileStack, int x, int y);
+    void placeTileMerge(TileStack&& tileStack, int x, int y);
     TileStack takeTile(int x, int y);
 
     void addTiles(int x, int y, int z, int count);

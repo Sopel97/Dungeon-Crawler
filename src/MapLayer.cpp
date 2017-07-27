@@ -75,6 +75,26 @@ void MapLayer::placeTile(TileStack&& tileStack, int x, int y)
 
     onTilePlaced(stack, x, y, column.topZ());
 }
+void MapLayer::placeTileMerge(TileStack&& tileStack, int x, int y)
+{
+    TileColumn& column = at(x, y);
+    TileStack& top = column.top();
+    if (top.tile().equals(tileStack.tile()))
+    {
+        const int spaceLeft = top.maxQuantity() - top.quantity();
+        const int toMove = std::min(spaceLeft, tileStack.quantity());
+        if (toMove > 0)
+        {
+            top.addTiles(toMove);
+            tileStack.removeTiles(toMove);
+        }
+    }
+
+    if (!tileStack.isEmpty())
+    {
+        placeTile(std::move(tileStack), x, y);
+    }
+}
 TileStack MapLayer::takeTile(int x, int y)
 {
     TileColumn& column = at(x, y);

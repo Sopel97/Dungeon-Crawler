@@ -95,11 +95,7 @@ SfmlEventHandler::EventResult InventoryView::onMouseButtonPressed(sf::Event::Mou
         }
         else if (event.button == sf::Mouse::Button::Right)
         {
-            if (!slot->content().isEmpty())
-            {
-                Tile& tile = slot->content().tile();
-                tile.model().use(m_inventorySystem->player(), slot->location());
-            }
+            m_inventory->useTile(m_inventorySystem->player(), slot->slotId());
         }
     }
     return EventResult{}.setTakeFocus().setConsumeEvent();
