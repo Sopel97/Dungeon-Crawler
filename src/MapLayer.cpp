@@ -139,19 +139,12 @@ TileStack MapLayer::splitTiles(int x, int y, int z, int count)
     }
 }
 
-std::vector<TileCollider> MapLayer::queryTileColliders(const Rectangle2F& queryRegion)
+std::vector<TileCollider> MapLayer::queryTileColliders(const Rectangle2I& queryRegion)
 {
-    const Vec2F& queryRegionTopLeft     = queryRegion.min;
-    const Vec2F& queryRegionBottomRight = queryRegion.max;
-    int firstTileX = std::max(Util::fastFloor(queryRegionTopLeft.x), 0);
-    int firstTileY = std::max(Util::fastFloor(queryRegionTopLeft.y), 0);
-    int lastTileX = std::min(Util::fastFloor(queryRegionBottomRight.x), m_width - 1);
-    int lastTileY = std::min(Util::fastFloor(queryRegionBottomRight.y), m_height - 1);
-
     std::vector<TileCollider> colliders;
-    for(int x = firstTileX; x <= lastTileX; ++x)
+    for(int x = queryRegion.min.x; x <= queryRegion.max.x; ++x)
     {
-        for(int y = firstTileY; y <= lastTileY; ++y)
+        for(int y = queryRegion.min.y; y <= queryRegion.max.y; ++y)
         {
             TileColumn& tileColumn = at(x, y);
             if (std::optional<TileCollider> collider = tileColumn.collider({ x,y }))

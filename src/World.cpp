@@ -159,15 +159,22 @@ bool World::isInsideWorldBounds(const ls::Vec2I& pos) const
 
 std::vector<TileCollider> World::queryTileColliders(const Rectangle2F& queryRegion)
 {
-    return m_mapLayer->queryTileColliders(queryRegion);
+    const Vec2F& queryRegionTopLeft = queryRegion.min;
+    const Vec2F& queryRegionBottomRight = queryRegion.max;
+    const int firstTileX = std::max(Util::fastFloor(queryRegionTopLeft.x), 0);
+    const int firstTileY = std::max(Util::fastFloor(queryRegionTopLeft.y), 0);
+    const int lastTileX = std::min(Util::fastFloor(queryRegionBottomRight.x), m_width - 1);
+    const int lastTileY = std::min(Util::fastFloor(queryRegionBottomRight.y), m_height - 1);
+
+    return m_mapLayer->queryTileColliders(ls::Rectangle2I(ls::Vec2I(firstTileX, firstTileY), ls::Vec2I(lastTileX, lastTileY)));
 }
 std::vector<ls::Vec2I> World::queryGridPointsBetweenTiles(const ls::Vec2I& from, const ls::Vec2I& to) const
 {
     return queryGridPoints(ls::LineSegment2F(ls::Vec2F(from.x + 0.5f, from.y + 0.5f), ls::Vec2F(to.x + 0.5f, to.y + 0.5f)));
 }
-std::vector<ls::Vec2I> World::queryGridPointsBetweenPlayerAndTile(const ls::Vec2I& to) const
+std::vector<ls::Vec2I> World::queryGridPointsBetweenEntityAndTile(const Entity& entity, const ls::Vec2I& to) const
 {
-    return queryGridPoints(ls::LineSegment2F(m_player.entity().model().position(), ls::Vec2F(to.x + 0.5f, to.y + 0.5f)));
+    return queryGridPoints(ls::LineSegment2F(entity.model().position(), ls::Vec2F(to.x + 0.5f, to.y + 0.5f)));
 }
 bool World::lineOfSightBetweenTiles(const ls::Vec2I& from, const ls::Vec2I& to) const
 {
@@ -177,9 +184,9 @@ bool World::lineOfSightBetweenTiles(const ls::Vec2I& from, const ls::Vec2I& to) 
     }
     return true;
 }
-bool World::lineOfSightBetweenPlayerAndTile(const ls::Vec2I& to) const
+bool World::lineOfSightBetweenEntityAndTile(const Entity& entity, const ls::Vec2I& to) const
 {
-    for (auto pos : queryGridPointsBetweenPlayerAndTile(to))
+    for (auto pos : queryGridPointsBetweenEntityAndTile(entity, to))
     {
         if (!m_mapLayer->at(pos.x, pos.y).top().tile().model().isThrowableThrough()) return false;
     }

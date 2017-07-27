@@ -79,7 +79,7 @@ void TileTransferMediator::operator()(const FromWorld& from, const ToWorld& to)
     int maxTileThrowDist = fromTileStack.tile().model().maxThrowDistance();
     if (world.tileManhattanDistanceFromPlayer(to.pos) > maxTileThrowDist) return; // out of range
 
-    if (!world.lineOfSightBetweenPlayerAndTile(from.pos)) return;
+    if (!world.lineOfSightBetweenEntityAndTile(from.player->entity(), from.pos)) return;
 
     // check line of sight between tiles
     if (!world.lineOfSightBetweenTiles(from.pos, to.pos)) return;
@@ -107,7 +107,7 @@ void TileTransferMediator::operator()(const FromWorld& from, const ToInventory& 
 
     if (world.playerDistanceToTile(from.pos) > maxPlayerDistFromTile) return; // out of range
     if (!fromTileStack.tile().model().isMovableFrom()) return; // item can't be moved
-    if (!world.lineOfSightBetweenPlayerAndTile(from.pos)) return; // no line of sight
+    if (!world.lineOfSightBetweenEntityAndTile(from.player->entity(), from.pos)) return; // no line of sight
 
     Inventory& inventory = *to.inventory;
     const int slot = to.slot;
@@ -159,7 +159,7 @@ void TileTransferMediator::operator()(const FromInventory& from, const ToWorld& 
     int maxTileThrowDist = fromTileStack.tile().model().maxThrowDistance();
     if (world.tileManhattanDistanceFromPlayer(to.pos) > maxTileThrowDist) return; // out of range
 
-    if (!world.lineOfSightBetweenPlayerAndTile(to.pos)) return; // out of sight
+    if (!world.lineOfSightBetweenEntityAndTile(to.player->entity(), to.pos)) return; // out of sight
 
     // perform move
     Logger::instance().log(Logger::Priority::Debug, "moving tile: Inventory -> World");

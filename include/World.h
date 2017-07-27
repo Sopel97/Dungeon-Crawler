@@ -66,9 +66,9 @@ public:
 
     std::vector<TileCollider> queryTileColliders(const ls::Rectangle2F& queryRegion);
     std::vector<ls::Vec2I> queryGridPointsBetweenTiles(const ls::Vec2I& from, const ls::Vec2I& to) const;
-    std::vector<ls::Vec2I> queryGridPointsBetweenPlayerAndTile(const ls::Vec2I& to) const;
+    std::vector<ls::Vec2I> queryGridPointsBetweenEntityAndTile(const Entity& entity, const ls::Vec2I& to) const;
     bool lineOfSightBetweenTiles(const ls::Vec2I& from, const ls::Vec2I& to) const;
-    bool lineOfSightBetweenPlayerAndTile(const ls::Vec2I& to) const;
+    bool lineOfSightBetweenEntityAndTile(const Entity& entity, const ls::Vec2I& to) const;
     float playerDistanceToTile(const ls::Vec2I& tile) const;
     int tileManhattanDistance(const ls::Vec2I& from, const ls::Vec2I& to) const;
     int tileManhattanDistanceFromPlayer(const ls::Vec2I& to) const;
