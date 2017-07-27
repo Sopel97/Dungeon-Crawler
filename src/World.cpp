@@ -49,6 +49,7 @@ World::World(Root& root, Player& player, TileTransferMediator& tileTransferMedia
     m_mapGenerator(m_width, m_height)
 {
     m_mapGenerator.generate(*m_mapLayer);
+    m_player.setWorld(*this);
     m_player.entity().model().setPosition(Vec2F(m_width / 2.0f, m_height / 2.0f));
 }
 World::~World()

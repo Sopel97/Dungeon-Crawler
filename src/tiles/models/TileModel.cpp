@@ -98,12 +98,12 @@ float TileModel::drag() const
 
 TileUseResult TileModel::use(Player& player, const TileLocation& location, int quantity)
 {
-    //return TileUseResult{ 0, {{ResourceManager<TilePrefab>::instance().get("Gold Coin"), 90}} }; test
+    //return TileUseResult{ 0, {{ResourceManager<TilePrefab>::instance().get("Gold Coin"), 90}} }; //test
     return TileUseResult::noAction();
 }
 TileUseResult TileModel::use(Player& player, const InventorySlotLocation& location, int quantity)
 {
-    //return TileUseResult{ 0,{ { ResourceManager<TilePrefab>::instance().get("Gold Coin"), 90 } } }; test
+    //return TileUseResult{ 0,{ { ResourceManager<TilePrefab>::instance().get("Gold Coin"), 90 } } }; //test
     return TileUseResult::noAction();
 }
 void TileModel::look(Player& player, const TileLocation& location, int quantity)

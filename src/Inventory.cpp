@@ -7,6 +7,9 @@
 
 #include "EventDispatcher.h"
 
+#include "Player.h"
+#include "World.h"
+
 #include "events/TilePlacedInInventory.h"
 #include "events/TileRemovedFromInventory.h"
 
@@ -115,7 +118,7 @@ void Inventory::useTile(Player& player, int slot)
 
         if (!tileStackToPlace.isEmpty())
         {
-            // TODO: fallback to World
+            player.tryPlaceTileUnderNearby(std::move(tileStackToPlace));
         }
     }
 }

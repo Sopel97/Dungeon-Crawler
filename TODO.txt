@@ -11,12 +11,6 @@
 
 - currently a lot of code from World, Inventory is duplicated in TileTransferMediator, think of a way to simplify it (TileTransferMediator has to call more event that World, Invntory so it is problematic)
 
-THIS
-- check if loot can be placed on the tile, if not search for possible location nearby
-
-THIS
-- Inventory should fallback to World when there is no place to spawn tile
-
 - WorldView? currently World is also a WindowContent, which should be decoupled (like inventory is)
 
 CONSIDER:

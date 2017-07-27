@@ -1,8 +1,6 @@
 #ifndef PLAYER_H
 #define PLAYER_H
 
-#include "PlayerUi.h"
-
 #include <memory>
 #include <vector>
 
@@ -23,6 +21,7 @@ class WindowSpaceManager;
 class InternalWindow;
 class TileTransferMediator;
 class InventorySlotLocation;
+class World;
 
 class Player
 {
@@ -40,6 +39,11 @@ public:
     Entity& entity();
     const Entity& entity() const;
 
+    World& world();
+    const World& world() const;
+
+    void setWorld(World& world);
+
     InventorySystem& inventorySystem();
     const InventorySystem& inventorySystem() const;
 
@@ -52,9 +56,11 @@ public:
 
     void attack(World& world, const ls::Vec2F& pos);
 
+    bool tryPlaceTileUnderNearby(TileStack&& tileStack);
+
 protected:
     WindowSpaceManager* m_wsm;
-    TileTransferMediator* m_tileTransferMediator;
+    World* m_world;
     Entity m_playerEntity;
     PlayerUi m_playerUi;
     InventorySystem m_inventorySystem;

@@ -19,6 +19,7 @@ using namespace ls;
 
 Player::Player(WindowSpaceManager& wsm, Game& game, TileTransferMediator& tileTransferMediator) :
     m_wsm(&wsm),
+    m_world(nullptr),
     m_playerEntity(-1, std::make_unique<PlayerModel>(*this, m_playerEntity), std::make_unique<PlayerRenderer>(*this, m_playerEntity)),
     m_playerUi(wsm, *this),
     m_inventorySystem(wsm, *this, tileTransferMediator),
@@ -62,6 +63,20 @@ const Entity& Player::entity() const
 {
     return m_playerEntity;
 }
+
+World& Player::world()
+{
+    return *m_world;
+}
+const World& Player::world() const
+{
+    return *m_world;
+}
+
+void Player::setWorld(World& world)
+{
+    m_world = &world;
+}
 InventorySystem& Player::inventorySystem()
 {
     return m_inventorySystem;
@@ -102,4 +117,10 @@ void Player::attack(World& world, const ls::Vec2F& pos)
     const int weaponSlot = m_equipmentInventory.slotId(PlayerEquipmentInventory::SlotType::PrimaryWeapon);
     if(attackResult.ammoUsed > 0) m_equipmentInventory.removeTiles(ammoSlot, attackResult.ammoUsed);
     if(attackResult.weaponUsed > 0) m_equipmentInventory.removeTiles(weaponSlot, attackResult.weaponUsed);
+}
+
+bool Player::tryPlaceTileUnderNearby(TileStack&& tileStack)
+{
+    const ls::Vec2I worldPos = m_world->worldToTile(m_playerEntity.model().position());
+    return m_world->tryPlaceTile(std::move(tileStack), worldPos.x, worldPos.y);
 }
