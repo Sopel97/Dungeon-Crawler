@@ -16,8 +16,7 @@
 
 - test animations
 
-- optimize outer border rendering (currently takes ~80% of performance)
--- may require caching which may require gathering state on tileplaced/removed (similarly as in case with light)
+- make outer border caching tiled if the map size grows too much (doing whole map at once may be slow)
 
 CONSIDER:
 hook up StaticEmbeddedHomogenousMemoryPool for components, tiles, entities, projectiles, see how it behaves

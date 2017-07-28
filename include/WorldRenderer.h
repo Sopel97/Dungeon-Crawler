@@ -8,6 +8,8 @@
 
 #include "ResourceManager.h"
 
+#include <vector>
+
 class Root;
 class World;
 class WindowSpaceManager;
@@ -15,6 +17,7 @@ class TallDrawable;
 class TileLocation;
 class SpriteBatch;
 class Spritesheet;
+class TileStack;
 
 // IMPORTANT: SFML makes redundant shader binds that result in very bad fps when many calls are made with the same shader. Should be improved later when vertex array is used.
 class WorldRenderer
@@ -35,6 +38,9 @@ protected:
     Root& m_root;
     World& m_world;
     WindowSpaceManager& m_windowSpaceManager;
+
+    ls::Array2<std::vector<const TileStack*>> m_outerBorderCache;
+    bool m_isOuterBorderCached;
 
     Camera m_camera;
     
@@ -59,6 +65,8 @@ protected:
     void prepareLightMap();
     void prepareMetaTexture();
     void updateShaderUniforms();
+    void buildOuterBorderCache();
+    void updateOuterBorderCache(const TileLocation & tileLocation);
     void drawOuterBorder(SpriteBatch& spriteBatch, const TileLocation & tileLocation);
     void drawMain(const sf::RenderStates& renderStates);
     void drawMeta(const sf::RenderStates& renderStates);

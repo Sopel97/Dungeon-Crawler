@@ -49,6 +49,8 @@ using namespace ls;
 WorldRenderer::WorldRenderer(Root& root, World& world) :
     m_root(root),
     m_world(world),
+    m_outerBorderCache(World::m_worldWidth, World::m_worldHeight),
+    m_isOuterBorderCached(false),
     m_camera(Vec2F(World::m_worldWidth / 2.0f, World::m_worldHeight / 2.0f), m_viewWidth, m_viewHeight),
     m_windowSpaceManager(root.windowSpaceManager())
 {
@@ -106,6 +108,12 @@ const Camera& WorldRenderer::camera() const
 
 void WorldRenderer::draw(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates)
 {
+    if (!m_isOuterBorderCached)
+    {
+        buildOuterBorderCache();
+        m_isOuterBorderCached = true;
+    }
+
     prepareIntermidiateRenderTarget();
     prepareLightMap();
     prepareMetaTexture();
@@ -140,7 +148,7 @@ void WorldRenderer::drawMain(const sf::RenderStates& renderStates)
     int lastTileY = std::min(Util::fastFloor(cameraBottomRight.y) + 1, m_world.m_height - 1);
 
     SpriteBatch spriteBatch;
-    
+
     //x,y are inverted here because we want to draw top down
     for (int y = firstTileY; y <= lastTileY; ++y)
     {
@@ -152,22 +160,11 @@ void WorldRenderer::drawMain(const sf::RenderStates& renderStates)
             {
                 TileLocation location(mapLayer, x, y, z);
 
-                if (z == 0)
+                tileStack.tile().renderer().draw(spriteBatch, location);
+
+                if (z == 0 && !tileStack.tile().renderer().coversOuterBorders())
                 {
-                    if (tileStack.tile().renderer().coversOuterBorders())
-                    {
-                        drawOuterBorder(spriteBatch, location);
-                        tileStack.tile().renderer().draw(spriteBatch, location);
-                    }
-                    else
-                    {
-                        tileStack.tile().renderer().draw(spriteBatch, location);
-                        drawOuterBorder(spriteBatch, location);
-                    }
-                }
-                else
-                {
-                    tileStack.tile().renderer().draw(spriteBatch, location);
+                    drawOuterBorder(spriteBatch, location);
                 }
 
                 ++z;
@@ -293,8 +290,8 @@ void WorldRenderer::alignVertices(SpriteBatch& batch) const
 {
     static constexpr float tileResolution = static_cast<float>(m_tileResolution);
     batch.apply([](sf::Vertex& vert) {
-        vert.position.x = ls::Util::fastFloor((vert.position.x+0.5f)*tileResolution) / tileResolution - 0.5f;
-        vert.position.y = ls::Util::fastFloor((vert.position.y+0.5f)*tileResolution) / tileResolution - 0.5f;
+        vert.position.x = ls::Util::fastFloor((vert.position.x + 0.5f)*tileResolution) / tileResolution - 0.5f;
+        vert.position.y = ls::Util::fastFloor((vert.position.y + 0.5f)*tileResolution) / tileResolution - 0.5f;
     });
 }
 void WorldRenderer::drawIntermidiate(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates)
@@ -340,7 +337,17 @@ void WorldRenderer::drawLightsToLightMap()
     m_lightMap.display();
 }
 
-void WorldRenderer::drawOuterBorder(SpriteBatch& spriteBatch, const TileLocation& tileLocation)
+void WorldRenderer::buildOuterBorderCache()
+{
+    for (int x = 0; x < World::m_worldWidth; ++x)
+    {
+        for (int y = 0; y < World::m_worldHeight; ++y)
+        {
+            updateOuterBorderCache(TileLocation(*(m_world.m_mapLayer), x, y, 0));
+        }
+    }
+}
+void WorldRenderer::updateOuterBorderCache(const TileLocation & tileLocation)
 {
     auto areTilesEqual = [](const TileStack * lhs, const TileStack * rhs)->bool {return lhs->tile().id() == rhs->tile().id(); };
     auto borderPriorityCompare = [](const TileStack * lhs, const TileStack * rhs)->bool {return lhs->tile().renderer().outerBorderPriority() < rhs->tile().renderer().outerBorderPriority(); };
@@ -380,10 +387,14 @@ void WorldRenderer::drawOuterBorder(SpriteBatch& spriteBatch, const TileLocation
     if (!differentNeigbourTiles.empty())
     {
         std::sort(differentNeigbourTiles.begin(), differentNeigbourTiles.end(), borderPriorityCompare);
+    }
 
-        for (const auto& neighbour : differentNeigbourTiles)
-        {
-            neighbour->tile().renderer().drawOutside(spriteBatch, tileLocation);
-        }
+    m_outerBorderCache(x, y) = std::move(differentNeigbourTiles);
+}
+void WorldRenderer::drawOuterBorder(SpriteBatch& spriteBatch, const TileLocation& tileLocation)
+{
+    for (const auto& neighbour : m_outerBorderCache(tileLocation.x, tileLocation.y))
+    {
+        neighbour->tile().renderer().drawOutside(spriteBatch, tileLocation);
     }
 }
