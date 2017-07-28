@@ -39,7 +39,7 @@ public:
 protected:
     struct TileOuterBorderCacheEntry
     {
-        const TileStack* tileStack;
+        ls::Vec2I tileStackPos;
         TileOuterBorderCache rendererCache;
     };
 

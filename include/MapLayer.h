@@ -5,11 +5,13 @@
 
 #include "../LibS/Array2.h"
 
-#include "../LibS/Geometry.h"
+#include "../LibS/Shapes.h"
 
 class World;
 class TileColumn;
 class TileStack;
+class Tile;
+class TileLocation;
 
 class MapLayer
 {
@@ -48,6 +50,9 @@ protected:
 
     void onTilePlaced(TileStack& stack, int x, int y, int z);
     void onTileRemoved(TileStack& stack, int x, int y, int z);
+
+    using TileUpdateFunction = void (Tile::*)(const TileLocation&, const ls::Vec2I&);
+    void updateNearbyTiles(int x, int y, int z, TileUpdateFunction func);
 };
 
 #endif // MAPLAYER_H

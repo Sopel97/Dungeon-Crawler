@@ -155,6 +155,27 @@ void Tile::onTileRemoved(const Inventory& inventory, int slot)
     m_renderer->onTileRemoved(inventory, slot);
 }
 
+void Tile::onTilePlacedNearby(const TileLocation& thisLocation, const ls::Vec2I& otherTileOffset)
+{
+    m_model->onTilePlacedNearby(thisLocation, otherTileOffset);
+    m_renderer->onTilePlacedNearby(thisLocation, otherTileOffset);
+}
+void Tile::onTileRemovedNearby(const TileLocation& thisLocation, const ls::Vec2I& otherTileOffset)
+{
+    m_model->onTileRemovedNearby(thisLocation, otherTileOffset);
+    m_renderer->onTileRemovedNearby(thisLocation, otherTileOffset);
+}
+void Tile::onTilePlacedOnTop(const TileLocation& thisLocation)
+{
+    m_model->onTilePlacedOnTop(thisLocation);
+    m_renderer->onTilePlacedOnTop(thisLocation);
+}
+void Tile::onTileRemovedFromTop(const TileLocation& thisLocation)
+{
+    m_model->onTileRemovedFromTop(thisLocation);
+    m_renderer->onTileRemovedFromTop(thisLocation);
+}
+
 
 int Tile::id() const
 {

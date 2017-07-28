@@ -349,14 +349,26 @@ void WorldRenderer::buildOuterBorderCache()
 }
 void WorldRenderer::updateOuterBorderCache(const TileLocation & tileLocation)
 {
-    auto areTilesEqual = [](const TileStack * lhs, const TileStack * rhs)->bool {return lhs->tile().id() == rhs->tile().id(); };
-    auto borderPriorityCompare = [](const TileStack * lhs, const TileStack * rhs)->bool {return lhs->tile().renderer().outerBorderPriority() < rhs->tile().renderer().outerBorderPriority(); };
+    auto areTilesEqual = [](
+        const TileStack * lhs, 
+        const TileStack * rhs)
+        ->bool 
+    {
+        return lhs->tile().id() == rhs->tile().id(); 
+    };
+    auto borderPriorityCompare = [](
+        const std::pair<const TileStack *, ls::Vec2I>& lhs, 
+        const std::pair<const TileStack *, ls::Vec2I>& rhs)
+        ->bool 
+    {
+        return lhs.first->tile().renderer().outerBorderPriority() < rhs.first->tile().renderer().outerBorderPriority(); 
+    };
 
     int x = tileLocation.x;
     int y = tileLocation.y;
     const MapLayer& map = *tileLocation.map;
 
-    std::vector<const TileStack*> differentNeigbourTiles;
+    std::vector<std::pair<const TileStack*, ls::Vec2I>> differentNeigbourTiles;
     int thisTileOuterBorderPriority = map.at(x, y, 0).tile().renderer().outerBorderPriority();
     for (int xoffset = -1; xoffset <= 1; ++xoffset)
     {
@@ -371,7 +383,7 @@ void WorldRenderer::updateOuterBorderCache(const TileLocation & tileLocation)
             bool firstSuchNeighbour = true;
             for (const auto& neighbour : differentNeigbourTiles)
             {
-                if (areTilesEqual(&tileStack, neighbour))
+                if (areTilesEqual(&tileStack, neighbour.first))
                 {
                     firstSuchNeighbour = false;
                     break;
@@ -379,7 +391,7 @@ void WorldRenderer::updateOuterBorderCache(const TileLocation & tileLocation)
             }
             if (firstSuchNeighbour)
             {
-                differentNeigbourTiles.push_back(&tileStack);
+                differentNeigbourTiles.push_back(std::pair<const TileStack*, ls::Vec2I>(&tileStack, {xx, yy}));
             }
         }
     }
@@ -391,14 +403,15 @@ void WorldRenderer::updateOuterBorderCache(const TileLocation & tileLocation)
 
     for (const auto& neighbour : differentNeigbourTiles)
     {
-        m_outerBorderCache(x, y).emplace_back(TileOuterBorderCacheEntry{ neighbour, neighbour->tile().renderer().buildOuterBorderCache(tileLocation) });
+        m_outerBorderCache(x, y).emplace_back(TileOuterBorderCacheEntry{ neighbour.second, neighbour.first->tile().renderer().buildOuterBorderCache(tileLocation)
+    });
     }
 }
 void WorldRenderer::drawOuterBorder(SpriteBatch& spriteBatch, const TileLocation& tileLocation)
 {
     for (const auto& neighbour : m_outerBorderCache(tileLocation.x, tileLocation.y))
     {
-        const TileStack& tileStack = *(neighbour.tileStack);
+        const TileStack& tileStack = tileLocation.map->at(neighbour.tileStackPos.x, neighbour.tileStackPos.y, 0);
         const TileOuterBorderCache& rendererCache = neighbour.rendererCache;
 
         tileStack.tile().renderer().drawOutside(spriteBatch, tileLocation, rendererCache);

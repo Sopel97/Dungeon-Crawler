@@ -160,6 +160,8 @@ void MapLayer::onTilePlaced(TileStack& stack, int x, int y, int z)
 
     stack.tile().onTilePlaced(location);
     EventDispatcher::instance().broadcast<TilePlacedInWorld>(TilePlacedInWorld{ &stack, location });
+
+    updateNearbyTiles(x, y, z, &Tile::onTilePlacedNearby);
 }
 void MapLayer::onTileRemoved(TileStack& stack, int x, int y, int z)
 {
@@ -167,4 +169,30 @@ void MapLayer::onTileRemoved(TileStack& stack, int x, int y, int z)
 
     stack.tile().onTileRemoved(location);
     EventDispatcher::instance().broadcast<TileRemovedFromWorld>(TileRemovedFromWorld{ &stack, location });
+
+    updateNearbyTiles(x, y, z, &Tile::onTileRemovedNearby);
+}
+
+void MapLayer::updateNearbyTiles(int x, int y, int z, TileUpdateFunction func)
+{
+    TileLocation location(*this, x, y, z);
+
+    const int minX = std::max(x - 1, 0);
+    const int maxX = std::min(x + 1, m_width - 1);
+    const int minY = std::max(y - 1, 0);
+    const int maxY = std::min(y + 1, m_height - 1);
+
+    for (int xx = minX; xx <= maxX; ++xx)
+    {
+        for (int yy = minY; yy <= maxY; ++yy)
+        {
+            if (xx == x && yy == y) continue;
+
+            TileColumn& tileColumn = m_tileColumns(xx, yy);
+            if (tileColumn.size() > z)
+            {
+                (tileColumn.at(z).tile().*func)(location, ls::Vec2I(xx - x, yy - y));
+            }
+        }
+    }
 }
