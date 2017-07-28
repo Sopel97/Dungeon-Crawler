@@ -1,6 +1,6 @@
-THIS ?
-- try to change  InventorySlotView::tileSize to 1.0
+- try to change  InventorySlotView::tileSize to 1.0 ?
 -- use SpriteBatch too
+--- may not be easy to do (and not needed too) since there is text rendering
 
 -- eventually encapsulate compontents in Tile (TileStack), Entity, Projectile so they are not visible from outside
 
@@ -14,12 +14,21 @@ THIS ?
 
 - WorldView? currently World is also a WindowContent, which should be decoupled (like inventory is)
 
+- test animations
+
+- optimize outer border rendering (currently takes ~80% of performance)
+-- may require caching which may require gathering state on tileplaced/removed (similarly as in case with light)
+
 CONSIDER:
 hook up StaticEmbeddedHomogenousMemoryPool for components, tiles, entities, projectiles, see how it behaves
 
+THIS:
 - group tile (and entity, and projectile) flags in one place (struct with bitfields or something)
+-- somehow merge 2 sets of flags (one from model, one from renderer)
+-- or make them separate (probably better)
 
 - continue to make better interface in (world) map and inventory (if something old that should be removed or changed pops up) regarding actions that should cause events (currently onTilePlaced, onTileRemoved). Mainly make it safer and easier to work with.
+
 THIS
 -- rename placeTile in MapLayer (in Inventory too maybe) to something that indicates no merging
 
@@ -34,6 +43,7 @@ THIS
 DRAWING RELATED, kinda important
 - make world drawing cleaner, parametrize intermidiate targets' sizes
 
+THIS:
 - make it possible for tiles to specify what size they are (1 - 1x1, 2 - 2x2, more should not be needed)
 
 - try dim light depending on height from the ground

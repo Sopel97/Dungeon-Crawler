@@ -293,8 +293,8 @@ void WorldRenderer::alignVertices(SpriteBatch& batch) const
 {
     static constexpr float tileResolution = static_cast<float>(m_tileResolution);
     batch.apply([](sf::Vertex& vert) {
-        vert.position.x = std::round(vert.position.x*tileResolution) / tileResolution;
-        vert.position.y = std::round(vert.position.y*tileResolution) / tileResolution;
+        vert.position.x = ls::Util::fastFloor((vert.position.x+0.5f)*tileResolution) / tileResolution - 0.5f;
+        vert.position.y = ls::Util::fastFloor((vert.position.y+0.5f)*tileResolution) / tileResolution - 0.5f;
     });
 }
 void WorldRenderer::drawIntermidiate(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates)
@@ -376,10 +376,14 @@ void WorldRenderer::drawOuterBorder(SpriteBatch& spriteBatch, const TileLocation
             }
         }
     }
-    std::sort(differentNeigbourTiles.begin(), differentNeigbourTiles.end(), borderPriorityCompare);
 
-    for (const auto& neighbour : differentNeigbourTiles)
+    if (!differentNeigbourTiles.empty())
     {
-        neighbour->tile().renderer().drawOutside(spriteBatch, tileLocation);
+        std::sort(differentNeigbourTiles.begin(), differentNeigbourTiles.end(), borderPriorityCompare);
+
+        for (const auto& neighbour : differentNeigbourTiles)
+        {
+            neighbour->tile().renderer().drawOutside(spriteBatch, tileLocation);
+        }
     }
 }
