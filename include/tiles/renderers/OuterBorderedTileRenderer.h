@@ -64,4 +64,5 @@ public:
 protected:
     CommonData* const m_commonData;
     const TimeAnimatedSprite* m_currentAnimatedSprite;
+
 };

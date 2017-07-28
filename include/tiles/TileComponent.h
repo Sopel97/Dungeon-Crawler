@@ -27,8 +27,8 @@ public:
     virtual void onTileRemoved(const TileLocation& location) {}
     virtual void onTileRemoved(const Inventory& inventory, int slot) {}
 
-    virtual void onTilePlacedNearby(const TileLocation& thisLocation, const ls::Vec2I& otherTileOffset) {}
-    virtual void onTileRemovedNearby(const TileLocation& thisLocation, const ls::Vec2I& otherTileOffset) {}
+    virtual void onTilePlacedNearby(const TileLocation& thisLocation, const ls::Vec2I& updatedTileOffset) {}
+    virtual void onTileRemovedNearby(const TileLocation& thisLocation, const ls::Vec2I& updatedTileOffset) {}
     virtual void onTilePlacedOnTop(const TileLocation& thisLocation) {}
     virtual void onTileRemovedFromTop(const TileLocation& thisLocation) {}
 };

@@ -21,6 +21,8 @@
 CONSIDER:
 hook up StaticEmbeddedHomogenousMemoryPool for components, tiles, entities, projectiles, see how it behaves
 
+- make mapgenerator update all tiles once (currenly it does up to 9 updates on one tile)
+
 THIS:
 - group tile (and entity, and projectile) flags in one place (struct with bitfields or something)
 -- somehow merge 2 sets of flags (one from model, one from renderer)

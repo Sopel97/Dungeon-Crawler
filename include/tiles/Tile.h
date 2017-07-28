@@ -69,8 +69,8 @@ public:
     void onTileRemoved(const TileLocation& location);
     void onTileRemoved(const Inventory& inventory, int slot);
 
-    void onTilePlacedNearby(const TileLocation& thisLocation, const ls::Vec2I& otherTileOffset);
-    void onTileRemovedNearby(const TileLocation& thisLocation, const ls::Vec2I& otherTileOffset);
+    void onTilePlacedNearby(const TileLocation& thisLocation, const ls::Vec2I& updatedTileOffset);
+    void onTileRemovedNearby(const TileLocation& thisLocation, const ls::Vec2I& updatedTileOffset);
     void onTilePlacedOnTop(const TileLocation& thisLocation);
     void onTileRemovedFromTop(const TileLocation& thisLocation);
 

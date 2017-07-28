@@ -159,24 +159,22 @@ void MapLayer::onTilePlaced(TileStack& stack, int x, int y, int z)
     TileLocation location(*this, x, y, z);
 
     stack.tile().onTilePlaced(location);
-    EventDispatcher::instance().broadcast<TilePlacedInWorld>(TilePlacedInWorld{ &stack, location });
-
     updateNearbyTiles(x, y, z, &Tile::onTilePlacedNearby);
+    if (z > 0) m_tileColumns(x, y).at(z - 1).tile().onTilePlacedOnTop(TileLocation(*this, x, y, z - 1));
+    EventDispatcher::instance().broadcast<TilePlacedInWorld>(TilePlacedInWorld{ &stack, location });
 }
 void MapLayer::onTileRemoved(TileStack& stack, int x, int y, int z)
 {
     TileLocation location(*this, x, y, z);
 
     stack.tile().onTileRemoved(location);
-    EventDispatcher::instance().broadcast<TileRemovedFromWorld>(TileRemovedFromWorld{ &stack, location });
-
     updateNearbyTiles(x, y, z, &Tile::onTileRemovedNearby);
+    if (z > 0) m_tileColumns(x, y).at(z - 1).tile().onTileRemovedFromTop(TileLocation(*this, x, y, z - 1));
+    EventDispatcher::instance().broadcast<TileRemovedFromWorld>(TileRemovedFromWorld{ &stack, location });
 }
 
 void MapLayer::updateNearbyTiles(int x, int y, int z, TileUpdateFunction func)
 {
-    TileLocation location(*this, x, y, z);
-
     const int minX = std::max(x - 1, 0);
     const int maxX = std::min(x + 1, m_width - 1);
     const int minY = std::max(y - 1, 0);
@@ -191,7 +189,7 @@ void MapLayer::updateNearbyTiles(int x, int y, int z, TileUpdateFunction func)
             TileColumn& tileColumn = m_tileColumns(xx, yy);
             if (tileColumn.size() > z)
             {
-                (tileColumn.at(z).tile().*func)(location, ls::Vec2I(xx - x, yy - y));
+                (tileColumn.at(z).tile().*func)(TileLocation(*this, xx, yy, z), ls::Vec2I(x - xx, y - yy));
             }
         }
     }

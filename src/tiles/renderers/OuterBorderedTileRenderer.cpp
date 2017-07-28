@@ -127,7 +127,7 @@ TileOuterBorderCache OuterBorderedTileRenderer::buildOuterBorderCache(const Tile
     isIdSame[TopRight] = (map.at(x + 1, y - 1, z).tile().id() == id);
 
     isIdSame[Left] = (map.at(x - 1, y + 0, z).tile().id() == id);
-    isIdSame[Center] = (map.at(x + 0, y + 0, z).tile().id() == id);
+    isIdSame[Center] = true;
     isIdSame[Right] = (map.at(x + 1, y + 0, z).tile().id() == id);
 
     isIdSame[BottomLeft] = (map.at(x - 1, y + 1, z).tile().id() == id);

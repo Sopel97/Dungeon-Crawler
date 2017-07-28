@@ -67,9 +67,19 @@ public:
 
     TileInnerBorderGroupType innerBorderGroup() const override;
 
+    void onTilePlaced(const TileLocation& location) override;
+    void onTilePlacedNearby(const TileLocation& thisLocation, const ls::Vec2I& updatedTileOffset) override;
+    void onTileRemovedNearby(const TileLocation& thisLocation, const ls::Vec2I& updatedTileOffset) override;
+
     std::unique_ptr<TileRenderer> clone(Tile& owner) const override;
 protected:
     CommonData* const m_commonData;
+    const ls::Vec2I* m_spriteCache00;
+    const ls::Vec2I* m_spriteCache10;
+    const ls::Vec2I* m_spriteCache01;
+    const ls::Vec2I* m_spriteCache11;
 
     virtual void draw(SpriteBatch& spriteBatch, const TileLocation& location, const ls::Vec2I& textureOffset) const;
+
+    void updateCache(const TileLocation& location);
 };
