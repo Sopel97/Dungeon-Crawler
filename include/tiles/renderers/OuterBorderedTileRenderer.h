@@ -45,7 +45,9 @@ public:
     void loadFromConfiguration(ConfigurationNode& config) override;
 
     void draw(SpriteBatch& spriteBatch, const TileLocation& location) const override;
-    void drawOutside(SpriteBatch& spriteBatch, const TileLocation& location) const override;
+    void drawOutside(SpriteBatch& spriteBatch, const TileLocation& location, const TileOuterBorderCache& cache) const override;
+
+    TileOuterBorderCache buildOuterBorderCache(const TileLocation& location) const override;
 
     const sf::Texture& texture() const;
     const Spritesheet& spritesheet() const;

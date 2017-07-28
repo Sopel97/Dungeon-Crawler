@@ -3,6 +3,8 @@
 #include "SFML/Graphics.hpp"
 #include "TileLocation.h"
 
+#include "tiles/TileOuterBorderCache.h"
+
 TileRenderer::TileRenderer(Tile& owner) :
     TileComponent(owner)
 {
@@ -22,7 +24,7 @@ void TileRenderer::draw(SpriteBatch& spriteBatch, const TileLocation& location) 
 {
 
 }
-void TileRenderer::drawOutside(SpriteBatch& spriteBatch, const TileLocation& location) const
+void TileRenderer::drawOutside(SpriteBatch& spriteBatch, const TileLocation& location, const TileOuterBorderCache& cache) const
 {
 
 }
@@ -33,6 +35,11 @@ void TileRenderer::drawMeta(SpriteBatch& spriteBatch, const TileLocation& locati
 void TileRenderer::draw(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates, const InventorySlotView& slot) const
 {
 
+}
+
+TileOuterBorderCache TileRenderer::buildOuterBorderCache(const TileLocation& location) const
+{
+    return TileOuterBorderCache{ -1, -1 };
 }
 
 TileInnerBorderGroupType TileRenderer::innerBorderGroup() const

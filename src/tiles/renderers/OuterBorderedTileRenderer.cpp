@@ -62,7 +62,42 @@ void OuterBorderedTileRenderer::draw(SpriteBatch& spriteBatch, const TileLocatio
     spriteBatch.emplaceRectangle(&(texture()), pos, size, sprite, spriteSize);
 }
 
-void OuterBorderedTileRenderer::drawOutside(SpriteBatch& spriteBatch, const TileLocation& location) const
+void OuterBorderedTileRenderer::drawOutside(SpriteBatch& spriteBatch, const TileLocation& location, const TileOuterBorderCache& cache) const
+{
+    const int x = location.x;
+    const int y = location.y;
+
+    const int sideBorderSpriteIndex = cache.sideSpriteIndex;
+
+    Vec2I sideBorderSpritePosition = m_commonData->borderSprites + Vec2I {sideBorderSpriteIndex, 0};
+
+    if(sideBorderSpriteIndex != -1)
+    {
+        const ls::Vec2F sprite = static_cast<ls::Vec2F>(spritesheet().gridCoordsToTexCoords(sideBorderSpritePosition));
+        const ls::Vec2F spriteSize = static_cast<ls::Vec2F>(spritesheet().gridSizeToTexSize({ 1, 1 }));
+        const ls::Vec2F size(1.0f, 1.0f);
+        const ls::Vec2F pos(x * size.x, y * size.y);
+
+        spriteBatch.emplaceRectangle(&(texture()), pos, size, sprite, spriteSize);
+    }
+
+
+    const int cornerBorderSpriteIndex = cache.cornerSpriteIndex;
+
+    Vec2I cornerBorderSpritePosition = m_commonData->borderSprites + Vec2I {cornerBorderSpriteIndex, 1};
+
+    if(cornerBorderSpriteIndex != -1)
+    {
+        const ls::Vec2F sprite = static_cast<ls::Vec2F>(spritesheet().gridCoordsToTexCoords(cornerBorderSpritePosition));
+        const ls::Vec2F spriteSize = static_cast<ls::Vec2F>(spritesheet().gridSizeToTexSize({ 1, 1 }));
+        const ls::Vec2F size(1.0f, 1.0f);
+        const ls::Vec2F pos(x * size.x, y * size.y);
+
+        spriteBatch.emplaceRectangle(&(texture()), pos, size, sprite, spriteSize);
+    }
+}
+
+TileOuterBorderCache OuterBorderedTileRenderer::buildOuterBorderCache(const TileLocation& location) const
 {
     enum Indices
     {
@@ -81,63 +116,39 @@ void OuterBorderedTileRenderer::drawOutside(SpriteBatch& spriteBatch, const Tile
 
     bool isIdSame[9];
 
-    int id = m_owner->id();
-    int x = location.x;
-    int y = location.y;
-    int z = location.z;
+    const int id = m_owner->id();
+    const int x = location.x;
+    const int y = location.y;
+    const int z = location.z;
     const MapLayer& map = *location.map;
 
-    isIdSame[TopLeft]     = (map.at(x - 1, y - 1, z).tile().id() == id);
-    isIdSame[Top]         = (map.at(x + 0, y - 1, z).tile().id() == id);
-    isIdSame[TopRight]    = (map.at(x + 1, y - 1, z).tile().id() == id);
+    isIdSame[TopLeft] = (map.at(x - 1, y - 1, z).tile().id() == id);
+    isIdSame[Top] = (map.at(x + 0, y - 1, z).tile().id() == id);
+    isIdSame[TopRight] = (map.at(x + 1, y - 1, z).tile().id() == id);
 
-    isIdSame[Left]        = (map.at(x - 1, y + 0, z).tile().id() == id);
-    isIdSame[Center]      = (map.at(x + 0, y + 0, z).tile().id() == id);
-    isIdSame[Right]       = (map.at(x + 1, y + 0, z).tile().id() == id);
+    isIdSame[Left] = (map.at(x - 1, y + 0, z).tile().id() == id);
+    isIdSame[Center] = (map.at(x + 0, y + 0, z).tile().id() == id);
+    isIdSame[Right] = (map.at(x + 1, y + 0, z).tile().id() == id);
 
-    isIdSame[BottomLeft]  = (map.at(x - 1, y + 1, z).tile().id() == id);
-    isIdSame[Bottom]      = (map.at(x + 0, y + 1, z).tile().id() == id);
+    isIdSame[BottomLeft] = (map.at(x - 1, y + 1, z).tile().id() == id);
+    isIdSame[Bottom] = (map.at(x + 0, y + 1, z).tile().id() == id);
     isIdSame[BottomRight] = (map.at(x + 1, y + 1, z).tile().id() == id);
 
     int sideBorderSpriteIndex = -1;
 
-    if(isIdSame[Left]) sideBorderSpriteIndex += 1;
-    if(isIdSame[Top]) sideBorderSpriteIndex += 2;
-    if(isIdSame[Right]) sideBorderSpriteIndex += 4;
-    if(isIdSame[Bottom]) sideBorderSpriteIndex += 8;
-
-
-    Vec2I sideBorderSpritePosition = m_commonData->borderSprites + Vec2I {sideBorderSpriteIndex, 0};
-
-    if(sideBorderSpriteIndex != -1)
-    {
-        const ls::Vec2F sprite = static_cast<ls::Vec2F>(spritesheet().gridCoordsToTexCoords(sideBorderSpritePosition));
-        const ls::Vec2F spriteSize = static_cast<ls::Vec2F>(spritesheet().gridSizeToTexSize({ 1, 1 }));
-        const ls::Vec2F size(1.0f, 1.0f);
-        const ls::Vec2F pos(x * size.x, y * size.y);
-
-        spriteBatch.emplaceRectangle(&(texture()), pos, size, sprite, spriteSize);
-    }
-
+    if (isIdSame[Left]) sideBorderSpriteIndex += 1;
+    if (isIdSame[Top]) sideBorderSpriteIndex += 2;
+    if (isIdSame[Right]) sideBorderSpriteIndex += 4;
+    if (isIdSame[Bottom]) sideBorderSpriteIndex += 8;
 
     int cornerBorderSpriteIndex = -1;
 
-    if(isIdSame[TopLeft] && !isIdSame[Top] && !isIdSame[Left]) cornerBorderSpriteIndex += 1;
-    if(isIdSame[TopRight] && !isIdSame[Top] && !isIdSame[Right]) cornerBorderSpriteIndex += 2;
-    if(isIdSame[BottomRight] && !isIdSame[Bottom] && !isIdSame[Right]) cornerBorderSpriteIndex += 4;
-    if(isIdSame[BottomLeft] && !isIdSame[Bottom] && !isIdSame[Left]) cornerBorderSpriteIndex += 8;
+    if (isIdSame[TopLeft] && !isIdSame[Top] && !isIdSame[Left]) cornerBorderSpriteIndex += 1;
+    if (isIdSame[TopRight] && !isIdSame[Top] && !isIdSame[Right]) cornerBorderSpriteIndex += 2;
+    if (isIdSame[BottomRight] && !isIdSame[Bottom] && !isIdSame[Right]) cornerBorderSpriteIndex += 4;
+    if (isIdSame[BottomLeft] && !isIdSame[Bottom] && !isIdSame[Left]) cornerBorderSpriteIndex += 8;
 
-    Vec2I cornerBorderSpritePosition = m_commonData->borderSprites + Vec2I {cornerBorderSpriteIndex, 1};
-
-    if(cornerBorderSpriteIndex != -1)
-    {
-        const ls::Vec2F sprite = static_cast<ls::Vec2F>(spritesheet().gridCoordsToTexCoords(cornerBorderSpritePosition));
-        const ls::Vec2F spriteSize = static_cast<ls::Vec2F>(spritesheet().gridSizeToTexSize({ 1, 1 }));
-        const ls::Vec2F size(1.0f, 1.0f);
-        const ls::Vec2F pos(x * size.x, y * size.y);
-
-        spriteBatch.emplaceRectangle(&(texture()), pos, size, sprite, spriteSize);
-    }
+    return { sideBorderSpriteIndex, cornerBorderSpriteIndex };
 }
 
 const sf::Texture& OuterBorderedTileRenderer::texture() const

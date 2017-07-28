@@ -389,12 +389,18 @@ void WorldRenderer::updateOuterBorderCache(const TileLocation & tileLocation)
         std::sort(differentNeigbourTiles.begin(), differentNeigbourTiles.end(), borderPriorityCompare);
     }
 
-    m_outerBorderCache(x, y) = std::move(differentNeigbourTiles);
+    for (const auto& neighbour : differentNeigbourTiles)
+    {
+        m_outerBorderCache(x, y).emplace_back(TileOuterBorderCacheEntry{ neighbour, neighbour->tile().renderer().buildOuterBorderCache(tileLocation) });
+    }
 }
 void WorldRenderer::drawOuterBorder(SpriteBatch& spriteBatch, const TileLocation& tileLocation)
 {
     for (const auto& neighbour : m_outerBorderCache(tileLocation.x, tileLocation.y))
     {
-        neighbour->tile().renderer().drawOutside(spriteBatch, tileLocation);
+        const TileStack& tileStack = *(neighbour.tileStack);
+        const TileOuterBorderCache& rendererCache = neighbour.rendererCache;
+
+        tileStack.tile().renderer().drawOutside(spriteBatch, tileLocation, rendererCache);
     }
 }

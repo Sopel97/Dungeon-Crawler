@@ -8,6 +8,8 @@
 
 #include "ResourceManager.h"
 
+#include "tiles/TileOuterBorderCache.h"
+
 #include <vector>
 
 class Root;
@@ -35,11 +37,17 @@ public:
     static ls::Vec2F aligned(const ls::Vec2F& pos);
 
 protected:
+    struct TileOuterBorderCacheEntry
+    {
+        const TileStack* tileStack;
+        TileOuterBorderCache rendererCache;
+    };
+
     Root& m_root;
     World& m_world;
     WindowSpaceManager& m_windowSpaceManager;
 
-    ls::Array2<std::vector<const TileStack*>> m_outerBorderCache;
+    ls::Array2<std::vector<TileOuterBorderCacheEntry>> m_outerBorderCache;
     bool m_isOuterBorderCached;
 
     Camera m_camera;
