@@ -38,7 +38,7 @@ tile = {
 
     drag = 0.85,
     isThrowableThrough = true,
-    isMovableTo = true,
+    allowsTilesAbove = true,
     canBeStored = true,
     maxThrowDistance = 10
     

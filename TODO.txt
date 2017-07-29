@@ -1,7 +1,3 @@
-- try to change  InventorySlotView::tileSize to 1.0 ?
--- use SpriteBatch too
---- may not be easy to do (and not needed too) since there is text rendering
-
 -- eventually encapsulate compontents in Tile (TileStack), Entity, Projectile so they are not visible from outside
 
 - Clear world generation code //little priority since it is waiting for libs still
@@ -29,9 +25,6 @@ THIS:
 -- or make them separate (probably better)
 
 - continue to make better interface in (world) map and inventory (if something old that should be removed or changed pops up) regarding actions that should cause events (currently onTilePlaced, onTileRemoved). Mainly make it safer and easier to work with.
-
-THIS
--- rename placeTile in MapLayer (in Inventory too maybe) to something that indicates no merging
 
 - consider using ls::Vec2I/ls::Vec3I to pass tile coordinates
 

@@ -43,7 +43,7 @@ void PlainTileModel::loadFromConfiguration(ConfigurationNode& config)
     m_commonData->drag = config["drag"].get<float>();
     m_commonData->maxThrowDistance = config["maxThrowDistance"].getDefault<int>(0);
     m_commonData->isThrowableThrough = config["isThrowableThrough"].getDefault<bool>(false);
-    m_commonData->isMovableTo = config["isMovableTo"].getDefault<bool>(false);
+    m_commonData->allowsTilesAbove = config["allowsTilesAbove"].getDefault<bool>(false);
     m_commonData->canBeStored = config["canBeStored"].getDefault<bool>(false);
     m_commonData->maxQuantity = config["maxQuantity"].getDefault<int>(1);
 }
@@ -55,7 +55,7 @@ std::optional<TileCollider> PlainTileModel::collider(const ls::Vec2I& pos)
     const ls::Rectangle2F aabb = m_commonData->collider.translated(static_cast<ls::Vec2F>(pos));
     return TileCollider(*m_owner, aabb);
 }
-bool PlainTileModel::isMovableFrom() const
+bool PlainTileModel::isMovable() const
 {
     return m_commonData->maxThrowDistance > 0;
 }
@@ -63,9 +63,9 @@ bool PlainTileModel::isThrowableThrough() const
 {
     return m_commonData->isThrowableThrough;
 }
-bool PlainTileModel::isMovableTo() const
+bool PlainTileModel::allowsTilesAbove() const
 {
-    return m_commonData->isMovableTo;
+    return m_commonData->allowsTilesAbove;
 }
 int PlainTileModel::maxThrowDistance() const
 {

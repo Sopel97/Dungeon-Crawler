@@ -62,7 +62,7 @@ bool EquipmentPieceModel::equals(const TileModel& other) const
 
     return true;
 }
-bool EquipmentPieceModel::isMovableFrom() const
+bool EquipmentPieceModel::isMovable() const
 {
     return true;
 }
@@ -70,7 +70,7 @@ bool EquipmentPieceModel::isThrowableThrough() const
 {
     return true;
 }
-bool EquipmentPieceModel::isMovableTo() const
+bool EquipmentPieceModel::allowsTilesAbove() const
 {
     return true;
 }

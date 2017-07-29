@@ -54,7 +54,7 @@ bool TileTransferMediator::isAnyTileGrabbed() const
 }
 void TileTransferMediator::operator()(const FromWorld& from, const ToWorld& to)
 {
-    constexpr float maxPlayerDistFromTile = 48.0f;
+    constexpr float maxPlayerDistFromTile = 1.5f;
     // check validity
 
     if (from.pos.x == to.pos.x && from.pos.y == to.pos.y) return;
@@ -68,13 +68,13 @@ void TileTransferMediator::operator()(const FromWorld& from, const ToWorld& to)
     int fromY = from.pos.y;
     TileColumn& fromTileColumn = map.at(fromX, fromY);
     TileStack& fromTileStack = fromTileColumn.top();
-    if (!fromTileStack.tile().model().isMovableFrom()) return;
+    if (!fromTileStack.tile().model().isMovable()) return;
 
     int toX = to.pos.x;
     int toY = to.pos.y;
     TileColumn& toTileColumn = map.at(toX, toY);
     TileStack& toTileStack = toTileColumn.top();
-    if (!toTileStack.tile().model().isMovableTo()) return;
+    if (!toTileStack.tile().model().allowsTilesAbove()) return;
 
     int maxTileThrowDist = fromTileStack.tile().model().maxThrowDistance();
     if (world.tileManhattanDistanceFromPlayer(to.pos) > maxTileThrowDist) return; // out of range
@@ -95,7 +95,7 @@ void TileTransferMediator::operator()(const FromWorld& from, const ToWorld& to)
 }
 void TileTransferMediator::operator()(const FromWorld& from, const ToInventory& to)
 {
-    constexpr float maxPlayerDistFromTile = 48.0f;
+    constexpr float maxPlayerDistFromTile = 1.5f;
 
     World& world = *from.world;
     MapLayer& map = world.map();
@@ -106,7 +106,7 @@ void TileTransferMediator::operator()(const FromWorld& from, const ToInventory& 
     TileStack& fromTileStack = fromTileColumn.top();
 
     if (world.playerDistanceToTile(from.pos) > maxPlayerDistFromTile) return; // out of range
-    if (!fromTileStack.tile().model().isMovableFrom()) return; // item can't be moved
+    if (!fromTileStack.tile().model().isMovable()) return; // item can't be moved
     if (!world.lineOfSightBetweenEntityAndTile(from.player->entity(), from.pos)) return; // no line of sight
 
     Inventory& inventory = *to.inventory;
@@ -154,7 +154,7 @@ void TileTransferMediator::operator()(const FromInventory& from, const ToWorld& 
     TileColumn& toTileColumn = map.at(toX, toY);
     TileStack& toTileStack = toTileColumn.top();
 
-    if (!toTileStack.tile().model().isMovableTo()) return; // cant be moved to this tile
+    if (!toTileStack.tile().model().allowsTilesAbove()) return; // cant be moved to this tile
 
     int maxTileThrowDist = fromTileStack.tile().model().maxThrowDistance();
     if (world.tileManhattanDistanceFromPlayer(to.pos) > maxTileThrowDist) return; // out of range
@@ -181,7 +181,7 @@ void TileTransferMediator::operator()(const FromInventory& from, const ToInvento
     const int fromSlot = from.slot;
     TileStack& fromTileStack = fromInventory.at(fromSlot);
     if (fromTileStack.isEmpty()) return; // nothing to move
-    if (!fromTileStack.tile().model().isMovableFrom()) return; // item can't be moved
+    if (!fromTileStack.tile().model().isMovable()) return; // item can't be moved
 
     Inventory& toInventory = *to.inventory;
     const int toSlot = to.slot;

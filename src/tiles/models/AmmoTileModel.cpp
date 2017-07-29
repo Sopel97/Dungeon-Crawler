@@ -70,7 +70,7 @@ bool AmmoTileModel::equals(const TileModel& other) const
 
     return true;
 }
-bool AmmoTileModel::isMovableFrom() const
+bool AmmoTileModel::isMovable() const
 {
     return true;
 }
@@ -78,7 +78,7 @@ bool AmmoTileModel::isThrowableThrough() const
 {
     return true;
 }
-bool AmmoTileModel::isMovableTo() const
+bool AmmoTileModel::allowsTilesAbove() const
 {
     return true;
 }

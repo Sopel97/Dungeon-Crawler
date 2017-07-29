@@ -37,7 +37,7 @@ std::optional<TileCollider> TileModel::collider(const ls::Vec2I& pos)
 {
     return std::nullopt;
 }
-bool TileModel::isMovableFrom() const
+bool TileModel::isMovable() const
 {
     return false;
 }
@@ -45,7 +45,7 @@ bool TileModel::isThrowableThrough() const
 {
     return false;
 }
-bool TileModel::isMovableTo() const
+bool TileModel::allowsTilesAbove() const
 {
     return false;
 }

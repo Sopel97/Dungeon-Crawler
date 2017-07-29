@@ -20,7 +20,7 @@ tile = {
 
     drag = 1,
     isThrowableThrough = false,
-    isMovableTo = false,
+    allowsTilesAbove = false,
     canBeStored = false,
     maxThrowDistance = 0
     

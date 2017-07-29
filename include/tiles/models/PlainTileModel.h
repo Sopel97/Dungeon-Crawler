@@ -24,7 +24,7 @@ public:
         float drag;
         int maxThrowDistance;
         bool isThrowableThrough;
-        bool isMovableTo;
+        bool allowsTilesAbove;
         bool canBeStored;
         int maxQuantity;
     };
@@ -36,9 +36,9 @@ public:
     void loadFromConfiguration(ConfigurationNode& config) override;
 
     std::optional<TileCollider> collider(const ls::Vec2I& pos) override;
-    bool isMovableFrom() const override;
+    bool isMovable() const override;
     bool isThrowableThrough() const override;
-    bool isMovableTo() const override;
+    bool allowsTilesAbove() const override;
     int maxThrowDistance() const override;
     bool canBeStored() const override;
     int maxQuantity() const override;

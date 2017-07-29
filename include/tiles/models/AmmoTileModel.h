@@ -43,9 +43,9 @@ public:
 
     bool equals(const TileModel& other) const override;
 
-    bool isMovableFrom() const override;
+    bool isMovable() const override;
     bool isThrowableThrough() const override;
-    bool isMovableTo() const override;
+    bool allowsTilesAbove() const override;
     int maxThrowDistance() const override;
     bool canBeStored() const override;
     int maxQuantity() const override;

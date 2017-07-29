@@ -216,7 +216,7 @@ Entity& World::spawnEntity(const EntityPrefab& prefab, const ls::Vec2F& position
 }
 bool World::trySpawnTile(const TilePrefab& prefab, int x, int y, int quantity)
 {
-    if (m_mapLayer->at(x, y).top().tile().model().isMovableTo())
+    if (m_mapLayer->at(x, y).top().tile().model().allowsTilesAbove())
     {
         TileStack tileStackToPlace(prefab.instantiate(), quantity);
         m_mapLayer->placeTileMerge(std::move(tileStackToPlace), x, y);
@@ -248,7 +248,7 @@ bool World::trySpawnTileNearby(const TilePrefab& prefab, int x, int y, int quant
 }
 bool World::tryPlaceTile(TileStack&& tileStack, int x, int y)
 {
-    if (m_mapLayer->at(x, y).top().tile().model().isMovableTo())
+    if (m_mapLayer->at(x, y).top().tile().model().allowsTilesAbove())
     {
         m_mapLayer->placeTileMerge(std::move(tileStack), x ,y);
         return true;

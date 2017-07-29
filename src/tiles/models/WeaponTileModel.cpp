@@ -86,7 +86,7 @@ bool WeaponTileModel::equals(const TileModel& other) const
 
     return true;
 }
-bool WeaponTileModel::isMovableFrom() const
+bool WeaponTileModel::isMovable() const
 {
     return true;
 }
@@ -94,7 +94,7 @@ bool WeaponTileModel::isThrowableThrough() const
 {
     return true;
 }
-bool WeaponTileModel::isMovableTo() const
+bool WeaponTileModel::allowsTilesAbove() const
 {
     return true;
 }
