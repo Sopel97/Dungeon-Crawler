@@ -29,6 +29,7 @@ public:
     int size() const;
 
     std::optional<TileCollider> collider(const ls::Vec2I& pos);
+    std::optional<ls::Rectangle2F> lightOccluder(const ls::Vec2I& pos) const;
 
     const std::vector<TileStack>& tiles() const;
     std::vector<TileStack>& tiles();

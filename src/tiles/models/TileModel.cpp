@@ -37,6 +37,10 @@ std::optional<TileCollider> TileModel::collider(const ls::Vec2I& pos)
 {
     return std::nullopt;
 }
+std::optional<ls::Rectangle2F> TileModel::lightOccluder(const ls::Vec2I& pos) const
+{
+    return std::nullopt;
+}
 bool TileModel::isMovable() const
 {
     return false;

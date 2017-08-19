@@ -21,6 +21,7 @@ public:
         std::string displayedName;
         bool hasCollider;
         ls::Rectangle2F collider;
+        std::optional<ls::Rectangle2F> lightOccluder;
         float drag;
         int maxThrowDistance;
         bool isThrowableThrough;
@@ -36,6 +37,7 @@ public:
     void loadFromConfiguration(ConfigurationNode& config) override;
 
     std::optional<TileCollider> collider(const ls::Vec2I& pos) override;
+    std::optional<ls::Rectangle2F> lightOccluder(const ls::Vec2I& pos) const override;
     bool isMovable() const override;
     bool isThrowableThrough() const override;
     bool allowsTilesAbove() const override;

@@ -45,6 +45,19 @@ void ContainerTileModel::loadFromConfiguration(ConfigurationNode& config)
         m_commonData->hasCollider = false;
     }
 
+    ConfigurationNode lightOccluderConfig = config["lightOccluder"];
+    if (lightOccluderConfig.exists())
+    {
+        m_commonData->lightOccluder = Rectangle2F(
+            Vec2F(lightOccluderConfig[1][1].get<float>(), lightOccluderConfig[1][2].get<float>()),
+            Vec2F(lightOccluderConfig[2][1].get<float>(), lightOccluderConfig[2][2].get<float>())
+        );
+    }
+    else
+    {
+        m_commonData->lightOccluder = std::nullopt;
+    }
+
     m_commonData->displayedName = config["displayedName"].getDefault<std::string>("");
     m_commonData->drag = config["drag"].get<float>();
     m_commonData->maxThrowDistance = config["maxThrowDistance"].getDefault<int>(0);
@@ -61,6 +74,17 @@ std::optional<TileCollider> ContainerTileModel::collider(const ls::Vec2I& pos)
 
     const ls::Rectangle2F aabb = m_commonData->collider.translated(static_cast<ls::Vec2F>(pos));
     return TileCollider(*m_owner, aabb);
+}
+std::optional<ls::Rectangle2F> ContainerTileModel::lightOccluder(const ls::Vec2I& pos) const
+{
+    if (m_commonData->lightOccluder.has_value())
+    {
+        return m_commonData->lightOccluder.value().translated(static_cast<ls::Vec2F>(pos));
+    }
+    else
+    {
+        return std::nullopt;
+    }
 }
 bool ContainerTileModel::isMovable() const
 {

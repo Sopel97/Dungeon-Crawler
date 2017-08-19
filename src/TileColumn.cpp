@@ -78,6 +78,16 @@ std::optional<TileCollider> TileColumn::collider(const ls::Vec2I& pos)
 
     return std::nullopt;
 }
+std::optional<ls::Rectangle2F> TileColumn::lightOccluder(const ls::Vec2I& pos) const
+{
+    for (const TileStack& tileStack : m_tiles)
+    {
+        if (std::optional<ls::Rectangle2F> lightOccluder = tileStack.tile().model().lightOccluder(pos))
+            return lightOccluder;
+    }
+
+    return std::nullopt;
+}
 
 int TileColumn::topZ() const
 {

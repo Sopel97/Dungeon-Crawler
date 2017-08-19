@@ -43,6 +43,7 @@ public:
     virtual bool equals(const TileModel& other) const; //NOTE: assume that the type of other is the same as the type of *this
 
     virtual std::optional<TileCollider> collider(const ls::Vec2I& pos);
+    virtual std::optional<ls::Rectangle2F> lightOccluder(const ls::Vec2I& pos) const;
     virtual bool isMovable() const;
     virtual bool isThrowableThrough() const;
     virtual bool allowsTilesAbove() const;
