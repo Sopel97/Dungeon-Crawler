@@ -10,6 +10,8 @@
 
 #include "tiles/TileOuterBorderCache.h"
 
+#include "WorkerThread.h"
+
 #include <vector>
 
 class Root;
@@ -43,6 +45,8 @@ protected:
         TileOuterBorderCache rendererCache;
     };
 
+    using LightGeometryStorage = std::vector<std::vector<sf::Vertex>>;
+
     Root& m_root;
     World& m_world;
     WindowSpaceManager& m_windowSpaceManager;
@@ -51,6 +55,8 @@ protected:
     bool m_isOuterBorderCached;
 
     Camera m_camera;
+
+    WorkerThread m_workerThread;
     
     sf::RenderTexture m_intermidiateRenderTarget;
     sf::RenderTexture m_metaTexture;
@@ -80,6 +86,7 @@ protected:
     void drawMeta(const sf::RenderStates& renderStates);
     void drawIntermidiate(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates);
     void drawLightMapToIntermidiate(const sf::RenderStates& renderStates);
-    void drawLightsToLightMap();
+    LightGeometryStorage generateLightGeometry();
+    void drawLightGeometryToLightMap(const LightGeometryStorage& geometry);
     void alignVertices(SpriteBatch& batch) const;
 };

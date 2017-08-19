@@ -44,6 +44,8 @@
 
 #include "Logger.h"
 
+#include "LightClipper.h"
+
 using namespace ls;
 
 WorldRenderer::WorldRenderer(Root& root, World& world) :
@@ -114,6 +116,13 @@ void WorldRenderer::draw(sf::RenderTarget& renderTarget, const sf::RenderStates&
         m_isOuterBorderCached = true;
     }
 
+    std::vector<std::vector<sf::Vertex>> lightGeometry;
+    m_workerThread.setJob(
+        [this, &lightGeometry](){
+            lightGeometry = generateLightGeometry();
+        }
+    );
+
     prepareIntermidiateRenderTarget();
     prepareLightMap();
     prepareMetaTexture();
@@ -121,7 +130,9 @@ void WorldRenderer::draw(sf::RenderTarget& renderTarget, const sf::RenderStates&
 
     drawMain(renderStates);
     drawMeta(renderStates);
-    drawLightsToLightMap();
+
+    m_workerThread.wait();
+    drawLightGeometryToLightMap(lightGeometry);
 
     drawLightMapToIntermidiate(renderStates);
     drawIntermidiate(renderTarget, renderStates);
@@ -322,16 +333,50 @@ void WorldRenderer::drawLightMapToIntermidiate(const sf::RenderStates& renderSta
 
     m_intermidiateRenderTarget.draw(lightMapSprite, lightMapRenderStates);
 }
-
-void WorldRenderer::drawLightsToLightMap()
+WorldRenderer::LightGeometryStorage WorldRenderer::generateLightGeometry()
 {
-    sf::RenderStates lightRenderStates;
-    lightRenderStates.blendMode = sf::BlendAdd;
+    const int textureWidth = m_lightTexture.get().texture().getSize().x;
+    const int textureHeight = m_lightTexture.get().texture().getSize().y;
+
+    auto mapUV = [textureWidth, textureHeight](const Light& light, const ls::Vec2F& pos) -> sf::Vector2f
+    {
+        const float lightRadius = light.radius();
+        const ls::Vec2F lightTopLeft = light.position() - ls::Vec2F(lightRadius, lightRadius);
+
+        const ls::Vec2F offset = pos - lightTopLeft;
+        const float u = textureWidth * (offset.x / (lightRadius*2.0f));
+        const float v = textureHeight * (offset.y / (lightRadius*2.0f));
+
+        return { u, v };
+    };
+
+    LightGeometryStorage result;
 
     auto lights = m_world.m_entitySystem.queryLights(m_camera.viewRectangle());
     for (auto& light : lights)
     {
-        light.draw(m_lightMap, lightRenderStates, m_lightTexture.get().texture());
+        LightClipper<float> clipper(light, {});
+
+        std::vector<sf::Vertex> vertices;
+        vertices.reserve(clipper.innerPolygon().size());
+        for (const auto& pos : clipper.innerPolygon())
+        {
+            vertices.emplace_back(sf::Vector2f(pos.x, pos.y), light.color(), mapUV(light, pos));
+        }
+        result.emplace_back(std::move(vertices));
+    }
+
+    return result;
+}
+
+void WorldRenderer::drawLightGeometryToLightMap(const LightGeometryStorage& geometry)
+{
+    sf::RenderStates lightRenderStates;
+    lightRenderStates.blendMode = sf::BlendAdd;
+    lightRenderStates.texture = &(m_lightTexture.get().texture());
+    for (const auto& vertexArray : geometry)
+    {
+        m_lightMap.draw(vertexArray.data(), vertexArray.size(), sf::PrimitiveType::TrianglesFan, lightRenderStates);
     }
 
     m_lightMap.display();
@@ -350,18 +395,18 @@ void WorldRenderer::buildOuterBorderCache()
 void WorldRenderer::updateOuterBorderCache(const TileLocation & tileLocation)
 {
     auto areTilesEqual = [](
-        const TileStack * lhs, 
+        const TileStack * lhs,
         const TileStack * rhs)
-        ->bool 
+        ->bool
     {
-        return lhs->tile().id() == rhs->tile().id(); 
+        return lhs->tile().id() == rhs->tile().id();
     };
     auto borderPriorityCompare = [](
-        const std::pair<const TileStack *, ls::Vec2I>& lhs, 
+        const std::pair<const TileStack *, ls::Vec2I>& lhs,
         const std::pair<const TileStack *, ls::Vec2I>& rhs)
-        ->bool 
+        ->bool
     {
-        return lhs.first->tile().renderer().outerBorderPriority() < rhs.first->tile().renderer().outerBorderPriority(); 
+        return lhs.first->tile().renderer().outerBorderPriority() < rhs.first->tile().renderer().outerBorderPriority();
     };
 
     int x = tileLocation.x;
@@ -391,7 +436,7 @@ void WorldRenderer::updateOuterBorderCache(const TileLocation & tileLocation)
             }
             if (firstSuchNeighbour)
             {
-                differentNeigbourTiles.push_back(std::pair<const TileStack*, ls::Vec2I>(&tileStack, {xx, yy}));
+                differentNeigbourTiles.push_back(std::pair<const TileStack*, ls::Vec2I>(&tileStack, { xx, yy }));
             }
         }
     }
@@ -404,7 +449,7 @@ void WorldRenderer::updateOuterBorderCache(const TileLocation & tileLocation)
     for (const auto& neighbour : differentNeigbourTiles)
     {
         m_outerBorderCache(x, y).emplace_back(TileOuterBorderCacheEntry{ neighbour.second, neighbour.first->tile().renderer().buildOuterBorderCache(tileLocation)
-    });
+        });
     }
 }
 void WorldRenderer::drawOuterBorder(SpriteBatch& spriteBatch, const TileLocation& tileLocation)
