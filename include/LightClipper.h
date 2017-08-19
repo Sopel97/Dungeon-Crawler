@@ -12,10 +12,10 @@
 template <class Float>
 struct DefaultLightClipperConstParams
 {
-    static constexpr Float spaceBetweenNeighbourRays = Float(0.2);
-    static constexpr Float maxRayInaccuracy = Float(5.0);
-    static constexpr Float minPointDistance = Float(2.0);
-    static constexpr Float sweepMargin = Float(0.001);
+    static constexpr float spaceBetweenNeighbourRays = Float(0.2);
+    static constexpr float maxRayInaccuracy = Float(5.0);
+    static constexpr float minPointDistance = Float(2.0);
+    static constexpr float sweepMargin = Float(0.001);
 };
 
 template <class Float, class ConstParams = DefaultLightClipperConstParams<Float>>
@@ -28,15 +28,14 @@ public:
     LightClipper(const Light& light, std::vector<Rectangle2> geom) :
         m_lightOrigin(light.position()),
         m_lightBounds(light.bounds()),
-        m_lightColor(light.color()),
         m_geometry(std::move(geom))
     {
         update();
     }
 
-    const std::vector<Vec2>& litAreaPolygon() const
+    const std::vector<Vec2>& innerPolygon() const
     {
-        return m_litAreaPolygon;
+        return m_innerPolygon;
     }
 
 private:
@@ -81,9 +80,9 @@ private:
     };
 
     Vec2 m_lightOrigin;
+
+    // following two are stored translated so that the ray origing is in (0, 0)
     Rectangle2 m_lightBounds;
-    sf::Color m_lightColor;
-    // stored translated such that ray origin is (0, 0)
     std::vector<Rectangle2> m_geometry;
 
     // following stored with local coordinates for easier computation, 
@@ -91,7 +90,7 @@ private:
     std::vector<Segment> m_segments;
     std::vector<Ray> m_rays;
 
-    std::vector<Vec2> m_litAreaPolygon;
+    std::vector<Vec2> m_innerPolygon;
 
     using SegmentIterator = typename std::vector<Segment>::iterator;
 
@@ -105,7 +104,26 @@ private:
         return copysign(Float(1.0) - v.x / (abs(v.x) + abs(v.y)), v.y);
     }
 
-    void addSegment(const Vec2& a, const Vec2& b)
+    void trimGeometry()
+    {
+        using std::max;
+        using std::min;
+
+        m_lightBounds.min.x -= m_lightOrigin.x;
+        m_lightBounds.min.y -= m_lightOrigin.y;
+        m_lightBounds.max.x -= m_lightOrigin.x;
+        m_lightBounds.max.y -= m_lightOrigin.y;
+
+        for (auto& rect : m_geometry)
+        {
+            rect.min.x = max(rect.min.x - m_lightOrigin.x, m_lightBounds.min.x);
+            rect.min.y = max(rect.min.y - m_lightOrigin.y, m_lightBounds.min.y);
+            rect.max.x = min(rect.max.x - m_lightOrigin.x, m_lightBounds.max.x);
+            rect.max.y = min(rect.max.y - m_lightOrigin.y, m_lightBounds.max.y);
+        }
+    }
+
+    void addSegment(Vec2 a, Vec2 b)
     {
         static constexpr Float eps = Float(0.001);
 
@@ -134,17 +152,6 @@ private:
         }
 
         m_segments.emplace_back(a, b);
-    }
-
-    void trimAndTranslateRectangles()
-    {
-        for (auto& rect : m_geometry)
-        {
-            rect.min.x = max(rect.min.x, m_lightBounds.min.x) - m_lightOrigin.x;
-            rect.min.y = max(rect.min.y, m_lightBounds.min.y) - m_lightOrigin.y;
-            rect.max.x = min(rect.max.x, m_lightBounds.max.x) - m_lightOrigin.x;
-            rect.max.y = min(rect.max.y, m_lightBounds.max.y) - m_lightOrigin.y;
-        }
     }
 
     void addSegmentsFromRectangle(const Rectangle2& rect)
@@ -329,21 +336,21 @@ private:
         {
             const Vec2 vertex = vertexLocal + m_lightOrigin;
 
-            if (!m_litAreaPolygon.empty())
+            if (!m_innerPolygon.empty())
             {
-                const Vec2 prevVertex = m_litAreaPolygon.back();
+                const Vec2 prevVertex = m_innerPolygon.back();
 
                 const Vec2 diff = vertex - prevVertex;
 
                 // dont add if vertex is too close to the one before
                 if (std::abs(diff.x) > ConstParams::minPointDistance || std::abs(diff.y) > ConstParams::minPointDistance)
                 {
-                    m_litAreaPolygon.emplace_back(vertex);
+                    m_innerPolygon.emplace_back(vertex);
                 }
             }
             else
             {
-                m_litAreaPolygon.emplace_back(vertex);
+                m_innerPolygon.emplace_back(vertex);
             }
         }
     }
@@ -390,12 +397,12 @@ private:
 
     void update()
     {
-        trimAndTranslateRectangles();
+        trimGeometry();
 
         // make segment list
         m_segments.reserve(m_geometry.size() * 2 + 4); // 4 for bounds
 
-                                                 // bounds
+        // bounds
         addSegmentsForBounds();
 
         // add rectangles
@@ -408,7 +415,7 @@ private:
         // also stored with local coordinates (all rays have origin in (0, 0))
         m_rays.reserve(m_geometry.size() * 6 + 4); // 4 for bounds
 
-                                             // bounds
+        // bounds
         addRaysForBounds();
 
         // rectangles
