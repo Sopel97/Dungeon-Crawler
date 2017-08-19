@@ -16,6 +16,8 @@ public:
     float radius() const;
     const sf::Color& color() const;
 
+    const ls::Rectangle2F bounds() const;
+
     void draw(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates, const sf::Texture& texture) const;
 
 private:

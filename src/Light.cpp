@@ -22,6 +22,12 @@ const sf::Color& Light::color() const
 {
     return m_color;
 }
+
+const ls::Rectangle2F Light::bounds() const
+{
+    const ls::Vec2F radiusVector(m_radius, m_radius);
+    return ls::Rectangle2F(m_position - radiusVector, m_position + radiusVector);
+}
 void Light::draw(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates, const sf::Texture& texture) const
 {
     const ls::Vec2F topLeft = m_position - ls::Vec2F(m_radius, m_radius);

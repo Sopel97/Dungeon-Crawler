@@ -17,6 +17,20 @@
 CONSIDER:
 hook up StaticEmbeddedHomogenousMemoryPool for components, tiles, entities, projectiles, see how it behaves
 
+THIS:
+- separate project to find a fast way to find all intersections between a lot of line segments and a lot of rays (rays have common origin) (radial sweepline?)
+-- duplicate segments that cross angle discontinuity
+-- compute angle (may be approximate, just something monotonic) of each begin end point to ray origin and ray
+-- binary search segments for each ray
+--- may require sweepline
+---- may even be better to do sweepline
+-- they HAVE TO intersect, just calculate distance
+
+- store lights from previous, update at most fixed amount of lights per frame, figure out how to do it efficiently, what data structure to use
+
+- prefabs should first be loaded (names, components), then actually initialized
+-- this is to allow for example tile to refer to each others' prefabs (any way is undefined now, because loading order is undefined)
+
 - make mapgenerator update all tiles once (currenly it does up to 9 updates on one tile)
 
 THIS:
@@ -27,6 +41,10 @@ THIS:
 - continue to make better interface in (world) map and inventory (if something old that should be removed or changed pops up) regarding actions that should cause events (currently onTilePlaced, onTileRemoved). Mainly make it safer and easier to work with.
 
 - consider using ls::Vec2I/ls::Vec3I to pass tile coordinates
+
+- consider replacing current item randomization distribution with something along havinf PDF of 1/e^(nx)
+-- or (1-x)^n   ((1-x)^n*(n+1))
+--- or leave as it is now
 
 - when tile is placed in world or moved to it/within it it remembers all tiles that are potential light sources (divide the world to a grid, like 32x32 or something for faster lookup) and query lights for rendering
 -- needs revision on how these events are generated. Make it so they arise in possibly as few places as possible
