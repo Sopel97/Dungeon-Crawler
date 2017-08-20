@@ -19,9 +19,6 @@ hook up StaticEmbeddedHomogenousMemoryPool for components, tiles, entities, proj
 
 THIS:
 - blur lights
-- store lights from previous frame, update at most fixed amount of lights per frame, figure out how to do it efficiently, what data structure to use
--- probably cache (tile/entity pointer -> Light and last update time), on each frame gather current lights, remove unused, update like ~10 (may require sorting by update time, maybe use a contiguous storage like a circular buffer and circle through the lights), draw
--- maybe even update occluder cache like every 4th frame
 
 - prefabs should first be loaded (names, components), then actually initialized
 -- this is to allow for example tile to refer to each others' prefabs (any way is undefined now, because loading order is undefined)

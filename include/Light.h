@@ -10,7 +10,7 @@
 class Light
 {
 public:
-    Light(const ls::Vec2F& position, float radius, const sf::Color& color);
+    Light(const ls::Vec2F& position, float radius, const sf::Color& color, const void* owner);
 
     const ls::Vec2F& position() const;
     float radius() const;
@@ -18,10 +18,13 @@ public:
 
     const ls::Rectangle2F bounds() const;
 
+    const void* owner() const;
+
     void draw(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates, const sf::Texture& texture) const;
 
 private:
     ls::Vec2F m_position;
     float m_radius;
     sf::Color m_color;
+    const void* m_owner;
 };

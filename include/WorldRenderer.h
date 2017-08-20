@@ -8,6 +8,8 @@
 
 #include "ResourceManager.h"
 
+#include "Light.h"
+
 #include "tiles/TileOuterBorderCache.h"
 
 #include "WorkerThread.h"
@@ -52,9 +54,19 @@ protected:
         ls::Array2<std::optional<ls::Rectangle2F>> occluders;
         ls::Rectangle2I range;
     };
-    
 
-    using LightGeometryStorage = std::vector<std::vector<sf::Vertex>>;
+    struct LightGeometryEntry
+    {
+        Light light;
+        std::vector<sf::Vertex> vertices;
+        bool toRemove;
+    };
+    
+    struct LightGeometryCache
+    {
+        std::vector<LightGeometryEntry> lights;
+        int current;
+    };
 
     Root& m_root;
     World& m_world;
@@ -64,6 +76,10 @@ protected:
 
     ls::Array2<std::vector<TileOuterBorderCacheEntry>> m_outerBorderCache;
     bool m_isOuterBorderCached;
+
+    LightOccluderCache m_lightOccluderCache;
+
+    LightGeometryCache m_lightGeometryCache;
 
     Camera m_camera;
 
@@ -86,6 +102,10 @@ protected:
     static constexpr int m_tileResolution = 32;
 
     static constexpr int m_maxLightRadius = 4;
+
+    static constexpr int m_lightOccluderCacheUpdateInterval = 2;
+
+    static constexpr int m_lightGeometryUpdatesPerFrame = 10;
     
 protected:
     void prepareIntermidiateRenderTarget();
@@ -99,9 +119,10 @@ protected:
     void drawMeta(const sf::RenderStates& renderStates);
     void drawIntermidiate(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates);
     void drawLightMapToIntermidiate(const sf::RenderStates& renderStates);
-    LightGeometryStorage generateLightGeometry();
-    void drawLightGeometryToLightMap(const LightGeometryStorage& geometry);
+    std::vector<sf::Vertex> generateLightGeometry(const Light& light);
+    void drawLightGeometryToLightMap();
     void alignVertices(SpriteBatch& batch) const;
-    LightOccluderCache createLightOccluderCache() const;
-    std::vector<ls::Rectangle2F> queryLightOccluders(const LightOccluderCache& cache, const Light& light) const;
+    void updateLightOccluderCache();
+    std::vector<ls::Rectangle2F> queryLightOccluders(const Light& light) const;
+    void updateLightGeometryCache();
 };

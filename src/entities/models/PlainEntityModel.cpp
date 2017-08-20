@@ -109,8 +109,8 @@ const AttributeArray& PlainEntityModel::attributes() const
 std::optional<Light> PlainEntityModel::light() const
 {
     return OscillatingLightSource(
-        Light(m_position, 4.0f, sf::Color::Green),
-        Light(m_position, 3.5f, sf::Color::Yellow),
+        Light(m_position, 4.0f, sf::Color::Green, this),
+        Light(m_position, 3.5f, sf::Color::Yellow, this),
         1.0
     ).at(GameTime::instance().now(), static_cast<double>(reinterpret_cast<intptr_t>(this))); //TODO: better way to get per entity constant value
 }

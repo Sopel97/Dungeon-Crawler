@@ -42,7 +42,8 @@ Light OscillatingLightSource::at(double t) const
     return Light(
         ls::Vec2F(x, y),
         rad,
-        sf::Color(static_cast<sf::Uint8>(r), static_cast<sf::Uint8>(g), static_cast<sf::Uint8>(b))
+        sf::Color(static_cast<sf::Uint8>(r), static_cast<sf::Uint8>(g), static_cast<sf::Uint8>(b)),
+        m_light1.owner()
     );
 }
 
@@ -80,6 +81,7 @@ Light OscillatingLightSource::at(double t, double seed) const
     return Light(
         ls::Vec2F(x, y),
         rad,
-        sf::Color(static_cast<sf::Uint8>(r), static_cast<sf::Uint8>(g), static_cast<sf::Uint8>(b))
+        sf::Color(static_cast<sf::Uint8>(r), static_cast<sf::Uint8>(g), static_cast<sf::Uint8>(b)),
+        m_light1.owner()
     );
 }

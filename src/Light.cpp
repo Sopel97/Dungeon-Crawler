@@ -2,10 +2,11 @@
 
 #include <SFML/Graphics.hpp>
 
-Light::Light(const ls::Vec2F& position, float radius, const sf::Color& color) :
+Light::Light(const ls::Vec2F& position, float radius, const sf::Color& color, const void* owner) :
     m_position(position),
     m_radius(radius),
-    m_color(color)
+    m_color(color),
+    m_owner(owner)
 {
 
 }
@@ -27,6 +28,10 @@ const ls::Rectangle2F Light::bounds() const
 {
     const ls::Vec2F radiusVector(m_radius, m_radius);
     return ls::Rectangle2F(m_position - radiusVector, m_position + radiusVector);
+}
+const void* Light::owner() const
+{
+    return m_owner;
 }
 void Light::draw(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates, const sf::Texture& texture) const
 {

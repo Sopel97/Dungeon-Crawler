@@ -117,11 +117,9 @@ void WorldRenderer::draw(sf::RenderTarget& renderTarget, const sf::RenderStates&
         m_isOuterBorderCached = true;
     }
 
-    std::vector<std::vector<sf::Vertex>> lightGeometry;
-    
     m_workerThread.setJob(
-        [this, &lightGeometry](){
-            lightGeometry = generateLightGeometry();
+        [this]() {
+        updateLightGeometryCache();
         }
     );
 
@@ -134,7 +132,7 @@ void WorldRenderer::draw(sf::RenderTarget& renderTarget, const sf::RenderStates&
     drawMeta(renderStates);
 
     m_workerThread.wait();
-    drawLightGeometryToLightMap(lightGeometry);
+    drawLightGeometryToLightMap();
 
     drawLightMapToIntermidiate(renderStates);
     drawIntermidiate(renderTarget, renderStates);
@@ -338,7 +336,7 @@ void WorldRenderer::drawLightMapToIntermidiate(const sf::RenderStates& renderSta
     m_intermidiateRenderTarget.draw(lightMapSprite, lightMapRenderStates);
 }
 
-WorldRenderer::LightOccluderCache WorldRenderer::createLightOccluderCache() const
+void WorldRenderer::updateLightOccluderCache()
 {
     const Vec2F radius(m_viewWidth + m_maxLightRadius, m_viewHeight + m_maxLightRadius);
     const ls::Rectangle2F bounds = ls::Rectangle2F(m_camera.center() - radius, m_camera.center() + radius);
@@ -351,22 +349,19 @@ WorldRenderer::LightOccluderCache WorldRenderer::createLightOccluderCache() cons
     const int lastTileX = std::min(Util::fastFloor(queryRegionBottomRight.x), m_world.m_width - 1);
     const int lastTileY = std::min(Util::fastFloor(queryRegionBottomRight.y), m_world.m_height - 1);
 
-    LightOccluderCache cache;
-    cache.range = ls::Rectangle2I(ls::Vec2I(firstTileX, firstTileY), ls::Vec2I(lastTileX, lastTileY));
-    cache.occluders = ls::Array2<std::optional<ls::Rectangle2F>>(cache.range.width() + 1, cache.range.height() + 1, std::nullopt);
+    m_lightOccluderCache.range = ls::Rectangle2I(ls::Vec2I(firstTileX, firstTileY), ls::Vec2I(lastTileX, lastTileY));
+    m_lightOccluderCache.occluders = ls::Array2<std::optional<ls::Rectangle2F>>(m_lightOccluderCache.range.width() + 1, m_lightOccluderCache.range.height() + 1, std::nullopt);
 
     for (int x = firstTileX; x <= lastTileX; ++x)
     {
         for (int y = firstTileY; y <= lastTileY; ++y)
         {
-            cache.occluders(x - cache.range.min.x, y - cache.range.min.y) = m_world.m_mapLayer->at(x, y).lightOccluder({ x, y });
+            m_lightOccluderCache.occluders(x - firstTileX, y - firstTileY) = m_world.m_mapLayer->at(x, y).lightOccluder({ x, y });
         }
     }
-    
-    return cache;
 }
 
-std::vector<ls::Rectangle2F> WorldRenderer::queryLightOccluders(const LightOccluderCache& cache, const Light& light) const
+std::vector<ls::Rectangle2F> WorldRenderer::queryLightOccluders(const Light& light) const
 {
     constexpr int numPreallocOccluders = 32;
 
@@ -375,10 +370,10 @@ std::vector<ls::Rectangle2F> WorldRenderer::queryLightOccluders(const LightOcclu
     const Vec2F& queryRegionTopLeft = bounds.min;
     const Vec2F& queryRegionBottomRight = bounds.max;
 
-    const int firstTileX = std::max(Util::fastFloor(queryRegionTopLeft.x), cache.range.min.x) - cache.range.min.x;
-    const int firstTileY = std::max(Util::fastFloor(queryRegionTopLeft.y), cache.range.min.y) - cache.range.min.y;
-    const int lastTileX = std::min(Util::fastFloor(queryRegionBottomRight.x), cache.range.max.x) - cache.range.min.x;
-    const int lastTileY = std::min(Util::fastFloor(queryRegionBottomRight.y), cache.range.max.y) - cache.range.min.y;
+    const int firstTileX = std::max(Util::fastFloor(queryRegionTopLeft.x), m_lightOccluderCache.range.min.x) - m_lightOccluderCache.range.min.x;
+    const int firstTileY = std::max(Util::fastFloor(queryRegionTopLeft.y), m_lightOccluderCache.range.min.y) - m_lightOccluderCache.range.min.y;
+    const int lastTileX = std::min(Util::fastFloor(queryRegionBottomRight.x), m_lightOccluderCache.range.max.x) - m_lightOccluderCache.range.min.x;
+    const int lastTileY = std::min(Util::fastFloor(queryRegionBottomRight.y), m_lightOccluderCache.range.max.y) - m_lightOccluderCache.range.min.y;
 
     std::vector<ls::Rectangle2F> occluders;
     occluders.reserve(numPreallocOccluders);
@@ -387,9 +382,9 @@ std::vector<ls::Rectangle2F> WorldRenderer::queryLightOccluders(const LightOcclu
     {
         for (int y = firstTileY; y <= lastTileY; ++y)
         {
-            if (cache.occluders(x, y).has_value())
+            if (m_lightOccluderCache.occluders(x, y).has_value())
             {
-                occluders.emplace_back(cache.occluders(x, y).value());
+                occluders.emplace_back(m_lightOccluderCache.occluders(x, y).value());
             }
         }
     }
@@ -397,7 +392,7 @@ std::vector<ls::Rectangle2F> WorldRenderer::queryLightOccluders(const LightOcclu
     return occluders;
 }
 
-WorldRenderer::LightGeometryStorage WorldRenderer::generateLightGeometry()
+std::vector<sf::Vertex> WorldRenderer::generateLightGeometry(const Light& light)
 {
     const int textureWidth = m_lightTexture.get().texture().getSize().x;
     const int textureHeight = m_lightTexture.get().texture().getSize().y;
@@ -414,39 +409,93 @@ WorldRenderer::LightGeometryStorage WorldRenderer::generateLightGeometry()
         return { u, v };
     };
 
-    LightOccluderCache cache = createLightOccluderCache();
+    LightClipper<float> clipper(light, queryLightOccluders(light));
 
-    auto lights = m_world.m_entitySystem.queryLights(m_camera.viewRectangle());
-    LightGeometryStorage result;
-    result.reserve(lights.size());
-    for (auto& light : lights)
+    std::vector<sf::Vertex> vertices;
+    vertices.reserve(clipper.innerPolygon().size() + 2);
+
     {
-        LightClipper<float> clipper(light, queryLightOccluders(cache, light));
-
-        std::vector<sf::Vertex> vertices;
-        vertices.reserve(clipper.innerPolygon().size() + 2);
-        vertices.emplace_back(sf::Vector2f(light.position().x, light.position().y), light.color(), mapUV(light, light.position()));
-        for (const auto& pos : clipper.innerPolygon())
-        {
-            vertices.emplace_back(sf::Vector2f(pos.x, pos.y), light.color(), mapUV(light, pos));
-        }
-        {
-            const auto& pos = clipper.innerPolygon()[0];
-            vertices.emplace_back(sf::Vector2f(pos.x, pos.y), light.color(), mapUV(light, pos));
-        }
-        result.emplace_back(std::move(vertices));
+        const auto& pos = light.position();
+        vertices.emplace_back(sf::Vector2f(pos.x, pos.y), light.color(), mapUV(light, pos));
+    }
+    for (const auto& pos : clipper.innerPolygon())
+    {
+        vertices.emplace_back(sf::Vector2f(pos.x, pos.y), light.color(), mapUV(light, pos));
+    }
+    {
+        const auto& pos = clipper.innerPolygon()[0];
+        vertices.emplace_back(sf::Vector2f(pos.x, pos.y), light.color(), mapUV(light, pos));
     }
 
-    return result;
+    return vertices;
+}
+void WorldRenderer::updateLightGeometryCache()
+{
+    if (m_numFramesDrawn % m_lightOccluderCacheUpdateInterval == 0)
+    {
+        updateLightOccluderCache();
+    }
+
+    auto lights = m_world.m_entitySystem.queryLights(m_camera.viewRectangle());
+
+    // update existing
+    for (auto& entry : m_lightGeometryCache.lights)
+    {
+        auto iter = std::find_if(lights.begin(), lights.end(), [&entry](const Light& light) {return entry.light.owner() == light.owner(); });
+        if (iter == lights.end()) entry.toRemove = true;
+        else
+        {
+            entry.toRemove = false;
+            entry.light = *iter;
+        }
+    }
+
+    // add new
+    for (auto& light : lights)
+    {
+        auto iter = std::find_if(m_lightGeometryCache.lights.begin(), m_lightGeometryCache.lights.end(), [&light](const LightGeometryEntry& entry) {return entry.light.owner() == light.owner(); });
+        if (iter == m_lightGeometryCache.lights.end())
+        {
+            m_lightGeometryCache.lights.emplace_back(LightGeometryEntry{ light, {}, false });
+        }
+    }
+
+    // count how much to revert counter
+    int rev = 0;
+    for (int i = 0; i < m_lightGeometryCache.current; ++i)
+    {
+        if (m_lightGeometryCache.lights[i].toRemove) ++rev;
+    }
+    m_lightGeometryCache.current -= rev;
+
+    // remove old
+    m_lightGeometryCache.lights.erase(
+        std::remove_if(
+            m_lightGeometryCache.lights.begin(),
+            m_lightGeometryCache.lights.end(),
+            [](const LightGeometryEntry& entry) {return entry.toRemove; }
+        ),
+        m_lightGeometryCache.lights.end()
+    );
+
+    // update geometry
+    const int numUpdates = std::min(m_lightGeometryUpdatesPerFrame, static_cast<int>(m_lightGeometryCache.lights.size()));
+    for (int i = 0; i < numUpdates; ++i)
+    {
+        m_lightGeometryCache.current %= m_lightGeometryCache.lights.size();
+        m_lightGeometryCache.lights[m_lightGeometryCache.current].vertices = generateLightGeometry(m_lightGeometryCache.lights[m_lightGeometryCache.current].light);
+        ++m_lightGeometryCache.current;
+    }
 }
 
-void WorldRenderer::drawLightGeometryToLightMap(const LightGeometryStorage& geometry)
+void WorldRenderer::drawLightGeometryToLightMap()
 {
     sf::RenderStates lightRenderStates;
     lightRenderStates.blendMode = sf::BlendAdd;
     lightRenderStates.texture = &(m_lightTexture.get().texture());
-    for (const auto& vertexArray : geometry)
+    for (const auto& entry : m_lightGeometryCache.lights)
     {
+        const auto& vertexArray = entry.vertices;
         m_lightMap.draw(vertexArray.data(), vertexArray.size(), sf::PrimitiveType::TrianglesFan, lightRenderStates);
     }
 
