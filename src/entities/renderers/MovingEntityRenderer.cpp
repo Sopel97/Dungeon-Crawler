@@ -76,7 +76,7 @@ void MovingEntityRenderer::draw(SpriteBatch& spriteBatch, const ls::Vec2I& textu
                 m_sprites.x + steppingSpriteVariant, 
                 m_sprites.y + direction
             )
-        ) + textureOffset
+        )
     );
     const ls::Vec2F spriteSize = static_cast<ls::Vec2F>(m_spritesheet.get().gridSizeToTexSize({ 1, 1 }));
     const ls::Vec2F size(1.0f, 1.0f);
