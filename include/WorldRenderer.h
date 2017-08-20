@@ -22,6 +22,7 @@ class TileLocation;
 class SpriteBatch;
 class Spritesheet;
 class TileStack;
+class Light;
 
 // IMPORTANT: SFML makes redundant shader binds that result in very bad fps when many calls are made with the same shader. Should be improved later when vertex array is used.
 class WorldRenderer
@@ -45,11 +46,21 @@ protected:
         TileOuterBorderCache rendererCache;
     };
 
+    
+    struct LightOccluderCache
+    {
+        ls::Array2<std::optional<ls::Rectangle2F>> occluders;
+        ls::Rectangle2I range;
+    };
+    
+
     using LightGeometryStorage = std::vector<std::vector<sf::Vertex>>;
 
     Root& m_root;
     World& m_world;
     WindowSpaceManager& m_windowSpaceManager;
+
+    int m_numFramesDrawn;
 
     ls::Array2<std::vector<TileOuterBorderCacheEntry>> m_outerBorderCache;
     bool m_isOuterBorderCached;
@@ -73,6 +84,8 @@ protected:
     static constexpr int m_viewHeight = 15;
 
     static constexpr int m_tileResolution = 32;
+
+    static constexpr int m_maxLightRadius = 4;
     
 protected:
     void prepareIntermidiateRenderTarget();
@@ -89,4 +102,6 @@ protected:
     LightGeometryStorage generateLightGeometry();
     void drawLightGeometryToLightMap(const LightGeometryStorage& geometry);
     void alignVertices(SpriteBatch& batch) const;
+    LightOccluderCache createLightOccluderCache() const;
+    std::vector<ls::Rectangle2F> queryLightOccluders(const LightOccluderCache& cache, const Light& light) const;
 };

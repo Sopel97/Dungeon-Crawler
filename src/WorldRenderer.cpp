@@ -51,6 +51,7 @@ using namespace ls;
 WorldRenderer::WorldRenderer(Root& root, World& world) :
     m_root(root),
     m_world(world),
+    m_numFramesDrawn(0),
     m_outerBorderCache(World::m_worldWidth, World::m_worldHeight),
     m_isOuterBorderCached(false),
     m_camera(Vec2F(World::m_worldWidth / 2.0f, World::m_worldHeight / 2.0f), m_viewWidth, m_viewHeight),
@@ -117,6 +118,7 @@ void WorldRenderer::draw(sf::RenderTarget& renderTarget, const sf::RenderStates&
     }
 
     std::vector<std::vector<sf::Vertex>> lightGeometry;
+    
     m_workerThread.setJob(
         [this, &lightGeometry](){
             lightGeometry = generateLightGeometry();
@@ -136,6 +138,8 @@ void WorldRenderer::draw(sf::RenderTarget& renderTarget, const sf::RenderStates&
 
     drawLightMapToIntermidiate(renderStates);
     drawIntermidiate(renderTarget, renderStates);
+
+    ++m_numFramesDrawn;
 }
 
 ls::Vec2F WorldRenderer::aligned(const ls::Vec2F& pos)
@@ -333,6 +337,66 @@ void WorldRenderer::drawLightMapToIntermidiate(const sf::RenderStates& renderSta
 
     m_intermidiateRenderTarget.draw(lightMapSprite, lightMapRenderStates);
 }
+
+WorldRenderer::LightOccluderCache WorldRenderer::createLightOccluderCache() const
+{
+    const Vec2F radius(m_viewWidth + m_maxLightRadius, m_viewHeight + m_maxLightRadius);
+    const ls::Rectangle2F bounds = ls::Rectangle2F(m_camera.center() - radius, m_camera.center() + radius);
+
+    const Vec2F& queryRegionTopLeft = bounds.min;
+    const Vec2F& queryRegionBottomRight = bounds.max;
+
+    const int firstTileX = std::max(Util::fastFloor(queryRegionTopLeft.x), 0);
+    const int firstTileY = std::max(Util::fastFloor(queryRegionTopLeft.y), 0);
+    const int lastTileX = std::min(Util::fastFloor(queryRegionBottomRight.x), m_world.m_width - 1);
+    const int lastTileY = std::min(Util::fastFloor(queryRegionBottomRight.y), m_world.m_height - 1);
+
+    LightOccluderCache cache;
+    cache.range = ls::Rectangle2I(ls::Vec2I(firstTileX, firstTileY), ls::Vec2I(lastTileX, lastTileY));
+    cache.occluders = ls::Array2<std::optional<ls::Rectangle2F>>(cache.range.width() + 1, cache.range.height() + 1, std::nullopt);
+
+    for (int x = firstTileX; x <= lastTileX; ++x)
+    {
+        for (int y = firstTileY; y <= lastTileY; ++y)
+        {
+            cache.occluders(x - cache.range.min.x, y - cache.range.min.y) = m_world.m_mapLayer->at(x, y).lightOccluder({ x, y });
+        }
+    }
+    
+    return cache;
+}
+
+std::vector<ls::Rectangle2F> WorldRenderer::queryLightOccluders(const LightOccluderCache& cache, const Light& light) const
+{
+    constexpr int numPreallocOccluders = 32;
+
+    const ls::Rectangle2F bounds = light.bounds();
+
+    const Vec2F& queryRegionTopLeft = bounds.min;
+    const Vec2F& queryRegionBottomRight = bounds.max;
+
+    const int firstTileX = std::max(Util::fastFloor(queryRegionTopLeft.x), cache.range.min.x) - cache.range.min.x;
+    const int firstTileY = std::max(Util::fastFloor(queryRegionTopLeft.y), cache.range.min.y) - cache.range.min.y;
+    const int lastTileX = std::min(Util::fastFloor(queryRegionBottomRight.x), cache.range.max.x) - cache.range.min.x;
+    const int lastTileY = std::min(Util::fastFloor(queryRegionBottomRight.y), cache.range.max.y) - cache.range.min.y;
+
+    std::vector<ls::Rectangle2F> occluders;
+    occluders.reserve(numPreallocOccluders);
+
+    for (int x = firstTileX; x <= lastTileX; ++x)
+    {
+        for (int y = firstTileY; y <= lastTileY; ++y)
+        {
+            if (cache.occluders(x, y).has_value())
+            {
+                occluders.emplace_back(cache.occluders(x, y).value());
+            }
+        }
+    }
+
+    return occluders;
+}
+
 WorldRenderer::LightGeometryStorage WorldRenderer::generateLightGeometry()
 {
     const int textureWidth = m_lightTexture.get().texture().getSize().x;
@@ -350,12 +414,14 @@ WorldRenderer::LightGeometryStorage WorldRenderer::generateLightGeometry()
         return { u, v };
     };
 
-    LightGeometryStorage result;
+    LightOccluderCache cache = createLightOccluderCache();
 
     auto lights = m_world.m_entitySystem.queryLights(m_camera.viewRectangle());
+    LightGeometryStorage result;
+    result.reserve(lights.size());
     for (auto& light : lights)
     {
-        LightClipper<float> clipper(light, m_world.queryLightOccluders(light));
+        LightClipper<float> clipper(light, queryLightOccluders(cache, light));
 
         std::vector<sf::Vertex> vertices;
         vertices.reserve(clipper.innerPolygon().size() + 2);
