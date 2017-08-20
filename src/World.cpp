@@ -157,6 +157,20 @@ bool World::isInsideWorldBounds(const ls::Vec2I& pos) const
     return pos.x >= 0 && pos.y >= 0 && pos.x < m_width && pos.y < m_height;
 }
 
+std::vector<ls::Rectangle2F> World::queryLightOccluders(const Light& light) const
+{
+    const ls::Rectangle2F lightBounds = light.bounds();
+
+    const Vec2F& queryRegionTopLeft = lightBounds.min;
+    const Vec2F& queryRegionBottomRight = lightBounds.max;
+
+    const int firstTileX = std::max(Util::fastFloor(queryRegionTopLeft.x), 0);
+    const int firstTileY = std::max(Util::fastFloor(queryRegionTopLeft.y), 0);
+    const int lastTileX = std::min(Util::fastFloor(queryRegionBottomRight.x), m_width - 1);
+    const int lastTileY = std::min(Util::fastFloor(queryRegionBottomRight.y), m_height - 1);
+
+    return m_mapLayer->queryLightOccluders(ls::Rectangle2I(ls::Vec2I(firstTileX, firstTileY), ls::Vec2I(lastTileX, lastTileY)));
+}
 std::vector<TileCollider> World::queryTileColliders(const Rectangle2F& queryRegion)
 {
     const Vec2F& queryRegionTopLeft = queryRegion.min;

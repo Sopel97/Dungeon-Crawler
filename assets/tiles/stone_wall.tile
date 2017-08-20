@@ -17,6 +17,10 @@ tile = {
 		{0.0, 0.0},
 		{1.0, 1.0}
 	},
+    lightOccluder = {
+        {0.0, 0.0},
+        {1.0, 1.0}
+    },
 
     drag = 1,
     isThrowableThrough = false,

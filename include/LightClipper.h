@@ -12,9 +12,9 @@
 template <class Float>
 struct DefaultLightClipperConstParams
 {
-    static constexpr float spaceBetweenNeighbourRays = Float(0.2);
-    static constexpr float maxRayInaccuracy = Float(5.0);
-    static constexpr float minPointDistance = Float(2.0);
+    static constexpr float spaceBetweenNeighbourRays = Float(0.02);
+    static constexpr float maxRayInaccuracy = Float(0.5);
+    static constexpr float minPointDistance = Float(0.01);
     static constexpr float sweepMargin = Float(0.001);
 };
 
@@ -125,7 +125,7 @@ private:
 
     void addSegment(Vec2 a, Vec2 b)
     {
-        static constexpr Float eps = Float(0.001);
+        static constexpr Float eps = std::numeric_limits<Float>::epsilon(); // NOTE: this should be small enough such that the space created between segments does not cause problems. Can't be 0.0 though
 
         // 0.001 because parallel lines cause some trouble
         if (a.y * b.y < eps) // may pass angle discontinuity

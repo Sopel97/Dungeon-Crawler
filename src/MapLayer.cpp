@@ -153,6 +153,20 @@ std::vector<TileCollider> MapLayer::queryTileColliders(const Rectangle2I& queryR
     }
     return colliders;
 }
+std::vector<ls::Rectangle2F> MapLayer::queryLightOccluders(const ls::Rectangle2I& queryRegion)
+{
+    std::vector<ls::Rectangle2F> occluders;
+    for (int x = queryRegion.min.x; x <= queryRegion.max.x; ++x)
+    {
+        for (int y = queryRegion.min.y; y <= queryRegion.max.y; ++y)
+        {
+            TileColumn& tileColumn = at(x, y);
+            if (std::optional<ls::Rectangle2F> occluder = tileColumn.lightOccluder({ x,y }))
+                occluders.emplace_back(occluder.value());
+        }
+    }
+    return occluders;
+}
 
 void MapLayer::onTilePlaced(TileStack& stack, int x, int y, int z)
 {

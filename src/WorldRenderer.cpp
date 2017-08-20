@@ -355,12 +355,17 @@ WorldRenderer::LightGeometryStorage WorldRenderer::generateLightGeometry()
     auto lights = m_world.m_entitySystem.queryLights(m_camera.viewRectangle());
     for (auto& light : lights)
     {
-        LightClipper<float> clipper(light, {});
+        LightClipper<float> clipper(light, m_world.queryLightOccluders(light));
 
         std::vector<sf::Vertex> vertices;
-        vertices.reserve(clipper.innerPolygon().size());
+        vertices.reserve(clipper.innerPolygon().size() + 2);
+        vertices.emplace_back(sf::Vector2f(light.position().x, light.position().y), light.color(), mapUV(light, light.position()));
         for (const auto& pos : clipper.innerPolygon())
         {
+            vertices.emplace_back(sf::Vector2f(pos.x, pos.y), light.color(), mapUV(light, pos));
+        }
+        {
+            const auto& pos = clipper.innerPolygon()[0];
             vertices.emplace_back(sf::Vector2f(pos.x, pos.y), light.color(), mapUV(light, pos));
         }
         result.emplace_back(std::move(vertices));

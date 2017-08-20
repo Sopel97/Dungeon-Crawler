@@ -39,6 +39,7 @@ public:
     TileStack splitTiles(int x, int y, int z, int count);
 
     std::vector<TileCollider> queryTileColliders(const ls::Rectangle2I& queryRegion);
+    std::vector<ls::Rectangle2F> queryLightOccluders(const ls::Rectangle2I& queryRegion);
 
 protected:
     World& m_world;
