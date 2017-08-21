@@ -14,7 +14,8 @@ EquipmentPieceModel::EquipmentPieceModel(Tile& owner, CommonData& commonData) :
 EquipmentPieceModel::EquipmentPieceModel(const EquipmentPieceModel& other, Tile& owner) :
     TileModel(other, owner),
     m_commonData(other.m_commonData),
-    m_attributes(other.m_attributes)
+    m_attributes(other.m_attributes),
+    m_quality(other.m_quality)
 {
 }
 EquipmentPieceModel::~EquipmentPieceModel()
@@ -106,7 +107,9 @@ float EquipmentPieceModel::drag() const
 
 void EquipmentPieceModel::onTileInstantiated()
 {
-    m_attributes = m_commonData->attributeRandomizer.randomize();
+    auto result = m_commonData->attributeRandomizer.randomize();
+    m_attributes = std::move(result.attributes);
+    m_quality = result.quality;
 }
 
 std::unique_ptr<TileModel> EquipmentPieceModel::clone(Tile& owner) const

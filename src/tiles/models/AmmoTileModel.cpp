@@ -18,7 +18,8 @@ AmmoTileModel::AmmoTileModel(Tile& owner, CommonData& commonData) :
 AmmoTileModel::AmmoTileModel(const AmmoTileModel& other, Tile& owner) :
     TileModel(other, owner),
     m_commonData(other.m_commonData),
-    m_attributes(other.m_attributes)
+    m_attributes(other.m_attributes),
+    m_quality(other.m_quality)
 {
 }
 AmmoTileModel::~AmmoTileModel()
@@ -122,7 +123,9 @@ TileAmmoGroupType AmmoTileModel::ammoGroup() const
 
 void AmmoTileModel::onTileInstantiated()
 {
-    m_attributes = m_commonData->attributeRandomizer.randomize();
+    auto result = m_commonData->attributeRandomizer.randomize();
+    m_attributes = std::move(result.attributes);
+    m_quality = result.quality;
 }
 
 std::unique_ptr<TileModel> AmmoTileModel::clone(Tile& owner) const

@@ -29,8 +29,14 @@ private:
 private:
     std::vector<AttributeRandomizationGroup> m_groups;
 public:
+    struct AttributeRandomizationResult
+    {
+        AttributeSet attributes;
+        float quality;
+    };
+
     void loadFromConfiguration(ConfigurationNode& config);
-    AttributeSet randomize() const;
+    AttributeRandomizationResult randomize() const;
 
 private:
     Attribute randomize(const AttributeRandomizationParameters& params) const;

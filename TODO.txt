@@ -20,7 +20,7 @@ hook up StaticEmbeddedHomogenousMemoryPool for components, tiles, entities, proj
 - wall sprites are not lit properly because it is unnaturally made, wall should extend further (considering its height)
 
 THIS:
-- calculate quality (% of possible max attributes) and make each item have specified prefix and color table for quality ranges (to simplify it maybe make some predefined qualities with predetermined colors that can be choosed from)
+- make each item have specified prefix and color table for quality ranges (to simplify it maybe make some predefined qualities with predetermined colors that can be choosed from)
 
 - prefabs should first be loaded (names, components), then actually initialized
 -- this is to allow for example tile to refer to each others' prefabs (any way is undefined now, because loading order is undefined)

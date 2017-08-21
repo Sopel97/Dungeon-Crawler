@@ -69,4 +69,5 @@ protected:
     CommonData* const m_commonData;
 
     AttributeSet m_attributes;
+    float m_quality;
 };

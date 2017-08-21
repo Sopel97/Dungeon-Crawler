@@ -25,9 +25,11 @@ void AttributeRandomizer::loadFromConfiguration(ConfigurationNode& config)
         m_groups.push_back({ probability, min, max, loadChoices(choicesConfig) });
     }
 }
-AttributeSet AttributeRandomizer::randomize() const
+AttributeRandomizer::AttributeRandomizationResult AttributeRandomizer::randomize() const
 {
     AttributeSet attributes;
+    float quality = 0.0f;
+    int numAttributes = 0;
 
     for (const auto& group : m_groups)
     {
@@ -45,13 +47,27 @@ AttributeSet AttributeRandomizer::randomize() const
         for (const auto* params : chosen)
         {
             Attribute attr = randomize(*params);
-            if (attr.value == 0) continue;
+
+            if (params->min == params->max)
+            {
+                quality += 1.0f;
+            }
+            else
+            {
+                quality += static_cast<float>(attr.value - params->min) / static_cast<float>(params->max - params->min + 1);
+            }
 
             attributes += attr;
+            ++numAttributes;
         }
     }
 
-    return attributes;
+    if (numAttributes > 0)
+    {
+        quality /= numAttributes;
+    }
+
+    return { std::move(attributes), quality };
 }
 std::vector<AttributeRandomizer::AttributeRandomizationParameters> AttributeRandomizer::loadChoices(ConfigurationNode& node) const
 {
@@ -78,7 +94,6 @@ std::vector<AttributeRandomizer::AttributeRandomizationParameters> AttributeRand
 Attribute AttributeRandomizer::randomize(const AttributeRandomizer::AttributeRandomizationParameters& params) const
 {
     const int value = Rng<std::ranlux48>::instance().sample(params.min, params.max, params.exponent);
-    if(value == 0) return Attribute{ params.attributeId, 0 };
 
     return Attribute{ params.attributeId, value };
 }

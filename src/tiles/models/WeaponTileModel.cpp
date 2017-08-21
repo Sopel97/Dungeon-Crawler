@@ -20,7 +20,8 @@ WeaponTileModel::WeaponTileModel(Tile& owner, CommonData& commonData) :
 WeaponTileModel::WeaponTileModel(const WeaponTileModel& other, Tile& owner) :
     TileModel(other, owner),
     m_commonData(other.m_commonData),
-    m_attributes(other.m_attributes)
+    m_attributes(other.m_attributes),
+    m_quality(other.m_quality)
 {
 }
 WeaponTileModel::~WeaponTileModel()
@@ -130,7 +131,9 @@ float WeaponTileModel::drag() const
 
 void WeaponTileModel::onTileInstantiated()
 {
-    m_attributes = m_commonData->attributeRandomizer.randomize();
+    auto result = m_commonData->attributeRandomizer.randomize();
+    m_attributes = std::move(result.attributes);
+    m_quality = result.quality;
 }
 
 TileAttackResult WeaponTileModel::attack(World& world, Player& player, const ls::Vec2F& hintedPosition, int quantity)
