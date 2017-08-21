@@ -12,18 +12,27 @@ private:
     {
         AttributeId attributeId;
         double exponent;
-        double probability;
+        double weight;
         int min;
         int max;
         // value = min + (max - min) * x^exponent, where x is uniformly distributed on [0, 1]
     };
 
+    struct AttributeRandomizationGroup
+    {
+        double probability;
+        int min;
+        int max;
+        std::vector<AttributeRandomizationParameters> parameters;
+    };
+
 private:
-    std::vector<AttributeRandomizationParameters> m_parameters;
+    std::vector<AttributeRandomizationGroup> m_groups;
 public:
     void loadFromConfiguration(ConfigurationNode& config);
     AttributeSet randomize() const;
 
 private:
     Attribute randomize(const AttributeRandomizationParameters& params) const;
+    std::vector<AttributeRandomizationParameters> loadChoices(ConfigurationNode& node) const;
 };

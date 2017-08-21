@@ -28,11 +28,15 @@ tile = {
 
     attributeRandomizationGuidelines = {
         {
-            attributeId = "Attack",
-            exponent = 1.0,
             probability = 1.0,
-            min = 3,
-            max = 5
+            choices = {
+                {
+                    attributeId = "Attack",
+                    exponent = 1.0,
+                    min = 3,
+                    max = 5
+                }
+            }
         }
     },
 

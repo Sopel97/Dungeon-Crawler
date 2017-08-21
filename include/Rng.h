@@ -2,6 +2,7 @@
 
 #include <vector>
 #include <numeric>
+#include <algorithm>
 
 template <class GenType>
 class Rng
@@ -102,6 +103,12 @@ public:
         }
 
         return result;
+    }
+
+    int uniform(int min, int max)
+    {
+        const std::uniform_int_distribution<int> distr(min, max);
+        return distr(m_rng);
     }
 
 private:
