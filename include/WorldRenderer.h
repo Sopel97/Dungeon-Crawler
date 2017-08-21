@@ -88,11 +88,14 @@ protected:
     sf::RenderTexture m_intermidiateRenderTarget;
     sf::RenderTexture m_metaTexture;
     sf::RenderTexture m_lightMap;
+    sf::RenderTexture m_lightMapVerticalBlur;
+    sf::RenderTexture m_lightMapBlur;
 
     sf::Shader m_intermidiateDepthShader;
     sf::Shader m_metaDepthShader;
     sf::Shader m_prettyStretchShader;
     sf::Shader m_lightShader;
+    sf::Shader m_blurShader;
 
     ResourceHandle<Spritesheet> m_lightTexture;
 

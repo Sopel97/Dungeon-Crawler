@@ -17,8 +17,11 @@
 CONSIDER:
 hook up StaticEmbeddedHomogenousMemoryPool for components, tiles, entities, projectiles, see how it behaves
 
+- wall sprites are not lit properly because it is unnaturally made, wall should extend further (considering its height)
+
 THIS:
-- blur lights
+- for attribute generation do 'groups' where you can specify to randomize from n to m different attributes
+- calculate quality (% of possible max attributes) and make each item have specified prefix and color table for quality ranges (to simplify it maybe make some predefined qualities with predetermined colors that can be choosed from)
 
 - prefabs should first be loaded (names, components), then actually initialized
 -- this is to allow for example tile to refer to each others' prefabs (any way is undefined now, because loading order is undefined)
@@ -29,8 +32,6 @@ THIS:
 - group tile (and entity, and projectile) flags in one place (struct with bitfields or something)
 -- somehow merge 2 sets of flags (one from model, one from renderer)
 -- or make them separate (probably better)
-
-- continue to make better interface in (world) map and inventory (if something old that should be removed or changed pops up) regarding actions that should cause events (currently onTilePlaced, onTileRemoved). Mainly make it safer and easier to work with.
 
 - consider using ls::Vec2I/ls::Vec3I to pass tile coordinates
 

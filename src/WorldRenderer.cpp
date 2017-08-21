@@ -80,6 +80,8 @@ WorldRenderer::WorldRenderer(Root& root, World& world) :
     //light map stretches one more tile, because some of the visible tiles need lighting of the tiles not seen
     //also adds one tile length on top and left to keep symmetry
     m_lightMap.create((m_viewWidth + 2) * m_tileResolution, (m_viewHeight + 2) * m_tileResolution);
+    m_lightMapVerticalBlur.create((m_viewWidth + 2) * m_tileResolution, (m_viewHeight + 2) * m_tileResolution);
+    m_lightMapBlur.create((m_viewWidth + 2) * m_tileResolution, (m_viewHeight + 2) * m_tileResolution);
 
     m_intermidiateDepthShader.loadFromFile("assets/shaders/intermidiate_depth.vert", "assets/shaders/intermidiate_depth.frag");
     m_metaDepthShader.loadFromFile("assets/shaders/meta_depth.vert", "assets/shaders/meta_depth.frag");
@@ -94,6 +96,8 @@ WorldRenderer::WorldRenderer(Root& root, World& world) :
     m_lightShader.setParameter("lightTextureSize", sf::Vector2f(static_cast<float>(m_lightMap.getSize().x), static_cast<float>(m_lightMap.getSize().y)));
     m_lightShader.setParameter("metaTextureSize", sf::Vector2f(static_cast<float>(m_metaTexture.getSize().x), static_cast<float>(m_metaTexture.getSize().y)));
     m_lightShader.setParameter("metaTexture", m_metaTexture.getTexture());
+
+    m_blurShader.loadFromFile("assets/shaders/blur.vert", "assets/shaders/blur.frag");
 }
 
 void WorldRenderer::moveCamera(const Vec2F& displacement)
@@ -323,7 +327,7 @@ void WorldRenderer::drawLightMapToIntermidiate(const sf::RenderStates& renderSta
     const Vec2F cameraCenter = cameraRect.centerOfMass();
 
     sf::RectangleShape lightMapSprite;
-    lightMapSprite.setTexture(&(m_lightMap.getTexture()));
+    lightMapSprite.setTexture(&(m_lightMapBlur.getTexture()));
     lightMapSprite.setSize(sf::Vector2f(cameraRect.width(), cameraRect.height()));
     //converts to world coordinates
     lightMapSprite.setPosition(sf::Vector2f(cameraCenter.x - cameraRect.width() / 2, cameraCenter.y - cameraRect.height() / 2));
@@ -490,6 +494,8 @@ void WorldRenderer::updateLightGeometryCache()
 
 void WorldRenderer::drawLightGeometryToLightMap()
 {
+    constexpr float blurScale = 1.5f;
+
     sf::RenderStates lightRenderStates;
     lightRenderStates.blendMode = sf::BlendAdd;
     lightRenderStates.texture = &(m_lightTexture.get().texture());
@@ -500,6 +506,28 @@ void WorldRenderer::drawLightGeometryToLightMap()
     }
 
     m_lightMap.display();
+
+    {
+        m_blurShader.setParameter("offset", sf::Vector2f(0, blurScale / m_lightMap.getSize().y));
+        m_lightMapVerticalBlur.clear();
+        sf::Sprite lightTextureSprite;
+        lightTextureSprite.setTexture(m_lightMap.getTexture(), true);
+        sf::RenderStates renderStates;
+        renderStates.shader = &m_blurShader;
+        m_lightMapVerticalBlur.draw(lightTextureSprite, renderStates);
+        m_lightMapVerticalBlur.display();
+    }
+
+    {
+        m_blurShader.setParameter("offset", sf::Vector2f(blurScale / m_lightMap.getSize().x, 0));
+        m_lightMapBlur.clear();
+        sf::Sprite lightTextureBlurredSprite;
+        lightTextureBlurredSprite.setTexture(m_lightMapVerticalBlur.getTexture(), true);
+        sf::RenderStates renderStates;
+        renderStates.shader = &m_blurShader;
+        m_lightMapBlur.draw(lightTextureBlurredSprite, renderStates);
+        m_lightMapBlur.display();
+    }
 }
 
 void WorldRenderer::buildOuterBorderCache()

@@ -15,7 +15,8 @@ void main()
     gl_TexCoord[0].y - (offset*(256.0/4.0))/lightTextureSize.y
     );
 
-    vec4 texPixel = texture2D(texture, lightTexCoords);
+    vec4 lightBlurred = texture2D(texture, lightTexCoords);
+    vec4 color = lightBlurred; //something between 1.0 and 2.0
     
-    gl_FragColor = texPixel;
+    gl_FragColor = color;
 }
