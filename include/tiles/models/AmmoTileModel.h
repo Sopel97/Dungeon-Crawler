@@ -11,6 +11,7 @@
 #include "../../ComponentCommonData.h"
 
 #include "tiles/TileRaritySelector.h"
+#include "tiles/TilePrefixSelector.h"
 
 #include "AttributeSet.h"
 #include "AttributeRandomizer.h"
@@ -36,6 +37,7 @@ public:
         TileAmmoGroupType ammoGroup;
         ResourceHandle<ProjectilePrefab> projectile;
         TileRaritySelector raritySelector;
+        TilePrefixSelector prefixSelector;
     };
 
     AmmoTileModel(Tile& owner, CommonData& commonData);
@@ -56,6 +58,7 @@ public:
     const std::string& displayedName() const override;
     const AttributeSet& attributes() const override;
     TileRarity rarity() const override;
+    std::string prefix() const override;
 
     float drag() const override;
 

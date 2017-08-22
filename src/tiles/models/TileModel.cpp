@@ -89,6 +89,10 @@ TileRarity TileModel::rarity() const
 {
     return TileRarity(1);
 }
+std::string TileModel::prefix() const
+{
+    return "";
+}
 
 Inventory* TileModel::inventory()
 {

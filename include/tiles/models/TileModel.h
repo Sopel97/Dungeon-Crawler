@@ -56,6 +56,7 @@ public:
     virtual const AttributeSet& attributes() const;
     virtual TileInformation additionalInformation() const;
     virtual TileRarity rarity() const;
+    virtual std::string prefix() const;
 
     virtual Inventory* inventory();
     virtual const Inventory* inventory() const;

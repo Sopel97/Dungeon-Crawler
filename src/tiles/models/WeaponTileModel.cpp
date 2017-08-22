@@ -87,10 +87,24 @@ void WeaponTileModel::loadFromConfiguration(ConfigurationNode& config)
     {
         m_commonData->raritySelector = TileRaritySelector::createDefault();
     }
+
+    ConfigurationNode prefixSelectorConfig = config["prefixSelector"];
+    if (prefixSelectorConfig.exists())
+    {
+        m_commonData->prefixSelector.loadFromConfiguration(prefixSelectorConfig);
+    }
+    else
+    {
+        m_commonData->prefixSelector = TilePrefixSelector::createDefault();
+    }
 }
 TileRarity WeaponTileModel::rarity() const
 {
     return m_commonData->raritySelector.select(m_quality);
+}
+std::string WeaponTileModel::prefix() const
+{
+    return m_commonData->prefixSelector.select(m_quality);
 }
 
 bool WeaponTileModel::equals(const TileModel& other) const
