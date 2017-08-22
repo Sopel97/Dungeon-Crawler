@@ -10,24 +10,26 @@
 
 - WorldView? currently World is also a WindowContent, which should be decoupled (like inventory is)
 
+THIS:
 - test animations
+-- probably an enchanted weapon
+--- magic wall if 2x2 tiles are implemented before
 
 - make outer border caching tiled if the map size grows too much (doing whole map at once may be slow)
 
 CONSIDER:
 hook up StaticEmbeddedHomogenousMemoryPool for components, tiles, entities, projectiles, see how it behaves
 
-- wall sprites are not lit properly because it is unnaturally made, wall should extend further (considering its height)
-
 THIS:
-- make each item have specified prefix and color table for quality ranges (to simplify it maybe make some predefined qualities with predetermined colors that can be choosed from)
+- hook up rarities and prefixes
+-- normal tiles should have no prefix and fixed rarity
+-- equipment has both based on quality
 
 - prefabs should first be loaded (names, components), then actually initialized
 -- this is to allow for example tile to refer to each others' prefabs (any way is undefined now, because loading order is undefined)
 
 - make mapgenerator update all tiles once (currenly it does up to 9 updates on one tile)
 
-THIS:
 - group tile (and entity, and projectile) flags in one place (struct with bitfields or something)
 -- somehow merge 2 sets of flags (one from model, one from renderer)
 -- or make them separate (probably better)
@@ -49,6 +51,7 @@ DRAWING RELATED, kinda important
 
 THIS:
 - make it possible for tiles to specify what size they are (1 - 1x1, 2 - 2x2, more should not be needed)
+-- test on pillar tile
 
 - try dim light depending on height from the ground
 - player's line of sight using raycasting
