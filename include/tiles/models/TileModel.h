@@ -15,6 +15,7 @@
 #include "tiles/TileComponent.h"
 #include "tiles/TileAttackResult.h"
 #include "tiles/TileUseResult.h"
+#include "tiles/TileRarity.h"
 
 #include "SlotContentRequirement.h"
 
@@ -54,6 +55,7 @@ public:
     virtual const std::string& displayedName() const;
     virtual const AttributeSet& attributes() const;
     virtual TileInformation additionalInformation() const;
+    virtual TileRarity rarity() const;
 
     virtual Inventory* inventory();
     virtual const Inventory* inventory() const;

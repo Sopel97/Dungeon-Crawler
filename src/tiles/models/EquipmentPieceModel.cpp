@@ -53,6 +53,20 @@ void EquipmentPieceModel::loadFromConfiguration(ConfigurationNode& config)
     m_commonData->drag = config["drag"].get<float>();
     m_commonData->maxThrowDistance = config["maxThrowDistance"].getDefault<int>(0);
     m_commonData->canBeStored = config["canBeStored"].getDefault<bool>(false);
+
+    ConfigurationNode raritySelectorConfig = config["raritySelector"];
+    if (raritySelectorConfig.exists())
+    {
+        m_commonData->raritySelector.loadFromConfiguration(raritySelectorConfig);
+    }
+    else
+    {
+        m_commonData->raritySelector = TileRaritySelector::createDefault();
+    }
+}
+TileRarity EquipmentPieceModel::rarity() const
+{
+    return m_commonData->raritySelector.select(m_quality);
 }
 
 bool EquipmentPieceModel::equals(const TileModel& other) const

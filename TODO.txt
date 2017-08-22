@@ -25,6 +25,9 @@ THIS:
 -- normal tiles should have no prefix and fixed rarity
 -- equipment has both based on quality
 
+THIS:
+- last blur to lightMap instead of separate render texture
+
 - prefabs should first be loaded (names, components), then actually initialized
 -- this is to allow for example tile to refer to each others' prefabs (any way is undefined now, because loading order is undefined)
 

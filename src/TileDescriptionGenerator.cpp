@@ -17,7 +17,7 @@ TileDescription TileDescriptionGenerator::generate(const Tile& tile, int quantit
     
     std::string fullName = tile.model().displayedName();
     if (quantity > 1) fullName += " x" + std::to_string(quantity);
-    desc.emplaceLine(fullName, sf::Color::Red, sf::Text::Style::Regular, 26);
+    desc.emplaceLine(fullName, tile.model().rarity().color(), sf::Text::Style::Regular, 26);
 
     TileInformation information = tile.model().additionalInformation();
     for (const auto& line : information)

@@ -10,6 +10,8 @@
 
 #include "../../ComponentCommonData.h"
 
+#include "tiles/TileRaritySelector.h"
+
 #include "AttributeSet.h"
 #include "AttributeRandomizer.h"
 
@@ -30,6 +32,7 @@ public:
         float drag;
         int maxThrowDistance;
         bool canBeStored;
+        TileRaritySelector raritySelector;
     };
 
     EquipmentPieceModel(Tile& owner, CommonData& commonData);
@@ -49,6 +52,7 @@ public:
     bool meetsRequirements(SlotContentRequirement req) const override;
     const std::string& displayedName() const override;
     const AttributeSet& attributes() const override;
+    TileRarity rarity() const override;
 
     float drag() const override;
 

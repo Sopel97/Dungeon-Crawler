@@ -77,6 +77,20 @@ void WeaponTileModel::loadFromConfiguration(ConfigurationNode& config)
         m_commonData->chanceToBreak = config["chanceToBreak"].getDefault<float>(0.0f);
         m_commonData->projectile = ResourceManager<ProjectilePrefab>::instance().get(config["projectile"].get<std::string>());
     }
+
+    ConfigurationNode raritySelectorConfig = config["raritySelector"];
+    if (raritySelectorConfig.exists())
+    {
+        m_commonData->raritySelector.loadFromConfiguration(raritySelectorConfig);
+    }
+    else
+    {
+        m_commonData->raritySelector = TileRaritySelector::createDefault();
+    }
+}
+TileRarity WeaponTileModel::rarity() const
+{
+    return m_commonData->raritySelector.select(m_quality);
 }
 
 bool WeaponTileModel::equals(const TileModel& other) const

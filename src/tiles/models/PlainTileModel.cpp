@@ -59,6 +59,7 @@ void PlainTileModel::loadFromConfiguration(ConfigurationNode& config)
     m_commonData->allowsTilesAbove = config["allowsTilesAbove"].getDefault<bool>(false);
     m_commonData->canBeStored = config["canBeStored"].getDefault<bool>(false);
     m_commonData->maxQuantity = config["maxQuantity"].getDefault<int>(1);
+    m_commonData->rarity = TileRarity(config["rarity"].getDefault<int>(1));
 }
 
 std::optional<TileCollider> PlainTileModel::collider(const ls::Vec2I& pos)
@@ -78,6 +79,10 @@ std::optional<ls::Rectangle2F> PlainTileModel::lightOccluder(const ls::Vec2I& po
     {
         return std::nullopt;
     }
+}
+TileRarity PlainTileModel::rarity() const
+{
+    return m_commonData->rarity;
 }
 bool PlainTileModel::isMovable() const
 {

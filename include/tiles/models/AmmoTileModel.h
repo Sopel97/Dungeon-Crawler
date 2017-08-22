@@ -10,6 +10,8 @@
 
 #include "../../ComponentCommonData.h"
 
+#include "tiles/TileRaritySelector.h"
+
 #include "AttributeSet.h"
 #include "AttributeRandomizer.h"
 
@@ -33,6 +35,7 @@ public:
         bool canBeStored;
         TileAmmoGroupType ammoGroup;
         ResourceHandle<ProjectilePrefab> projectile;
+        TileRaritySelector raritySelector;
     };
 
     AmmoTileModel(Tile& owner, CommonData& commonData);
@@ -52,6 +55,7 @@ public:
     bool meetsRequirements(SlotContentRequirement req) const override;
     const std::string& displayedName() const override;
     const AttributeSet& attributes() const override;
+    TileRarity rarity() const override;
 
     float drag() const override;
 

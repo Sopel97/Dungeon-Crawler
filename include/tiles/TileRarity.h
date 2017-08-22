@@ -12,6 +12,7 @@ private:
     int m_rarity;
 
 public:
+    TileRarity();
     TileRarity(int rarity);
 
     sf::Color color() const;

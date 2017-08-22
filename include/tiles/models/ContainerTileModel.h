@@ -33,6 +33,7 @@ public:
         bool isThrowableThrough;
         bool allowsTilesAbove;
         bool canBeStored;
+        TileRarity rarity;
     };
 
     ContainerTileModel(Tile& owner, CommonData& commonData);
@@ -52,6 +53,7 @@ public:
     bool meetsRequirements(SlotContentRequirement req) const override;
     const std::string& displayedName() const override;
     TileInformation additionalInformation() const override;
+    TileRarity rarity() const override;
 
     Inventory* inventory() override;
     const Inventory* inventory() const override;

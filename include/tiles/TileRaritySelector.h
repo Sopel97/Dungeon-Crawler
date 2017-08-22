@@ -13,7 +13,7 @@ public:
 
     void loadFromConfiguration(ConfigurationNode& config);
 
-    TileRarity select(int quality) const;
+    TileRarity select(float quality) const;
 
 protected:
     std::vector<TileRarity> m_rarities;

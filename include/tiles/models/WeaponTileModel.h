@@ -15,6 +15,8 @@
 #include "AttributeSet.h"
 #include "AttributeRandomizer.h"
 
+#include "tiles/TileRaritySelector.h"
+
 #include <memory>
 
 class Tile;
@@ -38,6 +40,7 @@ public:
         float chanceToBreak;
         std::vector<TileAmmoGroupType> allowedAmmoGroups;
         ResourceHandle<ProjectilePrefab> projectile;
+        TileRaritySelector raritySelector;
     };
 
     WeaponTileModel(Tile& owner, CommonData& commonData);
@@ -57,6 +60,7 @@ public:
     bool meetsRequirements(SlotContentRequirement req) const override;
     const std::string& displayedName() const override;
     const AttributeSet& attributes() const override;
+    TileRarity rarity() const override;
 
     float drag() const override;
 

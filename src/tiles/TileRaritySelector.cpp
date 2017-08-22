@@ -37,7 +37,7 @@ void TileRaritySelector::loadFromConfiguration(ConfigurationNode& config)
         m_thresholdQualities.emplace_back(threshold);
     }
 }
-TileRarity TileRaritySelector::select(int quality) const
+TileRarity TileRaritySelector::select(float quality) const
 {
     if (m_rarities.size() <= 1) return m_rarities[0];
 

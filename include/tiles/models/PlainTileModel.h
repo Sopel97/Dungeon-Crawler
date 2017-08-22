@@ -28,6 +28,7 @@ public:
         bool allowsTilesAbove;
         bool canBeStored;
         int maxQuantity;
+        TileRarity rarity;
     };
 
     PlainTileModel(Tile& owner, CommonData& commonData);
@@ -45,6 +46,7 @@ public:
     bool canBeStored() const override;
     int maxQuantity() const override;
     const std::string& displayedName() const override;
+    TileRarity rarity() const override;
 
     float drag() const;
 

@@ -13,6 +13,11 @@ const std::vector<sf::Color> TileRarity::m_colors{
     sf::Color(255, 0, 0) // otherwordly
 };
 
+TileRarity::TileRarity() :
+    m_rarity(0)
+{
+
+}
 TileRarity::TileRarity(int rarity) :
     m_rarity(rarity)
 {

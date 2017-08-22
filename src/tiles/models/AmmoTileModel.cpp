@@ -61,6 +61,20 @@ void AmmoTileModel::loadFromConfiguration(ConfigurationNode& config)
 
     m_commonData->ammoGroup = config["ammoGroup"].get<std::string>();
     m_commonData->projectile = ResourceManager<ProjectilePrefab>::instance().get(config["projectile"].get<std::string>());
+
+    ConfigurationNode raritySelectorConfig = config["raritySelector"];
+    if (raritySelectorConfig.exists())
+    {
+        m_commonData->raritySelector.loadFromConfiguration(raritySelectorConfig);
+    }
+    else
+    {
+        m_commonData->raritySelector = TileRaritySelector::createDefault();
+    }
+}
+TileRarity AmmoTileModel::rarity() const
+{
+    return m_commonData->raritySelector.select(m_quality);
 }
 
 bool AmmoTileModel::equals(const TileModel& other) const

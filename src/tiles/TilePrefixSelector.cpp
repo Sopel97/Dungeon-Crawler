@@ -48,7 +48,7 @@ void TilePrefixSelector::loadFromConfiguration(ConfigurationNode& config)
         m_thresholdQualities.emplace_back(threshold);
     }
 }
-std::string TilePrefixSelector::select(int quality) const
+std::string TilePrefixSelector::select(float quality) const
 {
     if (m_prefixes.size() <= 1) return m_prefixes[0];
 

@@ -85,6 +85,10 @@ TileInformation TileModel::additionalInformation() const
 {
     return {};
 }
+TileRarity TileModel::rarity() const
+{
+    return TileRarity(1);
+}
 
 Inventory* TileModel::inventory()
 {

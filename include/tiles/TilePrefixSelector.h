@@ -13,7 +13,7 @@ public:
 
     void loadFromConfiguration(ConfigurationNode& config);
 
-    std::string select(int quality) const;
+    std::string select(float quality) const;
 
 protected:
     std::vector<std::string> m_prefixes;
