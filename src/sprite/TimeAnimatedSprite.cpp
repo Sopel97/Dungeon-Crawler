@@ -14,24 +14,15 @@ void TimeAnimatedSprite::loadFromConfiguration(ConfigurationNode& config)
     const int numSprites = config.length();
     if (numSprites == 0) return;
 
-    if (numSprites == 1)
+    m_frames.reserve(numSprites);
+    double t = 0.0;
+    for (int i = 1; i <= numSprites; ++i)
     {
-        ConfigurationNode& spriteConfig = config[1];
+        ConfigurationNode& spriteConfig = config[i];
         const int x = spriteConfig[1].get<int>();
         const int y = spriteConfig[2].get<int>();
-        m_frames.push_back(Frame{ { x, y }, 1.0 });
-    }
-    else
-    {
-        m_frames.reserve(numSprites);
-        for (int i = 1; i <= numSprites; ++i)
-        {
-            ConfigurationNode& spriteConfig = config[1];
-            const int x = spriteConfig[1].get<int>();
-            const int y = spriteConfig[2].get<int>();
-            const double t = spriteConfig[3].get<double>();
-            m_frames.push_back(Frame{ { x, y }, t });
-        }
+        t += spriteConfig[3].getDefault<double>(1.0);
+        m_frames.push_back(Frame{ { x, y }, t });
     }
 }
 
@@ -47,6 +38,7 @@ const ls::Vec2I& TimeAnimatedSprite::at(double time) const
     if (numFrames <= 1) return m_frames[0].pos;
 
     time = std::fmod(time, m_frames.back().endTime);
+
     if (time < 0.0) return m_frames[0].pos; //shouldn't really happen
 
                               // linear search from cached position should be the fastest

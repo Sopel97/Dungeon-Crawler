@@ -44,6 +44,7 @@ void PlainTileRenderer::loadFromConfiguration(ConfigurationNode& config)
     std::string textureName = config["texture"].get<std::string>();
     m_commonData->spritesheet = ResourceManager<Spritesheet>::instance().get(textureName);
     m_commonData->hasMetaTexture = config["hasMetaTexture"].getDefault<bool>(false);
+    m_commonData->spriteSize = config["spriteSize"].getDefault<int>(1);
 
     m_commonData->spriteSelector.loadFromConfiguration(config);
 
@@ -66,9 +67,9 @@ void PlainTileRenderer::drawMeta(SpriteBatch& spriteBatch, const TileLocation& l
 void PlainTileRenderer::draw(SpriteBatch& spriteBatch, const TileLocation& location, const ls::Vec2I& textureOffset) const
 {
     const ls::Vec2F sprite = static_cast<ls::Vec2F>(spritesheet().gridCoordsToTexCoords(m_currentAnimatedSprite->now()));
-    const ls::Vec2F spriteSize = static_cast<ls::Vec2F>(spritesheet().gridSizeToTexSize({ 1, 1 }));
-    const ls::Vec2F size(1.0f, 1.0f);
-    const ls::Vec2F pos(location.x * size.x, location.y * size.y);
+    const ls::Vec2F spriteSize = static_cast<ls::Vec2F>(spritesheet().gridSizeToTexSize({ m_commonData->spriteSize, m_commonData->spriteSize }));
+    const ls::Vec2F size(static_cast<float>(m_commonData->spriteSize), static_cast<float>(m_commonData->spriteSize));
+    const ls::Vec2F pos(static_cast<float>(location.x - (m_commonData->spriteSize - 1)), static_cast<float>(location.y - (m_commonData->spriteSize - 1)));
 
     spriteBatch.emplaceRectangle(&(texture()), pos, size, sprite + textureOffset, spriteSize);
 }

@@ -1,0 +1,34 @@
+tile = {
+        
+    name = "Magic Wall",
+    displayedName = "Magic Wall",
+    
+    model = "PlainTileModel",
+    renderer = "PlainTileRenderer",
+
+    texture = "Spritesheet",
+    
+    spriteSelector = "WeightedRandom",
+    sprites = {
+        {{{0, 8, 0.33}, {2, 8, 0.33}, {4, 8, 0.33}}},
+    },
+    spriteSize = 2,
+    hasMetaTexture = true,
+    
+    collider = {
+        {0.0, 0.0},
+        {1.0, 1.0}
+    },
+    lightOccluder = {
+        {0.0, 0.0},
+        {1.0, 1.0}
+    },
+
+
+    drag = 0.85,
+    isThrowableThrough = false,
+    allowsTilesAbove = false,
+    canBeStored = false,
+    maxThrowDistance = 0
+    
+}

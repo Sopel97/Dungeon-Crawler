@@ -34,6 +34,7 @@ public:
     {
         ResourceHandle<Spritesheet> spritesheet;
         TileSpriteSelector spriteSelector;
+        int spriteSize;
 
         int outerBorderPriority;
         bool coversOuterBorders;

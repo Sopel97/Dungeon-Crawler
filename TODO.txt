@@ -10,20 +10,10 @@
 
 - WorldView? currently World is also a WindowContent, which should be decoupled (like inventory is)
 
-THIS:
-- test animations
--- probably an enchanted weapon
---- magic wall if 2x2 tiles are implemented before
-
 - make outer border caching tiled if the map size grows too much (doing whole map at once may be slow)
 
 CONSIDER:
 hook up StaticEmbeddedHomogenousMemoryPool for components, tiles, entities, projectiles, see how it behaves
-
-THIS:
-- hook up rarities and prefixes
--- normal tiles should have no prefix and fixed rarity
--- equipment has both based on quality
 
 THIS:
 - last blur to lightMap instead of separate render texture
@@ -52,9 +42,8 @@ THIS:
 DRAWING RELATED, kinda important
 - make world drawing cleaner, parametrize intermidiate targets' sizes
 
-THIS:
-- make it possible for tiles to specify what size they are (1 - 1x1, 2 - 2x2, more should not be needed)
--- test on pillar tile
+TODO:
+- pillar tile
 
 - try dim light depending on height from the ground
 - player's line of sight using raycasting
