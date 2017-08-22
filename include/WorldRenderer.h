@@ -89,7 +89,6 @@ protected:
     sf::RenderTexture m_metaTexture;
     sf::RenderTexture m_lightMap;
     sf::RenderTexture m_lightMapVerticalBlur;
-    sf::RenderTexture m_lightMapBlur;
 
     sf::Shader m_intermidiateDepthShader;
     sf::Shader m_metaDepthShader;
@@ -108,7 +107,7 @@ protected:
 
     static constexpr int m_lightOccluderCacheUpdateInterval = 2;
 
-    static constexpr int m_lightGeometryUpdatesPerFrame = 10;
+    static constexpr int m_lightGeometryUpdatesPerFrame = 8;
     
 protected:
     void prepareIntermidiateRenderTarget();

@@ -15,11 +15,23 @@
 CONSIDER:
 hook up StaticEmbeddedHomogenousMemoryPool for components, tiles, entities, projectiles, see how it behaves
 
-THIS:
-- last blur to lightMap instead of separate render texture
+- split attributes() request function in tile models to attributes() which returns all attributes, and activeAttributes() which takes inventory slot and returns attributes to be applied if the slot matches item's requirement
 
+- maybe update all equiped tiles to allow for timed equipment?
+
+- add support for temporary effects (not coming from equiped items)
+-- potions?
+--- health/mana addition specified separately and also get applied through separate functions in player
+
+- fix magic wall sprites alpha channel
+
+THIS:
 - prefabs should first be loaded (names, components), then actually initialized
 -- this is to allow for example tile to refer to each others' prefabs (any way is undefined now, because loading order is undefined)
+
+- consider checking for light occluders/colliders/maybe more; top to bottom (now is bottom to top), and specify a max depth of search
+
+- think of a way to minimize code duplication in tile models, maybe inheritance could do the job (would have to applied to model, and common data?)
 
 - make mapgenerator update all tiles once (currenly it does up to 9 updates on one tile)
 
@@ -33,14 +45,10 @@ THIS:
 -- or (1-x)^n   ((1-x)^n*(n+1))
 --- or leave as it is now
 
-- when tile is placed in world or moved to it/within it it remembers all tiles that are potential light sources (divide the world to a grid, like 32x32 or something for faster lookup) and query lights for rendering
--- needs revision on how these events are generated. Make it so they arise in possibly as few places as possible
--- possibly have a number for each tile that specifies how much light that is emitted by tile somewhere below is blocked (reduces radius by factor (sum of all reductions | max reduction))
+- when tile is placed in world or moved to it/within it it remembers all tiles that are potential light sources (divide the world to a grid, like 16x16 or something for faster lookup) and query lights for rendering
+-- have a number for each tile that specifies how much light that is emitted by tile somewhere below is blocked (reduces radius by factor (sum of all reductions | max reduction (max reduction seems more logical, because tile sprites mostly overwrite)))
 
 - window resizing (should be done fully by the window being resized. Relying only on min,max size parameters)
-
-DRAWING RELATED, kinda important
-- make world drawing cleaner, parametrize intermidiate targets' sizes
 
 TODO:
 - pillar tile
@@ -49,3 +57,5 @@ TODO:
 - player's line of sight using raycasting
 
 - '%' sign missing in tibia font
+
+- currently outer borders may be rendered wrong if they are in different textures, because they can't be sorted by texture. Probably no good solution, so will have to make sure no two outer borders from 2 textures are one to each other.

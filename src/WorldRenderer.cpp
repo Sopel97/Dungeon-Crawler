@@ -81,7 +81,6 @@ WorldRenderer::WorldRenderer(Root& root, World& world) :
     //also adds one tile length on top and left to keep symmetry
     m_lightMap.create((m_viewWidth + 2) * m_tileResolution, (m_viewHeight + 2) * m_tileResolution);
     m_lightMapVerticalBlur.create((m_viewWidth + 2) * m_tileResolution, (m_viewHeight + 2) * m_tileResolution);
-    m_lightMapBlur.create((m_viewWidth + 2) * m_tileResolution, (m_viewHeight + 2) * m_tileResolution);
 
     m_intermidiateDepthShader.loadFromFile("assets/shaders/intermidiate_depth.vert", "assets/shaders/intermidiate_depth.frag");
     m_metaDepthShader.loadFromFile("assets/shaders/meta_depth.vert", "assets/shaders/meta_depth.frag");
@@ -327,7 +326,7 @@ void WorldRenderer::drawLightMapToIntermidiate(const sf::RenderStates& renderSta
     const Vec2F cameraCenter = cameraRect.centerOfMass();
 
     sf::RectangleShape lightMapSprite;
-    lightMapSprite.setTexture(&(m_lightMapBlur.getTexture()));
+    lightMapSprite.setTexture(&(m_lightMap.getTexture()));
     lightMapSprite.setSize(sf::Vector2f(cameraRect.width(), cameraRect.height()));
     //converts to world coordinates
     lightMapSprite.setPosition(sf::Vector2f(cameraCenter.x - cameraRect.width() / 2, cameraCenter.y - cameraRect.height() / 2));
@@ -494,7 +493,7 @@ void WorldRenderer::updateLightGeometryCache()
 
 void WorldRenderer::drawLightGeometryToLightMap()
 {
-    constexpr float blurScale = 1.5f;
+    constexpr float blurScale = 1.73;
 
     sf::RenderStates lightRenderStates;
     lightRenderStates.blendMode = sf::BlendAdd;
@@ -520,13 +519,14 @@ void WorldRenderer::drawLightGeometryToLightMap()
 
     {
         m_blurShader.setParameter("offset", sf::Vector2f(blurScale / m_lightMap.getSize().x, 0));
-        m_lightMapBlur.clear();
+        m_lightMap.clear();
         sf::Sprite lightTextureBlurredSprite;
         lightTextureBlurredSprite.setTexture(m_lightMapVerticalBlur.getTexture(), true);
         sf::RenderStates renderStates;
         renderStates.shader = &m_blurShader;
-        m_lightMapBlur.draw(lightTextureBlurredSprite, renderStates);
-        m_lightMapBlur.display();
+        m_lightMap.setView(m_lightMap.getDefaultView());
+        m_lightMap.draw(lightTextureBlurredSprite, renderStates);
+        m_lightMap.display();
     }
 }
 
