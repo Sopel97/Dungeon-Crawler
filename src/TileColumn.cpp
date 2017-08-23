@@ -88,6 +88,16 @@ std::optional<ls::Rectangle2F> TileColumn::lightOccluder(const ls::Vec2I& pos) c
 
     return std::nullopt;
 }
+bool TileColumn::hasAnyLight(const ls::Vec2I& pos) const
+{
+    for (const TileStack& tileStack : m_tiles)
+    {
+        if (std::optional<Light> light = tileStack.tile().model().light(pos))
+            return true;
+    }
+
+    return false;
+}
 
 int TileColumn::topZ() const
 {

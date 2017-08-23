@@ -103,8 +103,6 @@ protected:
 
     static constexpr int m_tileResolution = 32;
 
-    static constexpr int m_maxLightRadius = 4;
-
     static constexpr int m_lightOccluderCacheUpdateInterval = 2;
 
     static constexpr int m_lightGeometryUpdatesPerFrame = 8;

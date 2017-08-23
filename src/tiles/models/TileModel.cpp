@@ -93,6 +93,10 @@ std::string TileModel::prefix() const
 {
     return "";
 }
+std::optional<Light> TileModel::light(const ls::Vec2I& pos) const
+{
+    return std::nullopt;
+}
 
 Inventory* TileModel::inventory()
 {

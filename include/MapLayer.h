@@ -12,6 +12,7 @@ class TileColumn;
 class TileStack;
 class Tile;
 class TileLocation;
+class MapLightCache;
 
 class MapLayer
 {

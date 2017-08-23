@@ -22,7 +22,14 @@ public:
 
     void draw(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates, const sf::Texture& texture) const;
 
+    static constexpr int maxLightRadius()
+    {
+        return m_maxLightRadius;
+    }
+
 private:
+    static constexpr int m_maxLightRadius = 4;
+
     ls::Vec2F m_position;
     float m_radius;
     sf::Color m_color;

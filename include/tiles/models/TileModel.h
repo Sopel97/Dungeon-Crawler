@@ -17,6 +17,8 @@
 #include "tiles/TileUseResult.h"
 #include "tiles/TileRarity.h"
 
+#include "Light.h"
+
 #include "SlotContentRequirement.h"
 
 #include "colliders/TileCollider.h"
@@ -57,6 +59,7 @@ public:
     virtual TileInformation additionalInformation() const;
     virtual TileRarity rarity() const;
     virtual std::string prefix() const;
+    virtual std::optional<Light> light(const ls::Vec2I& pos) const;
 
     virtual Inventory* inventory();
     virtual const Inventory* inventory() const;

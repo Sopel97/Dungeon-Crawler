@@ -341,7 +341,7 @@ void WorldRenderer::drawLightMapToIntermidiate(const sf::RenderStates& renderSta
 
 void WorldRenderer::updateLightOccluderCache()
 {
-    const Vec2F radius(m_viewWidth + m_maxLightRadius, m_viewHeight + m_maxLightRadius);
+    const Vec2F radius(m_viewWidth + Light::maxLightRadius(), m_viewHeight + Light::maxLightRadius());
     const ls::Rectangle2F bounds = ls::Rectangle2F(m_camera.center() - radius, m_camera.center() + radius);
 
     const Vec2F& queryRegionTopLeft = bounds.min;
