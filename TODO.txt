@@ -32,7 +32,7 @@ THIS:
 
 - consider checking for light occluders/colliders/maybe more; top to bottom (now is bottom to top), and specify a max depth of search
 
-- think of a way to minimize code duplication in tile models, maybe inheritance could do the job (would have to applied to model, and common data?)
+- think of a way to minimize code duplication in tile models (simple inheritance won't work because all models hold pointer to common data)
 
 - make mapgenerator update all tiles once (currenly it does up to 9 updates on one tile)
 
@@ -45,14 +45,6 @@ THIS:
 - consider replacing current item randomization distribution with something along havinf PDF of 1/e^(nx)
 -- or (1-x)^n   ((1-x)^n*(n+1))
 --- or leave as it is now
-
-THIS:
-- move max light radius to Light (currently in WorldRenderer)
-- when tile is placed in world or moved to it/within it it remembers all tiles that are potential light sources (divide the world to a grid, like 16x16 or something for faster lookup) and query lights for rendering (onTilePlaced, onTileRemoved)
--- have a number for each tile that specifies how much light that is emitted by tile somewhere below is blocked (reduces radius by factor (sum of all reductions | max reduction (max reduction seems more logical, because tile sprites mostly overwrite)))
---- max depth search of 4?
----- since it should only remember x,y (not z) every time an event happens on given x,y it should update whole column (check for removed/added lights), that's why max depth is specified
----- queries have to traverse in order to get dimming value
 
 - window resizing (should be done fully by the window being resized. Relying only on min,max size parameters)
 

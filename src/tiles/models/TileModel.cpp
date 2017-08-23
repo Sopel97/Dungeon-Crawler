@@ -97,6 +97,10 @@ std::optional<Light> TileModel::light(const ls::Vec2I& pos) const
 {
     return std::nullopt;
 }
+float TileModel::lightDimming() const
+{
+    return 1.0f;
+}
 
 Inventory* TileModel::inventory()
 {

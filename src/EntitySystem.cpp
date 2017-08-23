@@ -105,7 +105,7 @@ std::vector<EntityCollider> EntitySystem::queryColliders(const ls::Rectangle2F& 
 
     return collidersInRegion;
 }
-std::vector<Light> EntitySystem::queryLights(const ls::Rectangle2F& rect)
+std::vector<Light> EntitySystem::queryLights(const ls::Rectangle2F& rect) const
 {
     std::vector<Light> lightsInRange;
 
@@ -113,7 +113,7 @@ std::vector<Light> EntitySystem::queryLights(const ls::Rectangle2F& rect)
     const float halfRectWidth = rect.width() / 2.0f;
     const float halfRectHeight = rect.height() / 2.0f;
 
-    for (std::unique_ptr<Entity>& entity : m_entities)
+    for (const std::unique_ptr<Entity>& entity : m_entities)
     {
         std::optional<Light> lightOpt = entity->model().light();
         if (!lightOpt.has_value()) continue;
@@ -131,7 +131,7 @@ std::vector<Light> EntitySystem::queryLights(const ls::Rectangle2F& rect)
     }
 
     {
-        Entity& playerEntity = m_player->entity();
+        const Entity& playerEntity = m_player->entity();
         std::optional<Light> lightOpt = playerEntity.model().light();
         if (lightOpt.has_value())
         {

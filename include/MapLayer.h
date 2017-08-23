@@ -3,6 +3,10 @@
 
 #include "colliders/TileCollider.h"
 
+#include "Light.h"
+
+#include "MapLightCache.h"
+
 #include "../LibS/Array2.h"
 
 #include "../LibS/Shapes.h"
@@ -40,13 +44,15 @@ public:
     TileStack splitTiles(int x, int y, int z, int count);
 
     std::vector<TileCollider> queryTileColliders(const ls::Rectangle2I& queryRegion);
-    std::vector<ls::Rectangle2F> queryLightOccluders(const ls::Rectangle2I& queryRegion);
+    std::vector<ls::Rectangle2F> queryLightOccluders(const ls::Rectangle2I& queryRegion) const;
+    std::vector<Light> queryLights(const ls::Rectangle2I& queryRegion) const;
 
 protected:
     World& m_world;
     int m_width;
     int m_height;
     ls::Array2<TileColumn> m_tileColumns;
+    MapLightCache m_lightCache;
 
     static TileColumn m_emptyTileColumn;
 

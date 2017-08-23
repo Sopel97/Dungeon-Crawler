@@ -88,6 +88,46 @@ std::optional<ls::Rectangle2F> TileColumn::lightOccluder(const ls::Vec2I& pos) c
 
     return std::nullopt;
 }
+std::optional<Light> TileColumn::light(const ls::Vec2I& pos) const
+{
+    static constexpr float dimmingCutoffThreshold = 0.9f;
+
+    int numLights = 0;
+    int r = 0;
+    int g = 0;
+    int b = 0;
+    float radius = 0.0f;
+    float currentDimming = 0.0f;
+    ls::Vec2F position;
+    const void* owner;
+
+    const int numTiles = m_tiles.size();
+    for (int i = numTiles - 1; i >= 0; --i)
+    {
+        if (currentDimming > dimmingCutoffThreshold) break;
+
+        const Tile& tile = m_tiles[i].tile();
+        if (std::optional<Light> lightOpt = tile.model().light(pos))
+        {
+            const Light& light = lightOpt.value();
+
+            ++numLights;
+
+            r += light.color().r;
+            g += light.color().g;
+            b += light.color().b;
+            radius = std::max(radius, light.radius() * (1.0f - currentDimming));
+            position = light.position();
+            owner = light.owner();
+        }
+
+        currentDimming = std::max(currentDimming, tile.model().lightDimming());
+    }
+
+    if (numLights == 0) return std::nullopt;
+    
+    return Light(position, radius / numLights, sf::Color(r / numLights, g / numLights, b / numLights), owner);
+}
 bool TileColumn::hasAnyLight(const ls::Vec2I& pos) const
 {
     for (const TileStack& tileStack : m_tiles)

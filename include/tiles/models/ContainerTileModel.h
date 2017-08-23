@@ -34,6 +34,7 @@ public:
         bool allowsTilesAbove;
         bool canBeStored;
         TileRarity rarity;
+        float lightDimming;
     };
 
     ContainerTileModel(Tile& owner, CommonData& commonData);
@@ -54,6 +55,8 @@ public:
     const std::string& displayedName() const override;
     TileInformation additionalInformation() const override;
     TileRarity rarity() const override;
+    std::optional<Light> light(const ls::Vec2I& pos) const override;
+    float lightDimming() const override;
 
     Inventory* inventory() override;
     const Inventory* inventory() const override;

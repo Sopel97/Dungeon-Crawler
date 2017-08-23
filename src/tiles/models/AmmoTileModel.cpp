@@ -58,6 +58,7 @@ void AmmoTileModel::loadFromConfiguration(ConfigurationNode& config)
     m_commonData->drag = config["drag"].get<float>();
     m_commonData->maxThrowDistance = config["maxThrowDistance"].getDefault<int>(0);
     m_commonData->canBeStored = config["canBeStored"].getDefault<bool>(false);
+    m_commonData->lightDimming = config["lightDimming"].getDefault<float>(1.0f);
 
     m_commonData->ammoGroup = config["ammoGroup"].get<std::string>();
     m_commonData->projectile = ResourceManager<ProjectilePrefab>::instance().get(config["projectile"].get<std::string>());
@@ -85,6 +86,10 @@ void AmmoTileModel::loadFromConfiguration(ConfigurationNode& config)
 TileRarity AmmoTileModel::rarity() const
 {
     return m_commonData->raritySelector.select(m_quality);
+}
+float AmmoTileModel::lightDimming() const
+{
+    return m_commonData->lightDimming;
 }
 std::string AmmoTileModel::prefix() const
 {

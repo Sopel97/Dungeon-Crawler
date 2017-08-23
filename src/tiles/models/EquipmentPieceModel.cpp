@@ -53,6 +53,7 @@ void EquipmentPieceModel::loadFromConfiguration(ConfigurationNode& config)
     m_commonData->drag = config["drag"].get<float>();
     m_commonData->maxThrowDistance = config["maxThrowDistance"].getDefault<int>(0);
     m_commonData->canBeStored = config["canBeStored"].getDefault<bool>(false);
+    m_commonData->lightDimming = config["lightDimming"].getDefault<float>(1.0f);
 
     ConfigurationNode raritySelectorConfig = config["raritySelector"];
     if (raritySelectorConfig.exists())
@@ -77,6 +78,10 @@ void EquipmentPieceModel::loadFromConfiguration(ConfigurationNode& config)
 TileRarity EquipmentPieceModel::rarity() const
 {
     return m_commonData->raritySelector.select(m_quality);
+}
+float EquipmentPieceModel::lightDimming() const
+{
+    return m_commonData->lightDimming;
 }
 std::string EquipmentPieceModel::prefix() const
 {

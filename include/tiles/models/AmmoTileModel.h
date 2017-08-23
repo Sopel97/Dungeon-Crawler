@@ -38,6 +38,7 @@ public:
         ResourceHandle<ProjectilePrefab> projectile;
         TileRaritySelector raritySelector;
         TilePrefixSelector prefixSelector;
+        float lightDimming;
     };
 
     AmmoTileModel(Tile& owner, CommonData& commonData);
@@ -59,6 +60,7 @@ public:
     const AttributeSet& attributes() const override;
     TileRarity rarity() const override;
     std::string prefix() const override;
+    float lightDimming() const override;
 
     float drag() const override;
 

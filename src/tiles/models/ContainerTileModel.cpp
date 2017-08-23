@@ -65,6 +65,7 @@ void ContainerTileModel::loadFromConfiguration(ConfigurationNode& config)
     m_commonData->allowsTilesAbove = config["allowsTilesAbove"].getDefault<bool>(false);
     m_commonData->canBeStored = config["canBeStored"].getDefault<bool>(false);
     m_commonData->rarity = TileRarity(config["rarity"].getDefault<int>(1));
+    m_commonData->lightDimming = config["lightDimming"].getDefault<float>(1.0f);
 
     m_inventory.setSize(config["inventorySize"].get<int>());
 }
@@ -90,6 +91,17 @@ std::optional<ls::Rectangle2F> ContainerTileModel::lightOccluder(const ls::Vec2I
 TileRarity ContainerTileModel::rarity() const
 {
     return m_commonData->rarity;
+}
+float ContainerTileModel::lightDimming() const
+{
+    return m_commonData->lightDimming;
+}
+std::optional<Light> ContainerTileModel::light(const ls::Vec2I& pos) const
+{
+    // TEST
+    // return Light(static_cast<Vec2F>(pos) + ls::Vec2F(0.5f, 0.5f), 2.0f, sf::Color::White, this);
+
+    return std::nullopt;
 }
 bool ContainerTileModel::isMovable() const
 {

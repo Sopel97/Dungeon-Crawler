@@ -445,7 +445,7 @@ void WorldRenderer::updateLightGeometryCache()
         updateLightOccluderCache();
     }
 
-    auto lights = m_world.m_entitySystem.queryLights(m_camera.viewRectangle());
+    auto lights = m_world.queryLights(m_camera.viewRectangle());
 
     // update existing
     for (auto& entry : m_lightGeometryCache.lights)

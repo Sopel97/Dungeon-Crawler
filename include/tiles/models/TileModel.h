@@ -60,6 +60,7 @@ public:
     virtual TileRarity rarity() const;
     virtual std::string prefix() const;
     virtual std::optional<Light> light(const ls::Vec2I& pos) const;
+    virtual float lightDimming() const;
 
     virtual Inventory* inventory();
     virtual const Inventory* inventory() const;

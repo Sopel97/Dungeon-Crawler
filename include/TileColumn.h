@@ -7,6 +7,8 @@
 
 #include "colliders/TileCollider.h"
 
+#include "Light.h"
+
 #include "../LibS/Geometry.h"
 
 class TileStack;
@@ -30,6 +32,7 @@ public:
 
     std::optional<TileCollider> collider(const ls::Vec2I& pos);
     std::optional<ls::Rectangle2F> lightOccluder(const ls::Vec2I& pos) const;
+    std::optional<Light> light(const ls::Vec2I& pos) const; // NOTE: radius is maximal found, color is averaged. Maybe find a better way.
     bool hasAnyLight(const ls::Vec2I& pos) const;
 
     const std::vector<TileStack>& tiles() const;

@@ -60,6 +60,7 @@ void PlainTileModel::loadFromConfiguration(ConfigurationNode& config)
     m_commonData->canBeStored = config["canBeStored"].getDefault<bool>(false);
     m_commonData->maxQuantity = config["maxQuantity"].getDefault<int>(1);
     m_commonData->rarity = TileRarity(config["rarity"].getDefault<int>(1));
+    m_commonData->lightDimming = config["lightDimming"].getDefault<float>(1.0f);
 }
 
 std::optional<TileCollider> PlainTileModel::collider(const ls::Vec2I& pos)
@@ -83,6 +84,10 @@ std::optional<ls::Rectangle2F> PlainTileModel::lightOccluder(const ls::Vec2I& po
 TileRarity PlainTileModel::rarity() const
 {
     return m_commonData->rarity;
+}
+float PlainTileModel::lightDimming() const
+{
+    return m_commonData->lightDimming;
 }
 bool PlainTileModel::isMovable() const
 {

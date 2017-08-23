@@ -60,6 +60,7 @@ void WeaponTileModel::loadFromConfiguration(ConfigurationNode& config)
     m_commonData->drag = config["drag"].get<float>();
     m_commonData->maxThrowDistance = config["maxThrowDistance"].getDefault<int>(0);
     m_commonData->canBeStored = config["canBeStored"].getDefault<bool>(false);
+    m_commonData->lightDimming = config["lightDimming"].getDefault<float>(1.0f);
 
     m_commonData->requiresAmmo = config["requiresAmmo"].get<bool>();
     if (m_commonData->requiresAmmo)
@@ -101,6 +102,10 @@ void WeaponTileModel::loadFromConfiguration(ConfigurationNode& config)
 TileRarity WeaponTileModel::rarity() const
 {
     return m_commonData->raritySelector.select(m_quality);
+}
+float WeaponTileModel::lightDimming() const
+{
+    return m_commonData->lightDimming;
 }
 std::string WeaponTileModel::prefix() const
 {

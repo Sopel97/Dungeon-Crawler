@@ -66,6 +66,7 @@ public:
 
     std::vector<ls::Rectangle2F> queryLightOccluders(const Light& light) const;
     std::vector<TileCollider> queryTileColliders(const ls::Rectangle2F& queryRegion);
+    std::vector<Light> queryLights(const ls::Rectangle2F& queryRegion) const;
     std::vector<ls::Vec2I> queryGridPointsBetweenTiles(const ls::Vec2I& from, const ls::Vec2I& to) const;
     std::vector<ls::Vec2I> queryGridPointsBetweenEntityAndTile(const Entity& entity, const ls::Vec2I& to) const;
     bool lineOfSightBetweenTiles(const ls::Vec2I& from, const ls::Vec2I& to) const;

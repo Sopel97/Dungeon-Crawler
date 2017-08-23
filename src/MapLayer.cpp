@@ -25,7 +25,8 @@ MapLayer::MapLayer(World& world, int width, int height) :
     m_world(world),
     m_width(width),
     m_height(height),
-    m_tileColumns(width, height)
+    m_tileColumns(width, height),
+    m_lightCache(*this)
 {
 
 }
@@ -153,19 +154,33 @@ std::vector<TileCollider> MapLayer::queryTileColliders(const Rectangle2I& queryR
     }
     return colliders;
 }
-std::vector<ls::Rectangle2F> MapLayer::queryLightOccluders(const ls::Rectangle2I& queryRegion)
+std::vector<ls::Rectangle2F> MapLayer::queryLightOccluders(const ls::Rectangle2I& queryRegion) const
 {
     std::vector<ls::Rectangle2F> occluders;
     for (int x = queryRegion.min.x; x <= queryRegion.max.x; ++x)
     {
         for (int y = queryRegion.min.y; y <= queryRegion.max.y; ++y)
         {
-            TileColumn& tileColumn = at(x, y);
+            const TileColumn& tileColumn = at(x, y);
             if (std::optional<ls::Rectangle2F> occluder = tileColumn.lightOccluder({ x,y }))
                 occluders.emplace_back(occluder.value());
         }
     }
     return occluders;
+}
+std::vector<Light> MapLayer::queryLights(const ls::Rectangle2I& queryRegion) const
+{
+    std::vector<Light> lights;
+
+    for (const auto& pos : m_lightCache.queryLightPositions(queryRegion))
+    {
+        if (std::optional<Light> light = m_tileColumns(pos.x, pos.y).light(pos))
+        {
+            lights.emplace_back(light.value());
+        }
+    }
+
+    return lights;
 }
 
 void MapLayer::onTilePlaced(TileStack& stack, int x, int y, int z)
@@ -176,6 +191,8 @@ void MapLayer::onTilePlaced(TileStack& stack, int x, int y, int z)
     updateNearbyTiles(x, y, z, &Tile::onTilePlacedNearby);
     if (z > 0) m_tileColumns(x, y).at(z - 1).tile().onTilePlacedOnTop(TileLocation(*this, x, y, z - 1));
     EventDispatcher::instance().broadcast<TilePlacedInWorld>(TilePlacedInWorld{ &stack, location });
+
+    m_lightCache.update(ls::Vec2I(x, y));
 }
 void MapLayer::onTileRemoved(TileStack& stack, int x, int y, int z)
 {
@@ -185,6 +202,8 @@ void MapLayer::onTileRemoved(TileStack& stack, int x, int y, int z)
     updateNearbyTiles(x, y, z, &Tile::onTileRemovedNearby);
     if (z > 0) m_tileColumns(x, y).at(z - 1).tile().onTileRemovedFromTop(TileLocation(*this, x, y, z - 1));
     EventDispatcher::instance().broadcast<TileRemovedFromWorld>(TileRemovedFromWorld{ &stack, location });
+
+    m_lightCache.update(ls::Vec2I(x, y));
 }
 
 void MapLayer::updateNearbyTiles(int x, int y, int z, TileUpdateFunction func)
