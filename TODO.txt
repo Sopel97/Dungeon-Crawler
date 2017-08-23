@@ -16,6 +16,7 @@ CONSIDER:
 hook up StaticEmbeddedHomogenousMemoryPool for components, tiles, entities, projectiles, see how it behaves
 
 - split attributes() request function in tile models to attributes() which returns all attributes, and activeAttributes() which takes inventory slot and returns attributes to be applied if the slot matches item's requirement
+-- or just check if meets slot requirements on call site
 
 - maybe update all equiped tiles to allow for timed equipment?
 
@@ -45,8 +46,13 @@ THIS:
 -- or (1-x)^n   ((1-x)^n*(n+1))
 --- or leave as it is now
 
-- when tile is placed in world or moved to it/within it it remembers all tiles that are potential light sources (divide the world to a grid, like 16x16 or something for faster lookup) and query lights for rendering
+THIS:
+- move max light radius to Light (currently in WorldRenderer)
+- when tile is placed in world or moved to it/within it it remembers all tiles that are potential light sources (divide the world to a grid, like 16x16 or something for faster lookup) and query lights for rendering (onTilePlaced, onTileRemoved)
 -- have a number for each tile that specifies how much light that is emitted by tile somewhere below is blocked (reduces radius by factor (sum of all reductions | max reduction (max reduction seems more logical, because tile sprites mostly overwrite)))
+--- max depth search of 4?
+---- since it should only remember x,y (not z) every time an event happens on given x,y it should update whole column (check for removed/added lights), that's why max depth is specified
+---- queries have to traverse in order to get dimming value
 
 - window resizing (should be done fully by the window being resized. Relying only on min,max size parameters)
 

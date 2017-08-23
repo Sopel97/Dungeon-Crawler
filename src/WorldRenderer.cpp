@@ -373,6 +373,9 @@ std::vector<ls::Rectangle2F> WorldRenderer::queryLightOccluders(const Light& lig
     const Vec2F& queryRegionTopLeft = bounds.min;
     const Vec2F& queryRegionBottomRight = bounds.max;
 
+    const int centerX = Util::fastFloor(light.position().x) - m_lightOccluderCache.range.min.x;
+    const int centerY = Util::fastFloor(light.position().y) - m_lightOccluderCache.range.min.y;
+
     const int firstTileX = std::max(Util::fastFloor(queryRegionTopLeft.x), m_lightOccluderCache.range.min.x) - m_lightOccluderCache.range.min.x;
     const int firstTileY = std::max(Util::fastFloor(queryRegionTopLeft.y), m_lightOccluderCache.range.min.y) - m_lightOccluderCache.range.min.y;
     const int lastTileX = std::min(Util::fastFloor(queryRegionBottomRight.x), m_lightOccluderCache.range.max.x) - m_lightOccluderCache.range.min.x;
@@ -385,6 +388,9 @@ std::vector<ls::Rectangle2F> WorldRenderer::queryLightOccluders(const Light& lig
     {
         for (int y = firstTileY; y <= lastTileY; ++y)
         {
+            // don't take occluder that may also be the light source
+            if (x == centerX && y == centerY) continue;
+
             if (m_lightOccluderCache.occluders(x, y).has_value())
             {
                 occluders.emplace_back(m_lightOccluderCache.occluders(x, y).value());
