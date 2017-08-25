@@ -11,6 +11,8 @@
 
 #include "EventDispatcher.h"
 
+#include "AttributeSet.h"
+
 #include "../LibS/Geometry.h"
 
 #include <algorithm>
@@ -36,7 +38,10 @@ bool Player::tryInteractWithInternalInventory(Tile& tile, Inventory& inventory, 
 {
     return m_inventorySystem.tryInteractWithInternalInventory(tile, inventory, slot);
 }
-
+void Player::update()
+{
+    updateAttributes();
+}
 void Player::processAsyncKeyboardInput(World& world, float dt) //TODO: make it update the player entity so it moves in the next update. Don't interact with world in this function.
 {
     constexpr float acc = 200.0f / 32.0f;
@@ -123,4 +128,31 @@ bool Player::tryPlaceTileUnderNearby(TileStack&& tileStack)
 {
     const ls::Vec2I worldPos = m_world->worldToTile(m_playerEntity.model().position());
     return m_world->tryPlaceTile(std::move(tileStack), worldPos.x, worldPos.y);
+}
+
+
+const AttributeArray& Player::attributes() const
+{
+    return m_currentAttributes;
+}
+void Player::updateAttributes()
+{
+    m_currentAttributes.clear();
+
+    const int inventorySize = m_equipmentInventory.size();
+    for (int i = 0; i < inventorySize; ++i)
+    {
+        const TileStack& tileStack = m_equipmentInventory.contents()[i];
+        if (tileStack.isEmpty()) continue;
+
+        const Tile& tile = tileStack.tile();
+        if (tile.model().isSlotCorrect(m_equipmentInventory.slotContentRequirement(i)))
+        {
+            const AttributeSet& tileAttributes = tile.model().attributes();
+            for (const auto& attribute : tileAttributes)
+            {
+                m_currentAttributes += attribute;
+            }
+        }
+    }
 }

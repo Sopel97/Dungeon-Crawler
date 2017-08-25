@@ -15,8 +15,8 @@
 CONSIDER:
 hook up StaticEmbeddedHomogenousMemoryPool for components, tiles, entities, projectiles, see how it behaves
 
-- split attributes() request function in tile models to attributes() which returns all attributes, and activeAttributes() which takes inventory slot and returns attributes to be applied if the slot matches item's requirement
--- or just check if meets slot requirements on call site
+- allow weapons in one hand, shield in other hand
+-- no two handed weapons
 
 - maybe update all equiped tiles to allow for timed equipment?
 

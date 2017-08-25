@@ -59,6 +59,8 @@ World::~World()
 
 void World::draw(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates)
 {
+    m_worldRenderer.setCamera(m_player.entity().model().position());
+
     m_worldRenderer.draw(renderTarget, renderStates);
 }
 
@@ -138,10 +140,10 @@ void World::lookTile(const ls::Vec2I& tilePosition)
 
 void World::update(float dt)
 {
+    m_player.update();
+
     m_entitySystem.update(dt);
     m_projectileSystem.update(dt);
-
-    m_worldRenderer.setCamera(m_player.entity().model().position());
 }
 
 float World::drag(const Vec2F& position) const

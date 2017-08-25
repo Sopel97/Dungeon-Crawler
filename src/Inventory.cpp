@@ -33,7 +33,7 @@ const TileStack& Inventory::at(size_t slotId) const
 }
 bool Inventory::meetsRequirements(const Tile& tile, int slot) const
 {
-    return tile.model().meetsRequirements(this->slotContentRequirement(slot));
+    return tile.model().isSlotValid(this->slotContentRequirement(slot));
 }
 void Inventory::placeTile(TileStack&& tileStack, int slot)
 {

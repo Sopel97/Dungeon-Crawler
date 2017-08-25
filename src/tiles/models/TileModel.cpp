@@ -65,11 +65,15 @@ int TileModel::maxQuantity() const
 {
     return 1;
 }
-bool TileModel::meetsRequirements(SlotContentRequirement req) const
+bool TileModel::isSlotValid(SlotContentRequirement req) const
 {
     return req == SlotContentRequirement::None
         || req == SlotContentRequirement::LeftHand
         || req == SlotContentRequirement::RightHand;
+}
+bool TileModel::isSlotCorrect(SlotContentRequirement req) const
+{
+    return false;
 }
 const std::string& TileModel::displayedName() const
 {

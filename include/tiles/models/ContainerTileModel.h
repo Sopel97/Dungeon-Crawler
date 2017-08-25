@@ -51,7 +51,7 @@ public:
     int maxThrowDistance() const override;
     bool canBeStored() const override;
     int maxQuantity() const override;
-    bool meetsRequirements(SlotContentRequirement req) const override;
+    bool isSlotValid(SlotContentRequirement req) const override;
     const std::string& displayedName() const override;
     TileInformation additionalInformation() const override;
     TileRarity rarity() const override;

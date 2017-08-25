@@ -42,13 +42,13 @@ void WeaponTileModel::loadFromConfiguration(ConfigurationNode& config)
     }
 
     ConfigurationNode correctSlotsConfiguration = config["correctSlots"];
-    m_commonData->validSlots.insert(SlotContentRequirement::None);
+    m_commonData->correctSlots.insert(SlotContentRequirement::None);
     if (correctSlotsConfiguration.exists())
     {
         const int numEntries = correctSlotsConfiguration.length();
         for (int i = 1; i <= numEntries; ++i)
         {
-            m_commonData->validSlots.insert(SlotContentRequirementHelper::stringToEnum(correctSlotsConfiguration[i].get<std::string>()));
+            m_commonData->correctSlots.insert(SlotContentRequirementHelper::stringToEnum(correctSlotsConfiguration[i].get<std::string>()));
         }
     }
 
@@ -144,9 +144,13 @@ int WeaponTileModel::maxQuantity() const
 {
     return m_commonData->maxQuantity;
 }
-bool WeaponTileModel::meetsRequirements(SlotContentRequirement req) const
+bool WeaponTileModel::isSlotValid(SlotContentRequirement req) const
 {
     return m_commonData->validSlots.count(req) > 0;
+}
+bool WeaponTileModel::isSlotCorrect(SlotContentRequirement req) const
+{
+    return m_commonData->correctSlots.count(req) > 0;
 }
 const std::string& WeaponTileModel::displayedName() const
 {

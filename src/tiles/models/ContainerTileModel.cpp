@@ -127,7 +127,7 @@ int ContainerTileModel::maxQuantity() const
 {
     return 1;
 }
-bool ContainerTileModel::meetsRequirements(SlotContentRequirement req) const
+bool ContainerTileModel::isSlotValid(SlotContentRequirement req) const
 {
     return req == SlotContentRequirement::None
         || req == SlotContentRequirement::LeftHand

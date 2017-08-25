@@ -10,6 +10,8 @@
 #include "PlayerUi.h"
 #include "InventorySystem.h"
 
+#include "AttributeArray.h"
+
 #include "entities/Entity.h"
 
 class Entity;
@@ -28,6 +30,8 @@ class Player
 public:
     Player(WindowSpaceManager& wsm, Game& game, TileTransferMediator& tileTransferMediator);
 
+    void update();
+
     void processAsyncKeyboardInput(World& world, float dt);
 
     bool tryInteractWithExternalInventory(Tile& tile, Inventory& inventory, const TileLocation& location);
@@ -41,6 +45,8 @@ public:
 
     World& world();
     const World& world() const;
+
+    const AttributeArray& attributes() const;
 
     void setWorld(World& world);
 
@@ -65,6 +71,10 @@ protected:
     PlayerUi m_playerUi;
     InventorySystem m_inventorySystem;
     PlayerEquipmentInventory m_equipmentInventory;
+
+    AttributeArray m_currentAttributes;
+
+    void updateAttributes();
 
 private:
 };

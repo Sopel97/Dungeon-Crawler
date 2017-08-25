@@ -53,7 +53,8 @@ public:
     virtual int maxThrowDistance() const;
     virtual bool canBeStored() const;
     virtual int maxQuantity() const;
-    virtual bool meetsRequirements(SlotContentRequirement req) const;
+    virtual bool isSlotValid(SlotContentRequirement req) const;
+    virtual bool isSlotCorrect(SlotContentRequirement req) const;
     virtual const std::string& displayedName() const;
     virtual const AttributeSet& attributes() const;
     virtual TileInformation additionalInformation() const;

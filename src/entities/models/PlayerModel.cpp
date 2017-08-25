@@ -91,24 +91,7 @@ TileStack& PlayerModel::ammo()
 }
 const AttributeArray& PlayerModel::attributes() const
 {
-    // TODO: this should be a member and updated when needed
-    static AttributeArray attributes;
-
-    attributes.clear();
-    for (const auto& tileStack : m_playerOwner->equipmentInventory().contents())
-    {
-        if (tileStack.isEmpty()) continue;
-
-        const Tile& tile = tileStack.tile();
-
-        const AttributeSet& tileAttributes = tile.model().attributes();
-        for (const auto& attribute : tileAttributes)
-        {
-            attributes += attribute;
-        }
-    }
-
-    return attributes;
+    return m_playerOwner->attributes();
 }
 std::optional<Light> PlayerModel::light() const
 {

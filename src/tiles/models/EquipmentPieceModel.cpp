@@ -36,13 +36,13 @@ void EquipmentPieceModel::loadFromConfiguration(ConfigurationNode& config)
     }
 
     ConfigurationNode correctSlotsConfiguration = config["correctSlots"];
-    m_commonData->validSlots.insert(SlotContentRequirement::None);
+    m_commonData->correctSlots.insert(SlotContentRequirement::None);
     if (correctSlotsConfiguration.exists())
     {
         const int numEntries = correctSlotsConfiguration.length();
         for (int i = 1; i <= numEntries; ++i)
         {
-            m_commonData->validSlots.insert(SlotContentRequirementHelper::stringToEnum(correctSlotsConfiguration[i].get<std::string>()));
+            m_commonData->correctSlots.insert(SlotContentRequirementHelper::stringToEnum(correctSlotsConfiguration[i].get<std::string>()));
         }
     }
 
@@ -120,9 +120,13 @@ int EquipmentPieceModel::maxQuantity() const
 {
     return 1;
 }
-bool EquipmentPieceModel::meetsRequirements(SlotContentRequirement req) const
+bool EquipmentPieceModel::isSlotValid(SlotContentRequirement req) const
 {
     return m_commonData->validSlots.count(req) > 0;
+}
+bool EquipmentPieceModel::isSlotCorrect(SlotContentRequirement req) const
+{
+    return m_commonData->correctSlots.count(req) > 0;
 }
 const std::string& EquipmentPieceModel::displayedName() const
 {
