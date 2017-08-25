@@ -1,5 +1,6 @@
 #include "SpriteBatch.h"
 
+#include "../LibS/Geometry.h"
 
 SpriteBatch::SpriteBatch() :
     m_vertexBuffersByTexture(m_defaultNumBuffers)
@@ -23,6 +24,40 @@ void SpriteBatch::emplaceRectangle(const sf::Texture* texture, const ls::Vec2F& 
     buffer.emplace_back(topLeft);
     buffer.emplace_back(bottomRight);
     buffer.emplace_back(bottomLeft);
+}
+void SpriteBatch::emplaceRotatedRectangle(const sf::Texture* texture, const ls::Vec2F& position, const ls::Vec2F& size, const ls::Vec2F& texCoords, const ls::Vec2F& texSize, const ls::Vec2F& rotation, const ls::Vec2F& origin, const sf::Color& color)
+{
+    emplaceRotatedRectangle(texture, position, size, texCoords, texSize, rotation.angle(), origin, color);
+}
+void SpriteBatch::emplaceRotatedRectangle(const sf::Texture* texture, const ls::Vec2F& position, const ls::Vec2F& size, const ls::Vec2F& texCoords, const ls::Vec2F& texSize, const ls::Angle2F& rotation, const ls::Vec2F& origin, const sf::Color& color)
+{
+    const ls::Vec2F topLeft(position.x, position.y);
+    const ls::Vec2F topRight(position.x + size.x, position.y);
+    const ls::Vec2F bottomLeft(position.x, position.y + size.y);
+    const ls::Vec2F bottomRight(position.x + size.x, position.y + size.y);
+
+    ls::AffineTransformation2F transform;
+    transform.translate(origin).rotateClockwise(rotation).translate(-origin);
+
+    const ls::Vec2F p0 = transform.transformed(topLeft);
+    const ls::Vec2F p1 = transform.transformed(topRight);
+    const ls::Vec2F p2 = transform.transformed(bottomLeft);
+    const ls::Vec2F p3 = transform.transformed(bottomRight);
+
+    const sf::Vertex v0(sf::Vector2f(p0.x, p0.y), color, sf::Vector2f(texCoords.x, texCoords.y));
+    const sf::Vertex v1(sf::Vector2f(p1.x, p1.y), color, sf::Vector2f(texCoords.x + texSize.x, texCoords.y));
+    const sf::Vertex v2(sf::Vector2f(p2.x, p2.y), color, sf::Vector2f(texCoords.x, texCoords.y + texSize.y));
+    const sf::Vertex v3(sf::Vector2f(p3.x, p3.y), color, sf::Vector2f(texCoords.x + texSize.x, texCoords.y + texSize.y));
+
+    auto& buffer = findBuffer(texture);
+
+    buffer.emplace_back(v0);
+    buffer.emplace_back(v1);
+    buffer.emplace_back(v3);
+
+    buffer.emplace_back(v0);
+    buffer.emplace_back(v3);
+    buffer.emplace_back(v2);
 }
 
 void SpriteBatch::clear()

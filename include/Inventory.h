@@ -24,13 +24,14 @@ public:
 
     virtual std::vector<TileStack>& contents() = 0;
     virtual const std::vector<TileStack>& contents() const = 0;
-    virtual const SlotContentRequirement slotContentRequirement(size_t slotId) const = 0;
     virtual std::unique_ptr<InventoryView> createInventoryView(InventorySystem& invSys) = 0;
     virtual std::unique_ptr<InventoryWindow> createInventoryWindow(WindowSpaceManager& wsm, const std::string& name) const = 0;
 
-    virtual TileStack& at(size_t slotId);
-    virtual const TileStack& at(size_t slotId) const;
+    virtual TileStack& at(int slotId);
+    virtual const TileStack& at(int slotId) const;
+    virtual const SlotContentRequirement slotContentRequirement(int slotId) const = 0;
     virtual bool meetsRequirements(const Tile& tile, int slot) const;
+    virtual bool isInCorrectSlot(int slot) const;
 
     void placeTile(TileStack&& tileStack, int slot);
     void insertMerge(TileStack&& tileStack); // if not all tiles were consumed then tile.quantity() > 0
@@ -42,7 +43,7 @@ public:
 
     void useTile(Player& player, int slot);
 
-    virtual int size() const = 0;
+    virtual int size() const;
 
 protected:
     void onTilePlaced(TileStack& stack, int slot);

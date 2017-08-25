@@ -36,7 +36,7 @@ const std::vector<TileStack>& PlayerEquipmentInventory::contents() const
 {
     return m_contents;
 }
-const SlotContentRequirement PlayerEquipmentInventory::slotContentRequirement(size_t slotId) const
+const SlotContentRequirement PlayerEquipmentInventory::slotContentRequirement(int slotId) const
 {
     return m_contentRequirements[slotId];
 }
@@ -84,8 +84,4 @@ const TileStack& PlayerEquipmentInventory::at(SlotType slot) const
 int PlayerEquipmentInventory::slotId(SlotType slot) const
 {
     return static_cast<int>(slot);
-}
-int PlayerEquipmentInventory::size() const
-{
-    return m_contents.size();
 }

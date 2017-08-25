@@ -33,7 +33,7 @@ const std::vector<TileStack>& ContainerInventory::contents() const
     return m_contents;
 }
 
-const SlotContentRequirement ContainerInventory::slotContentRequirement(size_t slotId) const
+const SlotContentRequirement ContainerInventory::slotContentRequirement(int slotId) const
 {
     return SlotContentRequirement::None;
 }
@@ -78,9 +78,4 @@ std::unique_ptr<InventoryWindow> ContainerInventory::createInventoryWindow(Windo
 void ContainerInventory::setSize(int newSize)
 {
     m_contents.resize(newSize);
-}
-
-int ContainerInventory::size() const
-{
-    return m_contents.size();
 }

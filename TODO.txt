@@ -17,6 +17,13 @@ hook up StaticEmbeddedHomogenousMemoryPool for components, tiles, entities, proj
 
 - allow weapons in one hand, shield in other hand
 -- no two handed weapons
+- light source slot
+- second ring slot
+
+THIS:
+- add AcceleratingProjectileModel (for arrows/bullets. acceleration is for dumping mostly)
+- add OrientedProjectileRenderer (orients the sprite based on projectile velocity)
+-- actually add arrows
 
 - maybe update all equiped tiles to allow for timed equipment?
 

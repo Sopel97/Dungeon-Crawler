@@ -22,13 +22,11 @@ public:
 
     std::vector<TileStack>& contents() override;
     const std::vector<TileStack>& contents() const override;
-    const SlotContentRequirement slotContentRequirement(size_t slotId) const override;
+    const SlotContentRequirement slotContentRequirement(int slotId) const override;
     std::unique_ptr<InventoryView> createInventoryView(InventorySystem& invSys) override;
     std::unique_ptr<InventoryWindow> createInventoryWindow(WindowSpaceManager& wsm, const std::string& name) const override;
 
     void setSize(int newSize);
-
-    int size() const override;
 
 protected:
 private:

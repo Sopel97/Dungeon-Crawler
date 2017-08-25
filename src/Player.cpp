@@ -142,13 +142,9 @@ void Player::updateAttributes()
     const int inventorySize = m_equipmentInventory.size();
     for (int i = 0; i < inventorySize; ++i)
     {
-        const TileStack& tileStack = m_equipmentInventory.contents()[i];
-        if (tileStack.isEmpty()) continue;
-
-        const Tile& tile = tileStack.tile();
-        if (tile.model().isSlotCorrect(m_equipmentInventory.slotContentRequirement(i)))
+        if (m_equipmentInventory.isInCorrectSlot(i))
         {
-            const AttributeSet& tileAttributes = tile.model().attributes();
+            const AttributeSet& tileAttributes = m_equipmentInventory.at(i).tile().model().attributes();
             for (const auto& attribute : tileAttributes)
             {
                 m_currentAttributes += attribute;

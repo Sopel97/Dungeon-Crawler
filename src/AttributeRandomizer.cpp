@@ -54,7 +54,7 @@ AttributeRandomizer::AttributeRandomizationResult AttributeRandomizer::randomize
             }
             else
             {
-                quality += static_cast<float>(attr.value - params->min) / static_cast<float>(params->max - params->min + 1);
+                quality += static_cast<float>(attr.value - params->min + 1) / static_cast<float>(params->max - params->min + 1);
             }
 
             attributes += attr;

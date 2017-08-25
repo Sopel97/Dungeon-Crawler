@@ -23,17 +23,25 @@ Inventory::~Inventory()
 {
 
 }
-TileStack& Inventory::at(size_t slotId)
+TileStack& Inventory::at(int slotId)
 {
     return this->contents()[slotId];
 }
-const TileStack& Inventory::at(size_t slotId) const
+const TileStack& Inventory::at(int slotId) const
 {
     return this->contents()[slotId];
 }
 bool Inventory::meetsRequirements(const Tile& tile, int slot) const
 {
     return tile.model().isSlotValid(this->slotContentRequirement(slot));
+}
+bool Inventory::isInCorrectSlot(int slot) const
+{
+    const TileStack& tileStack = at(slot);
+    if (tileStack.isEmpty()) return false;
+
+    const Tile& tile = tileStack.tile();
+    return tile.model().isSlotCorrect(slotContentRequirement(slot));
 }
 void Inventory::placeTile(TileStack&& tileStack, int slot)
 {
@@ -131,4 +139,8 @@ void Inventory::onTileRemoved(TileStack& stack, int slot)
 {
     stack.tile().onTileRemoved(*this, slot);
     EventDispatcher::instance().broadcast<TileRemovedFromInventory>(TileRemovedFromInventory{ &stack, this, slot });
+}
+int Inventory::size() const
+{
+    return this->contents().size();
 }
