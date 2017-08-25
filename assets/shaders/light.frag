@@ -16,7 +16,8 @@ void main()
     );
 
     vec4 lightBlurred = texture2D(texture, lightTexCoords);
-    vec4 color = lightBlurred; //something between 1.0 and 2.0
+    vec4 color = lightBlurred;
     
     gl_FragColor = color;
+    gl_FragDepth = 0.0;
 }
