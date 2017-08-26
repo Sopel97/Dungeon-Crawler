@@ -21,6 +21,7 @@ public:
     struct CommonData : public ComponentCommonData
     {
         std::vector<AttributeId> inheritedAttributes;
+        int penetration;
     };
 
     MeleeProjectileModel(Projectile& owner, CommonData& commonData);

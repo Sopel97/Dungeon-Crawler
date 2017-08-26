@@ -24,9 +24,9 @@ public:
         float initialSpeed;
         float radius;
         float acceleration;
-        float maxDistanceTravelled;
-        float maxTimeTravelled;
-        int hitsBeforeBreak;
+        float maxTravelDistance;
+        float maxTravelTime;
+        int penetration;
     };
 
     MovingProjectileModel(Projectile& owner, CommonData& commonData);

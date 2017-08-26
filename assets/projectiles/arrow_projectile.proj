@@ -6,17 +6,17 @@ projectile = {
 
     initialSpeed = 8.0,
     radius = 0.1,
-    acceleration = -0.1,
-    maxDistanceTravelled = 16.0,
-    maxTimeTravelled = 3.0,
-    altitude = 0.4,
-    shadowAlpha = 127,
-    hitsBeforeBreak = 2,
+    acceleration = -1.0,
+    maxTravelDistance = 16.0,
+    maxTravelTime = 3.0,
+    penetration = 1,
 
     texture = "Spritesheet",
     hasMetaTexture = true,
     offsetToSpriteOrigin = {16, 5},
     sprites = {{9, 8}},
+    altitude = 0.4,
+    shadowAlpha = 127,
 
     inheritedAttributes = {
         "Attack"

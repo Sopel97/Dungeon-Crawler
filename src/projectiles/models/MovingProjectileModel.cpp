@@ -52,9 +52,9 @@ void MovingProjectileModel::loadFromConfiguration(ConfigurationNode& config)
     m_commonData->initialSpeed = config["initialSpeed"].get<float>();
     m_commonData->radius = config["radius"].get<float>();
     m_commonData->acceleration = config["acceleration"].get<float>();
-    m_commonData->maxDistanceTravelled = config["maxDistanceTravelled"].get<float>();
-    m_commonData->maxTimeTravelled = config["maxTimeTravelled"].get<float>();
-    m_commonData->hitsBeforeBreak = config["hitsBeforeBreak"].getDefault<int>(1);
+    m_commonData->maxTravelDistance = config["maxTravelDistance"].get<float>();
+    m_commonData->maxTravelTime = config["maxTravelTime"].get<float>();
+    m_commonData->penetration = config["penetration"].getDefault<int>(1);
 }
 
 bool MovingProjectileModel::canCollideWithTiles() const
@@ -107,7 +107,7 @@ const Entity* MovingProjectileModel::parentEntity() const
 void MovingProjectileModel::onProjectileInstantiated(World& world, Entity& parentEntity, const ls::Vec2F& hintedPosition)
 {
     m_group = parentEntity.model().group();
-    m_health = m_commonData->hitsBeforeBreak;
+    m_health = m_commonData->penetration + 1;
 
     ls::Vec2F displacement = hintedPosition - parentEntity.model().position();
     if (displacement.magnitudeSquared() < 0.001f) displacement.x = 1.0f;
@@ -150,7 +150,7 @@ void MovingProjectileModel::update(World& world, float dt)
 
         m_timeTravelled += dt;
         m_distanceTravelled += newSpeed * dt;
-        if (m_timeTravelled > m_commonData->maxTimeTravelled || m_distanceTravelled > m_commonData->maxDistanceTravelled)
+        if (m_timeTravelled > m_commonData->maxTravelTime || m_distanceTravelled > m_commonData->maxTravelDistance)
         {
             m_health = 0;
         }

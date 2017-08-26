@@ -15,7 +15,7 @@ MeleeProjectileModel::MeleeProjectileModel(Projectile& owner, CommonData& common
     m_position(0, 0),
     m_offset(0.0f, 0.0f),
     m_radius(0.5f),
-    m_health(3),
+    m_health(0),
     m_group(AggroGroupId::Neutral),
     m_attributes(),
     m_timeLeft(0.0f)
@@ -52,6 +52,7 @@ void MeleeProjectileModel::loadFromConfiguration(ConfigurationNode& config)
     }
 
     m_timeLeft = config["lifetime"].get<float>();
+    m_commonData->penetration = config["penetration"].getDefault<int>(0);
 }
 
 bool MeleeProjectileModel::canCollideWithTiles() const
@@ -100,6 +101,7 @@ const Entity* MeleeProjectileModel::parentEntity() const
 void MeleeProjectileModel::onProjectileInstantiated(World& world, Entity& parentEntity, const ls::Vec2F& hintedPosition)
 {
     m_parentEntity = &parentEntity;
+    m_health = m_commonData->penetration + 1;
 
     m_group = parentEntity.model().group();
     
