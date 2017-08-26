@@ -54,7 +54,7 @@ void MovingProjectileModel::loadFromConfiguration(ConfigurationNode& config)
     m_commonData->acceleration = config["acceleration"].get<float>();
     m_commonData->maxTravelDistance = config["maxTravelDistance"].get<float>();
     m_commonData->maxTravelTime = config["maxTravelTime"].get<float>();
-    m_commonData->penetration = config["penetration"].getDefault<int>(1);
+    m_commonData->penetration = config["penetration"].getDefault<int>(0);
 }
 
 bool MovingProjectileModel::canCollideWithTiles() const
