@@ -20,10 +20,7 @@ hook up StaticEmbeddedHomogenousMemoryPool for components, tiles, entities, proj
 - light source slot
 - second ring slot
 
-THIS:
-- add AcceleratingProjectileModel (for arrows/bullets. acceleration is for dumping mostly)
-- add OrientedProjectileRenderer (orients the sprite based on projectile velocity)
--- actually add arrows
+- instead of separate drawing of normal and meta sprites maybe gather both at once and then render. Many things just differ in texture offset so it would minimize unnecessary recomputation for meta sprites.
 
 - maybe update all equiped tiles to allow for timed equipment?
 

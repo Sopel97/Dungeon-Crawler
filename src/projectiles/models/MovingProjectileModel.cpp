@@ -116,7 +116,7 @@ void MovingProjectileModel::onProjectileInstantiated(World& world, Entity& paren
     const ls::Vec2F offset = displacement * offsetLength;
 
     m_position = parentEntity.model().position() + offset;
-    m_velocity = displacement * m_commonData->initialSpeed;
+    m_velocity = displacement * m_commonData->initialSpeed + parentEntity.model().velocity();
 
     m_attributes = AttributeArray(parentEntity.model().attributes(), m_commonData->inheritedAttributes);
 }

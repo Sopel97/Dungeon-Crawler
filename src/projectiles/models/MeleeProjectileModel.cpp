@@ -11,18 +11,23 @@ REGISTER_PROJECTILE_MODEL_TYPE(MeleeProjectileModel);
 MeleeProjectileModel::MeleeProjectileModel(Projectile& owner, CommonData& commonData) :
     ProjectileModel(owner),
     m_commonData(&commonData),
+    m_parentEntity(nullptr),
     m_position(0, 0),
+    m_offset(0.0f, 0.0f),
     m_radius(0.5f),
     m_health(3),
     m_group(AggroGroupId::Neutral),
-    m_attributes()
+    m_attributes(),
+    m_timeLeft(0.0f)
 {
 
 }
 MeleeProjectileModel::MeleeProjectileModel(const MeleeProjectileModel& other, Projectile& owner) :
     ProjectileModel(other, owner),
     m_commonData(other.m_commonData),
+    m_parentEntity(other.m_parentEntity),
     m_position(other.m_position),
+    m_offset(other.m_offset),
     m_radius(other.m_radius),
     m_health(other.m_health),
     m_group(other.m_group),
@@ -89,11 +94,13 @@ void MeleeProjectileModel::setPosition(const ls::Vec2F& newPosition)
 
 const Entity* MeleeProjectileModel::parentEntity() const
 {
-    return nullptr;
+    return m_parentEntity;
 }
 
 void MeleeProjectileModel::onProjectileInstantiated(World& world, Entity& parentEntity, const ls::Vec2F& hintedPosition)
 {
+    m_parentEntity = &parentEntity;
+
     m_group = parentEntity.model().group();
     
     ls::Vec2F displacement = hintedPosition - parentEntity.model().position();
@@ -101,6 +108,7 @@ void MeleeProjectileModel::onProjectileInstantiated(World& world, Entity& parent
     displacement.normalize();
     const float offsetLength = m_radius;
     const ls::Vec2F offset = displacement * offsetLength;
+    m_offset = offset;
 
     m_position = parentEntity.model().position() + offset;
 
@@ -122,8 +130,18 @@ void MeleeProjectileModel::update(World& world, float dt)
 {
     m_timeLeft -= dt;
     if (m_timeLeft <= 0.0f) m_health = 0;
+
+    if (m_parentEntity)
+    {
+        m_position = m_parentEntity->model().position() + m_offset;
+    }
 }
 
+void MeleeProjectileModel::onParentEntityDeleted()
+{
+    m_parentEntity = nullptr;
+    m_health = 0;
+}
 std::unique_ptr<ProjectileModel> MeleeProjectileModel::clone(Projectile& owner) const
 {
     return std::make_unique<MeleeProjectileModel>(*this, owner);

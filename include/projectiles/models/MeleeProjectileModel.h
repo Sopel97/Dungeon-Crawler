@@ -45,13 +45,18 @@ public:
     void onProjectileInstantiated(World& world, Entity& parentEntity, const ls::Vec2F& hintedPosition) override;
     void onCollidedWithEntity(EntityCollider& entityCollider) override;
 
+    void onParentEntityDeleted() override;
+
     void update(World& world, float dt) override;
 
     std::unique_ptr<ProjectileModel> clone(Projectile& owner) const override;
 
 private:
     CommonData* const m_commonData;
+
+    Entity* m_parentEntity;
     ls::Vec2F m_position;
+    ls::Vec2F m_offset;
     float m_radius;
     int m_health;
     AggroGroupId m_group;
