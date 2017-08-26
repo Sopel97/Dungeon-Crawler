@@ -14,7 +14,7 @@ tile = {
     },
 
     requiresAmmo = true,
-    ammoPerAttack = 2,
+    ammoPerAttack = 0,
     allowedAmmoGroups = {
         "Arrow"
     },

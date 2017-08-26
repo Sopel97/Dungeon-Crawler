@@ -31,18 +31,19 @@ void SpriteBatch::emplaceRotatedRectangle(const sf::Texture* texture, const ls::
 }
 void SpriteBatch::emplaceRotatedRectangle(const sf::Texture* texture, const ls::Vec2F& position, const ls::Vec2F& size, const ls::Vec2F& texCoords, const ls::Vec2F& texSize, const ls::Angle2F& rotation, const ls::Vec2F& origin, const sf::Color& color)
 {
+    
     const ls::Vec2F topLeft(position.x, position.y);
     const ls::Vec2F topRight(position.x + size.x, position.y);
     const ls::Vec2F bottomLeft(position.x, position.y + size.y);
     const ls::Vec2F bottomRight(position.x + size.x, position.y + size.y);
 
-    ls::AffineTransformation2F transform;
-    transform.translate(origin).rotateClockwise(rotation).translate(-origin);
+    sf::Transform transform;
+    transform.translate(origin.x, origin.y).rotate(rotation.degrees() + 90).translate(-origin.x, -origin.y);
 
-    const ls::Vec2F p0 = transform.transformed(topLeft);
-    const ls::Vec2F p1 = transform.transformed(topRight);
-    const ls::Vec2F p2 = transform.transformed(bottomLeft);
-    const ls::Vec2F p3 = transform.transformed(bottomRight);
+    const auto p0 = transform.transformPoint(topLeft.x, topLeft.y);
+    const auto p1 = transform.transformPoint(topRight.x, topRight.y);
+    const auto p2 = transform.transformPoint(bottomLeft.x, bottomLeft.y);
+    const auto p3 = transform.transformPoint(bottomRight.x, bottomRight.y);
 
     const sf::Vertex v0(sf::Vector2f(p0.x, p0.y), color, sf::Vector2f(texCoords.x, texCoords.y));
     const sf::Vertex v1(sf::Vector2f(p1.x, p1.y), color, sf::Vector2f(texCoords.x + texSize.x, texCoords.y));

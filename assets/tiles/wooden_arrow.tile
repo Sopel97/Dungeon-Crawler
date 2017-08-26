@@ -21,7 +21,7 @@ tile = {
     maxQuantity = 100,
 
     ammoGroup = "Arrow",
-    projectile = "Melee Projectile",
+    projectile = "Arrow Projectile",
 
     validSlots = {"None", "Ammo", "LeftHand", "RightHand"},
     correctSlots = {"Ammo"},

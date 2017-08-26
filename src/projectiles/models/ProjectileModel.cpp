@@ -58,6 +58,10 @@ const ls::Vec2F& ProjectileModel::position() const
 void ProjectileModel::setPosition(const ls::Vec2F& newPosition)
 {
 }
+ls::Vec2F ProjectileModel::velocity() const
+{
+    return { 0.0f, 0.0f };
+}
 const Entity* ProjectileModel::parentEntity() const
 {
     return nullptr;

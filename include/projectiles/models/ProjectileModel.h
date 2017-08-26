@@ -32,6 +32,7 @@ public:
 
     virtual const ls::Vec2F& position() const;
     virtual void setPosition(const ls::Vec2F& newPosition);
+    virtual ls::Vec2F velocity() const;
 
     virtual const Entity* parentEntity() const;
 
