@@ -20,9 +20,6 @@ hook up StaticEmbeddedHomogenousMemoryPool for components, tiles, entities, proj
 - light source slot
 - second ring slot
 
-THIS:
-- make projectiles have actual shadow sprites
-
 - change controls
 -- LMB attack
 -- RMB use

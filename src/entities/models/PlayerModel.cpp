@@ -96,8 +96,8 @@ const AttributeArray& PlayerModel::attributes() const
 std::optional<Light> PlayerModel::light() const
 {
     return OscillatingLightSource(
-        Light(m_position, 4.0f, sf::Color::Red, this),
-        Light(m_position, 3.5f, sf::Color::Blue, this),
+        Light(m_position, 4.0f, sf::Color::White, this),
+        Light(m_position, 3.5f, sf::Color::White, this),
         0.5
     ).at(GameTime::instance().now());
 }

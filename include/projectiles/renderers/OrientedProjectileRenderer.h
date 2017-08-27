@@ -18,10 +18,10 @@ public:
     {
         ResourceHandle<Spritesheet> spritesheet;
         TimeAnimatedSprite sprites;
+        TimeAnimatedSprite shadowSprites;
         bool hasMetaTexture;
         ls::Vec2I offsetToSpriteOrigin;
         float altitude;
-        int shadowAlpha;
     };
 
     OrientedProjectileRenderer(Projectile& owner, CommonData& commonData);
@@ -38,5 +38,8 @@ public:
 protected:
     CommonData* const m_commonData;
 
-    void draw(SpriteBatch& spriteBatch, const ls::Vec2I& texOffset, float altitude, const sf::Color& color = sf::Color::White) const;
+    void draw(SpriteBatch& spriteBatch, const ls::Vec2I& texOffset, const sf::Color& color = sf::Color::White) const;
+    void drawShadow(SpriteBatch& spriteBatch) const;
+
+    void drawSprite(SpriteBatch& spriteBatch, const ls::Vec2I& sprite, const ls::Vec2I& texOffset, float altitude, const sf::Color& color = sf::Color::White) const;
 };

@@ -15,6 +15,7 @@ projectile = {
     hasMetaTexture = true,
     offsetToSpriteOrigin = {16, 5},
     sprites = {{9, 8}},
+    shadowSprites = {{8, 8}},
     altitude = 0.4,
     shadowAlpha = 127,
 
