@@ -77,6 +77,33 @@ std::vector<ProjectileCollider> ProjectileSystem::queryColliders(const ls::Recta
 
     return collidersInRegion;
 }
+std::vector<Light> ProjectileSystem::queryLights(const ls::Rectangle2F& rect) const
+{
+    std::vector<Light> lightsInRange;
+
+    const Vec2F rectCenter = rect.centerOfMass();
+    const float halfRectWidth = rect.width() / 2.0f;
+    const float halfRectHeight = rect.height() / 2.0f;
+
+    for (const std::unique_ptr<Projectile>& projectile : m_projectiles)
+    {
+        std::optional<Light> lightOpt = projectile->model().light();
+        if (!lightOpt.has_value()) continue;
+
+        Light& light = lightOpt.value();
+
+        const Vec2F pos = light.position();
+        const float radius = light.radius();
+        const float xDist = std::abs(rectCenter.x - pos.x) - halfRectWidth;
+        const float yDist = std::abs(rectCenter.y - pos.y) - halfRectHeight;
+        if (xDist < radius && yDist < radius)
+        {
+            lightsInRange.push_back(light);
+        }
+    }
+
+    return lightsInRange;
+}
 const std::vector<std::unique_ptr<Projectile>>& ProjectileSystem::projectiles() const
 {
     return m_projectiles;

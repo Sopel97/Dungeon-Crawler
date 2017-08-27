@@ -50,6 +50,12 @@ void ProjectileModel::setHealth(int newHealth)
 {
 
 }
+std::optional<Light> ProjectileModel::light() const
+{
+    return std::nullopt;
+    
+    //return Light(position(), 1.0f, sf::Color::Red, this); // test
+}
 const ls::Vec2F& ProjectileModel::position() const
 {
     static const ls::Vec2F somePosition;

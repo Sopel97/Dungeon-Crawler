@@ -3,11 +3,14 @@
 #include <Configuration.h>
 
 #include <memory>
+#include <optional>
 
 #include "AggroGroup.h"
 #include "projectiles/ProjectileComponent.h"
 
 #include "colliders/ProjectileCollider.h"
+
+#include "Light.h"
 
 #include "../LibS/Shapes.h"
 
@@ -29,6 +32,7 @@ public:
     virtual AggroGroupId group() const;
     virtual int health() const;
     virtual void setHealth(int newHealth);
+    virtual std::optional<Light> light() const;
 
     virtual const ls::Vec2F& position() const;
     virtual void setPosition(const ls::Vec2F& newPosition);

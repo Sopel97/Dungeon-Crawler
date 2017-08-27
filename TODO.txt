@@ -20,6 +20,23 @@ hook up StaticEmbeddedHomogenousMemoryPool for components, tiles, entities, proj
 - light source slot
 - second ring slot
 
+THIS:
+- make projectiles have actual shadow sprites
+
+- change controls
+-- LMB attack
+-- RMB use
+-- CTRL + LMB move all
+-- SHIFT + LMB move half
+-- ALT + LMB move amount chosen in window
+--- trying to put item displays a window
+---- position near the mouse, has slider and reacts to arrow keys and numeric keys
+--- cancel = cancel
+--- ok = move max(stack size, specified amount)
+---- normally no way to select more than stack size, but a safety measure i needed
+--- don't interrupt if the item being moved changed
+-- MMB look
+
 - instead of separate drawing of normal and meta sprites maybe gather both at once and then render. Many things just differ in texture offset so it would minimize unnecessary recomputation for meta sprites.
 
 - maybe update all equiped tiles to allow for timed equipment?

@@ -197,8 +197,10 @@ std::vector<Light> World::queryLights(const ls::Rectangle2F& queryRegion) const
     const int maxY = std::max(ls::Util::fastFloor(queryRegion.max.y) + padding.y, m_worldHeight - 1);
 
     std::vector<Light> tileLights = m_mapLayer->queryLights(ls::Rectangle2I(ls::Vec2I(minX, minY), ls::Vec2I(maxX, maxY)));
-
     entityLights.insert(entityLights.end(), tileLights.begin(), tileLights.end());
+
+    std::vector<Light> projectileLights = m_projectileSystem.queryLights(queryRegion);
+    entityLights.insert(entityLights.end(), projectileLights.begin(), projectileLights.end());
 
     return entityLights;
 }
