@@ -130,8 +130,6 @@ int ContainerTileModel::maxQuantity() const
 bool ContainerTileModel::isSlotValid(SlotContentRequirement req) const
 {
     return req == SlotContentRequirement::None
-        || req == SlotContentRequirement::LeftHand
-        || req == SlotContentRequirement::RightHand
         || req == SlotContentRequirement::Container;
 }
 const std::string& ContainerTileModel::displayedName() const

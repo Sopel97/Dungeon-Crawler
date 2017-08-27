@@ -57,7 +57,6 @@ protected:
     static ls::Vec2I m_slotTexture;
     static ls::Vec2I m_slotTextureSize;
     static ls::Vec2I m_requirementIconSize;
-    static std::map<SlotContentRequirement, ls::Vec2I> m_requirementIcons;
 
     Inventory* m_inventory; //inventory will always outlive the views of its slots
     size_t m_slotId;

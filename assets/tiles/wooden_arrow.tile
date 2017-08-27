@@ -23,7 +23,7 @@ tile = {
     ammoGroup = "Arrow",
     projectile = "Arrow Projectile",
 
-    validSlots = {"None", "Ammo", "LeftHand", "RightHand"},
+    validSlots = {"None", "Ammo"},
     correctSlots = {"Ammo"},
 
     attributeRandomizationGuidelines = {

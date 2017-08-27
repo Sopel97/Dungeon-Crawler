@@ -67,9 +67,7 @@ int TileModel::maxQuantity() const
 }
 bool TileModel::isSlotValid(SlotContentRequirement req) const
 {
-    return req == SlotContentRequirement::None
-        || req == SlotContentRequirement::LeftHand
-        || req == SlotContentRequirement::RightHand;
+    return req == SlotContentRequirement::None;
 }
 bool TileModel::isSlotCorrect(SlotContentRequirement req) const
 {

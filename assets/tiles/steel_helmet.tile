@@ -13,7 +13,7 @@ tile = {
         {{{7, 7}}},
     },
 
-    validSlots = {"None", "Helmet", "LeftHand", "RightHand"},
+    validSlots = {"None", "Helmet"},
     correctSlots = {"Helmet"},
 
     attributeRandomizationGuidelines = {

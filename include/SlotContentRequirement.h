@@ -3,6 +3,8 @@
 #include <map>
 #include <string>
 
+#include "../LibS/Shapes.h"
+
 enum class SlotContentRequirement
 {
     None,
@@ -10,12 +12,13 @@ enum class SlotContentRequirement
     Chestplate,
     Pants,
     Boots,
-    RightHand,
-    LeftHand,
+    Weapon,
+    Shield,
     Necklace,
     Ring,
     Ammo,
-    Container
+    Container,
+    LightSource
 };
 
 class SlotContentRequirementHelper
@@ -26,4 +29,6 @@ public:
 
     static SlotContentRequirement stringToEnum(const std::string& s);
     static std::string enumToString(SlotContentRequirement req);
+
+    static ls::Vec2I sprite(SlotContentRequirement req);
 };

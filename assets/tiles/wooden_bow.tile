@@ -19,8 +19,8 @@ tile = {
         "Arrow"
     },
 
-    validSlots = {"None", "LeftHand", "RightHand"},
-    correctSlots = {"LeftHand", "RightHand"},
+    validSlots = {"None", "Weapon"},
+    correctSlots = {"Weapon"},
 
     attributeRandomizationGuidelines = {
         {

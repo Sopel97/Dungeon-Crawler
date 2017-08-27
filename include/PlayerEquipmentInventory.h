@@ -19,15 +19,17 @@ public:
     enum class SlotType
     {
         Necklace = 0,
-        PrimaryWeapon,
-        Ring,
+        Weapon,
+        Ring1,
+        Ring2,
         Helmet,
         Chestplate,
         Pants,
         Boots,
         Container,
-        SecondaryHand,
+        Shield,
         Ammo,
+        LightSource,
         NumSlotTypes
     };
 
@@ -46,6 +48,15 @@ public:
 
 protected:
 private:
+    struct SlotData
+    {
+        SlotType id;
+        SlotContentRequirement req;
+        ls::Vec2I pos;
+    };
+
+    static const std::vector<SlotData> m_slots;
+
     std::vector<TileStack> m_contents;
     std::vector<SlotContentRequirement> m_contentRequirements;
 };

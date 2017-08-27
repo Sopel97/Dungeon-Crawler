@@ -96,7 +96,7 @@ TileStack& Player::ammo()
 }
 TileStack& Player::weapon()
 {
-    return m_equipmentInventory.at(PlayerEquipmentInventory::SlotType::PrimaryWeapon);
+    return m_equipmentInventory.at(PlayerEquipmentInventory::SlotType::Weapon);
 }
 const PlayerEquipmentInventory& Player::equipmentInventory() const
 {
@@ -119,7 +119,7 @@ void Player::attack(World& world, const ls::Vec2F& pos)
     auto attackResult = weapon.attack(world, *this, pos);
 
     const int ammoSlot = m_equipmentInventory.slotId(PlayerEquipmentInventory::SlotType::Ammo);
-    const int weaponSlot = m_equipmentInventory.slotId(PlayerEquipmentInventory::SlotType::PrimaryWeapon);
+    const int weaponSlot = m_equipmentInventory.slotId(PlayerEquipmentInventory::SlotType::Weapon);
     if(attackResult.ammoUsed > 0) m_equipmentInventory.removeTiles(ammoSlot, attackResult.ammoUsed);
     if(attackResult.weaponUsed > 0) m_equipmentInventory.removeTiles(weaponSlot, attackResult.weaponUsed);
 }
@@ -129,7 +129,6 @@ bool Player::tryPlaceTileUnderNearby(TileStack&& tileStack)
     const ls::Vec2I worldPos = m_world->worldToTile(m_playerEntity.model().position());
     return m_world->tryPlaceTile(std::move(tileStack), worldPos.x, worldPos.y);
 }
-
 
 const AttributeArray& Player::attributes() const
 {

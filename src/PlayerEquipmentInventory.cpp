@@ -11,21 +11,32 @@
 
 using namespace ls;
 
+const std::vector<PlayerEquipmentInventory::SlotData> PlayerEquipmentInventory::m_slots{
+    { SlotType::Necklace,    SlotContentRequirement::Necklace,    Vec2I(52 + 43 * 0, 4 + 43 * 0) },
+    { SlotType::Weapon,      SlotContentRequirement::Weapon,      Vec2I(52 + 43 * 0, 4 + 43 * 1) },
+    { SlotType::Ring1,       SlotContentRequirement::Ring,        Vec2I(52 + 43 * 0, 4 + 43 * 2) },
+    { SlotType::Ring2,       SlotContentRequirement::Ring,        Vec2I(52 + 43 * 0, 4 + 43 * 3) },
+
+    { SlotType::Helmet,      SlotContentRequirement::Helmet,      Vec2I(52 + 43 * 1, 4 + 43 * 0) },
+    { SlotType::Chestplate,  SlotContentRequirement::Chestplate,  Vec2I(52 + 43 * 1, 4 + 43 * 1) },
+    { SlotType::Pants,       SlotContentRequirement::Pants,       Vec2I(52 + 43 * 1, 4 + 43 * 2) },
+    { SlotType::Boots,       SlotContentRequirement::Boots,       Vec2I(52 + 43 * 1, 4 + 43 * 3) },
+
+    { SlotType::Container,   SlotContentRequirement::Container,   Vec2I(52 + 43 * 2, 4 + 43 * 0) },
+    { SlotType::Shield,      SlotContentRequirement::Shield,      Vec2I(52 + 43 * 2, 4 + 43 * 1) },
+    { SlotType::Ammo,        SlotContentRequirement::Ammo,        Vec2I(52 + 43 * 2, 4 + 43 * 2) },
+    { SlotType::LightSource, SlotContentRequirement::LightSource, Vec2I(52 + 43 * 2, 4 + 43 * 3) }
+};
+
 PlayerEquipmentInventory::PlayerEquipmentInventory()
 {
-    m_contents.resize(10);
-    m_contentRequirements.resize(10);
+    m_contents.resize(m_slots.size());
+    m_contentRequirements.resize(m_slots.size());
 
-    m_contentRequirements[static_cast<int>(SlotType::Necklace)]      = SlotContentRequirement::Necklace;
-    m_contentRequirements[static_cast<int>(SlotType::PrimaryWeapon)] = SlotContentRequirement::RightHand;
-    m_contentRequirements[static_cast<int>(SlotType::Ammo)]          = SlotContentRequirement::Ammo;
-    m_contentRequirements[static_cast<int>(SlotType::Helmet)]        = SlotContentRequirement::Helmet;
-    m_contentRequirements[static_cast<int>(SlotType::Chestplate)]    = SlotContentRequirement::Chestplate;
-    m_contentRequirements[static_cast<int>(SlotType::Pants)]         = SlotContentRequirement::Pants;
-    m_contentRequirements[static_cast<int>(SlotType::Boots)]         = SlotContentRequirement::Boots;
-    m_contentRequirements[static_cast<int>(SlotType::Container)]     = SlotContentRequirement::Container;
-    m_contentRequirements[static_cast<int>(SlotType::SecondaryHand)] = SlotContentRequirement::LeftHand;
-    m_contentRequirements[static_cast<int>(SlotType::Ring)]          = SlotContentRequirement::Ring;
+    for (const auto& slot : m_slots)
+    {
+        m_contentRequirements[static_cast<int>(slot.id)] = slot.req;
+    }
 }
 
 std::vector<TileStack>& PlayerEquipmentInventory::contents()
@@ -43,20 +54,12 @@ const SlotContentRequirement PlayerEquipmentInventory::slotContentRequirement(in
 std::unique_ptr<InventoryView> PlayerEquipmentInventory::createInventoryView(InventorySystem& invSys)
 {
     std::vector<InventorySlotView> slotViews;
-    slotViews.reserve(m_contents.size());
+    slotViews.reserve(m_slots.size());
 
-    slotViews.emplace_back(this, 0, Vec2I(52, 17+43*0));
-    slotViews.emplace_back(this, 1, Vec2I(52, 17+43*1));
-    slotViews.emplace_back(this, 2, Vec2I(52, 17+43*2));
-
-    slotViews.emplace_back(this, 3, Vec2I(95, 4+43*0));
-    slotViews.emplace_back(this, 4, Vec2I(95, 4+43*1));
-    slotViews.emplace_back(this, 5, Vec2I(95, 4+43*2));
-    slotViews.emplace_back(this, 6, Vec2I(95, 4+43*3));
-
-    slotViews.emplace_back(this, 7, Vec2I(138, 17+43*0));
-    slotViews.emplace_back(this, 8, Vec2I(138, 17+43*1));
-    slotViews.emplace_back(this, 9, Vec2I(138, 17+43*2));
+    for (const auto& slot : m_slots)
+    {
+        slotViews.emplace_back(this, static_cast<int>(slot.id), slot.pos);
+    }
 
     return std::make_unique<InventoryView>(invSys, *this, std::move(slotViews));
 }
