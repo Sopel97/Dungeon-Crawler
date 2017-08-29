@@ -25,7 +25,9 @@ Player::Player(WindowSpaceManager& wsm, Game& game, TileTransferMediator& tileTr
     m_playerEntity(-1, std::make_unique<PlayerModel>(*this, m_playerEntity), std::make_unique<PlayerRenderer>(*this, m_playerEntity)),
     m_playerUi(wsm, *this),
     m_inventorySystem(wsm, *this, tileTransferMediator),
-    m_equipmentInventory()
+    m_equipmentInventory(),
+    m_weaponUseTimeLeft(0.0f),
+    m_weaponCooldownLeft(0.0f)
 {
     m_inventorySystem.openPermanentInventory(m_equipmentInventory, "");
 }
@@ -38,9 +40,12 @@ bool Player::tryInteractWithInternalInventory(Tile& tile, Inventory& inventory, 
 {
     return m_inventorySystem.tryInteractWithInternalInventory(tile, inventory, slot);
 }
-void Player::update()
+void Player::update(float dt)
 {
     updateAttributes();
+
+    m_weaponUseTimeLeft -= dt;
+    m_weaponCooldownLeft -= dt;
 }
 void Player::processAsyncKeyboardInput(World& world, float dt, const ls::Vec2I& mousePos)
 {
@@ -56,7 +61,9 @@ void Player::processAsyncKeyboardInput(World& world, float dt, const ls::Vec2I& 
         if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)
             && !sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LAlt)
             && !sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)
-            && !sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift))
+            && !sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift)
+            && m_weaponCooldownLeft <= 0.0f
+            )
         {
             attack(world, world.screenToWorld(mousePos));
         }
@@ -133,6 +140,9 @@ void Player::attack(World& world, const ls::Vec2F& pos)
     const int weaponSlot = m_equipmentInventory.slotId(PlayerEquipmentInventory::SlotType::Weapon);
     if (attackResult.ammoUsed > 0) m_equipmentInventory.removeTiles(ammoSlot, attackResult.ammoUsed);
     if (attackResult.weaponUsed > 0) m_equipmentInventory.removeTiles(weaponSlot, attackResult.weaponUsed);
+    
+    m_weaponUseTimeLeft = attackResult.useTime;
+    m_weaponCooldownLeft = attackResult.cooldown;
 }
 
 bool Player::tryPlaceTileUnderNearby(TileStack&& tileStack)

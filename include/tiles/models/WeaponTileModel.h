@@ -44,6 +44,8 @@ public:
         TileRaritySelector raritySelector;
         TilePrefixSelector prefixSelector;
         float lightDimming;
+        float useTime;
+        float cooldown;
     };
 
     WeaponTileModel(Tile& owner, CommonData& commonData);

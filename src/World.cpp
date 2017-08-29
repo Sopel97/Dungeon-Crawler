@@ -140,7 +140,7 @@ void World::lookTile(const ls::Vec2I& tilePosition)
 
 void World::update(float dt)
 {
-    m_player.update();
+    m_player.update(dt);
 
     m_entitySystem.update(dt);
     m_projectileSystem.update(dt);

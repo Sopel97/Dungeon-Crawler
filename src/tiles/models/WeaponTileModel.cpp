@@ -61,6 +61,8 @@ void WeaponTileModel::loadFromConfiguration(ConfigurationNode& config)
     m_commonData->maxThrowDistance = config["maxThrowDistance"].getDefault<int>(0);
     m_commonData->canBeStored = config["canBeStored"].getDefault<bool>(false);
     m_commonData->lightDimming = config["lightDimming"].getDefault<float>(1.0f);
+    m_commonData->useTime = config["useTime"].get<float>();
+    m_commonData->cooldown = config["cooldown"].get<float>();
 
     m_commonData->requiresAmmo = config["requiresAmmo"].get<bool>();
     if (m_commonData->requiresAmmo)
@@ -175,7 +177,7 @@ void WeaponTileModel::onTileInstantiated()
 
 TileAttackResult WeaponTileModel::attack(World& world, Player& player, const ls::Vec2F& hintedPosition, int quantity)
 {
-    TileAttackResult attackResult{ 0, 0 };
+    TileAttackResult attackResult{ 0, 0, m_commonData->useTime, m_commonData->cooldown };
 
     if (m_commonData->requiresAmmo)
     {

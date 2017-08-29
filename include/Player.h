@@ -30,7 +30,7 @@ class Player
 public:
     Player(WindowSpaceManager& wsm, Game& game, TileTransferMediator& tileTransferMediator);
 
-    void update();
+    void update(float dt);
 
     void processAsyncKeyboardInput(World& world, float dt, const ls::Vec2I& mousePos);
 
@@ -71,6 +71,8 @@ protected:
     PlayerUi m_playerUi;
     InventorySystem m_inventorySystem;
     PlayerEquipmentInventory m_equipmentInventory;
+    float m_weaponUseTimeLeft;
+    float m_weaponCooldownLeft;
 
     AttributeArray m_currentAttributes;
 

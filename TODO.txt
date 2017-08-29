@@ -28,10 +28,7 @@ hook up StaticEmbeddedHomogenousMemoryPool for components, tiles, entities, proj
 ---- normally no way to select more than stack size, but a safety measure i needed
 --- don't interrupt if the item being moved changed
 
-- specify use time (may be different from cooldown) for weapons, player should turn in the proper direction for 'use time' time
-- add cooldown for weapons (attack rate), parameter to specify if it can fire continously or by separate clicks
--- pass to attack function information if it is continuous firing or not (first tick of mouse down or later)
---- weapons should store last attack time instead of cooldown left, this will remove the need of updating (which would be impossible when switching items)
+- player should turn in the proper direction for 'use time' time
 
 - change tickrate to 50
 
