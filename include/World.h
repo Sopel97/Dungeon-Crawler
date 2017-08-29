@@ -88,6 +88,8 @@ public:
 
     void onEntityDeleted(Entity& entity);
 
+    bool isWithinWorldWindow(const ls::Vec2I& pos) const;
+
 protected:
     WorldRenderer m_worldRenderer;
     Root& m_root;

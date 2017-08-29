@@ -17,6 +17,11 @@ class TileColumn;
 class TileTransferMediator
 {
 public:
+    enum class Amount
+    {
+        All,
+        Half
+    };
     struct FromWorld
     {
         ls::Vec2I pos;
@@ -34,13 +39,16 @@ public:
         ls::Vec2I pos;
         World* world;
         Player* player;
+        Amount amount;
     };
     struct ToInventory
     {
         InventorySystem* inventorySystem;
         Inventory* inventory;
         int slot;
+        Amount amount;
     };
+
 private:
 
     std::optional<std::variant<FromWorld, FromInventory>> m_source;
@@ -49,8 +57,8 @@ public:
 
     void grabFromWorld(const ls::Vec2I& loc, World& world, Player& player);
     void grabFromInventory(InventorySystem& invSys, Inventory& inv, int slot);
-    void putToWorld(const ls::Vec2I& loc, World& world, Player& player);
-    void putToInventory(InventorySystem& invSys, Inventory& inv, int slot);
+    void putToWorld(const ls::Vec2I& loc, World& world, Player& player, Amount amount);
+    void putToInventory(InventorySystem& invSys, Inventory& inv, int slot, Amount amount);
     void reset();
 
     bool isAnyTileGrabbed() const;
@@ -66,4 +74,6 @@ private:
     static int move(Inventory& fromInventory, int fromSlot, Inventory& toInventory, int toSlot, int max);
     static std::vector<int> move(Inventory& fromInventory, int fromSlot, Inventory& toInventory, int max);
     static std::vector<int> move(Inventory& fromInventory, int fromSlot, MapLayer& map, int toX, int toY, int max);
+
+    static int computeQuantityToMove(int quantity, Amount amount);
 };

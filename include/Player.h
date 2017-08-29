@@ -32,7 +32,7 @@ public:
 
     void update();
 
-    void processAsyncKeyboardInput(World& world, float dt);
+    void processAsyncKeyboardInput(World& world, float dt, const ls::Vec2I& mousePos);
 
     bool tryInteractWithExternalInventory(Tile& tile, Inventory& inventory, const TileLocation& location);
     bool tryInteractWithInternalInventory(Tile& tile, Inventory& inventory, const InventorySlotLocation& slot);

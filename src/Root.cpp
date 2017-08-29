@@ -97,7 +97,9 @@ void Root::run()
 }
 void Root::processAsyncKeyboardInput(float dt)
 {
-    m_game->player().processAsyncKeyboardInput(m_game->world(), dt);
+    const auto mousePos = sf::Mouse::getPosition(m_window);
+
+    m_game->player().processAsyncKeyboardInput(m_game->world(), dt, ls::Vec2I(mousePos.x, mousePos.y));
 }
 
 void Root::loadAssets()

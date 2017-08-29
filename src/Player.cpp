@@ -42,14 +42,25 @@ void Player::update()
 {
     updateAttributes();
 }
-void Player::processAsyncKeyboardInput(World& world, float dt) //TODO: make it update the player entity so it moves in the next update. Don't interact with world in this function.
+void Player::processAsyncKeyboardInput(World& world, float dt, const ls::Vec2I& mousePos)
 {
     constexpr float acc = 200.0f / 32.0f;
     float drag = world.drag(m_playerEntity.model().position());
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) m_playerEntity.model().accelerate(Vec2F(-acc * dt * drag, 0.0f));
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) m_playerEntity.model().accelerate(Vec2F(acc * dt * drag, 0.0f));
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) m_playerEntity.model().accelerate(Vec2F(0.0f, -acc * dt * drag));
-    if(sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) m_playerEntity.model().accelerate(Vec2F(0.0f, acc * dt * drag));
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::A)) m_playerEntity.model().accelerate(Vec2F(-acc * dt * drag, 0.0f));
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::D)) m_playerEntity.model().accelerate(Vec2F(acc * dt * drag, 0.0f));
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::W)) m_playerEntity.model().accelerate(Vec2F(0.0f, -acc * dt * drag));
+    if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::S)) m_playerEntity.model().accelerate(Vec2F(0.0f, acc * dt * drag));
+
+    if (world.isWithinWorldWindow(mousePos))
+    {
+        if (sf::Mouse::isButtonPressed(sf::Mouse::Button::Left)
+            && !sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LAlt)
+            && !sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl)
+            && !sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift))
+        {
+            attack(world, world.screenToWorld(mousePos));
+        }
+    }
 }
 
 PlayerUi& Player::playerUi()
@@ -115,13 +126,13 @@ void Player::attack(World& world, const ls::Vec2F& pos)
 {
     TileStack& weapon = this->weapon();
     if (weapon.isEmpty()) return;
-    
+
     auto attackResult = weapon.attack(world, *this, pos);
 
     const int ammoSlot = m_equipmentInventory.slotId(PlayerEquipmentInventory::SlotType::Ammo);
     const int weaponSlot = m_equipmentInventory.slotId(PlayerEquipmentInventory::SlotType::Weapon);
-    if(attackResult.ammoUsed > 0) m_equipmentInventory.removeTiles(ammoSlot, attackResult.ammoUsed);
-    if(attackResult.weaponUsed > 0) m_equipmentInventory.removeTiles(weaponSlot, attackResult.weaponUsed);
+    if (attackResult.ammoUsed > 0) m_equipmentInventory.removeTiles(ammoSlot, attackResult.ammoUsed);
+    if (attackResult.weaponUsed > 0) m_equipmentInventory.removeTiles(weaponSlot, attackResult.weaponUsed);
 }
 
 bool Player::tryPlaceTileUnderNearby(TileStack&& tileStack)

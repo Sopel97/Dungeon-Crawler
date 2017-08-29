@@ -279,14 +279,14 @@ bool World::trySpawnTileNearby(const TilePrefab& prefab, int x, int y, int quant
     {
         if (trySpawnTile(prefab, x + offset.x, y + offset.y, quantity)) return true;
     }
-    
+
     return false;
 }
 bool World::tryPlaceTile(TileStack&& tileStack, int x, int y)
 {
     if (m_mapLayer->at(x, y).top().tile().model().allowsTilesAbove())
     {
-        m_mapLayer->placeTileMerge(std::move(tileStack), x ,y);
+        m_mapLayer->placeTileMerge(std::move(tileStack), x, y);
         return true;
     }
 
@@ -405,14 +405,23 @@ auto World::onMouseButtonPressed(sf::Event::MouseButtonEvent& event, EventContex
 
             if (isInsideWorldBounds(tilePosition))
             {
-                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LAlt))
-                {
-                    lookTile(tilePosition);
-                }
-                else
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift))
                 {
                     m_tileTransferMediator.grabFromWorld(tilePosition, *this, m_player);
                 }
+            }
+        }
+    }
+    else if (event.button == sf::Mouse::Button::Middle)
+    {
+        const Rectangle2I& worldViewRect = window().absoluteContentRect();
+        if (ls::intersect(worldViewRect, Vec2I(event.x, event.y))) //TODO: may be redundant
+        {
+            const Vec2I tilePosition = screenToTile(Vec2I(event.x, event.y));
+
+            if (isInsideWorldBounds(tilePosition))
+            {
+                lookTile(tilePosition);
             }
         }
     }
@@ -443,7 +452,14 @@ auto World::onMouseButtonReleased(sf::Event::MouseButtonEvent& event, EventConte
 
             if (isInsideWorldBounds(tilePosition))
             {
-                m_tileTransferMediator.putToWorld(tilePosition, *this, m_player);
+                if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl))
+                {
+                    m_tileTransferMediator.putToWorld(tilePosition, *this, m_player, TileTransferMediator::Amount::All);
+                }
+                else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift))
+                {
+                    m_tileTransferMediator.putToWorld(tilePosition, *this, m_player, TileTransferMediator::Amount::Half);
+                }
             }
             else
             {
@@ -454,7 +470,7 @@ auto World::onMouseButtonReleased(sf::Event::MouseButtonEvent& event, EventConte
 
     return EventResult{}.setTakeFocus().setConsumeEvent();
 }
-auto World::onKeyPressed(sf::Event::KeyEvent& event, EventContext context) 
+auto World::onKeyPressed(sf::Event::KeyEvent& event, EventContext context)
 -> EventResult
 {
     if (event.code == sf::Keyboard::Num1)
@@ -462,20 +478,18 @@ auto World::onKeyPressed(sf::Event::KeyEvent& event, EventContext context)
         const ls::Vec2I mousePos(sf::Mouse::getPosition(m_windowSpaceManager.window()).x, sf::Mouse::getPosition(m_windowSpaceManager.window()).y);
         const ls::Vec2F worldPos = screenToWorld(mousePos);
         m_entitySystem.spawnEntity(ResourceManager<EntityPrefab>::instance().get("test").get(), worldPos);
-    
-        return EventResult().setConsumeEvent().setTakeFocus(false);
-    }
-    else if (event.code == sf::Keyboard::Num2)
-    {
-        const ls::Vec2I mousePos(sf::Mouse::getPosition(m_windowSpaceManager.window()).x, sf::Mouse::getPosition(m_windowSpaceManager.window()).y);
-        const ls::Vec2F worldPos = screenToWorld(mousePos);
-        m_player.attack(*this, worldPos);
 
         return EventResult().setConsumeEvent().setTakeFocus(false);
     }
+
     return EventResult().setConsumeEvent(false).setTakeFocus(false);
 }
 void World::onEntityDeleted(Entity& entity)
 {
     m_projectileSystem.onEntityDeleted(entity);
+}
+
+bool World::isWithinWorldWindow(const ls::Vec2I& pos) const
+{
+    return ls::intersect(window().absoluteContentRect(), pos);
 }

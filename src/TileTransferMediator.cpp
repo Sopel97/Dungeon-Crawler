@@ -25,20 +25,20 @@ void TileTransferMediator::grabFromInventory(InventorySystem& invSys, Inventory&
 {
     m_source.emplace(FromInventory{ &invSys, &inv, slot });
 }
-void TileTransferMediator::putToWorld(const ls::Vec2I& loc, World& world, Player& player)
+void TileTransferMediator::putToWorld(const ls::Vec2I& loc, World& world, Player& player, Amount amount)
 {
     if (!m_source.has_value()) return;
 
-    std::variant<ToWorld, ToInventory> destination(ToWorld{ loc, &world, &player });
+    std::variant<ToWorld, ToInventory> destination(ToWorld{ loc, &world, &player, amount });
     std::visit(*this, m_source.value(), destination);
 
     m_source.reset();
 }
-void TileTransferMediator::putToInventory(InventorySystem& invSys, Inventory& inv, int slot)
+void TileTransferMediator::putToInventory(InventorySystem& invSys, Inventory& inv, int slot, Amount amount)
 {
     if (!m_source.has_value()) return;
 
-    std::variant<ToWorld, ToInventory> destination(ToInventory{ &invSys, &inv, slot });
+    std::variant<ToWorld, ToInventory> destination(ToInventory{ &invSys, &inv, slot, amount });
     std::visit(*this, m_source.value(), destination);
 
     m_source.reset();
@@ -86,7 +86,7 @@ void TileTransferMediator::operator()(const FromWorld& from, const ToWorld& to)
 
     // perform move
     Logger::instance().log(Logger::Priority::Debug, "moving tile: World -> World");
-    auto stacksToCauseEvent = move(map, fromX, fromY, toX, toY, fromTileStack.quantity());
+    auto stacksToCauseEvent = move(map, fromX, fromY, toX, toY, computeQuantityToMove(fromTileStack.quantity(), to.amount));
 
     for (int tileZ : stacksToCauseEvent)
     {
@@ -119,7 +119,7 @@ void TileTransferMediator::operator()(const FromWorld& from, const ToInventory& 
         Inventory& inventoryInside = *toTileStack.tile().model().inventory();
         if (!inventorySystem.canStore(inventoryInside, fromTileStack.tile(), inventory)) return;
 
-        auto slotsToCauseEvent = move(map, fromX, fromY, inventoryInside, fromTileStack.quantity());
+        auto slotsToCauseEvent = move(map, fromX, fromY, inventoryInside, computeQuantityToMove(fromTileStack.quantity(), to.amount));
 
         for (int slotId : slotsToCauseEvent)
         {
@@ -131,7 +131,7 @@ void TileTransferMediator::operator()(const FromWorld& from, const ToInventory& 
         if (!inventorySystem.canStore(inventory, fromTileStack.tile())) return;
         if (!inventory.meetsRequirements(fromTileStack.tile(), slot)) return;
 
-        if (move(map, fromX, fromY, inventory, slot, fromTileStack.quantity()))
+        if (move(map, fromX, fromY, inventory, slot, computeQuantityToMove(fromTileStack.quantity(), to.amount)))
         {
             EventDispatcher::instance().broadcast<TileMovedFromWorldToInventory>(TileMovedFromWorldToInventory{ from, to, &(inventory.at(slot)) });
         }
@@ -164,7 +164,7 @@ void TileTransferMediator::operator()(const FromInventory& from, const ToWorld& 
     // perform move
     Logger::instance().log(Logger::Priority::Debug, "moving tile: Inventory -> World");
 
-    auto stacksToCauseEvent = move(fromInventory, fromSlot, map, toX, toY, fromTileStack.quantity());
+    auto stacksToCauseEvent = move(fromInventory, fromSlot, map, toX, toY, computeQuantityToMove(fromTileStack.quantity(), to.amount));
 
     for (int tileZ : stacksToCauseEvent)
     {
@@ -192,7 +192,7 @@ void TileTransferMediator::operator()(const FromInventory& from, const ToInvento
         if (&inventoryInside == &fromInventory) return;
         if (!inventorySystem.canStore(inventoryInside, fromTileStack.tile(), toInventory)) return;
 
-        auto slotsToCauseEvent = move(fromInventory, fromSlot, inventoryInside, fromTileStack.quantity());
+        auto slotsToCauseEvent = move(fromInventory, fromSlot, inventoryInside, computeQuantityToMove(fromTileStack.quantity(), to.amount));
 
         for (int slotId : slotsToCauseEvent)
         {
@@ -204,7 +204,7 @@ void TileTransferMediator::operator()(const FromInventory& from, const ToInvento
         if (!inventorySystem.canStore(toInventory, fromTileStack.tile())) return;
         if (!toInventory.meetsRequirements(fromTileStack.tile(), toSlot)) return;
 
-        if (move(fromInventory, fromSlot, toInventory, toSlot, fromTileStack.quantity()))
+        if (move(fromInventory, fromSlot, toInventory, toSlot, computeQuantityToMove(fromTileStack.quantity(), to.amount)))
         {
             EventDispatcher::instance().broadcast<TileMovedFromInventoryToInventory>(TileMovedFromInventoryToInventory{ from, to, &(toInventory.at(toSlot)) });
         }
@@ -269,9 +269,9 @@ int TileTransferMediator::move(MapLayer& map, int fromX, int fromY, Inventory& i
     }
     else if (to.tile().equals(from.tile()))
     {
-        const int toMove = std::min(from.quantity(), to.maxQuantity() - to.quantity());
+        const int toMove = std::min(std::min(from.quantity(), to.maxQuantity() - to.quantity()), max);
         if (toMove == 0) return false;
-        
+
         map.removeTiles(fromX, fromY, fromZ, toMove);
         inventory.addTiles(toSlot, toMove);
 
@@ -317,7 +317,7 @@ int TileTransferMediator::move(Inventory& fromInventory, int fromSlot, Inventory
     }
     else if (to.tile().equals(from.tile()))
     {
-        const int toMove = std::min(from.quantity(), to.maxQuantity() - to.quantity());
+        const int toMove = std::min(std::min(from.quantity(), to.maxQuantity() - to.quantity()), max);
         if (toMove == 0) return false;
 
         fromInventory.removeTiles(fromSlot, toMove);
@@ -382,4 +382,25 @@ std::vector<int> TileTransferMediator::move(Inventory& fromInventory, int fromSl
     }
 
     return stacksToCauseEvents;
+}
+
+int TileTransferMediator::computeQuantityToMove(int quantity, Amount amount)
+{
+    int toMove = quantity;
+
+    switch (amount)
+    {
+    case TileTransferMediator::Amount::All:
+        toMove = quantity;
+        break;
+
+    case TileTransferMediator::Amount::Half:
+        toMove = quantity / 2;
+        break;
+
+    default:
+        toMove = quantity;
+    }
+
+    return std::max(toMove, 1);
 }

@@ -15,11 +15,11 @@
 CONSIDER:
 hook up StaticEmbeddedHomogenousMemoryPool for components, tiles, entities, projectiles, see how it behaves
 
+- tile transfer mediator does not handle toMove = 0 properly, because it does not exit early
+
+- global Input class for input aside sfml events
+
 - change controls
--- LMB attack
--- RMB use
--- CTRL + LMB move all
--- SHIFT + LMB move half
 -- ALT + LMB move amount chosen in window
 --- trying to put item displays a window
 ---- position near the mouse, has slider and reacts to arrow keys and numeric keys
@@ -27,7 +27,13 @@ hook up StaticEmbeddedHomogenousMemoryPool for components, tiles, entities, proj
 --- ok = move max(stack size, specified amount)
 ---- normally no way to select more than stack size, but a safety measure i needed
 --- don't interrupt if the item being moved changed
--- MMB look
+
+- specify use time (may be different from cooldown) for weapons, player should turn in the proper direction for 'use time' time
+- add cooldown for weapons (attack rate), parameter to specify if it can fire continously or by separate clicks
+-- pass to attack function information if it is continuous firing or not (first tick of mouse down or later)
+--- weapons should store last attack time instead of cooldown left, this will remove the need of updating (which would be impossible when switching items)
+
+- change tickrate to 50
 
 - instead of separate drawing of normal and meta sprites maybe gather both at once and then render. Many things just differ in texture offset so it would minimize unnecessary recomputation for meta sprites.
 -- SpriteBatch::SpriteGeometry class that holds std::array with 6 sf::Vertex objects. drawing then goes 1. calculate sprite geometry; 2. append to main sprite batch; 3. opt. change uv mapping; 4. opt. append to meta sprite batch.
@@ -64,14 +70,27 @@ THIS:
 
 - window resizing (should be done fully by the window being resized. Relying only on min,max size parameters)
 
-TODO:
+- many places that currently use std::lower_bound, std::upper_bound could probably have better performance with linear serach because the arrays are small
+
 - pillar tile
 
+- try to make light brighter without chaning light radius (try multiplying light by some constant?)
+
+- '%' sign missing in tibia font
+-- probably get a different font
+
+BIG (possibly breaking) CHANGES TO CONSIDER
 - try dim light depending on height from the ground
 - player's line of sight using raycasting
 
-- '%' sign missing in tibia font
-
 - currently outer borders may be rendered wrong if they are in different textures, because they can't be sorted by texture. Probably no good solution, so will have to make sure no two outer borders from 2 textures are one to each other.
+-- maybe disable depth test for layer 0?
 
-- many places that currently use std::lower_bound, std::upper_bound could probably have better performance with linear serach because the arrays are small
+
+
+DO LATER IF NOTHING POPS UP IN THE WAY
+- consider using alpha channel for both normal sprites and meta sprites as 'z' coordinate (initial height of the object. would be added to frag depth). Render tiles respecting height (simple offset).
+-- would enable stacking non-flat things in the world. Currently every non-flat thing has to set allowsTilesAbove to false to prevent tile from below from rendering through it.
+--- disallow stacking more items if max height would be surpassed
+
+- change depth range to [0.0, 2.0] and adjust it so 1.0 is one tile size

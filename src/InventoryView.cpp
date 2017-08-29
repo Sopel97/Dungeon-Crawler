@@ -77,25 +77,23 @@ SfmlEventHandler::EventResult InventoryView::onMouseButtonPressed(sf::Event::Mou
     InventorySlotView* slot = querySlot(pos);
     if (slot != nullptr)
     {
-        if(event.button == sf::Mouse::Button::Left)
+        if (event.button == sf::Mouse::Button::Left)
         {
-            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LAlt))
-            {
-                if (!slot->content().isEmpty())
-                {
-                    slot->content().look(m_inventorySystem->player(), slot->location());
-                }
-            }
-            else
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl) || sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift))
             {
                 m_inventorySystem->tileTransferMediator().grabFromInventory(*m_inventorySystem, *m_inventory, slot->slotId());
             }
-
-            return EventResult{}.setTakeFocus().setConsumeEvent();
         }
         else if (event.button == sf::Mouse::Button::Right)
         {
             m_inventory->useTile(m_inventorySystem->player(), slot->slotId());
+        }
+        else if (event.button == sf::Mouse::Button::Middle)
+        {
+            if (!slot->content().isEmpty())
+            {
+                slot->content().look(m_inventorySystem->player(), slot->location());
+            }
         }
     }
     return EventResult{}.setTakeFocus().setConsumeEvent();
@@ -119,7 +117,14 @@ SfmlEventHandler::EventResult InventoryView::onMouseButtonReleased(sf::Event::Mo
     {
         if (event.button == sf::Mouse::Button::Left)
         {
-            m_inventorySystem->tileTransferMediator().putToInventory(*m_inventorySystem, *m_inventory, slot->slotId());
+            if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LControl))
+            {
+                m_inventorySystem->tileTransferMediator().putToInventory(*m_inventorySystem, *m_inventory, slot->slotId(), TileTransferMediator::Amount::All);
+            }
+            else if (sf::Keyboard::isKeyPressed(sf::Keyboard::Key::LShift))
+            {
+                m_inventorySystem->tileTransferMediator().putToInventory(*m_inventorySystem, *m_inventory, slot->slotId(), TileTransferMediator::Amount::Half);
+            }
 
             return EventResult{}.setTakeFocus().setConsumeEvent();
         }
