@@ -50,7 +50,7 @@ protected:
 
     std::unique_ptr<Game> m_game;
 
-    static constexpr float m_tickTime = 1.0f / 60.0f;
+    static constexpr float m_tickTime = 1.0f / 50.0f;
     static constexpr size_t m_defaultWindowWidth = 1024;
     static constexpr size_t m_defaultWindowHeight = 768;
 private:

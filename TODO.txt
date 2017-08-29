@@ -30,8 +30,6 @@ hook up StaticEmbeddedHomogenousMemoryPool for components, tiles, entities, proj
 
 - player should turn in the proper direction for 'use time' time
 
-- change tickrate to 50
-
 - instead of separate drawing of normal and meta sprites maybe gather both at once and then render. Many things just differ in texture offset so it would minimize unnecessary recomputation for meta sprites.
 -- SpriteBatch::SpriteGeometry class that holds std::array with 6 sf::Vertex objects. drawing then goes 1. calculate sprite geometry; 2. append to main sprite batch; 3. opt. change uv mapping; 4. opt. append to meta sprite batch.
 -- keep old way too
