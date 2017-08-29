@@ -74,6 +74,8 @@ public:
     virtual void look(Player& player, const InventorySlotLocation& location, int quantity);
     virtual TileAttackResult attack(World& world, Player& player, const ls::Vec2F& hintedPosition, int quantity);
     virtual void indirectAttack(World& world, Player& player, const ls::Vec2F& hintedPosition, int quantity);
+    virtual void updateEquiped(Player& player, int quantity);
+
     virtual TileAmmoGroupType ammoGroup() const;
 
     virtual std::unique_ptr<TileModel> clone(Tile& owner) const;

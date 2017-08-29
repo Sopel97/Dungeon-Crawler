@@ -43,6 +43,7 @@ bool Player::tryInteractWithInternalInventory(Tile& tile, Inventory& inventory, 
 void Player::update(float dt)
 {
     updateAttributes();
+    updateEquipedTiles();
 
     m_weaponUseTimeLeft -= dt;
     m_weaponCooldownLeft -= dt;
@@ -140,7 +141,7 @@ void Player::attack(World& world, const ls::Vec2F& pos)
     const int weaponSlot = m_equipmentInventory.slotId(PlayerEquipmentInventory::SlotType::Weapon);
     if (attackResult.ammoUsed > 0) m_equipmentInventory.removeTiles(ammoSlot, attackResult.ammoUsed);
     if (attackResult.weaponUsed > 0) m_equipmentInventory.removeTiles(weaponSlot, attackResult.weaponUsed);
-    
+
     m_weaponUseTimeLeft = attackResult.useTime;
     m_weaponCooldownLeft = attackResult.cooldown;
 }
@@ -170,5 +171,15 @@ void Player::updateAttributes()
                 m_currentAttributes += attribute;
             }
         }
+    }
+}
+void Player::updateEquipedTiles()
+{
+    for (TileStack& tileStack : m_equipmentInventory.contents())
+    {
+        if (tileStack.isEmpty()) continue;
+
+        Tile& tile = tileStack.tile();
+        tile.updateEquiped(*this, tileStack.quantity());
     }
 }

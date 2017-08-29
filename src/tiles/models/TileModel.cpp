@@ -144,6 +144,10 @@ void TileModel::indirectAttack(World& world, Player& player, const ls::Vec2F& hi
 {
 
 }
+void TileModel::updateEquiped(Player& player, int quantity)
+{
+
+}
 TileAmmoGroupType TileModel::ammoGroup() const
 {
     return TileAmmoGroupType();

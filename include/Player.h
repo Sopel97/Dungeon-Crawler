@@ -77,6 +77,7 @@ protected:
     AttributeArray m_currentAttributes;
 
     void updateAttributes();
+    void updateEquipedTiles();
 
 private:
 };

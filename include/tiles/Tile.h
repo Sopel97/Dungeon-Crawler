@@ -59,6 +59,7 @@ public:
     void look(Player& player, const InventorySlotLocation& location, int quantity);
     TileAttackResult attack(World& world, Player& player, const ls::Vec2F& hintedPosition, int quantity);
     void indirectAttack(World& world, Player& player, const ls::Vec2F& hintedPosition, int quantity);
+    void updateEquiped(Player& player, int quantity);
 
     void onTileQuantityChanged(int oldQuantity, int newQuantity);
     void onTileInstantiated();

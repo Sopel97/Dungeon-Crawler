@@ -35,8 +35,6 @@ hook up StaticEmbeddedHomogenousMemoryPool for components, tiles, entities, proj
 -- keep old way too
 --- that way objects dont have to recalculate things for both normal and meta sprites.
 
-- maybe update all equiped tiles to allow for timed equipment?
-
 - add support for temporary effects (not coming from equiped items)
 -- potions?
 --- health/mana addition specified separately and also get applied through separate functions in player

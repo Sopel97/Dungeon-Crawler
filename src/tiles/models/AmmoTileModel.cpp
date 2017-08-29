@@ -163,7 +163,6 @@ void AmmoTileModel::onTileInstantiated()
     auto result = m_commonData->attributeRandomizer.randomize();
     m_attributes = std::move(result.attributes);
     m_quality = result.quality;
-    std::cout << m_quality << '\n';
 }
 
 std::unique_ptr<TileModel> AmmoTileModel::clone(Tile& owner) const

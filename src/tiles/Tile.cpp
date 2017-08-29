@@ -104,11 +104,11 @@ TileUseResult Tile::use(Player& player, const InventorySlotLocation& location, i
 }
 void Tile::look(Player& player, const TileLocation& location, int quantity)
 {
-    return model().look(player, location, quantity);
+    model().look(player, location, quantity);
 }
 void Tile::look(Player& player, const InventorySlotLocation& location, int quantity)
 {
-    return model().look(player, location, quantity);
+    model().look(player, location, quantity);
 }
 TileAttackResult Tile::attack(World& world, Player& player, const ls::Vec2F& hintedPosition, int quantity)
 {
@@ -116,7 +116,11 @@ TileAttackResult Tile::attack(World& world, Player& player, const ls::Vec2F& hin
 }
 void Tile::indirectAttack(World& world, Player& player, const ls::Vec2F& hintedPosition, int quantity)
 {
-    return model().indirectAttack(world, player, hintedPosition, quantity);
+    model().indirectAttack(world, player, hintedPosition, quantity);
+}
+void Tile::updateEquiped(Player& player, int quantity)
+{
+    model().updateEquiped(player, quantity);
 }
 
 void Tile::onTileQuantityChanged(int oldQuantity, int newQuantity)
