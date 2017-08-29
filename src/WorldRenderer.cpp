@@ -95,6 +95,7 @@ WorldRenderer::WorldRenderer(Root& root, World& world) :
     m_lightShader.setParameter("lightTextureSize", sf::Vector2f(static_cast<float>(m_lightMap.getSize().x), static_cast<float>(m_lightMap.getSize().y)));
     m_lightShader.setParameter("metaTextureSize", sf::Vector2f(static_cast<float>(m_metaTexture.getSize().x), static_cast<float>(m_metaTexture.getSize().y)));
     m_lightShader.setParameter("metaTexture", m_metaTexture.getTexture());
+    m_lightShader.setParameter("brightness", 1.5f);
 
     m_blurShader.loadFromFile("assets/shaders/blur.vert", "assets/shaders/blur.frag");
 }
