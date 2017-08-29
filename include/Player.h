@@ -13,6 +13,7 @@
 #include "AttributeArray.h"
 
 #include "entities/Entity.h"
+#include "entities/models/EntityModel.h"
 
 class Entity;
 class World;
@@ -64,6 +65,8 @@ public:
 
     bool tryPlaceTileUnderNearby(TileStack&& tileStack);
 
+    const std::optional<EntityModel::Direction>& forcedDirection() const;
+
 protected:
     WindowSpaceManager* m_wsm;
     World* m_world;
@@ -73,6 +76,7 @@ protected:
     PlayerEquipmentInventory m_equipmentInventory;
     float m_weaponUseTimeLeft;
     float m_weaponCooldownLeft;
+    std::optional<EntityModel::Direction> m_forcedDirection;
 
     AttributeArray m_currentAttributes;
 
@@ -80,6 +84,8 @@ protected:
     void updateEquipedTiles();
 
 private:
+
+    EntityModel::Direction directionFromOffset(const ls::Vec2F& offset) const;
 };
 
 #endif // PLAYER_H

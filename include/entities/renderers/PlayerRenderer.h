@@ -42,4 +42,6 @@ protected:
     ls::Vec2I m_sprites;
 
     void draw(SpriteBatch& spriteBatch, const ls::Vec2I& textureOffset) const;
+
+    EntityModel::Direction direction() const;
 };

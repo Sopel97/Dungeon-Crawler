@@ -6,6 +6,7 @@
 #include "SpriteBatch.h"
 
 #include "World.h"
+#include "Player.h"
 
 #include "sprite/Spritesheet.h"
 
@@ -64,7 +65,6 @@ void PlayerRenderer::draw(SpriteBatch& spriteBatch, const ls::Vec2I& textureOffs
     constexpr float steppingSpeedThreshold = 16.0f / 32.0f;
 
     const auto& model = m_owner->model();
-    const int direction = model.directionOfMove();
     const float speed = model.velocity().magnitude();
     int steppingSpriteVariant = 0;
 
@@ -81,7 +81,7 @@ void PlayerRenderer::draw(SpriteBatch& spriteBatch, const ls::Vec2I& textureOffs
         m_spritesheet.get().gridCoordsToTexCoords(
             ls::Vec2I(
                 m_sprites.x + steppingSpriteVariant,
-                m_sprites.y + direction
+                m_sprites.y + direction()
             )
         )
     );
@@ -100,4 +100,16 @@ const sf::Texture& PlayerRenderer::texture() const
 std::unique_ptr<EntityRenderer> PlayerRenderer::clone(Entity& owner) const
 {
     return std::make_unique<PlayerRenderer>(*this, owner);
+}
+
+EntityModel::Direction PlayerRenderer::direction() const
+{
+    if (const auto& forcedDirection = m_playerOwner->forcedDirection())
+    {
+        return forcedDirection.value();
+    }
+    else
+    {
+        return m_owner->model().directionOfMove();
+    }
 }

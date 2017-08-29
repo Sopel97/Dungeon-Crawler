@@ -27,7 +27,8 @@ Player::Player(WindowSpaceManager& wsm, Game& game, TileTransferMediator& tileTr
     m_inventorySystem(wsm, *this, tileTransferMediator),
     m_equipmentInventory(),
     m_weaponUseTimeLeft(0.0f),
-    m_weaponCooldownLeft(0.0f)
+    m_weaponCooldownLeft(0.0f),
+    m_forcedDirection(std::nullopt)
 {
     m_inventorySystem.openPermanentInventory(m_equipmentInventory, "");
 }
@@ -44,6 +45,11 @@ void Player::update(float dt)
 {
     updateAttributes();
     updateEquipedTiles();
+
+    if (m_weaponUseTimeLeft <= 0.0f)
+    {
+        m_forcedDirection = std::nullopt;
+    }
 
     m_weaponUseTimeLeft -= dt;
     m_weaponCooldownLeft -= dt;
@@ -144,6 +150,11 @@ void Player::attack(World& world, const ls::Vec2F& pos)
 
     m_weaponUseTimeLeft = attackResult.useTime;
     m_weaponCooldownLeft = attackResult.cooldown;
+
+    if (attackResult.useTime > 0.0f)
+    {
+        m_forcedDirection = directionFromOffset(pos - m_playerEntity.model().position());
+    }
 }
 
 bool Player::tryPlaceTileUnderNearby(TileStack&& tileStack)
@@ -182,4 +193,19 @@ void Player::updateEquipedTiles()
         Tile& tile = tileStack.tile();
         tile.updateEquiped(*this, tileStack.quantity());
     }
+}
+
+
+EntityModel::Direction Player::directionFromOffset(const ls::Vec2F& offset) const
+{
+    const float ax = std::abs(offset.x);
+    const float ay = std::abs(offset.y);
+
+    if (ax > ay) return offset.x > 0 ? EntityModel::Direction::East : EntityModel::Direction::West;
+    else return offset.y > 0 ? EntityModel::Direction::South : EntityModel::Direction::North;
+}
+
+const std::optional<EntityModel::Direction>& Player::forcedDirection() const
+{
+    return m_forcedDirection;
 }
