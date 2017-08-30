@@ -53,6 +53,19 @@ void Player::update(float dt)
 
     m_weaponUseTimeLeft -= dt;
     m_weaponCooldownLeft -= dt;
+
+    for (auto iter = m_temporaryAttributes.begin(); iter != m_temporaryAttributes.end();)
+    {
+        const auto& element = *iter;
+        if (!element.stillActive())
+        {
+            iter = m_temporaryAttributes.erase(iter);
+        }
+        else
+        {
+            ++iter;
+        }
+    }
 }
 void Player::processAsyncKeyboardInput(World& world, float dt, const ls::Vec2I& mousePos)
 {
@@ -136,6 +149,28 @@ void Player::showTileDescription(TileDescription&& description)
     m_playerUi.showTileDescription(std::move(description));
 }
 
+bool Player::addEffect(const Effect& effect, bool forceOverwrite)
+{
+    const auto iter = m_temporaryAttributes.find(effect);
+    if (iter == m_temporaryAttributes.end())
+    {
+        m_temporaryAttributes.emplace_hint(iter, effect);
+        return true;
+    }
+    else if (forceOverwrite)
+    {
+        m_temporaryAttributes.erase(iter);
+        m_temporaryAttributes.emplace(effect);
+        return true;
+    }
+
+    return false;
+}
+bool Player::hasEffect(int id) const
+{
+    return m_temporaryAttributes.find(id) != m_temporaryAttributes.end();
+}
+
 void Player::attack(World& world, const ls::Vec2F& pos)
 {
     TileStack& weapon = this->weapon();
@@ -177,11 +212,13 @@ void Player::updateAttributes()
         if (m_equipmentInventory.isInCorrectSlot(i))
         {
             const AttributeSet& tileAttributes = m_equipmentInventory.at(i).tile().model().attributes();
-            for (const auto& attribute : tileAttributes)
-            {
-                m_currentAttributes += attribute;
-            }
+            m_currentAttributes += tileAttributes;
         }
+    }
+
+    for (const auto& tempAttr : m_temporaryAttributes)
+    {
+        m_currentAttributes += tempAttr.attributes();
     }
 }
 void Player::updateEquipedTiles()

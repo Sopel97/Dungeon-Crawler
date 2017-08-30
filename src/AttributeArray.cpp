@@ -53,6 +53,22 @@ bool AttributeArray::operator!=(const AttributeArray& rhs) const
     return !operator==(rhs);
 }
 
+AttributeArray& AttributeArray::operator+=(const AttributeSet& rhs)
+{
+    for (const auto& attr : rhs)
+    {
+        operator+=(attr);
+    }
+
+    return *this;
+}
+AttributeArray AttributeArray::operator+(const AttributeSet& rhs) const
+{
+    AttributeArray copy(*this);
+    copy += rhs;
+    return copy;
+}
+
 AttributeArray& AttributeArray::operator+=(const AttributeArray& rhs)
 {
     for (int i = 0; i < numAttributes; ++i)

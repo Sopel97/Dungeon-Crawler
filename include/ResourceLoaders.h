@@ -17,6 +17,8 @@
 #include "projectiles/models/ProjectileModel.h"
 #include "projectiles/renderers/ProjectileRenderer.h"
 
+#include "effects/EffectPrefab.h"
+
 #include "Configuration.h"
 
 #include "Logger.h"
@@ -231,4 +233,11 @@ class ResourceLoader<sf::Font>
 {
 public:
     static std::pair<std::string, std::unique_ptr<sf::Font>> load(const std::string& path); //should return nullptr when resource was not loaded
+};
+
+template <>
+class ResourceLoader<EffectPrefab>
+{
+public:
+    static std::pair<std::string, std::unique_ptr<EffectPrefab>> load(const std::string& path); //should return nullptr when resource was not loaded
 };

@@ -64,6 +64,7 @@ private:
     }
 
     std::vector<std::string> scanForFiles(const std::string& path, const std::string& query) const;
+    void loadEffects();
     void loadTextures();
     void loadProjectiles();
     void loadTiles();

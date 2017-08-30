@@ -153,3 +153,11 @@ std::pair<std::string, std::unique_ptr<sf::Font>> ResourceLoader<sf::Font>::load
     if (!font->loadFromFile(path)) return std::make_pair(path, nullptr);
     return std::make_pair(path, std::move(font));
 }
+
+std::pair<std::string, std::unique_ptr<EffectPrefab>> ResourceLoader<EffectPrefab>::load(const std::string& path)
+{
+    std::unique_ptr<EffectPrefab> effect = std::make_unique<EffectPrefab>();
+    Configuration config = Configuration(path);
+    effect->loadFromConfiguration(config);
+    return std::make_pair(path, std::move(effect));
+}

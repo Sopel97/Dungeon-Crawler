@@ -111,6 +111,13 @@ void Root::loadAssets()
 
     ResourceManager<sf::Font>::instance().loadWithName("Font", "assets\\fonts\\standard_font2.ttf");
 }
+void Root::loadEffects()
+{
+    for (const auto& effectPath : scanForFiles("assets\\effects\\", "*.effect"))
+    {
+        ResourceManager<EffectPrefab>::instance().load(effectPath);
+    }
+}
 void Root::loadTextures()
 {
     Configuration config("assets/gfx/textures.meta");
