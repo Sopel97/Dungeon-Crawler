@@ -4,6 +4,9 @@
 #include "entities/models/EntityModel.h"
 #include "ResourceLoaders.h"
 
+#include "OscillatingLightSource.h"
+#include "GameTime.h"
+
 #include "DamageCalculator.h"
 
 REGISTER_PROJECTILE_MODEL_TYPE(MovingProjectileModel);
@@ -49,6 +52,34 @@ void MovingProjectileModel::loadFromConfiguration(ConfigurationNode& config)
         m_commonData->inheritedAttributes.emplace_back(AttributeIdHelper::stringToEnum(attributeName));
     }
 
+    ConfigurationNode lightConfig = config["light"];
+    if (lightConfig.exists())
+    {
+        ConfigurationNode light1Config = lightConfig["light1"];
+        const float rad1 = light1Config["radius"].get<float>();
+        const int r1 = light1Config["color"][1].get<int>();
+        const int g1 = light1Config["color"][2].get<int>();
+        const int b1 = light1Config["color"][3].get<int>();
+
+        ConfigurationNode light2Config = lightConfig["light2"];
+        const float rad2 = light2Config["radius"].get<float>();
+        const int r2 = light2Config["color"][1].get<int>();
+        const int g2 = light2Config["color"][2].get<int>();
+        const int b2 = light2Config["color"][3].get<int>();
+
+        const float freq = lightConfig["freq"].get<float>();
+
+        m_commonData->light = CommonData::OscillatingLight{
+            CommonData::Light{ rad1, sf::Color(r1, g1, b1) },
+            CommonData::Light{ rad2, sf::Color(r2, g2, b2) },
+            freq
+        };
+    }
+    else
+    {
+        m_commonData->light = std::nullopt;
+    }
+
     m_commonData->initialSpeed = config["initialSpeed"].get<float>();
     m_commonData->radius = config["radius"].get<float>();
     m_commonData->acceleration = config["acceleration"].get<float>();
@@ -85,6 +116,25 @@ int MovingProjectileModel::health() const
 void MovingProjectileModel::setHealth(int newHealth)
 {
     m_health = newHealth;
+}
+std::optional<Light> MovingProjectileModel::light() const
+{
+    if (m_commonData->light.has_value())
+    {
+        const auto& light1 = m_commonData->light.value().light1;
+        const auto& light2 = m_commonData->light.value().light2;
+        const float freq = m_commonData->light.value().freq;
+
+        return OscillatingLightSource(
+            Light(m_position, light1.radius, light1.color, this),
+            Light(m_position, light2.radius, light2.color, this),
+            freq
+        ).at(GameTime::instance().now(), static_cast<double>(reinterpret_cast<intptr_t>(this))); //TODO: better way to get per entity constant value;
+    }
+    else
+    {
+        return std::nullopt;
+    }
 }
 const ls::Vec2F& MovingProjectileModel::position() const
 {

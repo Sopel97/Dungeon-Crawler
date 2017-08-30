@@ -20,7 +20,21 @@ class MovingProjectileModel : public ProjectileModel
 public:
     struct CommonData : public ComponentCommonData
     {
+        struct Light
+        {
+            float radius;
+            sf::Color color;
+        };
+
+        struct OscillatingLight
+        {
+            Light light1;
+            Light light2;
+            float freq;
+        };
+
         std::vector<AttributeId> inheritedAttributes;
+        std::optional<OscillatingLight> light;
         float initialSpeed;
         float radius;
         float acceleration;
@@ -42,6 +56,7 @@ public:
     AggroGroupId group() const override;
     int health() const override;
     void setHealth(int newHealth) override;
+    std::optional<Light> light() const override;
 
     const ls::Vec2F& position() const override;
     void setPosition(const ls::Vec2F& newPosition) override;

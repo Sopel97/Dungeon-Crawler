@@ -21,5 +21,17 @@ projectile = {
 
     inheritedAttributes = {
         "Attack"
+    },
+
+    light = {
+        light1 = {
+            radius = 1.0,
+            color = {0, 0, 255}
+        },
+        light2 = {
+            radius = 1.5,
+            color = {255, 0, 0}
+        },
+        freq = 1.0
     }
 }
