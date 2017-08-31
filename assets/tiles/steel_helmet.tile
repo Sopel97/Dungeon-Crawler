@@ -13,7 +13,7 @@ tile = {
         {{{7, 7}}},
     },
 
-    validSlots = {"None", "Helmet"},
+    validSlots = {"None", "Helmet", "LightSource"},
     correctSlots = {"Helmet"},
 
     attributeRandomizationGuidelines = {
@@ -28,6 +28,18 @@ tile = {
                 }
             }
         }
+    },
+
+    light = {
+        light1 = {
+            radius = 3.5,
+            color = {255, 70, 0}
+        },
+        light2 = {
+            radius = 4.0,
+            color = {70, 255, 0}
+        },
+        freq = 0.5
     },
 
     drag = 0.85,

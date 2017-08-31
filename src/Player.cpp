@@ -13,6 +13,10 @@
 
 #include "AttributeSet.h"
 
+#include "OscillatingLightSource.h"
+
+#include "GameTime.h"
+
 #include "../LibS/Geometry.h"
 
 #include <algorithm>
@@ -136,6 +140,10 @@ TileStack& Player::weapon()
 {
     return m_equipmentInventory.at(PlayerEquipmentInventory::SlotType::Weapon);
 }
+const TileStack& Player::lightSource() const
+{
+    return m_equipmentInventory.at(PlayerEquipmentInventory::SlotType::LightSource);
+}
 const PlayerEquipmentInventory& Player::equipmentInventory() const
 {
     return m_equipmentInventory;
@@ -232,6 +240,32 @@ void Player::updateEquipedTiles()
     }
 }
 
+std::optional<LightParams> Player::light() const
+{
+    const auto defaultLight = []() {
+        return OscillatingLightSource(
+            LightParams(1.0f, sf::Color::Red),
+            LightParams(1.5f, sf::Color::Blue),
+            0.5
+        ).at(GameTime::instance().now());
+    };
+
+    const TileStack& source = lightSource();
+    if (source.isEmpty())
+    {
+        return defaultLight();
+    }
+
+    std::optional<Light> tileLight = source.tile().model().light({ 0, 0 }); //position does not matter
+    if (tileLight.has_value())
+    {
+        return tileLight.value().params();
+    }
+    else
+    {
+        return defaultLight();
+    }
+}
 
 EntityModel::Direction Player::directionFromOffset(const ls::Vec2F& offset) const
 {

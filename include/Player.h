@@ -57,6 +57,7 @@ public:
 
     TileStack& ammo();
     TileStack& weapon();
+    const TileStack& lightSource() const;
     const PlayerEquipmentInventory& equipmentInventory() const;
 
     void showTileDescription(const TileDescription& description);
@@ -70,6 +71,8 @@ public:
     bool tryPlaceTileUnderNearby(TileStack&& tileStack);
 
     const std::optional<EntityModel::Direction>& forcedDirection() const;
+
+    std::optional<LightParams> light() const;
 
 protected:
     struct EffectCompareById

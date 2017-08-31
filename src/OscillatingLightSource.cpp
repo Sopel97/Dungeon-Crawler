@@ -8,6 +8,29 @@ OscillatingLightSource::OscillatingLightSource(const LightParams& light1, const 
 
 }
 
+OscillatingLightSource OscillatingLightSource::fromConfig(ConfigurationNode& config)
+{
+    ConfigurationNode light1Config = config["light1"];
+    const float rad1 = light1Config["radius"].get<float>();
+    const int r1 = light1Config["color"][1].get<int>();
+    const int g1 = light1Config["color"][2].get<int>();
+    const int b1 = light1Config["color"][3].get<int>();
+
+    ConfigurationNode light2Config = config["light2"];
+    const float rad2 = light2Config["radius"].get<float>();
+    const int r2 = light2Config["color"][1].get<int>();
+    const int g2 = light2Config["color"][2].get<int>();
+    const int b2 = light2Config["color"][3].get<int>();
+
+    const float freq = config["freq"].get<float>();
+
+    return OscillatingLightSource(
+        LightParams(rad1, sf::Color(r1, g1, b1)),
+        LightParams(rad2, sf::Color(r2, g2, b2)),
+        freq
+    );
+}
+
 LightParams OscillatingLightSource::at(double t) const
 {
     constexpr double noiseScale = 1.5;

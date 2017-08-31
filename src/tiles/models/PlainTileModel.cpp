@@ -2,6 +2,8 @@
 
 #include "World.h"
 
+#include "GameTime.h"
+
 using namespace ls;
 
 REGISTER_TILE_MODEL_TYPE(PlainTileModel)
@@ -52,6 +54,16 @@ void PlainTileModel::loadFromConfiguration(ConfigurationNode& config)
         m_commonData->lightOccluder = std::nullopt;
     }
 
+    ConfigurationNode lightConfig = config["light"];
+    if (lightConfig.exists())
+    {
+        m_commonData->light = OscillatingLightSource::fromConfig(lightConfig);
+    }
+    else
+    {
+        m_commonData->light = std::nullopt;
+    }
+
     m_commonData->displayedName = config["displayedName"].getDefault<std::string>("");
     m_commonData->drag = config["drag"].get<float>();
     m_commonData->maxThrowDistance = config["maxThrowDistance"].getDefault<int>(0);
@@ -88,6 +100,21 @@ TileRarity PlainTileModel::rarity() const
 float PlainTileModel::lightDimming() const
 {
     return m_commonData->lightDimming;
+}
+std::optional<Light> PlainTileModel::light(const ls::Vec2I& pos) const
+{
+    if (m_commonData->light.has_value())
+    {
+        return Light(
+            m_commonData->light.value().at(GameTime::instance().now(), static_cast<double>(reinterpret_cast<intptr_t>(this))),
+            static_cast<ls::Vec2F>(pos) + ls::Vec2F(0.5f, 0.5f),
+            this
+        );
+    }
+    else
+    {
+        return std::nullopt;
+    }
 }
 bool PlainTileModel::isMovable() const
 {

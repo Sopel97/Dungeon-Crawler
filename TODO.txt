@@ -35,9 +35,6 @@ hook up StaticEmbeddedHomogenousMemoryPool for components, tiles, entities, proj
 
 - potions for testing temporary attributes
 
-- add support for lights for equipment and plain tile models.
--- player's light should depend on equiped light source
-
 THIS:
 - prefabs should first be loaded (names, components), then actually initialized
 -- this is to allow for example tile to refer to each others' prefabs (any way is undefined now, because loading order is undefined)

@@ -16,6 +16,8 @@
 #include "AttributeSet.h"
 #include "AttributeRandomizer.h"
 
+#include "OscillatingLightSource.h"
+
 #include <memory>
 
 class Tile;
@@ -30,6 +32,7 @@ public:
         std::set<SlotContentRequirement> validSlots;
         std::set<SlotContentRequirement> correctSlots;
         AttributeRandomizer attributeRandomizer;
+        std::optional<OscillatingLightSource> light;
         float drag;
         int maxThrowDistance;
         bool canBeStored;
@@ -59,6 +62,7 @@ public:
     TileRarity rarity() const override;
     std::string prefix() const override;
     float lightDimming() const override;
+    std::optional<Light> light(const ls::Vec2I& pos) const override;
 
     float drag() const override;
 

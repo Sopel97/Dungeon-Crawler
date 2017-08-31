@@ -7,7 +7,9 @@
 
 #include "../LibS/Geometry.h"
 
-#include "../../ComponentCommonData.h"
+#include "ComponentCommonData.h"
+
+#include "OscillatingLightSource.h"
 
 #include <memory>
 
@@ -22,6 +24,7 @@ public:
         bool hasCollider;
         ls::Rectangle2F collider;
         std::optional<ls::Rectangle2F> lightOccluder;
+        std::optional<OscillatingLightSource> light;
         float drag;
         int maxThrowDistance;
         bool isThrowableThrough;
@@ -49,6 +52,7 @@ public:
     const std::string& displayedName() const override;
     TileRarity rarity() const override;
     float lightDimming() const override;
+    std::optional<Light> light(const ls::Vec2I& pos) const override;
 
     float drag() const;
 

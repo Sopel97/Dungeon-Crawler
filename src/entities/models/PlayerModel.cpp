@@ -95,15 +95,14 @@ const AttributeArray& PlayerModel::attributes() const
 }
 std::optional<Light> PlayerModel::light() const
 {
-    return Light(
-        OscillatingLightSource(
-            LightParams(4.0f, sf::Color::Red),
-            LightParams(3.5f, sf::Color::Blue),
-            0.5
-        ).at(GameTime::instance().now()),
-        m_position,
-        this
-    );
+    if (std::optional<LightParams> lightParams = m_playerOwner->light())
+    {
+        return Light(lightParams.value(), m_position, this);
+    }
+    else
+    {
+        return std::nullopt;
+    }
 }
 
 EntityModel::Direction PlayerModel::directionOfMove() const

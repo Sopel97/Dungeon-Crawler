@@ -25,6 +25,7 @@ class Light
 public:
     Light(const LightParams& params, const ls::Vec2F& position, const void* owner);
 
+    const LightParams& params() const;
     const ls::Vec2F& position() const;
     float radius() const;
     const sf::Color& color() const;

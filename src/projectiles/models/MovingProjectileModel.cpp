@@ -7,6 +7,8 @@
 #include "OscillatingLightSource.h"
 #include "GameTime.h"
 
+#include "Configuration.h"
+
 #include "DamageCalculator.h"
 
 REGISTER_PROJECTILE_MODEL_TYPE(MovingProjectileModel);
@@ -55,25 +57,7 @@ void MovingProjectileModel::loadFromConfiguration(ConfigurationNode& config)
     ConfigurationNode lightConfig = config["light"];
     if (lightConfig.exists())
     {
-        ConfigurationNode light1Config = lightConfig["light1"];
-        const float rad1 = light1Config["radius"].get<float>();
-        const int r1 = light1Config["color"][1].get<int>();
-        const int g1 = light1Config["color"][2].get<int>();
-        const int b1 = light1Config["color"][3].get<int>();
-
-        ConfigurationNode light2Config = lightConfig["light2"];
-        const float rad2 = light2Config["radius"].get<float>();
-        const int r2 = light2Config["color"][1].get<int>();
-        const int g2 = light2Config["color"][2].get<int>();
-        const int b2 = light2Config["color"][3].get<int>();
-
-        const float freq = lightConfig["freq"].get<float>();
-
-        m_commonData->light = OscillatingLightSource(
-            LightParams( rad1, sf::Color(r1, g1, b1) ),
-            LightParams( rad2, sf::Color(r2, g2, b2) ),
-            freq
-        );
+        m_commonData->light = OscillatingLightSource::fromConfig(lightConfig);
     }
     else
     {

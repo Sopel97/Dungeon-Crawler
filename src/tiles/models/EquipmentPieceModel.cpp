@@ -4,6 +4,8 @@
 
 #include "SlotContentRequirement.h"
 
+#include "GameTime.h"
+
 REGISTER_TILE_MODEL_TYPE(EquipmentPieceModel)
 
 EquipmentPieceModel::EquipmentPieceModel(Tile& owner, CommonData& commonData) :
@@ -49,6 +51,16 @@ void EquipmentPieceModel::loadFromConfiguration(ConfigurationNode& config)
     ConfigurationNode attributeParams = config["attributeRandomizationGuidelines"];
     m_commonData->attributeRandomizer.loadFromConfiguration(attributeParams);
 
+    ConfigurationNode lightConfig = config["light"];
+    if (lightConfig.exists())
+    {
+        m_commonData->light = OscillatingLightSource::fromConfig(lightConfig);
+    }
+    else
+    {
+        m_commonData->light = std::nullopt;
+    }
+
     m_commonData->displayedName = config["displayedName"].getDefault<std::string>("");
     m_commonData->drag = config["drag"].get<float>();
     m_commonData->maxThrowDistance = config["maxThrowDistance"].getDefault<int>(0);
@@ -82,6 +94,21 @@ TileRarity EquipmentPieceModel::rarity() const
 float EquipmentPieceModel::lightDimming() const
 {
     return m_commonData->lightDimming;
+}
+std::optional<Light> EquipmentPieceModel::light(const ls::Vec2I& pos) const
+{
+    if (m_commonData->light.has_value())
+    {
+        return Light(
+            m_commonData->light.value().at(GameTime::instance().now(), static_cast<double>(reinterpret_cast<intptr_t>(this))),
+            static_cast<ls::Vec2F>(pos) + ls::Vec2F(0.5f, 0.5f),
+            this
+        );
+    }
+    else
+    {
+        return std::nullopt;
+    }
 }
 std::string EquipmentPieceModel::prefix() const
 {

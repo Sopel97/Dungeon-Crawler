@@ -26,6 +26,10 @@ Light::Light(const LightParams& params, const ls::Vec2F& position, const void* o
 
 }
 
+const LightParams& Light::params() const
+{
+    return m_params;
+}
 const ls::Vec2F& Light::position() const
 {
     return m_position;
