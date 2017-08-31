@@ -104,6 +104,7 @@ void Root::processAsyncKeyboardInput(float dt)
 
 void Root::loadAssets()
 {
+    loadEffects();
     loadTextures();
     loadProjectiles();
     loadTiles();

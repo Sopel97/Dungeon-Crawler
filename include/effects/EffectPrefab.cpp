@@ -11,14 +11,15 @@ EffectPrefab::~EffectPrefab()
 {
 }
 
-void EffectPrefab::loadFromConfiguration(Configuration& config)
+void EffectPrefab::loadFromConfiguration(ConfigurationNode& config)
 {
     ConfigurationNode attributesConfig = config["attributes"];
     const int numAttributes = attributesConfig.length();
     for (int i = 1; i <= numAttributes; ++i)
     {
-        const AttributeId attributeId = AttributeIdHelper::stringToEnum(attributesConfig[1].get<std::string>());
-        const int attributeValue = attributesConfig[2].get<int>();
+        const std::string attributeName = attributesConfig[i][1].get<std::string>();
+        const AttributeId attributeId = AttributeIdHelper::stringToEnum(attributeName);
+        const int attributeValue = attributesConfig[i][2].get<int>();
         m_attributes += Attribute{ attributeId, attributeValue };
     }
 

@@ -12,7 +12,7 @@ public:
     EffectPrefab();
     ~EffectPrefab();
 
-    void loadFromConfiguration(Configuration& config);
+    void loadFromConfiguration(ConfigurationNode& config);
 
     Effect instantiate() const;
 protected:

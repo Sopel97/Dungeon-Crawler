@@ -158,6 +158,13 @@ std::pair<std::string, std::unique_ptr<EffectPrefab>> ResourceLoader<EffectPrefa
 {
     std::unique_ptr<EffectPrefab> effect = std::make_unique<EffectPrefab>();
     Configuration config = Configuration(path);
-    effect->loadFromConfiguration(config);
-    return std::make_pair(path, std::move(effect));
+    ConfigurationNode effectConfig = config["effect"];
+    std::string effectName = effectConfig["name"].get<std::string>();
+    effect->loadFromConfiguration(effectConfig);
+
+    Logger::instance().logLazy(Logger::Priority::Info, [&]()->std::string {return
+        "Loaded effect: " + effectName;
+    });
+
+    return std::make_pair(effectName, std::move(effect));
 }

@@ -1,0 +1,10 @@
+effect = {
+    name = "Test",
+
+    attributes = {
+        {"Attack", 2},
+        {"Defense", -1}
+    },
+
+    duration = 60.0
+}
