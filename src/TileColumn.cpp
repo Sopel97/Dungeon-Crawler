@@ -126,7 +126,7 @@ std::optional<Light> TileColumn::light(const ls::Vec2I& pos) const
 
     if (numLights == 0) return std::nullopt;
     
-    return Light(position, radius / numLights, sf::Color(r / numLights, g / numLights, b / numLights), owner);
+    return Light(LightParams(radius / numLights, sf::Color(r / numLights, g / numLights, b / numLights)), position, owner);
 }
 bool TileColumn::hasAnyLight(const ls::Vec2I& pos) const
 {

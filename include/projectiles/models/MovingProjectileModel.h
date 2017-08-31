@@ -9,6 +9,8 @@
 
 #include "colliders/ProjectileCollider.h"
 
+#include "OscillatingLightSource.h"
+
 #include "../LibS/Shapes.h"
 
 #include "AttributeArray.h"
@@ -20,21 +22,8 @@ class MovingProjectileModel : public ProjectileModel
 public:
     struct CommonData : public ComponentCommonData
     {
-        struct Light
-        {
-            float radius;
-            sf::Color color;
-        };
-
-        struct OscillatingLight
-        {
-            Light light1;
-            Light light2;
-            float freq;
-        };
-
         std::vector<AttributeId> inheritedAttributes;
-        std::optional<OscillatingLight> light;
+        std::optional<OscillatingLightSource> light;
         float initialSpeed;
         float radius;
         float acceleration;

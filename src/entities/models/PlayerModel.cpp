@@ -95,11 +95,15 @@ const AttributeArray& PlayerModel::attributes() const
 }
 std::optional<Light> PlayerModel::light() const
 {
-    return OscillatingLightSource(
-        Light(m_position, 4.0f, sf::Color::Red, this),
-        Light(m_position, 3.5f, sf::Color::Blue, this),
-        0.5
-    ).at(GameTime::instance().now());
+    return Light(
+        OscillatingLightSource(
+            LightParams(4.0f, sf::Color::Red),
+            LightParams(3.5f, sf::Color::Blue),
+            0.5
+        ).at(GameTime::instance().now()),
+        m_position,
+        this
+    );
 }
 
 EntityModel::Direction PlayerModel::directionOfMove() const

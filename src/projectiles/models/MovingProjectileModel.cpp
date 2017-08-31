@@ -69,11 +69,11 @@ void MovingProjectileModel::loadFromConfiguration(ConfigurationNode& config)
 
         const float freq = lightConfig["freq"].get<float>();
 
-        m_commonData->light = CommonData::OscillatingLight{
-            CommonData::Light{ rad1, sf::Color(r1, g1, b1) },
-            CommonData::Light{ rad2, sf::Color(r2, g2, b2) },
+        m_commonData->light = OscillatingLightSource(
+            LightParams( rad1, sf::Color(r1, g1, b1) ),
+            LightParams( rad2, sf::Color(r2, g2, b2) ),
             freq
-        };
+        );
     }
     else
     {
@@ -121,15 +121,11 @@ std::optional<Light> MovingProjectileModel::light() const
 {
     if (m_commonData->light.has_value())
     {
-        const auto& light1 = m_commonData->light.value().light1;
-        const auto& light2 = m_commonData->light.value().light2;
-        const float freq = m_commonData->light.value().freq;
-
-        return OscillatingLightSource(
-            Light(m_position, light1.radius, light1.color, this),
-            Light(m_position, light2.radius, light2.color, this),
-            freq
-        ).at(GameTime::instance().now(), static_cast<double>(reinterpret_cast<intptr_t>(this))); //TODO: better way to get per entity constant value;
+        return Light(
+            m_commonData->light.value().at(GameTime::instance().now(), static_cast<double>(reinterpret_cast<intptr_t>(this))),
+            m_position,
+            this
+        );
     }
     else
     {
@@ -191,7 +187,7 @@ void MovingProjectileModel::update(World& world, float dt)
     constexpr float minSpeed = 0.1f;
 
     const float speed = m_velocity.magnitude();
-    const float newSpeed = std::max(0.0f, speed - m_commonData->acceleration * dt);
+    const float newSpeed = std::max(0.0f, speed + m_commonData->acceleration * dt);
 
     if (newSpeed > minSpeed)
     {

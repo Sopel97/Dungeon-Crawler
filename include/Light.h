@@ -7,20 +7,30 @@
 #include <SFML/Graphics/RenderTarget.hpp>
 #include <SFML/Graphics/RenderStates.hpp>
 
+class LightParams
+{
+public:
+    LightParams(float radius, const sf::Color& color);
+
+    float radius() const;
+    const sf::Color& color() const;
+
+private:
+    float m_radius;
+    sf::Color m_color;
+};
+
 class Light
 {
 public:
-    Light(const ls::Vec2F& position, float radius, const sf::Color& color, const void* owner);
+    Light(const LightParams& params, const ls::Vec2F& position, const void* owner);
 
     const ls::Vec2F& position() const;
     float radius() const;
     const sf::Color& color() const;
-
-    const ls::Rectangle2F bounds() const;
-
     const void* owner() const;
 
-    void draw(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates, const sf::Texture& texture) const;
+    ls::Rectangle2F bounds() const;
 
     static constexpr int maxLightRadius()
     {
@@ -30,8 +40,7 @@ public:
 private:
     static constexpr int m_maxLightRadius = 4;
 
+    LightParams m_params;
     ls::Vec2F m_position;
-    float m_radius;
-    sf::Color m_color;
     const void* m_owner;
 };

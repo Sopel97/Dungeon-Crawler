@@ -2,10 +2,25 @@
 
 #include <SFML/Graphics.hpp>
 
-Light::Light(const ls::Vec2F& position, float radius, const sf::Color& color, const void* owner) :
-    m_position(position),
+LightParams::LightParams(float radius, const sf::Color& color) :
     m_radius(radius),
-    m_color(color),
+    m_color(color)
+{
+
+}
+
+float LightParams::radius() const
+{
+    return m_radius;
+}
+const sf::Color& LightParams::color() const
+{
+    return m_color;
+}
+
+Light::Light(const LightParams& params, const ls::Vec2F& position, const void* owner) :
+    m_params(params),
+    m_position(position),
     m_owner(owner)
 {
 
@@ -17,31 +32,19 @@ const ls::Vec2F& Light::position() const
 }
 float Light::radius() const
 {
-    return m_radius;
+    return m_params.radius();
 }
 const sf::Color& Light::color() const
 {
-    return m_color;
-}
-
-const ls::Rectangle2F Light::bounds() const
-{
-    const ls::Vec2F radiusVector(m_radius, m_radius);
-    return ls::Rectangle2F(m_position - radiusVector, m_position + radiusVector);
+    return m_params.color();
 }
 const void* Light::owner() const
 {
     return m_owner;
 }
-void Light::draw(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates, const sf::Texture& texture) const
+
+ls::Rectangle2F Light::bounds() const
 {
-    const ls::Vec2F topLeft = m_position - ls::Vec2F(m_radius, m_radius);
-
-    sf::RectangleShape playerLightShape;
-    playerLightShape.setTexture(&texture, true);
-    playerLightShape.setPosition(sf::Vector2f(topLeft.x, topLeft.y));
-    playerLightShape.setSize(sf::Vector2f(m_radius * 2.0f, m_radius * 2.0f));
-    playerLightShape.setFillColor(m_color);
-
-    renderTarget.draw(playerLightShape, renderStates);
+    const ls::Vec2F radiusVector(radius(), radius());
+    return ls::Rectangle2F(m_position - radiusVector, m_position + radiusVector);
 }
