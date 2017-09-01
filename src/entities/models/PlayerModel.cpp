@@ -105,6 +105,19 @@ std::optional<Light> PlayerModel::light() const
     }
 }
 
+bool PlayerModel::addEffect(const Effect& effect)
+{
+    return m_playerOwner->addEffect(effect);
+}
+bool PlayerModel::hasEffect(int id) const
+{
+    return m_playerOwner->hasEffect(id);
+}
+bool PlayerModel::removeEffect(int id)
+{
+    return m_playerOwner->removeEffect(id);
+}
+
 EntityModel::Direction PlayerModel::directionOfMove() const
 {
     return m_directionOfMove;

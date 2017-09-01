@@ -87,6 +87,18 @@ std::optional<Light> EntityModel::light() const
 {
     return std::nullopt;
 }
+bool EntityModel::addEffect(const Effect& effect)
+{
+    return false;
+}
+bool EntityModel::hasEffect(int id) const
+{
+    return false;
+}
+bool EntityModel::removeEffect(int id)
+{
+    return false;
+}
 
 void EntityModel::onEntityInstantiated(const ls::Vec2F& pos)
 {

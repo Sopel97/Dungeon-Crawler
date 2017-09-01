@@ -14,11 +14,11 @@ public:
 
     void loadFromConfiguration(ConfigurationNode& config);
 
-    Effect instantiate() const;
+    Effect instantiate(std::optional<float> duration = std::nullopt) const;
 protected:
     int m_id;
     AttributeSet m_attributes;
-    std::optional<float> m_duration;
+    EffectOverwrite m_overwrite;
 
     static int m_lastId;
 };

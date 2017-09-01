@@ -12,6 +12,7 @@
 
 #include "AttributeArray.h"
 #include "effects/Effect.h"
+#include "effects/EffectsSet.h"
 
 #include "entities/Entity.h"
 #include "entities/models/EntityModel.h"
@@ -63,8 +64,9 @@ public:
     void showTileDescription(const TileDescription& description);
     void showTileDescription(TileDescription&& description);
 
-    bool addEffect(const Effect& effect, bool forceOverwrite = false);
+    bool addEffect(const Effect& effect);
     bool hasEffect(int id) const;
+    bool removeEffect(int id);
 
     void attack(World& world, const ls::Vec2F& pos);
 
@@ -75,24 +77,6 @@ public:
     std::optional<LightParams> light() const;
 
 protected:
-    struct EffectCompareById
-    {
-        using is_transparent = void;
-
-        bool operator()(const Effect& lhs, const Effect& rhs) const
-        {
-            return lhs.id() < rhs.id();
-        }
-        bool operator()(const Effect& lhs, int rhs) const
-        {
-            return lhs.id() < rhs;
-        }
-        bool operator()(int lhs, const Effect& rhs) const
-        {
-            return lhs < rhs.id();
-        }
-    };
-
     WindowSpaceManager* m_wsm;
     World* m_world;
     Entity m_playerEntity;
@@ -102,7 +86,7 @@ protected:
     float m_weaponUseTimeLeft;
     float m_weaponCooldownLeft;
     std::optional<EntityModel::Direction> m_forcedDirection;
-    std::set<Effect, EffectCompareById> m_temporaryAttributes;
+    EffectsSet m_effects;
 
     AttributeArray m_currentAttributes;
 

@@ -43,5 +43,5 @@ tile = {
     maxThrowDistance = 10,
 
     useTime = 0.5,
-    cooldown = 0.5
+    cooldown = 0.01
 }

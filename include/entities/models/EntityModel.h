@@ -20,6 +20,7 @@
 class Entity;
 class AttributeArray;
 class World;
+class Effect;
 
 class EntityModel : public EntityComponent<EntityModel, Entity>
 {
@@ -53,6 +54,10 @@ public:
     virtual TileStack& ammo();
     virtual const AttributeArray& attributes() const;
     virtual std::optional<Light> light() const;
+
+    virtual bool addEffect(const Effect& effect);
+    virtual bool hasEffect(int id) const;
+    virtual bool removeEffect(int id);
 
     void onEntityInstantiated(const ls::Vec2F& pos) override;
 

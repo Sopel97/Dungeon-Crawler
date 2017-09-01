@@ -23,18 +23,10 @@ void EffectPrefab::loadFromConfiguration(ConfigurationNode& config)
         m_attributes += Attribute{ attributeId, attributeValue };
     }
 
-    ConfigurationNode durationConfig = config["duration"];
-    if (durationConfig.exists())
-    {
-        m_duration = durationConfig.get<float>();
-    }
-    else
-    {
-        m_duration = std::nullopt;
-    }
+    m_overwrite = EffectOverwriteHelper::stringToEnum(config["overwrite"].get<std::string>());
 }
 
-Effect EffectPrefab::instantiate() const
+Effect EffectPrefab::instantiate(std::optional<float> duration) const
 {
-    return Effect(m_id, m_attributes, m_duration);
+    return Effect(m_id, m_attributes, m_overwrite, duration);
 }

@@ -37,6 +37,10 @@ public:
     const AttributeArray& attributes() const override;
     std::optional<Light> light() const override;
 
+    bool addEffect(const Effect& effect) override;
+    bool hasEffect(int id) const override;
+    bool removeEffect(int id) override;
+
     EntityModel::Direction directionOfMove() const override;
 
     void update(World& world, float dt) override;
