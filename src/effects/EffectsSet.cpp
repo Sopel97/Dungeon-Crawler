@@ -13,7 +13,7 @@ bool EffectsSet::addEffect(const Effect& effect)
 
     if (
         effect.overwrite() == EffectOverwrite::Always || 
-        (effect.overwrite() == EffectOverwrite::Longer && iter->timeLeft() < effect.timeLeft())
+        (effect.overwrite() == EffectOverwrite::Longer && isFirstLonger(effect, *iter))
         )
     {
         m_effects.erase(iter);
@@ -63,4 +63,15 @@ void EffectsSet::update(float dt)
             ++iter;
         }
     }
+}
+
+bool EffectsSet::isFirstLonger(const Effect& first, const Effect& second)
+{
+    const auto& firstTimeLeft = first.timeLeft();
+    const auto& secondTimeLeft = second.timeLeft();
+
+    if (!firstTimeLeft.has_value()) return true;
+    if (!secondTimeLeft.has_value()) return false;
+
+    return firstTimeLeft.value() > secondTimeLeft.value();
 }

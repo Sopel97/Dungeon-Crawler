@@ -35,4 +35,6 @@ private:
     };
 
     std::set<Effect, EffectCompareById> m_effects;
+
+    static bool isFirstLonger(const Effect& first, const Effect& second);
 };

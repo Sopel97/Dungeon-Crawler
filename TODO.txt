@@ -19,6 +19,8 @@ hook up StaticEmbeddedHomogenousMemoryPool for components, tiles, entities, proj
 
 - global Input class for input aside sfml events
 
+- store actual geometry in outer border cache and inner border cache?
+
 - change controls
 -- ALT + LMB move amount chosen in window
 --- trying to put item displays a window
