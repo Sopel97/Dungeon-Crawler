@@ -10,20 +10,7 @@ SpriteBatch::SpriteBatch() :
 
 void SpriteBatch::emplaceRectangle(const sf::Texture* texture, const ls::Vec2F& position, const ls::Vec2F& size, const ls::Vec2F& texCoords, const ls::Vec2F& texSize, const sf::Color& color)
 {
-    const sf::Vertex topLeft(sf::Vector2f(position.x, position.y), color, sf::Vector2f(texCoords.x, texCoords.y));
-    const sf::Vertex topRight(sf::Vector2f(position.x + size.x, position.y), color, sf::Vector2f(texCoords.x + texSize.x, texCoords.y));
-    const sf::Vertex bottomLeft(sf::Vector2f(position.x, position.y + size.y), color, sf::Vector2f(texCoords.x, texCoords.y + texSize.y));
-    const sf::Vertex bottomRight(sf::Vector2f(position.x + size.x, position.y + size.y), color, sf::Vector2f(texCoords.x + texSize.x, texCoords.y + texSize.y));
-
-    auto& buffer = findBuffer(texture);
-
-    buffer.emplace_back(topLeft);
-    buffer.emplace_back(topRight);
-    buffer.emplace_back(bottomRight);
-
-    buffer.emplace_back(topLeft);
-    buffer.emplace_back(bottomRight);
-    buffer.emplace_back(bottomLeft);
+    emplaceGeometry(texture, geometryFromRectangle(position, size, texCoords, texSize, color));
 }
 void SpriteBatch::emplaceRotatedRectangle(const sf::Texture* texture, const ls::Vec2F& position, const ls::Vec2F& size, const ls::Vec2F& texCoords, const ls::Vec2F& texSize, const ls::Vec2F& rotation, const ls::Vec2F& origin, const sf::Color& color)
 {
@@ -31,7 +18,29 @@ void SpriteBatch::emplaceRotatedRectangle(const sf::Texture* texture, const ls::
 }
 void SpriteBatch::emplaceRotatedRectangle(const sf::Texture* texture, const ls::Vec2F& position, const ls::Vec2F& size, const ls::Vec2F& texCoords, const ls::Vec2F& texSize, const ls::Angle2F& rotation, const ls::Vec2F& origin, const sf::Color& color)
 {
-    
+    emplaceGeometry(texture, geometryFromRotatedRectangle(position, size, texCoords, texSize, rotation, origin, color));
+}
+void SpriteBatch::emplaceGeometry(const sf::Texture* texture, const SpriteGeometry& geometry)
+{
+    auto& buffer = findBuffer(texture);
+    buffer.insert(buffer.end(), geometry.vertices.begin(), geometry.vertices.end());
+}
+
+SpriteBatch::SpriteGeometry SpriteBatch::geometryFromRectangle(const ls::Vec2F& position, const ls::Vec2F& size, const ls::Vec2F& texCoords, const ls::Vec2F& texSize, const sf::Color& color)
+{
+    const sf::Vertex topLeft(sf::Vector2f(position.x, position.y), color, sf::Vector2f(texCoords.x, texCoords.y));
+    const sf::Vertex topRight(sf::Vector2f(position.x + size.x, position.y), color, sf::Vector2f(texCoords.x + texSize.x, texCoords.y));
+    const sf::Vertex bottomLeft(sf::Vector2f(position.x, position.y + size.y), color, sf::Vector2f(texCoords.x, texCoords.y + texSize.y));
+    const sf::Vertex bottomRight(sf::Vector2f(position.x + size.x, position.y + size.y), color, sf::Vector2f(texCoords.x + texSize.x, texCoords.y + texSize.y));
+
+    return SpriteGeometry{ topLeft, topRight, bottomRight, topLeft, bottomRight, bottomLeft };
+}
+SpriteBatch::SpriteGeometry SpriteBatch::geometryFromRotatedRectangle(const ls::Vec2F& position, const ls::Vec2F& size, const ls::Vec2F& texCoords, const ls::Vec2F& texSize, const ls::Vec2F& rotation, const ls::Vec2F& origin, const sf::Color& color)
+{
+    return geometryFromRotatedRectangle(position, size, texCoords, texSize, rotation.angle(), origin, color);
+}
+SpriteBatch::SpriteGeometry SpriteBatch::geometryFromRotatedRectangle(const ls::Vec2F& position, const ls::Vec2F& size, const ls::Vec2F& texCoords, const ls::Vec2F& texSize, const ls::Angle2F& rotation, const ls::Vec2F& origin, const sf::Color& color)
+{
     const ls::Vec2F topLeft(position.x, position.y);
     const ls::Vec2F topRight(position.x + size.x, position.y);
     const ls::Vec2F bottomLeft(position.x, position.y + size.y);
@@ -50,15 +59,7 @@ void SpriteBatch::emplaceRotatedRectangle(const sf::Texture* texture, const ls::
     const sf::Vertex v2(sf::Vector2f(p2.x, p2.y), color, sf::Vector2f(texCoords.x, texCoords.y + texSize.y));
     const sf::Vertex v3(sf::Vector2f(p3.x, p3.y), color, sf::Vector2f(texCoords.x + texSize.x, texCoords.y + texSize.y));
 
-    auto& buffer = findBuffer(texture);
-
-    buffer.emplace_back(v0);
-    buffer.emplace_back(v1);
-    buffer.emplace_back(v3);
-
-    buffer.emplace_back(v0);
-    buffer.emplace_back(v3);
-    buffer.emplace_back(v2);
+    return SpriteGeometry{ v0, v1, v3, v0, v3, v2 };
 }
 
 void SpriteBatch::clear()
