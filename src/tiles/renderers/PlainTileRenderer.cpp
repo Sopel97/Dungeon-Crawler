@@ -54,25 +54,27 @@ void PlainTileRenderer::loadFromConfiguration(ConfigurationNode& config)
     m_commonData->coversOuterBorders = config["coversOuterBorders"].getDefault<bool>(defaultForBorderCovering);
 }
 
-void PlainTileRenderer::draw(SpriteBatch& spriteBatch, const TileLocation& location) const
+void PlainTileRenderer::draw(SpriteBatch& mainSriteBatch, SpriteBatch& metaSpriteBatch, const TileLocation& location) const
 {
     if (!m_commonData->spritesheet) return;
-    draw(spriteBatch, location, Vec2I(0, 0));
-}
-void PlainTileRenderer::drawMeta(SpriteBatch& spriteBatch, const TileLocation& location) const
-{
-    if (!m_commonData->spritesheet || !m_commonData->hasMetaTexture) return;
-    draw(spriteBatch, location, Vec2I(texture().getSize().x / 2, 0));
-}
-void PlainTileRenderer::draw(SpriteBatch& spriteBatch, const TileLocation& location, const ls::Vec2I& textureOffset) const
-{
+
     const ls::Vec2F sprite = static_cast<ls::Vec2F>(spritesheet().gridCoordsToTexCoords(m_currentAnimatedSprite->now()));
     const ls::Vec2F spriteSize = static_cast<ls::Vec2F>(spritesheet().gridSizeToTexSize({ m_commonData->spriteSize, m_commonData->spriteSize }));
     const ls::Vec2F size(static_cast<float>(m_commonData->spriteSize), static_cast<float>(m_commonData->spriteSize));
     const ls::Vec2F pos(static_cast<float>(location.x - (m_commonData->spriteSize - 1)), static_cast<float>(location.y - (m_commonData->spriteSize - 1)));
 
-    spriteBatch.emplaceRectangle(&(texture()), pos, size, sprite + textureOffset, spriteSize);
+    auto geometry = SpriteBatch::geometryFromRectangle(pos, size, sprite, spriteSize);
+    mainSriteBatch.emplaceGeometry(&(texture()), geometry);
+
+    if (!m_commonData->hasMetaTexture) return;
+    const sf::Vector2f texOffset(texture().getSize().x / 2.0f, 0.0f);
+    for (auto& v : geometry.vertices)
+    {
+        v.texCoords += texOffset;
+    }
+    metaSpriteBatch.emplaceGeometry(&(texture()), geometry);
 }
+
 void PlainTileRenderer::draw(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates, const InventorySlotView& slot) const
 {
     const ls::Vec2I sprite = spritesheet().gridCoordsToTexCoords(m_currentAnimatedSprite->now());

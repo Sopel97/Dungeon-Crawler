@@ -14,6 +14,8 @@
 
 #include "WorkerThread.h"
 
+#include "SpriteBatch.h"
+
 #include <vector>
 
 class Root;
@@ -115,8 +117,7 @@ protected:
     void buildOuterBorderCache();
     void updateOuterBorderCache(const TileLocation & tileLocation);
     void drawOuterBorder(SpriteBatch& spriteBatch, const TileLocation & tileLocation);
-    void drawMain(const sf::RenderStates& renderStates);
-    void drawMeta(const sf::RenderStates& renderStates);
+    void draw(const sf::RenderStates& renderStates);
     void drawIntermidiate(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates);
     void drawLightMapToIntermidiate(const sf::RenderStates& renderStates);
     std::vector<sf::Vertex> generateLightGeometry(const Light& light);

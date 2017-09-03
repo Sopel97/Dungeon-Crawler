@@ -42,16 +42,7 @@ void MovingEntityRenderer::loadFromConfiguration(ConfigurationNode& config)
     m_sprites.y = config["sprites"][2].get<int>();
 }
 
-void MovingEntityRenderer::draw(SpriteBatch& spriteBatch) const
-{
-    draw(spriteBatch, ls::Vec2I(0, 0));
-}
-
-void MovingEntityRenderer::drawMeta(SpriteBatch& spriteBatch) const
-{
-    draw(spriteBatch, ls::Vec2I(m_spritesheet.get().texture().getSize().x / 2, 0));
-}
-void MovingEntityRenderer::draw(SpriteBatch& spriteBatch, const ls::Vec2I& textureOffset) const
+void MovingEntityRenderer::draw(SpriteBatch& mainSpriteBatch, SpriteBatch& metaSpriteBatch) const
 {
     const Vec2F offsetToOrigin = Vec2F(-25 / 32.0f, -26 / 32.0f);
     constexpr float steppingSpeedThreshold = 16.0f;
@@ -82,7 +73,16 @@ void MovingEntityRenderer::draw(SpriteBatch& spriteBatch, const ls::Vec2I& textu
     const ls::Vec2F size(1.0f, 1.0f);
     ls::Vec2F pos = m_owner->model().position() + offsetToOrigin;
 
-    spriteBatch.emplaceRectangle(&(texture()), pos, size, sprite + textureOffset, spriteSize);
+    auto geometry = SpriteBatch::geometryFromRectangle(pos, size, sprite, spriteSize);
+
+    mainSpriteBatch.emplaceGeometry(&(texture()), geometry);
+
+    const sf::Vector2f texOffset(m_spritesheet.get().texture().getSize().x / 2.0f, 0.0f);
+    for (auto& v : geometry.vertices)
+    {
+        v.texCoords += texOffset;
+    }
+    metaSpriteBatch.emplaceGeometry(&(texture()), geometry);
 }
 
 const sf::Texture& MovingEntityRenderer::texture() const

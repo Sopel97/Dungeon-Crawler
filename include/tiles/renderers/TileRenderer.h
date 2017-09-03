@@ -32,12 +32,10 @@ public:
     TileRenderer(const TileRenderer& other, Tile& owner);
     ~TileRenderer() override;
 
-    virtual void draw(SpriteBatch& spriteBatch, const TileLocation& location) const;
-    virtual void drawOutside(SpriteBatch& spriteBatch, const TileLocation& location, const TileOuterBorderCache& cache) const;
-
-    virtual void drawMeta(SpriteBatch& spriteBatch, const TileLocation& location) const;
+    virtual void draw(SpriteBatch& mainSriteBatch, SpriteBatch& metaSpriteBatch, const TileLocation& location) const;
 
     virtual void draw(sf::RenderTarget& renderTarget, const sf::RenderStates& renderStates, const InventorySlotView& slot) const;
+    virtual void drawOutside(SpriteBatch& spriteBatch, const TileLocation& location, const TileOuterBorderCache& cache) const;
 
     virtual TileOuterBorderCache buildOuterBorderCache(const TileLocation& location) const;
 

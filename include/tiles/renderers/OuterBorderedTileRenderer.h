@@ -44,7 +44,7 @@ public:
 
     void loadFromConfiguration(ConfigurationNode& config) override;
 
-    void draw(SpriteBatch& spriteBatch, const TileLocation& location) const override;
+    void draw(SpriteBatch& mainSpriteBatch, SpriteBatch& metaSpriteBatch, const TileLocation& location) const override;
     void drawOutside(SpriteBatch& spriteBatch, const TileLocation& location, const TileOuterBorderCache& cache) const override;
 
     TileOuterBorderCache buildOuterBorderCache(const TileLocation& location) const override;

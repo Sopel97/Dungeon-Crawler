@@ -72,21 +72,27 @@ void InnerBorderedWallTileRenderer::loadFromConfiguration(ConfigurationNode& con
     m_commonData->innerBorderGroup = config["innerBorderGroup"].get<std::string>();
 }
 
-void InnerBorderedWallTileRenderer::draw(SpriteBatch& spriteBatch, const TileLocation& location) const
+void InnerBorderedWallTileRenderer::drawGeometry(SpriteBatch& mainSpriteBatch, SpriteBatch& metaSpriteBatch, SpriteBatch::SpriteGeometry& geometry) const
+{
+    const sf::Vector2f texOffset(texture().getSize().x / 2.0f, 0.0f);
+
+    mainSpriteBatch.emplaceGeometry(&(texture()), geometry);
+
+    if (m_commonData->hasMetaTexture)
+    {
+        for (auto& v : geometry.vertices)
+        {
+            v.texCoords += texOffset;
+        }
+        metaSpriteBatch.emplaceGeometry(&(texture()), geometry);
+    }
+}
+void InnerBorderedWallTileRenderer::draw(SpriteBatch& mainSpriteBatch, SpriteBatch& metaSpriteBatch, const TileLocation& location) const
 {
     if (!m_commonData->spritesheet) return;
-    draw(spriteBatch, location, ls::Vec2I(0, 0));
-}
 
-void InnerBorderedWallTileRenderer::drawMeta(SpriteBatch& spriteBatch, const TileLocation& location) const
-{
-    if (!m_commonData->spritesheet || !m_commonData->hasMetaTexture) return;
-    draw(spriteBatch, location, ls::Vec2I(texture().getSize().x / 2, 0));
-}
-void InnerBorderedWallTileRenderer::draw(SpriteBatch& spriteBatch, const TileLocation& location, const ls::Vec2I& textureOffset) const
-{
-    int x = location.x;
-    int y = location.y;
+    const int x = location.x;
+    const int y = location.y;
 
     //on x, y
     if (m_spriteCache00 != nullptr)
@@ -96,7 +102,8 @@ void InnerBorderedWallTileRenderer::draw(SpriteBatch& spriteBatch, const TileLoc
         const ls::Vec2F size(1.0f, 1.0f);
         const ls::Vec2F pos(x * size.x, y * size.y);
 
-        spriteBatch.emplaceRectangle(&(texture()), pos, size, sprite + textureOffset, spriteSize);
+        auto geometry = SpriteBatch::geometryFromRectangle(pos, size, sprite, spriteSize);
+        drawGeometry(mainSpriteBatch, metaSpriteBatch, geometry);
     }
 
     //on x-1, y
@@ -107,7 +114,8 @@ void InnerBorderedWallTileRenderer::draw(SpriteBatch& spriteBatch, const TileLoc
         const ls::Vec2F size(1.0f, 1.0f);
         const ls::Vec2F pos((x - 1) * size.x, y * size.y);
 
-        spriteBatch.emplaceRectangle(&(texture()), pos, size, sprite + textureOffset, spriteSize);
+        auto geometry = SpriteBatch::geometryFromRectangle(pos, size, sprite, spriteSize);
+        drawGeometry(mainSpriteBatch, metaSpriteBatch, geometry);
     }
 
     //on x, y-1
@@ -118,7 +126,8 @@ void InnerBorderedWallTileRenderer::draw(SpriteBatch& spriteBatch, const TileLoc
         const ls::Vec2F size(1.0f, 1.0f);
         const ls::Vec2F pos(x * size.x, (y - 1) * size.y);
 
-        spriteBatch.emplaceRectangle(&(texture()), pos, size, sprite + textureOffset, spriteSize);
+        auto geometry = SpriteBatch::geometryFromRectangle(pos, size, sprite, spriteSize);
+        drawGeometry(mainSpriteBatch, metaSpriteBatch, geometry);
     }
 
     //on x-1, y-1
@@ -129,7 +138,8 @@ void InnerBorderedWallTileRenderer::draw(SpriteBatch& spriteBatch, const TileLoc
         const ls::Vec2F size(1.0f, 1.0f);
         const ls::Vec2F pos((x - 1) * size.x, (y - 1) * size.y);
 
-        spriteBatch.emplaceRectangle(&(texture()), pos, size, sprite + textureOffset, spriteSize);
+        auto geometry = SpriteBatch::geometryFromRectangle(pos, size, sprite, spriteSize);
+        drawGeometry(mainSpriteBatch, metaSpriteBatch, geometry);
     }
 }
 const sf::Texture& InnerBorderedWallTileRenderer::texture() const

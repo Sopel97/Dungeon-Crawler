@@ -7,6 +7,8 @@
 
 #include "ResourceManager.h"
 
+#include "SpriteBatch.h"
+
 #include <memory>
 
 class Projectile;
@@ -30,16 +32,16 @@ public:
 
     void loadFromConfiguration(ConfigurationNode& config) override;
 
-    void draw(SpriteBatch& spriteBatch) const override;
-    void drawMeta(SpriteBatch& spriteBatch) const override;
+    virtual void draw(SpriteBatch& mainSpriteBatch, SpriteBatch& metaSpriteBatch) const;
 
     std::unique_ptr<ProjectileRenderer> clone(Projectile& owner) const override;
 
 protected:
     CommonData* const m_commonData;
 
-    void draw(SpriteBatch& spriteBatch, const ls::Vec2I& texOffset, const sf::Color& color = sf::Color::White) const;
-    void drawShadow(SpriteBatch& spriteBatch) const;
+    SpriteBatch::SpriteGeometry geometry() const;
+    SpriteBatch::SpriteGeometry shadowGeometry() const;
+    SpriteBatch::SpriteGeometry spriteGeometry(const ls::Vec2I& sprite, float altitude, const sf::Color& color = sf::Color::White) const;
 
-    void drawSprite(SpriteBatch& spriteBatch, const ls::Vec2I& sprite, const ls::Vec2I& texOffset, float altitude, const sf::Color& color = sf::Color::White) const;
+    const sf::Texture& texture() const;
 };

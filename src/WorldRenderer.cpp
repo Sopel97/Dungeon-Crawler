@@ -132,8 +132,7 @@ void WorldRenderer::draw(sf::RenderTarget& renderTarget, const sf::RenderStates&
     prepareMetaTexture();
     updateShaderUniforms();
 
-    drawMain(renderStates);
-    drawMeta(renderStates);
+    draw(renderStates);
 
     m_workerThread.wait();
     drawLightGeometryToLightMap();
@@ -150,10 +149,10 @@ ls::Vec2F WorldRenderer::aligned(const ls::Vec2F& pos)
     return ls::Vec2F(std::round(pos.x*tileResolution) / tileResolution, std::round(pos.y*tileResolution) / tileResolution);
 }
 
-void WorldRenderer::drawMain(const sf::RenderStates& renderStates)
+void WorldRenderer::draw(const sf::RenderStates& renderStates)
 {
-    sf::RenderStates colorRenderStates = renderStates;
-    colorRenderStates.shader = &m_intermidiateDepthShader;
+    SpriteBatch mainSpriteBatch;
+    SpriteBatch metaSpriteBatch;
 
     MapLayer& mapLayer = *(m_world.m_mapLayer);
     const Rectangle2F cameraRect = m_camera.viewRectangle();
@@ -163,8 +162,6 @@ void WorldRenderer::drawMain(const sf::RenderStates& renderStates)
     int firstTileY = std::max(Util::fastFloor(cameraTopLeft.y), 0);
     int lastTileX = std::min(Util::fastFloor(cameraBottomRight.x) + 1, m_world.m_width - 1);
     int lastTileY = std::min(Util::fastFloor(cameraBottomRight.y) + 1, m_world.m_height - 1);
-
-    SpriteBatch spriteBatch;
 
     //x,y are inverted here because we want to draw top down
     for (int y = firstTileY; y <= lastTileY; ++y)
@@ -177,11 +174,11 @@ void WorldRenderer::drawMain(const sf::RenderStates& renderStates)
             {
                 TileLocation location(mapLayer, x, y, z);
 
-                tileStack.tile().renderer().draw(spriteBatch, location);
+                tileStack.tile().renderer().draw(mainSpriteBatch, metaSpriteBatch, location);
 
                 if (z == 0 && !tileStack.tile().renderer().coversOuterBorders())
                 {
-                    drawOuterBorder(spriteBatch, location);
+                    drawOuterBorder(mainSpriteBatch, location);
                 }
 
                 ++z;
@@ -191,18 +188,32 @@ void WorldRenderer::drawMain(const sf::RenderStates& renderStates)
 
     for (Entity* visibleEntity : m_world.m_entitySystem.getVisibleEntities(m_camera))
     {
-        visibleEntity->renderer().draw(spriteBatch);
+        visibleEntity->renderer().draw(mainSpriteBatch, metaSpriteBatch);
     }
     for (Projectile* visibleProjectile : m_world.m_projectileSystem.getVisibleProjectiles(m_camera))
     {
-        visibleProjectile->renderer().draw(spriteBatch);
+        visibleProjectile->renderer().draw(mainSpriteBatch, metaSpriteBatch);
     }
 
-    alignVertices(spriteBatch);
+    // finalize main
+    alignVertices(mainSpriteBatch);
 
-    m_intermidiateRenderTarget.draw(spriteBatch, colorRenderStates);
+    sf::RenderStates colorRenderStates = renderStates;
+    colorRenderStates.shader = &m_intermidiateDepthShader;
+
+    m_intermidiateRenderTarget.draw(mainSpriteBatch, colorRenderStates);
 
     m_intermidiateRenderTarget.display();
+
+    // finalize meta
+    alignVertices(metaSpriteBatch);
+
+    sf::RenderStates metaRenderStates = renderStates;
+    metaRenderStates.shader = &m_metaDepthShader;
+
+    m_metaTexture.draw(metaSpriteBatch, metaRenderStates);
+
+    m_metaTexture.display();
 }
 
 void WorldRenderer::prepareIntermidiateRenderTarget()
@@ -254,55 +265,7 @@ void WorldRenderer::updateShaderUniforms()
     m_prettyStretchShader.setParameter("viewOffset", sf::Vector2f(static_cast<float>(viewRect.min.x), static_cast<float>(viewRect.min.y)));
     m_prettyStretchShader.setParameter("destinationTextureSize", sf::Vector2f(static_cast<float>(viewRect.width()), static_cast<float>(viewRect.height())));
 }
-void WorldRenderer::drawMeta(const sf::RenderStates& renderStates)
-{
-    sf::RenderStates metaRenderStates = renderStates;
-    metaRenderStates.shader = &m_metaDepthShader;
 
-    MapLayer& mapLayer = *(m_world.m_mapLayer);
-    const Rectangle2F cameraRect = m_camera.viewRectangle();
-    const Vec2F& cameraTopLeft = cameraRect.min;
-    const Vec2F& cameraBottomRight = cameraRect.max;
-    int firstTileX = std::max(Util::fastFloor(cameraTopLeft.x), 0);
-    int firstTileY = std::max(Util::fastFloor(cameraTopLeft.y), 0);
-    int lastTileX = std::min(Util::fastFloor(cameraBottomRight.x) + 1, m_world.m_width - 1);
-    int lastTileY = std::min(Util::fastFloor(cameraBottomRight.y) + 1, m_world.m_height - 1);
-
-    SpriteBatch spriteBatch;
-
-    //x,y are inverted here because we want to draw top down
-    for (int y = firstTileY; y <= lastTileY; ++y)
-    {
-        for (int x = firstTileX; x <= lastTileX; ++x)
-        {
-            TileColumn& tileColumn = mapLayer.at(x, y);
-            int z = 0;
-            for (TileStack& tileStack : tileColumn.tiles())
-            {
-                TileLocation location(mapLayer, x, y, z);
-
-                tileStack.tile().renderer().drawMeta(spriteBatch, location);
-
-                ++z;
-            }
-        }
-    }
-
-    for (Entity* visibleEntity : m_world.m_entitySystem.getVisibleEntities(m_camera))
-    {
-        visibleEntity->renderer().drawMeta(spriteBatch);
-    }
-    for (Projectile* visibleProjectile : m_world.m_projectileSystem.getVisibleProjectiles(m_camera))
-    {
-        visibleProjectile->renderer().drawMeta(spriteBatch);
-    }
-
-    alignVertices(spriteBatch);
-
-    m_metaTexture.draw(spriteBatch, metaRenderStates);
-
-    m_metaTexture.display();
-}
 void WorldRenderer::alignVertices(SpriteBatch& batch) const
 {
     static constexpr float tileResolution = static_cast<float>(m_tileResolution);

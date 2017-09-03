@@ -34,23 +34,30 @@ void OrientedProjectileRenderer::loadFromConfiguration(ConfigurationNode& config
     m_commonData->altitude = config["altitude"].getDefault<float>(0.0f);
 }
 
-void OrientedProjectileRenderer::draw(SpriteBatch& spriteBatch) const
+void OrientedProjectileRenderer::draw(SpriteBatch& mainSpriteBatch, SpriteBatch& metaSpriteBatch) const
 {
-    draw(spriteBatch, ls::Vec2I(0, 0));
+    auto geom = geometry();
+    mainSpriteBatch.emplaceGeometry(&(texture()), geom);
+    mainSpriteBatch.emplaceGeometry(&(texture()), shadowGeometry());
 
-    drawShadow(spriteBatch);
-}
-void OrientedProjectileRenderer::drawMeta(SpriteBatch& spriteBatch) const
-{
     if (!m_commonData->hasMetaTexture) return;
 
-    draw(spriteBatch, ls::Vec2I(m_commonData->spritesheet.get().texture().getSize().x / 2, 0));
+    const sf::Vector2f texOffset(m_commonData->spritesheet.get().texture().getSize().x / 2.0f, 0.0f);
+    for (auto& v : geom.vertices)
+    {
+        v.texCoords += texOffset;
+    }
+    metaSpriteBatch.emplaceGeometry((&texture()), geom);
 }
-void OrientedProjectileRenderer::drawShadow(SpriteBatch& spriteBatch) const
+SpriteBatch::SpriteGeometry OrientedProjectileRenderer::geometry() const
 {
-    drawSprite(spriteBatch, m_commonData->shadowSprites.now(), ls::Vec2I(0, 0), 0.0f);
+    return spriteGeometry(m_commonData->sprites.now(), m_commonData->altitude);
 }
-void OrientedProjectileRenderer::drawSprite(SpriteBatch& spriteBatch, const ls::Vec2I& sprite, const ls::Vec2I& texOffset, float altitude, const sf::Color& color) const
+SpriteBatch::SpriteGeometry OrientedProjectileRenderer::shadowGeometry() const
+{
+    return spriteGeometry(m_commonData->shadowSprites.now(), 0.0f);
+}
+SpriteBatch::SpriteGeometry OrientedProjectileRenderer::spriteGeometry(const ls::Vec2I& sprite, float altitude, const sf::Color& color) const
 {
     const ls::Vec2F offset = m_commonData->offsetToSpriteOrigin / 32.0f;
 
@@ -66,11 +73,11 @@ void OrientedProjectileRenderer::drawSprite(SpriteBatch& spriteBatch, const ls::
     const ls::Vec2F spriteSize = static_cast<ls::Vec2F>(m_commonData->spritesheet.get().gridSizeToTexSize({ 1, 1 }));
     const ls::Vec2F size(1.0f, 1.0f);
 
-    spriteBatch.emplaceRotatedRectangle(&(m_commonData->spritesheet.get().texture()), pos, size, spritePos + texOffset, spriteSize, direction, pos + offset, color);
+    return SpriteBatch::geometryFromRotatedRectangle(pos, size, spritePos, spriteSize, direction, pos + offset, color);
 }
-void OrientedProjectileRenderer::draw(SpriteBatch& spriteBatch, const ls::Vec2I& texOffset, const sf::Color& color) const
+const sf::Texture& OrientedProjectileRenderer::texture() const
 {
-    drawSprite(spriteBatch, m_commonData->sprites.now(), texOffset, m_commonData->altitude);
+    return m_commonData->spritesheet.get().texture();
 }
 
 std::unique_ptr<ProjectileRenderer> OrientedProjectileRenderer::clone(Projectile& owner) const

@@ -30,8 +30,7 @@ public:
 
     void loadFromConfiguration(ConfigurationNode& config) override;
 
-    void draw(SpriteBatch& spriteBatch) const override;
-    void drawMeta(SpriteBatch& spriteBatch) const override;
+    void draw(SpriteBatch& mainSpriteBatch, SpriteBatch& metaSpriteBatch) const override;
 
     const sf::Texture& texture() const;
 
@@ -40,8 +39,6 @@ protected:
     Player* m_playerOwner;
     ResourceHandle<Spritesheet> m_spritesheet;
     ls::Vec2I m_sprites;
-
-    void draw(SpriteBatch& spriteBatch, const ls::Vec2I& textureOffset) const;
 
     EntityModel::Direction direction() const;
 };

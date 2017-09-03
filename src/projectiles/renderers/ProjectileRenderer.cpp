@@ -15,11 +15,7 @@ ProjectileRenderer::~ProjectileRenderer()
 
 }
 
-void ProjectileRenderer::draw(SpriteBatch& spriteBatch) const
-{
-
-}
-void ProjectileRenderer::drawMeta(SpriteBatch& spriteBatch) const
+void ProjectileRenderer::draw(SpriteBatch& mainSpriteBatch, SpriteBatch& metaSpriteBatch) const
 {
 
 }

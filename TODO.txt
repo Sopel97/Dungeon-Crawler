@@ -28,10 +28,6 @@ hook up StaticEmbeddedHomogenousMemoryPool for components, tiles, entities, proj
 ---- normally no way to select more than stack size, but a safety measure i needed
 --- don't interrupt if the item being moved changed
 
-THIS:
-- instead of separate drawing of normal and meta sprites maybe gather both at once and then render. Many things just differ in texture offset so it would minimize unnecessary recomputation for meta sprites.
--- Use SpriteBatch::SpriteGeometry - 1. calculate sprite geometry; 2. append to main sprite batch; 3. opt. change uv mapping; 4. opt. append to meta sprite batch.
-
 - potions for testing temporary attributes
 
 - consider checking for light occluders/colliders/maybe more; top to bottom (now is bottom to top), and specify a max depth of search

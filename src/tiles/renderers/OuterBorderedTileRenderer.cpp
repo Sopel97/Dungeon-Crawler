@@ -52,14 +52,14 @@ void OuterBorderedTileRenderer::loadFromConfiguration(ConfigurationNode& config)
     m_commonData->outerBorderPriority = config["outerBorderPriority"].get<int>();
 }
 
-void OuterBorderedTileRenderer::draw(SpriteBatch& spriteBatch, const TileLocation& location) const
+void OuterBorderedTileRenderer::draw(SpriteBatch& mainSpriteBatch, SpriteBatch& metaSpriteBatch, const TileLocation& location) const
 {
     const ls::Vec2F sprite = static_cast<ls::Vec2F>(spritesheet().gridCoordsToTexCoords(m_currentAnimatedSprite->now()));
     const ls::Vec2F spriteSize = static_cast<ls::Vec2F>(spritesheet().gridSizeToTexSize({ 1, 1 }));
     const ls::Vec2F size(1.0f, 1.0f);
     const ls::Vec2F pos(location.x * size.x, location.y * size.y);
 
-    spriteBatch.emplaceRectangle(&(texture()), pos, size, sprite, spriteSize);
+    mainSpriteBatch.emplaceRectangle(&(texture()), pos, size, sprite, spriteSize);
 }
 
 void OuterBorderedTileRenderer::drawOutside(SpriteBatch& spriteBatch, const TileLocation& location, const TileOuterBorderCache& cache) const

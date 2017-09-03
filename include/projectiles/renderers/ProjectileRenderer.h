@@ -22,8 +22,7 @@ public:
     ProjectileRenderer(const ProjectileRenderer& other, Projectile& owner);
     ~ProjectileRenderer() override;
 
-    virtual void draw(SpriteBatch& spriteBatch) const;
-    virtual void drawMeta(SpriteBatch& spriteBatch) const;
+    virtual void draw(SpriteBatch& mainSpriteBatch, SpriteBatch& metaSpriteBatch) const;
 
     std::unique_ptr<ProjectileRenderer> clone(Projectile& owner) const override;
 };

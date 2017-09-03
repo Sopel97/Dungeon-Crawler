@@ -15,11 +15,7 @@ EntityRenderer::~EntityRenderer()
 
 }
 
-void EntityRenderer::draw(SpriteBatch& spriteBatch) const
-{
-
-}
-void EntityRenderer::drawMeta(SpriteBatch& spriteBatch) const
+void EntityRenderer::draw(SpriteBatch& mainSpriteBatch, SpriteBatch& metaSpriteBatch) const
 {
 
 }

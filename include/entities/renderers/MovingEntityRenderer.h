@@ -27,8 +27,7 @@ public:
 
     void loadFromConfiguration(ConfigurationNode& config) override;
 
-    void draw(SpriteBatch& spriteBatch) const override;
-    void drawMeta(SpriteBatch& spriteBatch) const override;
+    void draw(SpriteBatch& mainSpriteBatch, SpriteBatch& metaSpriteBatch) const override;
 
     const sf::Texture& texture() const;
 

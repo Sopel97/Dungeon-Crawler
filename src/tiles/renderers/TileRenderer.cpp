@@ -20,15 +20,11 @@ TileRenderer::~TileRenderer()
 
 }
 
-void TileRenderer::draw(SpriteBatch& spriteBatch, const TileLocation& location) const
+void TileRenderer::draw(SpriteBatch& mainSpriteBatch, SpriteBatch& metaSpriteBatch, const TileLocation& location) const
 {
 
 }
 void TileRenderer::drawOutside(SpriteBatch& spriteBatch, const TileLocation& location, const TileOuterBorderCache& cache) const
-{
-
-}
-void TileRenderer::drawMeta(SpriteBatch& spriteBatch, const TileLocation& location) const
 {
 
 }

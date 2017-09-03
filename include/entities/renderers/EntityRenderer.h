@@ -22,8 +22,7 @@ public:
     EntityRenderer(const EntityRenderer& other, Entity& owner);
     ~EntityRenderer() override;
 
-    virtual void draw(SpriteBatch& spriteBatch) const;
-    virtual void drawMeta(SpriteBatch& spriteBatch) const;
+    virtual void draw(SpriteBatch& mainSpriteBatch, SpriteBatch& metaSpriteBatch) const;
 
     std::unique_ptr<EntityRenderer> clone(Entity& owner) const override;
 };

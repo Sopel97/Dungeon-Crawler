@@ -6,6 +6,8 @@
 
 #include "ResourceLoaders.h"
 
+#include "SpriteBatch.h"
+
 #include "../LibS/Geometry.h"
 
 #include "../../ComponentCommonData.h"
@@ -59,8 +61,7 @@ public:
 
     void loadFromConfiguration(ConfigurationNode& config) override;
 
-    void draw(SpriteBatch& spriteBatch, const TileLocation& location) const override;
-    void drawMeta(SpriteBatch& spriteBatch, const TileLocation& location) const override;
+    void draw(SpriteBatch& mainSpriteBatch, SpriteBatch& metaSpriteBatch, const TileLocation& location) const override;
 
     const sf::Texture& texture() const;
     const Spritesheet& spritesheet() const;
@@ -79,7 +80,7 @@ protected:
     const ls::Vec2I* m_spriteCache01;
     const ls::Vec2I* m_spriteCache11;
 
-    virtual void draw(SpriteBatch& spriteBatch, const TileLocation& location, const ls::Vec2I& textureOffset) const;
+    void drawGeometry(SpriteBatch& mainSpriteBatch, SpriteBatch& metaSpriteBatch, SpriteBatch::SpriteGeometry& geometry) const;
 
     void updateCache(const TileLocation& location);
 };

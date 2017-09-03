@@ -50,16 +50,7 @@ void PlayerRenderer::loadFromConfiguration(ConfigurationNode& config)
 {
 }
 
-void PlayerRenderer::draw(SpriteBatch& spriteBatch) const
-{
-    draw(spriteBatch, ls::Vec2I(0, 0));
-}
-
-void PlayerRenderer::drawMeta(SpriteBatch& spriteBatch) const
-{
-    draw(spriteBatch, ls::Vec2I(m_spritesheet.get().texture().getSize().x/2, 0));
-}
-void PlayerRenderer::draw(SpriteBatch& spriteBatch, const ls::Vec2I& textureOffset) const
+void PlayerRenderer::draw(SpriteBatch& mainSpriteBatch, SpriteBatch& metaSpriteBatch) const
 {
     const Vec2F offsetToOrigin = Vec2F(-25 / 32.0f, -26 / 32.0f);
     constexpr float steppingSpeedThreshold = 16.0f / 32.0f;
@@ -84,12 +75,21 @@ void PlayerRenderer::draw(SpriteBatch& spriteBatch, const ls::Vec2I& textureOffs
                 m_sprites.y + direction()
             )
         )
-    );
+        );
     const ls::Vec2F spriteSize = static_cast<ls::Vec2F>(m_spritesheet.get().gridSizeToTexSize({ 1, 1 }));
     const ls::Vec2F size(1.0f, 1.0f);
     ls::Vec2F pos = m_owner->model().position() + offsetToOrigin;
 
-    spriteBatch.emplaceRectangle(&(texture()), pos, size, sprite + textureOffset, spriteSize);
+    auto geometry = SpriteBatch::geometryFromRectangle(pos, size, sprite, spriteSize);
+
+    mainSpriteBatch.emplaceGeometry(&(texture()), geometry);
+
+    const sf::Vector2f texOffset(m_spritesheet.get().texture().getSize().x / 2.0f, 0.0f);
+    for (auto& v : geometry.vertices)
+    {
+        v.texCoords += texOffset;
+    }
+    metaSpriteBatch.emplaceGeometry(&(texture()), geometry);
 }
 
 const sf::Texture& PlayerRenderer::texture() const
