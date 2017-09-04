@@ -1,0 +1,28 @@
+tile = {
+        
+    name = "Test Potion",
+    displayedName = "Test Potion",
+    
+    model = "EffectGivingTileModel",
+    renderer = "PlainTileRenderer",
+
+    texture = "Spritesheet",
+    
+    spriteSelector = "WeightedRandom",
+    sprites = {
+        {{{8, 9}}},
+    },
+
+    maxQuantity = 100,
+
+    drag = 0.85,
+    isThrowableThrough = true,
+    allowsTilesAbove = true,
+    canBeStored = true,
+    maxThrowDistance = 10,
+
+    transformsInto = "Medium Potion Flask",
+    effect = "Test",
+    effectDuration = 10.0
+    
+}

@@ -1,0 +1,25 @@
+tile = {
+        
+    name = "Medium Potion Flask",
+    displayedName = "Medium Potion Flask",
+    
+    model = "PlainTileModel",
+    renderer = "PlainTileRenderer",
+
+    texture = "Spritesheet",
+    
+    spriteSelector = "WeightedRandom",
+    sprites = {
+        {{{9, 9}}},
+    },
+	
+	maxQuantity = 100,
+
+    drag = 0.85,
+    isMovableFrom = true,
+    isThrowableThrough = true,
+    allowsTilesAbove = true,
+    canBeStored = true,
+    maxThrowDistance = 10
+    
+}

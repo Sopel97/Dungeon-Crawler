@@ -30,7 +30,7 @@ hook up StaticEmbeddedHomogenousMemoryPool for components, tiles, entities, proj
 ---- normally no way to select more than stack size, but a safety measure i needed
 --- don't interrupt if the item being moved changed
 
-- potions for testing temporary attributes
+- make tiles inserted into inventory stack with others if possible (on tile use), currently they are placed in the first valid spot.
 
 - consider checking for light occluders/colliders/maybe more; top to bottom (now is bottom to top), and specify a max depth of search
 
