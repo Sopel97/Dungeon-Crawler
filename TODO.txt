@@ -33,11 +33,10 @@ hook up StaticEmbeddedHomogenousMemoryPool for components, tiles, entities, proj
 - make tiles inserted into inventory stack with others if possible (on tile use), currently they are placed in the first valid spot.
 
 - make rarities configurable
-
-- make some cleaning in configuration side of the code
--- optional, set, vector and default types (implemented in LuaTables) should be handled automatically
--- separate files for ls::Shapes, ResourceHandles
--- separate files for other common things being loaded
+-- 'global' array of DynamicEnum<...> loaded on start of Root
+--- encapsulated further in TileRarity instead of being used naked
+--- array with respective colors (since DynamicEnum is enumerated from 0 incrementally)
+-- default rarity table in TileRaritySelector should include all rarities with equal quality ranges for each.
 
 - consider checking for light occluders/colliders/maybe more; top to bottom (now is bottom to top), and specify a max depth of search
 
