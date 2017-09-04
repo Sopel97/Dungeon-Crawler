@@ -6,7 +6,7 @@
 #include "WeightedRandomSpriteSelector.h"
 #include "TimeAnimatedSprite.h"
 
-#include "Configuration.h"
+#include "configuration/Configuration.h"
 
 class TileSpriteSelector
 {

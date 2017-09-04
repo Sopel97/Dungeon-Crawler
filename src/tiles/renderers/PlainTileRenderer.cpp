@@ -11,7 +11,7 @@
 
 #include "sprite/Spritesheet.h"
 
-#include "ConfigurationResourceHandleLoaders.h"
+#include "configuration/ResourceConfigurationReaders.h"
 
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
@@ -43,7 +43,7 @@ PlainTileRenderer::~PlainTileRenderer()
 
 void PlainTileRenderer::loadFromConfiguration(ConfigurationNode& config)
 {
-    ConfigurationLoaders::load(m_commonData->spritesheet, config["texture"]);
+    ConfigurationReaders::read(m_commonData->spritesheet, config["texture"]);
     m_commonData->spriteSelector.loadFromConfiguration(config);
     m_commonData->spriteSize = config["spriteSize"].getDefault<int>(1);
     m_commonData->hasMetaTexture = config["hasMetaTexture"].getDefault<bool>(false);

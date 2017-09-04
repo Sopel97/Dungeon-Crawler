@@ -14,8 +14,8 @@
 
 #include "sprite/Spritesheet.h"
 
-#include "ConfigurationShapesLoaders.h"
-#include "ConfigurationResourceHandleLoaders.h"
+#include "configuration/ShapeConfigurationReaders.h"
+#include "configuration/ResourceConfigurationReaders.h"
 
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
@@ -53,7 +53,7 @@ void InnerBorderedWallTileRenderer::loadFromConfiguration(ConfigurationNode& con
 {
 
     Vec2I spriteSet;
-    ConfigurationLoaders::load(spriteSet, config["spriteSet"]);
+    ConfigurationReaders::read(spriteSet, config["spriteSet"]);
 
     m_commonData->spriteSet.full = spriteSet + Vec2I(2, 3);
     m_commonData->spriteSet.top = spriteSet + Vec2I(2, 1);
@@ -70,7 +70,7 @@ void InnerBorderedWallTileRenderer::loadFromConfiguration(ConfigurationNode& con
     m_commonData->spriteSet.outerTopLeft = spriteSet + Vec2I(2, 2);
     m_commonData->spriteSet.innerBottomRight = spriteSet + Vec2I(0, 0);
 
-    ConfigurationLoaders::load(m_commonData->spritesheet, config["texture"]);
+    ConfigurationReaders::read(m_commonData->spritesheet, config["texture"]);
     m_commonData->hasMetaTexture = config["hasMetaTexture"].get<bool>();
 
     m_commonData->innerBorderGroup = config["innerBorderGroup"].get<std::string>();

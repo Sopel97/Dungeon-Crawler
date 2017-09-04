@@ -1,6 +1,6 @@
 #pragma once 
 
-#include "Configuration.h"
+#include "configuration/Configuration.h"
 
 #include "ComponentCommonData.h"
 #include "entities/EntityComponent.h"

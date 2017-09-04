@@ -10,6 +10,7 @@
 class LightParams
 {
 public:
+    LightParams() = default;
     LightParams(float radius, const sf::Color& color);
 
     float radius() const;
@@ -23,6 +24,7 @@ private:
 class Light
 {
 public:
+    Light() = default;
     Light(const LightParams& params, const ls::Vec2F& position, const void* owner);
 
     const LightParams& params() const;

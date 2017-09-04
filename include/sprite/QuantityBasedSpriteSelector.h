@@ -2,7 +2,7 @@
 
 #include <vector>
 
-#include "Configuration.h"
+#include "configuration/Configuration.h"
 
 #include "../LibS/Geometry.h"
 

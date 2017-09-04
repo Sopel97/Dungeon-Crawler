@@ -4,11 +4,11 @@
 
 #include "ResourceLoaders.h"
 
-#include "Configuration.h"
+#include "configuration/Configuration.h"
 
 #include "../LibS/Geometry.h"
 
-#include "../../ComponentCommonData.h"
+#include "ComponentCommonData.h"
 
 #include "tiles/TileRaritySelector.h"
 #include "tiles/TilePrefixSelector.h"

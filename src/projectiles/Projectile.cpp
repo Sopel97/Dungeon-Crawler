@@ -6,7 +6,7 @@
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 
-#include "Configuration.h"
+#include "configuration/Configuration.h"
 
 #include <memory>
 

@@ -5,7 +5,7 @@
 #include "ResourceManager.h"
 #include "TilePrefab.h"
 #include "TileStack.h"
-#include "Configuration.h"
+#include "configuration/Configuration.h"
 
 class Inventory;
 

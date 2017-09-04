@@ -4,8 +4,9 @@
 
 #include "SlotContentRequirement.h"
 
-#include "ConfigurationOptionalLoader.h"
-#include "ConfigurationResourceHandleLoaders.h"
+#include "configuration/CommonConfigurationReaders.h"
+#include "configuration/ResourceConfigurationReaders.h"
+#include "configuration/OscillatingLightSourceConfigurationReader.h"
 
 #include "Player.h"
 
@@ -31,10 +32,10 @@ void EffectGivingTileModel::loadFromConfiguration(ConfigurationNode& config)
 {
     m_commonData->displayedName = config["displayedName"].getDefault<std::string>("");
 
-    ConfigurationLoaders::load(m_commonData->light, config["light"]);
-    ConfigurationLoaders::load(m_commonData->transformsIntoTile, config["transformsInto"]);
-    ConfigurationLoaders::load(m_commonData->effect, config["effect"]);
-    ConfigurationLoaders::load(m_commonData->effectDuration, config["effectDuration"]);
+    ConfigurationReaders::read(m_commonData->light, config["light"]);
+    ConfigurationReaders::read(m_commonData->transformsIntoTile, config["transformsInto"]);
+    ConfigurationReaders::read(m_commonData->effect, config["effect"]);
+    ConfigurationReaders::read(m_commonData->effectDuration, config["effectDuration"]);
 
     m_commonData->drag = config["drag"].get<float>();
     m_commonData->maxThrowDistance = config["maxThrowDistance"].getDefault<int>(0);

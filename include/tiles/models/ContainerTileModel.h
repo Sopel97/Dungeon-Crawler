@@ -7,7 +7,7 @@
 
 #include "ContainerInventory.h"
 
-#include "Configuration.h"
+#include "configuration/Configuration.h"
 
 #include "../LibS/Geometry.h"
 

@@ -4,6 +4,9 @@
 
 #include "SlotContentRequirement.h"
 
+#include "configuration/SlotContentRequirementConfigurationReader.h"
+#include "configuration/CommonConfigurationReaders.h"
+
 #include "World.h"
 
 #include "Player.h"
@@ -31,10 +34,10 @@ void AmmoTileModel::loadFromConfiguration(ConfigurationNode& config)
     m_commonData->displayedName = config["displayedName"].getDefault<std::string>("");
 
     m_commonData->validSlots.insert(SlotContentRequirement::None);
-    ConfigurationLoaders::load(m_commonData->validSlots, config["validSlots"]);
+    ConfigurationReaders::read(m_commonData->validSlots, config["validSlots"]);
 
     m_commonData->correctSlots.insert(SlotContentRequirement::None);
-    ConfigurationLoaders::load(m_commonData->correctSlots, config["correctSlots"]);
+    ConfigurationReaders::read(m_commonData->correctSlots, config["correctSlots"]);
 
     m_commonData->attributeRandomizer.loadFromConfiguration(config["attributeRandomizationGuidelines"]);
 

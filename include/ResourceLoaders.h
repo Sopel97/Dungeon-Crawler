@@ -19,7 +19,7 @@
 
 #include "effects/EffectPrefab.h"
 
-#include "Configuration.h"
+#include "configuration/Configuration.h"
 
 #include "Logger.h"
 

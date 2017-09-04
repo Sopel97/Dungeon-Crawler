@@ -3,7 +3,10 @@
 #include <algorithm>
 
 #include "SlotContentRequirement.h"
-#include "ConfigurationResourceHandleLoaders.h"
+
+#include "configuration/ResourceConfigurationReaders.h"
+#include "configuration/SlotContentRequirementConfigurationReader.h"
+#include "configuration/CommonConfigurationReaders.h"
 
 #include "Player.h"
 
@@ -33,8 +36,8 @@ void WeaponTileModel::loadFromConfiguration(ConfigurationNode& config)
 {
     m_commonData->displayedName = config["displayedName"].getDefault<std::string>("");
 
-    ConfigurationLoaders::load(m_commonData->validSlots, config["validSlots"]);
-    ConfigurationLoaders::load(m_commonData->correctSlots, config["correctSlots"]);
+    ConfigurationReaders::read(m_commonData->validSlots, config["validSlots"]);
+    ConfigurationReaders::read(m_commonData->correctSlots, config["correctSlots"]);
 
     m_commonData->attributeRandomizer.loadFromConfiguration(config["attributeRandomizationGuidelines"]);
 
@@ -57,7 +60,7 @@ void WeaponTileModel::loadFromConfiguration(ConfigurationNode& config)
     else
     {
         m_commonData->chanceToBreak = config["chanceToBreak"].getDefault<float>(0.0f);
-        ConfigurationLoaders::load(m_commonData->projectile, config["projectile"]);
+        ConfigurationReaders::read(m_commonData->projectile, config["projectile"]);
     }
 
     m_commonData->raritySelector.loadFromConfiguration(config["raritySelector"]);

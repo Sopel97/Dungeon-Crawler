@@ -7,8 +7,8 @@
 
 #include "World.h"
 
-#include "ConfigurationShapesLoaders.h"
-#include "ConfigurationResourceHandleLoaders.h"
+#include "configuration/ShapeConfigurationReaders.h"
+#include "configuration/ResourceConfigurationReaders.h"
 
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
@@ -39,9 +39,9 @@ MovingEntityRenderer::~MovingEntityRenderer()
 
 void MovingEntityRenderer::loadFromConfiguration(ConfigurationNode& config)
 {
-    ConfigurationLoaders::load(m_spritesheet, config["texture"]);
+    ConfigurationReaders::read(m_spritesheet, config["texture"]);
     m_hasMetaTexture = config["hasMetaTexture"].get<bool>();
-    ConfigurationLoaders::load(m_sprites, config["sprites"]);
+    ConfigurationReaders::read(m_sprites, config["sprites"]);
 }
 
 void MovingEntityRenderer::draw(SpriteBatch& mainSpriteBatch, SpriteBatch& metaSpriteBatch) const

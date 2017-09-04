@@ -3,7 +3,7 @@
 #include <vector>
 
 #include "AttributeSet.h"
-#include "Configuration.h"
+#include "configuration/Configuration.h"
 
 class AttributeRandomizer
 {

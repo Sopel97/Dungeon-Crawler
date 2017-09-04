@@ -4,13 +4,13 @@
 
 #include "ResourceLoaders.h"
 
-#include "Configuration.h"
+#include "configuration/Configuration.h"
 
 #include "tiles/TileAttackResult.h"
 
 #include "../LibS/Geometry.h"
 
-#include "../../ComponentCommonData.h"
+#include "ComponentCommonData.h"
 
 #include "AttributeSet.h"
 #include "AttributeRandomizer.h"

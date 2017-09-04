@@ -2,7 +2,7 @@
 
 #include <string>
 
-#include "Configuration.h"
+#include "configuration/Configuration.h"
 
 class TilePrefixSelector
 {

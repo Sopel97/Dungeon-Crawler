@@ -2,8 +2,8 @@
 
 #include "ResourceLoaders.h"
 
-#include "ConfigurationResourceHandleLoaders.h"
-#include "ConfigurationShapesLoaders.h"
+#include "configuration/ResourceConfigurationReaders.h"
+#include "configuration/ShapeConfigurationReaders.h"
 
 #include "SpriteBatch.h"
 
@@ -28,11 +28,11 @@ OrientedProjectileRenderer::~OrientedProjectileRenderer()
 
 void OrientedProjectileRenderer::loadFromConfiguration(ConfigurationNode& config)
 {
-    ConfigurationLoaders::load(m_commonData->spritesheet, config["texture"]);
+    ConfigurationReaders::read(m_commonData->spritesheet, config["texture"]);
     m_commonData->sprites.loadFromConfiguration(config["sprites"]);
     m_commonData->shadowSprites.loadFromConfiguration(config["shadowSprites"]);
     m_commonData->hasMetaTexture = config["hasMetaTexture"].get<bool>();
-    ConfigurationLoaders::load(m_commonData->offsetToSpriteOrigin, config["offsetToSpriteOrigin"]);
+    ConfigurationReaders::read(m_commonData->offsetToSpriteOrigin, config["offsetToSpriteOrigin"]);
     m_commonData->altitude = config["altitude"].getDefault<float>(0.0f);
 }
 

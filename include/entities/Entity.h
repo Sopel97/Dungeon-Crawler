@@ -1,7 +1,7 @@
 #ifndef ENTITY_H
 #define ENTITY_H
 
-#include "Configuration.h"
+#include "configuration/Configuration.h"
 
 #include "ComponentFactory.h"
 

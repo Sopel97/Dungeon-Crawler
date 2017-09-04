@@ -4,6 +4,10 @@
 
 #include "SlotContentRequirement.h"
 
+#include "configuration/SlotContentRequirementConfigurationReader.h"
+#include "configuration/OscillatingLightSourceConfigurationReader.h"
+#include "configuration/CommonConfigurationReaders.h"
+
 #include "GameTime.h"
 
 REGISTER_TILE_MODEL_TYPE(EquipmentPieceModel)
@@ -28,12 +32,12 @@ void EquipmentPieceModel::loadFromConfiguration(ConfigurationNode& config)
 {
     m_commonData->displayedName = config["displayedName"].getDefault<std::string>("");
 
-    ConfigurationLoaders::load(m_commonData->validSlots, config["validSlots"]);
-    ConfigurationLoaders::load(m_commonData->correctSlots, config["correctSlots"]);
+    ConfigurationReaders::read(m_commonData->validSlots, config["validSlots"]);
+    ConfigurationReaders::read(m_commonData->correctSlots, config["correctSlots"]);
 
     m_commonData->attributeRandomizer.loadFromConfiguration(config["attributeRandomizationGuidelines"]);
 
-    ConfigurationLoaders::load(m_commonData->light, config["light"]);
+    ConfigurationReaders::read(m_commonData->light, config["light"]);
 
     m_commonData->drag = config["drag"].get<float>();
     m_commonData->maxThrowDistance = config["maxThrowDistance"].getDefault<int>(0);

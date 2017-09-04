@@ -1,7 +1,7 @@
 #ifndef ENTITYMODEL_H
 #define ENTITYMODEL_H
 
-#include <Configuration.h>
+#include "configuration/Configuration.h"
 
 #include <memory>
 #include <optional>

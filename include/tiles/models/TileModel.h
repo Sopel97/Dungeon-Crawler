@@ -1,7 +1,7 @@
 #ifndef TILEMODEL_H
 #define TILEMODEL_H
 
-#include "Configuration.h"
+#include "configuration/Configuration.h"
 
 #include "../LibS/Geometry.h"
 

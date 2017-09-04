@@ -1,7 +1,8 @@
 #include "tiles/models/PlainTileModel.h"
 
-#include "ConfigurationShapesLoaders.h"
-#include "ConfigurationOptionalLoader.h"
+#include "configuration/ShapeConfigurationReaders.h"
+#include "configuration/CommonConfigurationReaders.h"
+#include "configuration/OscillatingLightSourceConfigurationReader.h"
 
 #include "World.h"
 
@@ -32,9 +33,9 @@ void PlainTileModel::loadFromConfiguration(ConfigurationNode& config)
 {
     m_commonData->displayedName = config["displayedName"].getDefault<std::string>("");
 
-    ConfigurationLoaders::load(m_commonData->collider, config["collider"]);
-    ConfigurationLoaders::load(m_commonData->lightOccluder, config["lightOccluder"]);
-    ConfigurationLoaders::load(m_commonData->light, config["light"]);
+    ConfigurationReaders::read(m_commonData->collider, config["collider"]);
+    ConfigurationReaders::read(m_commonData->lightOccluder, config["lightOccluder"]);
+    ConfigurationReaders::read(m_commonData->light, config["light"]);
 
     m_commonData->drag = config["drag"].get<float>();
     m_commonData->maxThrowDistance = config["maxThrowDistance"].getDefault<int>(0);

@@ -1,7 +1,7 @@
 #ifndef TILE_H
 #define TILE_H
 
-#include "Configuration.h"
+#include "configuration/Configuration.h"
 
 #include "ComponentFactory.h"
 

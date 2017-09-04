@@ -7,7 +7,7 @@
 
 #include "EffectOverwrite.h"
 
-#include "Configuration.h"
+#include "configuration/Configuration.h"
 
 class Effect
 {

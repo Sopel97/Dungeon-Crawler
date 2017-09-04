@@ -2,7 +2,7 @@
 
 #include <SFML/Graphics/Texture.hpp>
 
-#include "Configuration.h"
+#include "configuration/Configuration.h"
 
 #include "../LibS/Shapes.h"
 

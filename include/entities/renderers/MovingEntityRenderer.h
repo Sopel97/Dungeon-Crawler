@@ -2,7 +2,7 @@
 
 #include "EntityRenderer.h"
 
-#include "Configuration.h"
+#include "configuration/Configuration.h"
 
 #include "ResourceLoaders.h"
 

@@ -4,7 +4,7 @@
 
 #include "../LibS/Shapes.h"
 
-#include "Configuration.h"
+#include "configuration/Configuration.h"
 
 class TimeAnimatedSprite
 {

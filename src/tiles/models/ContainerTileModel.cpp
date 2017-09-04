@@ -4,8 +4,8 @@
 
 #include "Player.h"
 
-#include "ConfigurationShapesLoaders.h"
-#include "ConfigurationOptionalLoader.h"
+#include "configuration/ShapeConfigurationReaders.h"
+#include "configuration/CommonConfigurationReaders.h"
 
 #include "World.h"
 
@@ -36,8 +36,8 @@ void ContainerTileModel::loadFromConfiguration(ConfigurationNode& config)
 {
     m_commonData->displayedName = config["displayedName"].getDefault<std::string>("");
 
-    ConfigurationLoaders::load(m_commonData->collider, config["collider"]);
-    ConfigurationLoaders::load(m_commonData->lightOccluder, config["lightOccluder"]);
+    ConfigurationReaders::read(m_commonData->collider, config["collider"]);
+    ConfigurationReaders::read(m_commonData->lightOccluder, config["lightOccluder"]);
 
     m_commonData->drag = config["drag"].get<float>();
     m_commonData->maxThrowDistance = config["maxThrowDistance"].getDefault<int>(0);

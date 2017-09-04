@@ -15,8 +15,8 @@
 
 #include "sprite/Spritesheet.h"
 
-#include "ConfigurationShapesLoaders.h"
-#include "ConfigurationResourceHandleLoaders.h"
+#include "configuration/ShapeConfigurationReaders.h"
+#include "configuration/ResourceConfigurationReaders.h"
 
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
@@ -46,11 +46,11 @@ OuterBorderedTileRenderer::~OuterBorderedTileRenderer()
 
 void OuterBorderedTileRenderer::loadFromConfiguration(ConfigurationNode& config)
 {
-    ConfigurationLoaders::load(m_commonData->spritesheet, config["texture"]);
+    ConfigurationReaders::read(m_commonData->spritesheet, config["texture"]);
 
     m_commonData->spriteSelector.loadFromConfiguration(config);
 
-    ConfigurationLoaders::load(m_commonData->borderSprites, config["borderSprites"]);
+    ConfigurationReaders::read(m_commonData->borderSprites, config["borderSprites"]);
 
     m_commonData->outerBorderPriority = config["outerBorderPriority"].get<int>();
 }
