@@ -224,7 +224,7 @@ std::optional<LightParams> Player::light() const
             LightParams(1.0f, sf::Color::Red),
             LightParams(1.5f, sf::Color::Blue),
             0.5
-        ).at(GameTime::instance().now());
+        ).now();
     };
 
     const TileStack& source = lightSource();

@@ -32,6 +32,10 @@ hook up StaticEmbeddedHomogenousMemoryPool for components, tiles, entities, proj
 
 - make tiles inserted into inventory stack with others if possible (on tile use), currently they are placed in the first valid spot.
 
+- make rarities configurable
+
+- each member in any common data should have its loading function, so loading common data is simplified
+
 - consider checking for light occluders/colliders/maybe more; top to bottom (now is bottom to top), and specify a max depth of search
 
 - think of a way to minimize code duplication in tile models (simple inheritance won't work because all models hold pointer to common data)

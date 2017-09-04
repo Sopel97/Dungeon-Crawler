@@ -81,7 +81,7 @@ std::optional<Light> EffectGivingTileModel::light(const ls::Vec2I& pos) const
     if (m_commonData->light.has_value())
     {
         return Light(
-            m_commonData->light.value().at(GameTime::instance().now(), static_cast<double>(reinterpret_cast<intptr_t>(this))),
+            m_commonData->light.value().now(OscillatingLightSource::seedFromPointer(this)),
             static_cast<ls::Vec2F>(pos) + ls::Vec2F(0.5f, 0.5f),
             this
         );

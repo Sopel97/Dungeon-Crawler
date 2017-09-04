@@ -113,7 +113,7 @@ std::optional<Light> PlainEntityModel::light() const
             LightParams(4.0f, sf::Color::Green),
             LightParams(3.5f, sf::Color::Yellow),
             1.0
-        ).at(GameTime::instance().now(), static_cast<double>(reinterpret_cast<intptr_t>(this))), //TODO: better way to get per entity constant value
+        ).now(OscillatingLightSource::seedFromPointer(this)),
         m_position,
         this
     );

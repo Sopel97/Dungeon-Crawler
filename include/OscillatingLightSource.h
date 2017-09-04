@@ -14,6 +14,11 @@ public:
     LightParams at(double t) const;
     LightParams at(double t, double seed) const;
 
+    LightParams now() const;
+    LightParams now(double seed) const;
+
+    static double seedFromPointer(const void* ptr);
+
 private:
     LightParams m_light1;
     LightParams m_light2;
