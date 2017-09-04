@@ -27,8 +27,8 @@ public:
     struct CommonData : public ComponentCommonData
     {
         std::string displayedName;
-        std::set<SlotContentRequirement> validSlots;
-        std::set<SlotContentRequirement> correctSlots;
+        SlotContentRequirementSet validSlots;
+        SlotContentRequirementSet correctSlots;
         AttributeRandomizer attributeRandomizer;
         int maxQuantity;
         float drag;

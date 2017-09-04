@@ -34,7 +34,10 @@ hook up StaticEmbeddedHomogenousMemoryPool for components, tiles, entities, proj
 
 - make rarities configurable
 
-- each member in any common data should have its loading function, so loading common data is simplified
+- make some cleaning in configuration side of the code
+-- optional, set, vector and default types (implemented in LuaTables) should be handled automatically
+-- separate files for ls::Shapes, ResourceHandles
+-- separate files for other common things being loaded
 
 - consider checking for light occluders/colliders/maybe more; top to bottom (now is bottom to top), and specify a max depth of search
 

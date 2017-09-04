@@ -11,6 +11,8 @@
 
 #include "sprite/Spritesheet.h"
 
+#include "ConfigurationResourceHandleLoaders.h"
+
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 
@@ -41,16 +43,14 @@ PlainTileRenderer::~PlainTileRenderer()
 
 void PlainTileRenderer::loadFromConfiguration(ConfigurationNode& config)
 {
-    std::string textureName = config["texture"].get<std::string>();
-    m_commonData->spritesheet = ResourceManager<Spritesheet>::instance().get(textureName);
-    m_commonData->hasMetaTexture = config["hasMetaTexture"].getDefault<bool>(false);
-    m_commonData->spriteSize = config["spriteSize"].getDefault<int>(1);
-
+    ConfigurationLoaders::load(m_commonData->spritesheet, config["texture"]);
     m_commonData->spriteSelector.loadFromConfiguration(config);
+    m_commonData->spriteSize = config["spriteSize"].getDefault<int>(1);
+    m_commonData->hasMetaTexture = config["hasMetaTexture"].getDefault<bool>(false);
 
     m_commonData->outerBorderPriority = config["outerBorderPriority"].getDefault<int>(-1); //-1 means that it will always be on top
 
-    bool defaultForBorderCovering = m_commonData->outerBorderPriority == -1 ? true : false;
+    const bool defaultForBorderCovering = m_commonData->outerBorderPriority == -1 ? true : false;
     m_commonData->coversOuterBorders = config["coversOuterBorders"].getDefault<bool>(defaultForBorderCovering);
 }
 

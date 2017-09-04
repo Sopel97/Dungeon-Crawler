@@ -8,6 +8,7 @@
 #include "GameTime.h"
 
 #include "Configuration.h"
+#include "ConfigurationOptionalLoader.h"
 
 #include "DamageCalculator.h"
 
@@ -54,15 +55,7 @@ void MovingProjectileModel::loadFromConfiguration(ConfigurationNode& config)
         m_commonData->inheritedAttributes.emplace_back(AttributeIdHelper::stringToEnum(attributeName));
     }
 
-    ConfigurationNode lightConfig = config["light"];
-    if (lightConfig.exists())
-    {
-        m_commonData->light = OscillatingLightSource::fromConfig(lightConfig);
-    }
-    else
-    {
-        m_commonData->light = std::nullopt;
-    }
+    ConfigurationLoaders::load(m_commonData->light, config["light"]);
 
     m_commonData->initialSpeed = config["initialSpeed"].get<float>();
     m_commonData->radius = config["radius"].get<float>();

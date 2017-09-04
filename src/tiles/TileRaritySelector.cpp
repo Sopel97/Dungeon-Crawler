@@ -23,6 +23,12 @@ TileRaritySelector TileRaritySelector::createDefault()
 
 void TileRaritySelector::loadFromConfiguration(ConfigurationNode& config)
 {
+    if (!config.exists())
+    {
+        *this = createDefault();
+        return;
+    }
+
     m_rarities.clear();
     m_thresholdQualities.clear();
 

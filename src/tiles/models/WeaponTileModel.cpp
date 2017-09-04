@@ -3,6 +3,7 @@
 #include <algorithm>
 
 #include "SlotContentRequirement.h"
+#include "ConfigurationResourceHandleLoaders.h"
 
 #include "Player.h"
 
@@ -30,39 +31,17 @@ WeaponTileModel::~WeaponTileModel()
 
 void WeaponTileModel::loadFromConfiguration(ConfigurationNode& config)
 {
-    ConfigurationNode validSlotsConfiguration = config["validSlots"];
-    m_commonData->validSlots.insert(SlotContentRequirement::None);
-    if (validSlotsConfiguration.exists())
-    {
-        const int numEntries = validSlotsConfiguration.length();
-        for (int i = 1; i <= numEntries; ++i)
-        {
-            m_commonData->validSlots.insert(SlotContentRequirementHelper::stringToEnum(validSlotsConfiguration[i].get<std::string>()));
-        }
-    }
-
-    ConfigurationNode correctSlotsConfiguration = config["correctSlots"];
-    m_commonData->correctSlots.insert(SlotContentRequirement::None);
-    if (correctSlotsConfiguration.exists())
-    {
-        const int numEntries = correctSlotsConfiguration.length();
-        for (int i = 1; i <= numEntries; ++i)
-        {
-            m_commonData->correctSlots.insert(SlotContentRequirementHelper::stringToEnum(correctSlotsConfiguration[i].get<std::string>()));
-        }
-    }
-
-    ConfigurationNode attributeParams = config["attributeRandomizationGuidelines"];
-    m_commonData->attributeRandomizer.loadFromConfiguration(attributeParams);
-
     m_commonData->displayedName = config["displayedName"].getDefault<std::string>("");
+
+    ConfigurationLoaders::load(m_commonData->validSlots, config["validSlots"]);
+    ConfigurationLoaders::load(m_commonData->correctSlots, config["correctSlots"]);
+
+    m_commonData->attributeRandomizer.loadFromConfiguration(config["attributeRandomizationGuidelines"]);
+
     m_commonData->maxQuantity = config["maxQuantity"].getDefault<int>(1);
     m_commonData->drag = config["drag"].get<float>();
     m_commonData->maxThrowDistance = config["maxThrowDistance"].getDefault<int>(0);
     m_commonData->canBeStored = config["canBeStored"].getDefault<bool>(false);
-    m_commonData->lightDimming = config["lightDimming"].getDefault<float>(1.0f);
-    m_commonData->useTime = config["useTime"].get<float>();
-    m_commonData->cooldown = config["cooldown"].get<float>();
 
     m_commonData->requiresAmmo = config["requiresAmmo"].get<bool>();
     if (m_commonData->requiresAmmo)
@@ -78,28 +57,15 @@ void WeaponTileModel::loadFromConfiguration(ConfigurationNode& config)
     else
     {
         m_commonData->chanceToBreak = config["chanceToBreak"].getDefault<float>(0.0f);
-        m_commonData->projectile = ResourceManager<ProjectilePrefab>::instance().get(config["projectile"].get<std::string>());
+        ConfigurationLoaders::load(m_commonData->projectile, config["projectile"]);
     }
 
-    ConfigurationNode raritySelectorConfig = config["raritySelector"];
-    if (raritySelectorConfig.exists())
-    {
-        m_commonData->raritySelector.loadFromConfiguration(raritySelectorConfig);
-    }
-    else
-    {
-        m_commonData->raritySelector = TileRaritySelector::createDefault();
-    }
+    m_commonData->raritySelector.loadFromConfiguration(config["raritySelector"]);
+    m_commonData->prefixSelector.loadFromConfiguration(config["prefixSelector"]);
 
-    ConfigurationNode prefixSelectorConfig = config["prefixSelector"];
-    if (prefixSelectorConfig.exists())
-    {
-        m_commonData->prefixSelector.loadFromConfiguration(prefixSelectorConfig);
-    }
-    else
-    {
-        m_commonData->prefixSelector = TilePrefixSelector::createDefault();
-    }
+    m_commonData->lightDimming = config["lightDimming"].getDefault<float>(1.0f);
+    m_commonData->useTime = config["useTime"].get<float>();
+    m_commonData->cooldown = config["cooldown"].get<float>();
 }
 TileRarity WeaponTileModel::rarity() const
 {

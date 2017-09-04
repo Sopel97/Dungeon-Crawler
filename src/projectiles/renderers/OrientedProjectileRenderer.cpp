@@ -2,6 +2,9 @@
 
 #include "ResourceLoaders.h"
 
+#include "ConfigurationResourceHandleLoaders.h"
+#include "ConfigurationShapesLoaders.h"
+
 #include "SpriteBatch.h"
 
 REGISTER_PROJECTILE_RENDERER_TYPE(OrientedProjectileRenderer);
@@ -25,12 +28,11 @@ OrientedProjectileRenderer::~OrientedProjectileRenderer()
 
 void OrientedProjectileRenderer::loadFromConfiguration(ConfigurationNode& config)
 {
-    m_commonData->spritesheet = ResourceManager<Spritesheet>::instance().get(config["texture"].get<std::string>());
+    ConfigurationLoaders::load(m_commonData->spritesheet, config["texture"]);
     m_commonData->sprites.loadFromConfiguration(config["sprites"]);
     m_commonData->shadowSprites.loadFromConfiguration(config["shadowSprites"]);
     m_commonData->hasMetaTexture = config["hasMetaTexture"].get<bool>();
-    m_commonData->offsetToSpriteOrigin.x = config["offsetToSpriteOrigin"][1].get<int>();
-    m_commonData->offsetToSpriteOrigin.y = config["offsetToSpriteOrigin"][2].get<int>();
+    ConfigurationLoaders::load(m_commonData->offsetToSpriteOrigin, config["offsetToSpriteOrigin"]);
     m_commonData->altitude = config["altitude"].getDefault<float>(0.0f);
 }
 

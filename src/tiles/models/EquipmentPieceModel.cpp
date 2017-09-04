@@ -26,66 +26,23 @@ EquipmentPieceModel::~EquipmentPieceModel()
 
 void EquipmentPieceModel::loadFromConfiguration(ConfigurationNode& config)
 {
-    ConfigurationNode validSlotsConfiguration = config["validSlots"];
-    m_commonData->validSlots.insert(SlotContentRequirement::None);
-    if (validSlotsConfiguration.exists())
-    {
-        const int numEntries = validSlotsConfiguration.length();
-        for (int i = 1; i <= numEntries; ++i)
-        {
-            m_commonData->validSlots.insert(SlotContentRequirementHelper::stringToEnum(validSlotsConfiguration[i].get<std::string>()));
-        }
-    }
-
-    ConfigurationNode correctSlotsConfiguration = config["correctSlots"];
-    m_commonData->correctSlots.insert(SlotContentRequirement::None);
-    if (correctSlotsConfiguration.exists())
-    {
-        const int numEntries = correctSlotsConfiguration.length();
-        for (int i = 1; i <= numEntries; ++i)
-        {
-            m_commonData->correctSlots.insert(SlotContentRequirementHelper::stringToEnum(correctSlotsConfiguration[i].get<std::string>()));
-        }
-    }
-
-    ConfigurationNode attributeParams = config["attributeRandomizationGuidelines"];
-    m_commonData->attributeRandomizer.loadFromConfiguration(attributeParams);
-
-    ConfigurationNode lightConfig = config["light"];
-    if (lightConfig.exists())
-    {
-        m_commonData->light = OscillatingLightSource::fromConfig(lightConfig);
-    }
-    else
-    {
-        m_commonData->light = std::nullopt;
-    }
-
     m_commonData->displayedName = config["displayedName"].getDefault<std::string>("");
+
+    ConfigurationLoaders::load(m_commonData->validSlots, config["validSlots"]);
+    ConfigurationLoaders::load(m_commonData->correctSlots, config["correctSlots"]);
+
+    m_commonData->attributeRandomizer.loadFromConfiguration(config["attributeRandomizationGuidelines"]);
+
+    ConfigurationLoaders::load(m_commonData->light, config["light"]);
+
     m_commonData->drag = config["drag"].get<float>();
     m_commonData->maxThrowDistance = config["maxThrowDistance"].getDefault<int>(0);
     m_commonData->canBeStored = config["canBeStored"].getDefault<bool>(false);
+
+    m_commonData->raritySelector.loadFromConfiguration(config["raritySelector"]);
+    m_commonData->prefixSelector.loadFromConfiguration(config["prefixSelector"]);
+
     m_commonData->lightDimming = config["lightDimming"].getDefault<float>(1.0f);
-
-    ConfigurationNode raritySelectorConfig = config["raritySelector"];
-    if (raritySelectorConfig.exists())
-    {
-        m_commonData->raritySelector.loadFromConfiguration(raritySelectorConfig);
-    }
-    else
-    {
-        m_commonData->raritySelector = TileRaritySelector::createDefault();
-    }
-
-    ConfigurationNode prefixSelectorConfig = config["prefixSelector"];
-    if (prefixSelectorConfig.exists())
-    {
-        m_commonData->prefixSelector.loadFromConfiguration(prefixSelectorConfig);
-    }
-    else
-    {
-        m_commonData->prefixSelector = TilePrefixSelector::createDefault();
-    }
 }
 TileRarity EquipmentPieceModel::rarity() const
 {

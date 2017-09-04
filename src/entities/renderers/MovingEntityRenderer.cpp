@@ -7,6 +7,9 @@
 
 #include "World.h"
 
+#include "ConfigurationShapesLoaders.h"
+#include "ConfigurationResourceHandleLoaders.h"
+
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 
@@ -36,10 +39,9 @@ MovingEntityRenderer::~MovingEntityRenderer()
 
 void MovingEntityRenderer::loadFromConfiguration(ConfigurationNode& config)
 {
-    m_spritesheet = ResourceManager<Spritesheet>::instance().get(config["texture"].get<std::string>());
+    ConfigurationLoaders::load(m_spritesheet, config["texture"]);
     m_hasMetaTexture = config["hasMetaTexture"].get<bool>();
-    m_sprites.x = config["sprites"][1].get<int>();
-    m_sprites.y = config["sprites"][2].get<int>();
+    ConfigurationLoaders::load(m_sprites, config["sprites"]);
 }
 
 void MovingEntityRenderer::draw(SpriteBatch& mainSpriteBatch, SpriteBatch& metaSpriteBatch) const

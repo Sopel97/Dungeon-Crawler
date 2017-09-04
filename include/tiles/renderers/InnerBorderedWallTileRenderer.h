@@ -49,10 +49,9 @@ public:
         }spriteSet;
 
         ResourceHandle<Spritesheet> spritesheet;
+        bool hasMetaTexture;
 
         TileInnerBorderGroupType innerBorderGroup;
-
-        bool hasMetaTexture;
     };
 
     InnerBorderedWallTileRenderer(Tile& owner, CommonData& commonData);

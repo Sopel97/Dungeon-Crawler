@@ -4,6 +4,8 @@
 
 #include "Configuration.h"
 
+#include <optional>
+
 class OscillatingLightSource
 {
 public:
@@ -24,3 +26,17 @@ private:
     LightParams m_light2;
     double m_frequency;
 };
+
+namespace ConfigurationLoaders
+{
+    inline void load(std::optional<OscillatingLightSource>& lightSource, ConfigurationNode& config)
+    {
+        if (!config.exists())
+        {
+            lightSource = std::nullopt;
+            return;
+        }
+
+        lightSource = OscillatingLightSource::fromConfig(config);
+    }
+}

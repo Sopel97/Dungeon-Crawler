@@ -34,6 +34,12 @@ TilePrefixSelector TilePrefixSelector::createDefault()
 
 void TilePrefixSelector::loadFromConfiguration(ConfigurationNode& config)
 {
+    if (!config.exists())
+    {
+        *this = createDefault();
+        return;
+    }
+
     m_prefixes.clear();
     m_thresholdQualities.clear();
 

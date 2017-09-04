@@ -14,6 +14,7 @@
 #include "../../ComponentCommonData.h"
 
 #include <memory>
+#include <optional>
 
 class Tile;
 class TileLocation;
@@ -25,8 +26,7 @@ public:
     struct CommonData : public ComponentCommonData
     {
         std::string displayedName;
-        bool hasCollider;
-        ls::Rectangle2F collider;
+        std::optional<ls::Rectangle2F> collider;
         std::optional<ls::Rectangle2F> lightOccluder;
         float drag;
         int maxThrowDistance;

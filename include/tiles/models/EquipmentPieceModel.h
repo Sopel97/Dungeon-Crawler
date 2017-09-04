@@ -29,8 +29,8 @@ public:
     struct CommonData : public ComponentCommonData
     {
         std::string displayedName;
-        std::set<SlotContentRequirement> validSlots;
-        std::set<SlotContentRequirement> correctSlots;
+        SlotContentRequirementSet validSlots;
+        SlotContentRequirementSet correctSlots;
         AttributeRandomizer attributeRandomizer;
         std::optional<OscillatingLightSource> light;
         float drag;

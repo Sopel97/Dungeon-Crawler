@@ -4,6 +4,9 @@
 
 #include "SlotContentRequirement.h"
 
+#include "ConfigurationOptionalLoader.h"
+#include "ConfigurationResourceHandleLoaders.h"
+
 #include "Player.h"
 
 #include "GameTime.h"
@@ -26,45 +29,19 @@ EffectGivingTileModel::~EffectGivingTileModel()
 
 void EffectGivingTileModel::loadFromConfiguration(ConfigurationNode& config)
 {
-    ConfigurationNode lightConfig = config["light"];
-    if (lightConfig.exists())
-    {
-        m_commonData->light = OscillatingLightSource::fromConfig(lightConfig);
-    }
-    else
-    {
-        m_commonData->light = std::nullopt;
-    }
-
     m_commonData->displayedName = config["displayedName"].getDefault<std::string>("");
+
+    ConfigurationLoaders::load(m_commonData->light, config["light"]);
+    ConfigurationLoaders::load(m_commonData->transformsIntoTile, config["transformsInto"]);
+    ConfigurationLoaders::load(m_commonData->effect, config["effect"]);
+    ConfigurationLoaders::load(m_commonData->effectDuration, config["effectDuration"]);
+
     m_commonData->drag = config["drag"].get<float>();
     m_commonData->maxThrowDistance = config["maxThrowDistance"].getDefault<int>(0);
     m_commonData->canBeStored = config["canBeStored"].getDefault<bool>(false);
     m_commonData->lightDimming = config["lightDimming"].getDefault<float>(1.0f);
     m_commonData->rarity = TileRarity(config["rarity"].getDefault<int>(1));
     m_commonData->maxQuantity = config["maxQuantity"].getDefault<int>(1);
-
-    ConfigurationNode transformsIntoConfig = config["transformsInto"];
-    if (transformsIntoConfig.exists())
-    {
-        m_commonData->transformsIntoTile = ResourceManager<TilePrefab>::instance().get(transformsIntoConfig.get<std::string>());
-    }
-    else
-    {
-        m_commonData->transformsIntoTile = nullptr;
-    }
-
-    m_commonData->effect = ResourceManager<EffectPrefab>::instance().get(config["effect"]);
-    
-    ConfigurationNode effectDurationConfig = config["effectDuration"];
-    if (effectDurationConfig.exists())
-    {
-        m_commonData->effectDuration = effectDurationConfig.get<float>();
-    }
-    else
-    {
-        m_commonData->effectDuration = std::nullopt;
-    }
 
     m_commonData->isConsumable = config["isConsumable"].getDefault<bool>(true);
 }

@@ -35,10 +35,10 @@ public:
         ResourceHandle<Spritesheet> spritesheet;
         TileSpriteSelector spriteSelector;
         int spriteSize;
+        bool hasMetaTexture;
 
         int outerBorderPriority;
         bool coversOuterBorders;
-        bool hasMetaTexture;
     };
 
     PlainTileRenderer(Tile& owner, CommonData& commonData);

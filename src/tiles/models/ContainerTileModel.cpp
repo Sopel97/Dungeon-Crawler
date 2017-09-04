@@ -4,6 +4,9 @@
 
 #include "Player.h"
 
+#include "ConfigurationShapesLoaders.h"
+#include "ConfigurationOptionalLoader.h"
+
 #include "World.h"
 
 using namespace ls;
@@ -31,34 +34,11 @@ ContainerTileModel::~ContainerTileModel()
 
 void ContainerTileModel::loadFromConfiguration(ConfigurationNode& config)
 {
-    ConfigurationNode colliderConfig = config["collider"];
-    if(colliderConfig.exists())
-    {
-        m_commonData->hasCollider = true;
-        m_commonData->collider = Rectangle2F(
-                                     Vec2F(colliderConfig[1][1].get<float>(), colliderConfig[1][2].get<float>()),
-                                     Vec2F(colliderConfig[2][1].get<float>(), colliderConfig[2][2].get<float>())
-                                 );
-    }
-    else
-    {
-        m_commonData->hasCollider = false;
-    }
-
-    ConfigurationNode lightOccluderConfig = config["lightOccluder"];
-    if (lightOccluderConfig.exists())
-    {
-        m_commonData->lightOccluder = Rectangle2F(
-            Vec2F(lightOccluderConfig[1][1].get<float>(), lightOccluderConfig[1][2].get<float>()),
-            Vec2F(lightOccluderConfig[2][1].get<float>(), lightOccluderConfig[2][2].get<float>())
-        );
-    }
-    else
-    {
-        m_commonData->lightOccluder = std::nullopt;
-    }
-
     m_commonData->displayedName = config["displayedName"].getDefault<std::string>("");
+
+    ConfigurationLoaders::load(m_commonData->collider, config["collider"]);
+    ConfigurationLoaders::load(m_commonData->lightOccluder, config["lightOccluder"]);
+
     m_commonData->drag = config["drag"].get<float>();
     m_commonData->maxThrowDistance = config["maxThrowDistance"].getDefault<int>(0);
     m_commonData->isThrowableThrough = config["isThrowableThrough"].getDefault<bool>(false);
@@ -72,9 +52,9 @@ void ContainerTileModel::loadFromConfiguration(ConfigurationNode& config)
 
 std::optional<TileCollider> ContainerTileModel::collider(const ls::Vec2I& pos)
 {
-    if (!m_commonData->hasCollider) return std::nullopt;
+    if (!m_commonData->collider.has_value()) return std::nullopt;
 
-    const ls::Rectangle2F aabb = m_commonData->collider.translated(static_cast<ls::Vec2F>(pos));
+    const ls::Rectangle2F aabb = m_commonData->collider.value().translated(static_cast<ls::Vec2F>(pos));
     return TileCollider(*m_owner, aabb);
 }
 std::optional<ls::Rectangle2F> ContainerTileModel::lightOccluder(const ls::Vec2I& pos) const

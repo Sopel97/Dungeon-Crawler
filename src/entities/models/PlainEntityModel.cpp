@@ -2,6 +2,8 @@
 
 #include "OscillatingLightSource.h"
 
+#include "ConfigurationResourceHandleLoaders.h"
+
 #include "GameTime.h"
 
 using namespace ls;
@@ -39,7 +41,7 @@ void PlainEntityModel::loadFromConfiguration(ConfigurationNode& config)
 {
     m_health = m_commonData->maxHealth = config["maxHealth"].get<int>();
     m_commonData->maxSpeed = config["maxSpeed"].get<float>();
-    m_commonData->corpseTile = ResourceManager<TilePrefab>::instance().get(config["corpseTile"].get<std::string>());
+    ConfigurationLoaders::load(m_commonData->corpseTile, config["corpseTile"]);
     m_commonData->lootRandomizer.loadFromConfiguration(config["lootRandomizationGuidelines"]);
     m_commonData->group = AggroGroupIdHelper::stringToEnum(config["group"].get<std::string>());
 

@@ -1,5 +1,7 @@
 #include "SlotContentRequirement.h"
 
+#include "Configuration.h"
+
 const std::map<std::string, SlotContentRequirement> SlotContentRequirementHelper::m_dictionary {
     { "None", SlotContentRequirement::None },
     { "Helmet", SlotContentRequirement::Helmet },

@@ -15,6 +15,9 @@
 
 #include "sprite/Spritesheet.h"
 
+#include "ConfigurationShapesLoaders.h"
+#include "ConfigurationResourceHandleLoaders.h"
+
 #include <SFML/Graphics.hpp>
 #include <SFML/System.hpp>
 
@@ -43,12 +46,12 @@ OuterBorderedTileRenderer::~OuterBorderedTileRenderer()
 
 void OuterBorderedTileRenderer::loadFromConfiguration(ConfigurationNode& config)
 {
-    std::string textureName = config["texture"].get<std::string>();
-    m_commonData->spritesheet = ResourceManager<Spritesheet>::instance().get(textureName);
+    ConfigurationLoaders::load(m_commonData->spritesheet, config["texture"]);
 
     m_commonData->spriteSelector.loadFromConfiguration(config);
 
-    m_commonData->borderSprites = Vec2I {config["borderSprites"][1].get<int>(), config["borderSprites"][2].get<int>()};
+    ConfigurationLoaders::load(m_commonData->borderSprites, config["borderSprites"]);
+
     m_commonData->outerBorderPriority = config["outerBorderPriority"].get<int>();
 }
 
