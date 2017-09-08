@@ -54,12 +54,11 @@ void Root::run()
         float dt = time - lastTick; //delta time is for the tick
         m_lastFrameTime = time - lastDraw;
 
-        // BUG: crashes after making some event and going out of the window??????????
         while(m_window.pollEvent(event))
         {
             if (event.type == sf::Event::EventType::Closed)
             {
-                m_window.close();
+                return;
             }
             else if (event.type == sf::Event::EventType::Resized)
             {
@@ -70,6 +69,7 @@ void Root::run()
 				m_windowSpaceManager.tryDispatchEvent(event);
 			}
         }
+
         if(time >= m_tickTime + lastTick)
         {
             if(m_window.hasFocus()) processAsyncKeyboardInput(dt);

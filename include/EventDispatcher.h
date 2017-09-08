@@ -97,7 +97,7 @@ EventDispatcher::EventCallbackHandle<EventType>::~EventCallbackHandle()
 template <class EventType>
 void EventDispatcher::EventCallbackHandle<EventType>::unsubscribe()
 {
-    if (m_callback == m_allCallbacks.end()) return;
+    if (m_callback == m_allCallbacks.end() || m_allCallbacks.empty()) return;
     m_allCallbacks.erase(m_callback);
     m_callback = m_allCallbacks.end();
 }

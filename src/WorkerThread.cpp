@@ -1,6 +1,7 @@
 #include "WorkerThread.h"
 
 WorkerThread::WorkerThread() :
+    m_terminate(false),
     m_processed(false),
     m_thread([this]() { workerLoop(); })
 {
@@ -22,13 +23,20 @@ void WorkerThread::wait()
     m_cv.wait(lock, [this] {return m_processed; });
     lock.unlock();
 }
+WorkerThread::~WorkerThread()
+{
+    m_terminate = true;
+    m_cv.notify_one();
+    m_thread.join();
+}
 
 void WorkerThread::workerLoop()
 {
     for (;;)
     {
         std::unique_lock<std::mutex> lock(m_mutex);
-        m_cv.wait(lock, [this] {return m_job.has_value(); });
+        m_cv.wait(lock, [this] {return m_job.has_value() || m_terminate; });
+        if (m_terminate) break;
 
         m_job.value()();
         m_job.reset();
