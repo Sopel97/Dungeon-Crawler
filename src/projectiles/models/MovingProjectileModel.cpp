@@ -7,8 +7,8 @@
 #include "OscillatingLightSource.h"
 #include "GameTime.h"
 
-#include "Configuration.h"
-#include "ConfigurationOptionalLoader.h"
+#include "configuration/CommonConfigurationReaders.h"
+#include "configuration/OscillatingLightSourceConfigurationReader.h"
 
 #include "DamageCalculator.h"
 
@@ -55,7 +55,7 @@ void MovingProjectileModel::loadFromConfiguration(ConfigurationNode& config)
         m_commonData->inheritedAttributes.emplace_back(AttributeIdHelper::stringToEnum(attributeName));
     }
 
-    ConfigurationLoaders::load(m_commonData->light, config["light"]);
+    ConfigurationReaders::read(m_commonData->light, config["light"]);
 
     m_commonData->initialSpeed = config["initialSpeed"].get<float>();
     m_commonData->radius = config["radius"].get<float>();

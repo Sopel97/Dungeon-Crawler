@@ -67,7 +67,7 @@ protected:
     struct LightGeometryCache
     {
         std::vector<LightGeometryEntry> lights;
-        int current;
+        int current = 0;
     };
 
     Root& m_root;
