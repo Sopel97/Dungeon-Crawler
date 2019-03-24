@@ -1,0 +1,419 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project DefaultTargets="Build" ToolsVersion="14.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup Label="ProjectConfigurations">
+    <ProjectConfiguration Include="Debug|Win32">
+      <Configuration>Debug</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|Win32">
+      <Configuration>Release</Configuration>
+      <Platform>Win32</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Debug|x64">
+      <Configuration>Debug</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+    <ProjectConfiguration Include="Release|x64">
+      <Configuration>Release</Configuration>
+      <Platform>x64</Platform>
+    </ProjectConfiguration>
+  </ItemGroup>
+  <PropertyGroup Label="Globals">
+    <ProjectGuid>{B04CF96D-50F6-4A06-9595-49BDCBC1CEEE}</ProjectGuid>
+    <Keyword>Win32Proj</Keyword>
+    <RootNamespace>DungeonCrawler</RootNamespace>
+    <WindowsTargetPlatformVersion>10.0.14393.0</WindowsTargetPlatformVersion>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.Default.props" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v141</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>true</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'" Label="Configuration">
+    <ConfigurationType>Application</ConfigurationType>
+    <UseDebugLibraries>false</UseDebugLibraries>
+    <PlatformToolset>v140</PlatformToolset>
+    <WholeProgramOptimization>true</WholeProgramOptimization>
+    <CharacterSet>Unicode</CharacterSet>
+  </PropertyGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.props" />
+  <ImportGroup Label="ExtensionSettings">
+  </ImportGroup>
+  <ImportGroup Label="Shared">
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <ImportGroup Label="PropertySheets" Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <Import Project="$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props" Condition="exists('$(UserRootDir)\Microsoft.Cpp.$(Platform).user.props')" Label="LocalAppDataPlatform" />
+  </ImportGroup>
+  <PropertyGroup Label="UserMacros" />
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <LinkIncremental>true</LinkIncremental>
+    <IncludePath>..\lua;..\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\lib visual studio 2015;$(LibraryPath)</LibraryPath>
+    <SourcePath>..\src;$(SourcePath)</SourcePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <LinkIncremental>true</LinkIncremental>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <LinkIncremental>false</LinkIncremental>
+    <IncludePath>..\lua;..\include;$(IncludePath)</IncludePath>
+    <LibraryPath>..\lib visual studio 2015;$(LibraryPath)</LibraryPath>
+    <SourcePath>..\src;$(SourcePath)</SourcePath>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <LinkIncremental>false</LinkIncremental>
+  </PropertyGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>WIN32;_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <MinimalRebuild>false</MinimalRebuild>
+      <SDLCheck>false</SDLCheck>
+      <DebugInformationFormat>ProgramDatabase</DebugInformationFormat>
+      <RuntimeLibrary>MultiThreadedDebug</RuntimeLibrary>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <FloatingPointExceptions>false</FloatingPointExceptions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <AdditionalLibraryDirectories>C:\dev\Dungeon-Crawler\lib;%(AdditionalLibraryDirectories)</AdditionalLibraryDirectories>
+      <AdditionalDependencies>LibS-mt-s-d.lib;lua53.lib;sfml-graphics-d.lib;sfml-system-d.lib;sfml-window-d.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">
+    <ClCompile>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <WarningLevel>Level3</WarningLevel>
+      <Optimization>Disabled</Optimization>
+      <PreprocessorDefinitions>_DEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>WIN32;NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+      <SDLCheck>false</SDLCheck>
+      <RuntimeLibrary>MultiThreaded</RuntimeLibrary>
+      <LanguageStandard>stdcpplatest</LanguageStandard>
+      <MultiProcessorCompilation>true</MultiProcessorCompilation>
+      <EnableEnhancedInstructionSet>StreamingSIMDExtensions2</EnableEnhancedInstructionSet>
+      <FloatingPointModel>Fast</FloatingPointModel>
+      <FloatingPointExceptions>false</FloatingPointExceptions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+      <AdditionalDependencies>LibS-mt-s.lib;lua53.lib;sfml-graphics.lib;sfml-system.lib;sfml-window.lib;opengl32.lib;%(AdditionalDependencies)</AdditionalDependencies>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemDefinitionGroup Condition="'$(Configuration)|$(Platform)'=='Release|x64'">
+    <ClCompile>
+      <WarningLevel>Level3</WarningLevel>
+      <PrecompiledHeader>
+      </PrecompiledHeader>
+      <Optimization>MaxSpeed</Optimization>
+      <FunctionLevelLinking>true</FunctionLevelLinking>
+      <IntrinsicFunctions>true</IntrinsicFunctions>
+      <PreprocessorDefinitions>NDEBUG;_CONSOLE;%(PreprocessorDefinitions)</PreprocessorDefinitions>
+    </ClCompile>
+    <Link>
+      <SubSystem>Console</SubSystem>
+      <GenerateDebugInformation>true</GenerateDebugInformation>
+      <EnableCOMDATFolding>true</EnableCOMDATFolding>
+      <OptimizeReferences>true</OptimizeReferences>
+    </Link>
+  </ItemDefinitionGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\include\effects\EffectPrefab.cpp" />
+    <ClCompile Include="..\luatables\luatables.cc" />
+    <ClCompile Include="..\main.cpp" />
+    <ClCompile Include="..\src\AggroGroup.cpp" />
+    <ClCompile Include="..\src\AspectRatio.cpp" />
+    <ClCompile Include="..\src\Attribute.cpp" />
+    <ClCompile Include="..\src\AttributeArray.cpp" />
+    <ClCompile Include="..\src\AttributeRandomizer.cpp" />
+    <ClCompile Include="..\src\AttributeSet.cpp" />
+    <ClCompile Include="..\src\Camera.cpp" />
+    <ClCompile Include="..\src\colliders\Collisions.cpp" />
+    <ClCompile Include="..\src\colliders\EntityCollider.cpp" />
+    <ClCompile Include="..\src\colliders\ProjectileCollider.cpp" />
+    <ClCompile Include="..\src\colliders\TileCollider.cpp" />
+    <ClCompile Include="..\src\Component.cpp" />
+    <ClCompile Include="..\src\ComponentCommonData.cpp" />
+    <ClCompile Include="..\src\configuration\Configuration.cpp" />
+    <ClCompile Include="..\src\ContainerInventory.cpp" />
+    <ClCompile Include="..\src\DamageCalculator.cpp" />
+    <ClCompile Include="..\src\effects\Effect.cpp" />
+    <ClCompile Include="..\src\effects\EffectOverwrite.cpp" />
+    <ClCompile Include="..\src\effects\EffectsSet.cpp" />
+    <ClCompile Include="..\src\entities\Entity.cpp" />
+    <ClCompile Include="..\src\entities\EntityPrefab.cpp" />
+    <ClCompile Include="..\src\entities\models\EntityModel.cpp" />
+    <ClCompile Include="..\src\entities\models\PlainEntityModel.cpp" />
+    <ClCompile Include="..\src\entities\models\PlayerModel.cpp" />
+    <ClCompile Include="..\src\entities\renderers\EntityRenderer.cpp" />
+    <ClCompile Include="..\src\entities\renderers\MovingEntityRenderer.cpp" />
+    <ClCompile Include="..\src\entities\renderers\PlayerRenderer.cpp" />
+    <ClCompile Include="..\src\EntitySystem.cpp" />
+    <ClCompile Include="..\src\EventDispatcher.cpp" />
+    <ClCompile Include="..\src\Game.cpp" />
+    <ClCompile Include="..\src\GameTime.cpp" />
+    <ClCompile Include="..\src\Inventory.cpp" />
+    <ClCompile Include="..\src\InventorySlotLocation.cpp" />
+    <ClCompile Include="..\src\InventorySlotView.cpp" />
+    <ClCompile Include="..\src\InventorySystem.cpp" />
+    <ClCompile Include="..\src\InventoryView.cpp" />
+    <ClCompile Include="..\src\Light.cpp" />
+    <ClCompile Include="..\src\Logger.cpp" />
+    <ClCompile Include="..\src\MapGenerator.cpp" />
+    <ClCompile Include="..\src\MapLayer.cpp" />
+    <ClCompile Include="..\src\MapLightCache.cpp" />
+    <ClCompile Include="..\src\OscillatingLightSource.cpp" />
+    <ClCompile Include="..\src\Player.cpp" />
+    <ClCompile Include="..\src\PlayerEquipmentInventory.cpp" />
+    <ClCompile Include="..\src\PlayerUi.cpp" />
+    <ClCompile Include="..\src\ProjectileSystem.cpp" />
+    <ClCompile Include="..\src\projectiles\models\MeleeProjectileModel.cpp" />
+    <ClCompile Include="..\src\projectiles\models\MovingProjectileModel.cpp" />
+    <ClCompile Include="..\src\projectiles\models\ProjectileModel.cpp" />
+    <ClCompile Include="..\src\projectiles\Projectile.cpp" />
+    <ClCompile Include="..\src\projectiles\ProjectilePrefab.cpp" />
+    <ClCompile Include="..\src\projectiles\renderers\NullProjectileRenderer.cpp" />
+    <ClCompile Include="..\src\projectiles\renderers\OrientedProjectileRenderer.cpp" />
+    <ClCompile Include="..\src\projectiles\renderers\ProjectileRenderer.cpp" />
+    <ClCompile Include="..\src\QuantityBasedSpriteSet.cpp" />
+    <ClCompile Include="..\src\RectSubdivision.cpp" />
+    <ClCompile Include="..\src\ResourceLoaders.cpp" />
+    <ClCompile Include="..\src\ResourceManager.cpp" />
+    <ClCompile Include="..\src\Root.cpp" />
+    <ClCompile Include="..\src\SfmlEventHandler.cpp" />
+    <ClCompile Include="..\src\SFMLUtil.cpp" />
+    <ClCompile Include="..\src\SlotContentRequirement.cpp" />
+    <ClCompile Include="..\src\SpriteBatch.cpp" />
+    <ClCompile Include="..\src\sprite\QuantityBasedSpriteSelector.cpp" />
+    <ClCompile Include="..\src\sprite\Spritesheet.cpp" />
+    <ClCompile Include="..\src\sprite\TileSpriteSelector.cpp" />
+    <ClCompile Include="..\src\sprite\TimeAnimatedSprite.cpp" />
+    <ClCompile Include="..\src\sprite\WeightedRandomSpriteSelector.cpp" />
+    <ClCompile Include="..\src\TileDescription.cpp" />
+    <ClCompile Include="..\src\TileDescriptionGenerator.cpp" />
+    <ClCompile Include="..\src\TileDescriptionRenderer.cpp" />
+    <ClCompile Include="..\src\TileLocation.cpp" />
+    <ClCompile Include="..\src\TileColumn.cpp" />
+    <ClCompile Include="..\src\tiles\models\AmmoTileModel.cpp" />
+    <ClCompile Include="..\src\tiles\models\ContainerTileModel.cpp" />
+    <ClCompile Include="..\src\tiles\models\EffectGivingTileModel.cpp" />
+    <ClCompile Include="..\src\tiles\models\EquipmentPieceModel.cpp" />
+    <ClCompile Include="..\src\tiles\models\PlainTileModel.cpp" />
+    <ClCompile Include="..\src\tiles\models\TileModel.cpp" />
+    <ClCompile Include="..\src\tiles\models\WeaponTileModel.cpp" />
+    <ClCompile Include="..\src\tiles\Tile.cpp" />
+    <ClCompile Include="..\src\tiles\TilePrefab.cpp" />
+    <ClCompile Include="..\src\tiles\TilePrefixSelector.cpp" />
+    <ClCompile Include="..\src\tiles\TileRandomizer.cpp" />
+    <ClCompile Include="..\src\tiles\TileRarity.cpp" />
+    <ClCompile Include="..\src\tiles\TileRaritySelector.cpp" />
+    <ClCompile Include="..\src\tiles\TileStack.cpp" />
+    <ClCompile Include="..\src\tiles\renderers\InnerBorderedWallTileRenderer.cpp" />
+    <ClCompile Include="..\src\tiles\renderers\OuterBorderedTileRenderer.cpp" />
+    <ClCompile Include="..\src\tiles\renderers\PlainTileRenderer.cpp" />
+    <ClCompile Include="..\src\tiles\renderers\TileRenderer.cpp" />
+    <ClCompile Include="..\src\TileTransferMediator.cpp" />
+    <ClCompile Include="..\src\WeightedSpriteSet.cpp" />
+    <ClCompile Include="..\src\window\BackgroundWindow.cpp" />
+    <ClCompile Include="..\src\window\InternalWindow.cpp" />
+    <ClCompile Include="..\src\window\InternalWindowHeaderButton.cpp" />
+    <ClCompile Include="..\src\window\InventoryWindow.cpp" />
+    <ClCompile Include="..\src\window\Scene.cpp" />
+    <ClCompile Include="..\src\window\WindowContent.cpp" />
+    <ClCompile Include="..\src\window\WindowSpaceManager.cpp" />
+    <ClCompile Include="..\src\WorkerThread.cpp" />
+    <ClCompile Include="..\src\World.cpp" />
+    <ClCompile Include="..\src\WorldRenderer.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\include\AggroGroup.h" />
+    <ClInclude Include="..\include\AspectRatio.h" />
+    <ClInclude Include="..\include\Attribute.h" />
+    <ClInclude Include="..\include\AttributeArray.h" />
+    <ClInclude Include="..\include\AttributeRandomizer.h" />
+    <ClInclude Include="..\include\AttributeSet.h" />
+    <ClInclude Include="..\include\Camera.h" />
+    <ClInclude Include="..\include\colliders\Collisions.h" />
+    <ClInclude Include="..\include\colliders\EntityCollider.h" />
+    <ClInclude Include="..\include\colliders\ProjectileCollider.h" />
+    <ClInclude Include="..\include\colliders\TileCollider.h" />
+    <ClInclude Include="..\include\ConfigurationDefaultLoaders.h" />
+    <ClInclude Include="..\include\configuration\AttributeConfigurationReader.h" />
+    <ClInclude Include="..\include\configuration\CommonConfigurationReaders.h" />
+    <ClInclude Include="..\include\configuration\Configuration.h" />
+    <ClInclude Include="..\include\configuration\ConfigurationReader.h" />
+    <ClInclude Include="..\include\configuration\OscillatingLightSourceConfigurationReader.h" />
+    <ClInclude Include="..\include\configuration\ResourceConfigurationReaders.h" />
+    <ClInclude Include="..\include\configuration\ShapeConfigurationReaders.h" />
+    <ClInclude Include="..\include\configuration\SlotContentRequirementConfigurationReader.h" />
+    <ClInclude Include="..\include\DynamicEnum.h" />
+    <ClInclude Include="..\include\Component.h" />
+    <ClInclude Include="..\include\ComponentCommonData.h" />
+    <ClInclude Include="..\include\ComponentFactory.h" />
+    <ClInclude Include="..\include\ContainerInventory.h" />
+    <ClInclude Include="..\include\DamageCalculator.h" />
+    <ClInclude Include="..\include\effects\Effect.h" />
+    <ClInclude Include="..\include\effects\EffectOverwrite.h" />
+    <ClInclude Include="..\include\effects\EffectPrefab.h" />
+    <ClInclude Include="..\include\effects\EffectsSet.h" />
+    <ClInclude Include="..\include\entities\Entity.h" />
+    <ClInclude Include="..\include\entities\EntityComponent.h" />
+    <ClInclude Include="..\include\entities\EntityPrefab.h" />
+    <ClInclude Include="..\include\entities\models\EntityModel.h" />
+    <ClInclude Include="..\include\entities\models\PlainEntityModel.h" />
+    <ClInclude Include="..\include\entities\models\PlayerModel.h" />
+    <ClInclude Include="..\include\entities\renderers\EntityRenderer.h" />
+    <ClInclude Include="..\include\entities\renderers\MovingEntityRenderer.h" />
+    <ClInclude Include="..\include\entities\renderers\PlayerRenderer.h" />
+    <ClInclude Include="..\include\EntitySystem.h" />
+    <ClInclude Include="..\include\EventDispatcher.h" />
+    <ClInclude Include="..\include\events\TileMovedFromInventoryToInventory.h" />
+    <ClInclude Include="..\include\events\TileMovedFromInventoryToWorld.h" />
+    <ClInclude Include="..\include\events\TileMovedFromWorldToInventory.h" />
+    <ClInclude Include="..\include\events\TileMovedFromWorldToWorld.h" />
+    <ClInclude Include="..\include\events\TilePlacedInInventory.h" />
+    <ClInclude Include="..\include\events\TilePlacedInWorld.h" />
+    <ClInclude Include="..\include\events\TileRemovedFromInventory.h" />
+    <ClInclude Include="..\include\events\TileRemovedFromWorld.h" />
+    <ClInclude Include="..\include\Game.h" />
+    <ClInclude Include="..\include\GameTime.h" />
+    <ClInclude Include="..\include\Inventory.h" />
+    <ClInclude Include="..\include\InventorySlotLocation.h" />
+    <ClInclude Include="..\include\InventorySlotView.h" />
+    <ClInclude Include="..\include\InventorySystem.h" />
+    <ClInclude Include="..\include\InventoryView.h" />
+    <ClInclude Include="..\include\Light.h" />
+    <ClInclude Include="..\include\LightClipper.h" />
+    <ClInclude Include="..\include\Logger.h" />
+    <ClInclude Include="..\include\MapGenerator.h" />
+    <ClInclude Include="..\include\MapLayer.h" />
+    <ClInclude Include="..\include\MapLightCache.h" />
+    <ClInclude Include="..\include\OscillatingLightSource.h" />
+    <ClInclude Include="..\include\Player.h" />
+    <ClInclude Include="..\include\PlayerEquipmentInventory.h" />
+    <ClInclude Include="..\include\PlayerUi.h" />
+    <ClInclude Include="..\include\ProjectileSystem.h" />
+    <ClInclude Include="..\include\projectiles\models\MeleeProjectileModel.h" />
+    <ClInclude Include="..\include\projectiles\models\MovingProjectileModel.h" />
+    <ClInclude Include="..\include\projectiles\models\ProjectileModel.h" />
+    <ClInclude Include="..\include\projectiles\Projectile.h" />
+    <ClInclude Include="..\include\projectiles\ProjectileComponent.h" />
+    <ClInclude Include="..\include\projectiles\ProjectilePrefab.h" />
+    <ClInclude Include="..\include\projectiles\renderers\NullProjectileRenderer.h" />
+    <ClInclude Include="..\include\projectiles\renderers\OrientedProjectileRenderer.h" />
+    <ClInclude Include="..\include\projectiles\renderers\ProjectileRenderer.h" />
+    <ClInclude Include="..\include\QuantityBasedSpriteSet.h" />
+    <ClInclude Include="..\include\RectSubdivision.h" />
+    <ClInclude Include="..\include\ResourceLoaders.h" />
+    <ClInclude Include="..\include\ResourceManager.h" />
+    <ClInclude Include="..\include\Rng.h" />
+    <ClInclude Include="..\include\Root.h" />
+    <ClInclude Include="..\include\SfmlEventHandler.h" />
+    <ClInclude Include="..\include\SFMLUtil.h" />
+    <ClInclude Include="..\include\SlotContentRequirement.h" />
+    <ClInclude Include="..\include\SpriteBatch.h" />
+    <ClInclude Include="..\include\sprite\QuantityBasedSpriteSelector.h" />
+    <ClInclude Include="..\include\sprite\Spritesheet.h" />
+    <ClInclude Include="..\include\sprite\TileSpriteSelector.h" />
+    <ClInclude Include="..\include\sprite\TimeAnimatedSprite.h" />
+    <ClInclude Include="..\include\sprite\WeightedRandomSpriteSelector.h" />
+    <ClInclude Include="..\include\TextRenderer.h" />
+    <ClInclude Include="..\include\TileDescription.h" />
+    <ClInclude Include="..\include\TileDescriptionGenerator.h" />
+    <ClInclude Include="..\include\TileDescriptionRenderer.h" />
+    <ClInclude Include="..\include\TileLocation.h" />
+    <ClInclude Include="..\include\TileColumn.h" />
+    <ClInclude Include="..\include\tiles\models\AmmoTileModel.h" />
+    <ClInclude Include="..\include\tiles\models\ContainerTileModel.h" />
+    <ClInclude Include="..\include\tiles\models\EffectGivingTileModel.h" />
+    <ClInclude Include="..\include\tiles\models\EquipmentPieceModel.h" />
+    <ClInclude Include="..\include\tiles\models\PlainTileModel.h" />
+    <ClInclude Include="..\include\tiles\models\TileModel.h" />
+    <ClInclude Include="..\include\tiles\models\WeaponTileModel.h" />
+    <ClInclude Include="..\include\tiles\Tile.h" />
+    <ClInclude Include="..\include\tiles\TileAttackResult.h" />
+    <ClInclude Include="..\include\tiles\TileComponent.h" />
+    <ClInclude Include="..\include\tiles\TileInformation.h" />
+    <ClInclude Include="..\include\tiles\TileOuterBorderCache.h" />
+    <ClInclude Include="..\include\tiles\TilePrefab.h" />
+    <ClInclude Include="..\include\tiles\TilePrefixSelector.h" />
+    <ClInclude Include="..\include\tiles\TileRandomizer.h" />
+    <ClInclude Include="..\include\tiles\TileRarity.h" />
+    <ClInclude Include="..\include\tiles\TileRaritySelector.h" />
+    <ClInclude Include="..\include\tiles\TileStack.h" />
+    <ClInclude Include="..\include\tiles\renderers\InnerBorderedWallTileRenderer.h" />
+    <ClInclude Include="..\include\tiles\renderers\OuterBorderedTileRenderer.h" />
+    <ClInclude Include="..\include\tiles\renderers\PlainTileRenderer.h" />
+    <ClInclude Include="..\include\tiles\renderers\TileRenderer.h" />
+    <ClInclude Include="..\include\tiles\TileUseResult.h" />
+    <ClInclude Include="..\include\TileTransferMediator.h" />
+    <ClInclude Include="..\include\WeightedSpriteSet.h" />
+    <ClInclude Include="..\include\window\BackgroundWindow.h" />
+    <ClInclude Include="..\include\window\InternalWindow.h" />
+    <ClInclude Include="..\include\window\InternalWindowHeaderButton.h" />
+    <ClInclude Include="..\include\window\InventoryWindow.h" />
+    <ClInclude Include="..\include\window\Scene.h" />
+    <ClInclude Include="..\include\window\WindowContent.h" />
+    <ClInclude Include="..\include\window\WindowParams.h" />
+    <ClInclude Include="..\include\window\WindowSpaceManager.h" />
+    <ClInclude Include="..\include\WorkerThread.h" />
+    <ClInclude Include="..\include\World.h" />
+    <ClInclude Include="..\include\WorldRenderer.h" />
+    <ClInclude Include="..\luatables\luatables.h" />
+  </ItemGroup>
+  <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
+  <ImportGroup Label="ExtensionTargets">
+  </ImportGroup>
+</Project>

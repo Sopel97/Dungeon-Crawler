@@ -1,0 +1,842 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Resource Files">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{ec0ab527-7bf0-491f-be1b-4c5916d4b064}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\include">
+      <UniqueIdentifier>{7bd5fa17-82dd-40fd-b31b-31e8103456c0}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\include\tiles">
+      <UniqueIdentifier>{da09ab4f-e47a-427d-8d3d-3bb717f5176e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\include\entities">
+      <UniqueIdentifier>{3ef8bacf-96d7-44ba-923f-92c4d138af15}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\include\events">
+      <UniqueIdentifier>{7ac057ba-a13b-4e32-a16d-8760a151e761}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\include\entities\models">
+      <UniqueIdentifier>{fb852035-0f92-4516-a6eb-b8f9bfb3a199}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\include\tiles\models">
+      <UniqueIdentifier>{adf28a2d-b59b-4e14-965a-3d2a2fbcb3ee}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\src">
+      <UniqueIdentifier>{fe234cac-1842-4717-adb8-1217e9d31f2e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\src\entities">
+      <UniqueIdentifier>{dd318f04-f8b9-4bb4-87b3-4afc803cc684}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\src\events">
+      <UniqueIdentifier>{43aebd5b-9ac7-4f3a-8c4a-a99d65047c1e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\src\tiles">
+      <UniqueIdentifier>{e9576d6c-423f-437b-8387-5508c5ab677a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\src\entities\models">
+      <UniqueIdentifier>{22fd8e3d-af5d-45f8-9b43-5c6069120ba9}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\src\tiles\models">
+      <UniqueIdentifier>{88f0fb0b-7aae-4896-bd32-7fe58b7354d1}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="luatables">
+      <UniqueIdentifier>{32bfcd02-5b92-48c6-88b2-0c6b53f7585f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\include\entities\renderers">
+      <UniqueIdentifier>{47af7a49-0372-43fa-a076-e6369edc4773}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\include\tiles\renderers">
+      <UniqueIdentifier>{daeaf09c-8357-4deb-972e-71aa997f1a2d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\src\entities\renderers">
+      <UniqueIdentifier>{b0722c38-0a54-484e-93e4-6034ef4b8e57}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\src\tiles\renderers">
+      <UniqueIdentifier>{47fddec3-a388-4b7c-b143-a98821535f80}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\include\window">
+      <UniqueIdentifier>{af119130-14b8-4083-91e8-43c73c95d5a3}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\src\window">
+      <UniqueIdentifier>{d94a9d8a-c7cf-4eb4-a964-ec530b544f13}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\include\sprite">
+      <UniqueIdentifier>{23ad0769-46e3-466e-ab09-823eec2aa452}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\src\sprite">
+      <UniqueIdentifier>{0335b7d2-d95d-446f-9dd8-d3955d35506e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\include\projectiles">
+      <UniqueIdentifier>{17beec6f-8b63-4454-b87b-b65689e6cc4e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\include\projectiles\models">
+      <UniqueIdentifier>{b36992cb-6afe-41ae-8307-15ec4bba496b}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\include\projectiles\renderers">
+      <UniqueIdentifier>{0da34cf2-5605-47e1-8d3d-c20029bae8cf}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\src\projectiles">
+      <UniqueIdentifier>{792d0540-ddc0-438e-b5dc-2132562b4ec7}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\src\projectiles\models">
+      <UniqueIdentifier>{6b81c16f-dc88-45c1-b98a-a2e954b53bcc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\src\projectiles\renderers">
+      <UniqueIdentifier>{1201187c-dfb6-4a28-a367-ace0396c8a59}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\include\colliders">
+      <UniqueIdentifier>{20ad1c67-f0ea-4fd4-8388-28899a7c7a0a}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\src\colliders">
+      <UniqueIdentifier>{e76f4732-65c9-448e-aed0-196e2d80458f}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\include\effects">
+      <UniqueIdentifier>{01e028f7-45a2-4bb1-82e3-7e31082b3e64}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\src\effects">
+      <UniqueIdentifier>{c412d5b4-ecbe-4a5d-8cb3-cb8e20257a95}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Header Files\include\configuration">
+      <UniqueIdentifier>{8237ea26-c2df-4aaf-a728-f0c9d8e376b8}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="Source Files\src\configuration">
+      <UniqueIdentifier>{b2ce25f5-2d71-49eb-9ee9-14d630217aca}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\src\Camera.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ContainerInventory.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\EntitySystem.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\EventDispatcher.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Game.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Inventory.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\InventorySlotView.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\InventorySystem.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\InventoryView.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\MapGenerator.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\MapLayer.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Player.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PlayerEquipmentInventory.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\PlayerUi.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\QuantityBasedSpriteSet.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ResourceLoaders.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ResourceManager.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Root.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\SFMLUtil.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\TileLocation.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\WeightedSpriteSet.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\World.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\entities\Entity.cpp">
+      <Filter>Source Files\src\entities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\entities\models\EntityModel.cpp">
+      <Filter>Source Files\src\entities\models</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\entities\models\PlayerModel.cpp">
+      <Filter>Source Files\src\entities\models</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\tiles\Tile.cpp">
+      <Filter>Source Files\src\tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\tiles\models\ContainerTileModel.cpp">
+      <Filter>Source Files\src\tiles\models</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\tiles\models\PlainTileModel.cpp">
+      <Filter>Source Files\src\tiles\models</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\tiles\models\TileModel.cpp">
+      <Filter>Source Files\src\tiles\models</Filter>
+    </ClCompile>
+    <ClCompile Include="..\luatables\luatables.cc">
+      <Filter>luatables</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\TileColumn.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\tiles\TileStack.cpp">
+      <Filter>Source Files\src\tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\tiles\TilePrefab.cpp">
+      <Filter>Source Files\src\tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ComponentCommonData.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\entities\renderers\EntityRenderer.cpp">
+      <Filter>Source Files\src\entities\renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\entities\renderers\PlayerRenderer.cpp">
+      <Filter>Source Files\src\entities\renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\tiles\renderers\InnerBorderedWallTileRenderer.cpp">
+      <Filter>Source Files\src\tiles\renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\tiles\renderers\OuterBorderedTileRenderer.cpp">
+      <Filter>Source Files\src\tiles\renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\tiles\renderers\PlainTileRenderer.cpp">
+      <Filter>Source Files\src\tiles\renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\tiles\renderers\TileRenderer.cpp">
+      <Filter>Source Files\src\tiles\renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\main.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Component.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\SfmlEventHandler.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\AspectRatio.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\RectSubdivision.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\window\BackgroundWindow.cpp">
+      <Filter>Source Files\src\window</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\window\InternalWindow.cpp">
+      <Filter>Source Files\src\window</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\window\Scene.cpp">
+      <Filter>Source Files\src\window</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\window\WindowContent.cpp">
+      <Filter>Source Files\src\window</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\window\WindowSpaceManager.cpp">
+      <Filter>Source Files\src\window</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\window\InternalWindowHeaderButton.cpp">
+      <Filter>Source Files\src\window</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\TileTransferMediator.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\window\InventoryWindow.cpp">
+      <Filter>Source Files\src\window</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\TileDescription.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\TileDescriptionGenerator.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\TileDescriptionRenderer.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\tiles\models\EquipmentPieceModel.cpp">
+      <Filter>Source Files\src\tiles\models</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\SlotContentRequirement.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\GameTime.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\sprite\TimeAnimatedSprite.cpp">
+      <Filter>Source Files\src\sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\sprite\QuantityBasedSpriteSelector.cpp">
+      <Filter>Source Files\src\sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\sprite\WeightedRandomSpriteSelector.cpp">
+      <Filter>Source Files\src\sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\sprite\TileSpriteSelector.cpp">
+      <Filter>Source Files\src\sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Logger.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\entities\EntityPrefab.cpp">
+      <Filter>Source Files\src\entities</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\tiles\TileRandomizer.cpp">
+      <Filter>Source Files\src\tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\entities\renderers\MovingEntityRenderer.cpp">
+      <Filter>Source Files\src\entities\renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\entities\models\PlainEntityModel.cpp">
+      <Filter>Source Files\src\entities\models</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\projectiles\Projectile.cpp">
+      <Filter>Source Files\src\projectiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\projectiles\ProjectilePrefab.cpp">
+      <Filter>Source Files\src\projectiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\projectiles\models\ProjectileModel.cpp">
+      <Filter>Source Files\src\projectiles\models</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\projectiles\renderers\ProjectileRenderer.cpp">
+      <Filter>Source Files\src\projectiles\renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\ProjectileSystem.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\AggroGroup.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\colliders\TileCollider.cpp">
+      <Filter>Source Files\src\colliders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\colliders\EntityCollider.cpp">
+      <Filter>Source Files\src\colliders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\colliders\ProjectileCollider.cpp">
+      <Filter>Source Files\src\colliders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\colliders\Collisions.cpp">
+      <Filter>Source Files\src\colliders</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\DamageCalculator.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\projectiles\models\MeleeProjectileModel.cpp">
+      <Filter>Source Files\src\projectiles\models</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\projectiles\renderers\NullProjectileRenderer.cpp">
+      <Filter>Source Files\src\projectiles\renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Attribute.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\AttributeArray.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\AttributeRandomizer.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\AttributeSet.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\Light.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\OscillatingLightSource.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\WorldRenderer.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\SpriteBatch.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\tiles\models\AmmoTileModel.cpp">
+      <Filter>Source Files\src\tiles\models</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\tiles\models\WeaponTileModel.cpp">
+      <Filter>Source Files\src\tiles\models</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\sprite\Spritesheet.cpp">
+      <Filter>Source Files\src\sprite</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\InventorySlotLocation.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\WorkerThread.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\tiles\TileRarity.cpp">
+      <Filter>Source Files\src\tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\tiles\TileRaritySelector.cpp">
+      <Filter>Source Files\src\tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\tiles\TilePrefixSelector.cpp">
+      <Filter>Source Files\src\tiles</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\MapLightCache.cpp">
+      <Filter>Source Files\src</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\projectiles\models\MovingProjectileModel.cpp">
+      <Filter>Source Files\src\projectiles\models</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\projectiles\renderers\OrientedProjectileRenderer.cpp">
+      <Filter>Source Files\src\projectiles\renderers</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\effects\Effect.cpp">
+      <Filter>Source Files\src\effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\include\effects\EffectPrefab.cpp">
+      <Filter>Source Files\src\effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\effects\EffectOverwrite.cpp">
+      <Filter>Source Files\src\effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\effects\EffectsSet.cpp">
+      <Filter>Source Files\src\effects</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\tiles\models\EffectGivingTileModel.cpp">
+      <Filter>Source Files\src\tiles\models</Filter>
+    </ClCompile>
+    <ClCompile Include="..\src\configuration\Configuration.cpp">
+      <Filter>Source Files\src\configuration</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\include\Camera.h">
+      <Filter>Header Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ContainerInventory.h">
+      <Filter>Header Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\EntitySystem.h">
+      <Filter>Header Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\EventDispatcher.h">
+      <Filter>Header Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Game.h">
+      <Filter>Header Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Inventory.h">
+      <Filter>Header Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\InventorySlotView.h">
+      <Filter>Header Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\InventorySystem.h">
+      <Filter>Header Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\InventoryView.h">
+      <Filter>Header Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\MapGenerator.h">
+      <Filter>Header Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\MapLayer.h">
+      <Filter>Header Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Player.h">
+      <Filter>Header Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\PlayerEquipmentInventory.h">
+      <Filter>Header Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\PlayerUi.h">
+      <Filter>Header Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\QuantityBasedSpriteSet.h">
+      <Filter>Header Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ResourceLoaders.h">
+      <Filter>Header Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ResourceManager.h">
+      <Filter>Header Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Root.h">
+      <Filter>Header Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\SFMLUtil.h">
+      <Filter>Header Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\TextRenderer.h">
+      <Filter>Header Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\TileLocation.h">
+      <Filter>Header Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\WeightedSpriteSet.h">
+      <Filter>Header Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\World.h">
+      <Filter>Header Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\entities\models\EntityModel.h">
+      <Filter>Header Files\include\entities\models</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\entities\models\PlayerModel.h">
+      <Filter>Header Files\include\entities\models</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\entities\Entity.h">
+      <Filter>Header Files\include\entities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\tiles\models\ContainerTileModel.h">
+      <Filter>Header Files\include\tiles\models</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\tiles\models\PlainTileModel.h">
+      <Filter>Header Files\include\tiles\models</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\tiles\models\TileModel.h">
+      <Filter>Header Files\include\tiles\models</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\tiles\Tile.h">
+      <Filter>Header Files\include\tiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\luatables\luatables.h">
+      <Filter>luatables</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\TileColumn.h">
+      <Filter>Header Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\tiles\TileStack.h">
+      <Filter>Header Files\include\tiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\tiles\TilePrefab.h">
+      <Filter>Header Files\include\tiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ComponentCommonData.h">
+      <Filter>Header Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\entities\renderers\EntityRenderer.h">
+      <Filter>Header Files\include\entities\renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\entities\renderers\PlayerRenderer.h">
+      <Filter>Header Files\include\entities\renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\tiles\renderers\InnerBorderedWallTileRenderer.h">
+      <Filter>Header Files\include\tiles\renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\tiles\renderers\OuterBorderedTileRenderer.h">
+      <Filter>Header Files\include\tiles\renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\tiles\renderers\PlainTileRenderer.h">
+      <Filter>Header Files\include\tiles\renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\tiles\renderers\TileRenderer.h">
+      <Filter>Header Files\include\tiles\renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Component.h">
+      <Filter>Header Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\SfmlEventHandler.h">
+      <Filter>Header Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\RectSubdivision.h">
+      <Filter>Header Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\AspectRatio.h">
+      <Filter>Header Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\window\WindowParams.h">
+      <Filter>Header Files\include\window</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\window\WindowSpaceManager.h">
+      <Filter>Header Files\include\window</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\window\Scene.h">
+      <Filter>Header Files\include\window</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\window\WindowContent.h">
+      <Filter>Header Files\include\window</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\window\InternalWindow.h">
+      <Filter>Header Files\include\window</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\window\BackgroundWindow.h">
+      <Filter>Header Files\include\window</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\window\InternalWindowHeaderButton.h">
+      <Filter>Header Files\include\window</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\TileTransferMediator.h">
+      <Filter>Header Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\window\InventoryWindow.h">
+      <Filter>Header Files\include\window</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\events\TileMovedFromWorldToWorld.h">
+      <Filter>Header Files\include\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\events\TileMovedFromWorldToInventory.h">
+      <Filter>Header Files\include\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\events\TileMovedFromInventoryToInventory.h">
+      <Filter>Header Files\include\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\events\TileMovedFromInventoryToWorld.h">
+      <Filter>Header Files\include\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\tiles\TileComponent.h">
+      <Filter>Header Files\include\tiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\SlotContentRequirement.h">
+      <Filter>Header Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\TileDescription.h">
+      <Filter>Header Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\TileDescriptionRenderer.h">
+      <Filter>Header Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\TileDescriptionGenerator.h">
+      <Filter>Header Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\tiles\models\EquipmentPieceModel.h">
+      <Filter>Header Files\include\tiles\models</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Rng.h">
+      <Filter>Header Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\sprite\TimeAnimatedSprite.h">
+      <Filter>Header Files\include\sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\GameTime.h">
+      <Filter>Header Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\sprite\QuantityBasedSpriteSelector.h">
+      <Filter>Header Files\include\sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\sprite\WeightedRandomSpriteSelector.h">
+      <Filter>Header Files\include\sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\sprite\TileSpriteSelector.h">
+      <Filter>Header Files\include\sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Logger.h">
+      <Filter>Header Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\entities\EntityComponent.h">
+      <Filter>Header Files\include\entities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\entities\EntityPrefab.h">
+      <Filter>Header Files\include\entities</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ComponentFactory.h">
+      <Filter>Header Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\tiles\TileRandomizer.h">
+      <Filter>Header Files\include\tiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\entities\renderers\MovingEntityRenderer.h">
+      <Filter>Header Files\include\entities\renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\entities\models\PlainEntityModel.h">
+      <Filter>Header Files\include\entities\models</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\projectiles\ProjectileComponent.h">
+      <Filter>Header Files\include\projectiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\projectiles\Projectile.h">
+      <Filter>Header Files\include\projectiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\projectiles\ProjectilePrefab.h">
+      <Filter>Header Files\include\projectiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\projectiles\models\ProjectileModel.h">
+      <Filter>Header Files\include\projectiles\models</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\projectiles\renderers\ProjectileRenderer.h">
+      <Filter>Header Files\include\projectiles\renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ProjectileSystem.h">
+      <Filter>Header Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\AggroGroup.h">
+      <Filter>Header Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\colliders\TileCollider.h">
+      <Filter>Header Files\include\colliders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\colliders\EntityCollider.h">
+      <Filter>Header Files\include\colliders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\colliders\ProjectileCollider.h">
+      <Filter>Header Files\include\colliders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\colliders\Collisions.h">
+      <Filter>Header Files\include\colliders</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\DamageCalculator.h">
+      <Filter>Header Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\projectiles\models\MeleeProjectileModel.h">
+      <Filter>Header Files\include\projectiles\models</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\projectiles\renderers\NullProjectileRenderer.h">
+      <Filter>Header Files\include\projectiles\renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Attribute.h">
+      <Filter>Header Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\AttributeArray.h">
+      <Filter>Header Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\AttributeRandomizer.h">
+      <Filter>Header Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\AttributeSet.h">
+      <Filter>Header Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\Light.h">
+      <Filter>Header Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\OscillatingLightSource.h">
+      <Filter>Header Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\WorldRenderer.h">
+      <Filter>Header Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\SpriteBatch.h">
+      <Filter>Header Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\events\TilePlacedInWorld.h">
+      <Filter>Header Files\include\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\events\TileRemovedFromWorld.h">
+      <Filter>Header Files\include\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\events\TilePlacedInInventory.h">
+      <Filter>Header Files\include\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\events\TileRemovedFromInventory.h">
+      <Filter>Header Files\include\events</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\tiles\TileInformation.h">
+      <Filter>Header Files\include\tiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\DynamicEnum.h">
+      <Filter>Header Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\tiles\models\AmmoTileModel.h">
+      <Filter>Header Files\include\tiles\models</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\tiles\models\WeaponTileModel.h">
+      <Filter>Header Files\include\tiles\models</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\sprite\Spritesheet.h">
+      <Filter>Header Files\include\sprite</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\InventorySlotLocation.h">
+      <Filter>Header Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\tiles\TileAttackResult.h">
+      <Filter>Header Files\include\tiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\tiles\TileUseResult.h">
+      <Filter>Header Files\include\tiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\tiles\TileOuterBorderCache.h">
+      <Filter>Header Files\include\tiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\WorkerThread.h">
+      <Filter>Header Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\LightClipper.h">
+      <Filter>Header Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\tiles\TileRarity.h">
+      <Filter>Header Files\include\tiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\tiles\TileRaritySelector.h">
+      <Filter>Header Files\include\tiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\tiles\TilePrefixSelector.h">
+      <Filter>Header Files\include\tiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\MapLightCache.h">
+      <Filter>Header Files\include</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\projectiles\models\MovingProjectileModel.h">
+      <Filter>Header Files\include\projectiles\models</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\projectiles\renderers\OrientedProjectileRenderer.h">
+      <Filter>Header Files\include\projectiles\renderers</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\effects\Effect.h">
+      <Filter>Header Files\include\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\effects\EffectPrefab.h">
+      <Filter>Header Files\include\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\effects\EffectsSet.h">
+      <Filter>Header Files\include\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\effects\EffectOverwrite.h">
+      <Filter>Header Files\include\effects</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\tiles\models\EffectGivingTileModel.h">
+      <Filter>Header Files\include\tiles\models</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\ConfigurationDefaultLoaders.h">
+      <Filter>Header Files\include\tiles</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\configuration\Configuration.h">
+      <Filter>Header Files\include\configuration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\configuration\ShapeConfigurationReaders.h">
+      <Filter>Header Files\include\configuration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\configuration\ConfigurationReader.h">
+      <Filter>Header Files\include\configuration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\configuration\CommonConfigurationReaders.h">
+      <Filter>Header Files\include\configuration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\configuration\ResourceConfigurationReaders.h">
+      <Filter>Header Files\include\configuration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\configuration\SlotContentRequirementConfigurationReader.h">
+      <Filter>Header Files\include\configuration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\configuration\AttributeConfigurationReader.h">
+      <Filter>Header Files\include\configuration</Filter>
+    </ClInclude>
+    <ClInclude Include="..\include\configuration\OscillatingLightSourceConfigurationReader.h">
+      <Filter>Header Files\include\configuration</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <Text Include="ReadMe.txt" />
+  </ItemGroup>
+</Project>
